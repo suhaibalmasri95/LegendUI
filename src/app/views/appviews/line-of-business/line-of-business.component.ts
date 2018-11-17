@@ -248,6 +248,7 @@ export class LineOfBusinessComponent implements OnInit {
     this.lineOfBusinessForm.ID = lineOfBusiness.ID;
     this.lineOfBusinessForm.Name = lineOfBusiness.Name;
     this.lineOfBusinessForm.Name2 = lineOfBusiness.Name2;
+    this.lineOfBusinessForm.Code = lineOfBusiness.Code;
      this.lineOfBusinessForm.Status = lineOfBusiness.Status;
      this.lineOfBusinessForm.LineOfBusiness = lineOfBusiness.LineOfBusiness;
     this.lineOfBusinessForm.Module = lineOfBusiness.Module;

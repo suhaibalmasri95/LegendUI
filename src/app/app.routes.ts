@@ -135,8 +135,7 @@ export const ROUTES: Routes = [
           subLineOfBusinessLockUp: SubLineOfBusinessLockUpResolver,
           renisType: RenisTypeResolver,
           excessFrom: ExcessFromResolver,
-          country: CountryResolver,
-          currencies: CurrencyResolver
+        
         }
       }
     ]
