@@ -1,0 +1,387 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-10">
+    <!-- <h2>{{formControls.Name}}</h2> -->
+    <h2>Users</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a>Organizations</a>
+      </li>
+      <li class="active">
+        <strong>Users</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-sm-2">
+    <div class="title-action">
+      <!-- <a ui-sref="pages.edit-form({id:formControls.id})" class="btn btn-primary">Edit This form</a> -->
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="tabs-container">
+        <div class="panel-body">
+
+
+          <mat-tab-group (selectedTabChange)="changeTab($event)">
+            <mat-tab label="Users ">
+              <div class="col-md-12">
+                <fieldset>
+                  <legend>
+                    Users
+                  </legend>
+                  <form #form="ngForm" (ngSubmit)="saveUser(form)" class="{{submit?'submited':''}}">
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="Username">Username <span class="help-block">*</span></label>
+                        <input name="Username" placeholder="Username" type="text" class="form-control" [(ngModel)]="userForm.UserName"
+                          required>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="Name">Name <span class="help-block">*</span></label>
+                        <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="userForm.Name"
+                          required>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="Name2">Name 2</label>
+                        <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="userForm.Name2">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+                        <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control"
+                          [ngModel]="userForm.EffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="userForm.EffectiveDate = $event">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+                        <input name="ExpiryDate" required placeholder="Expiry Date" type="date" class="form-control"
+                          [ngModel]="userForm.ExpiryDate  | date:'yyyy-MM-dd'" (ngModelChange)="userForm.ExpiryDate = $event">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Status">Status</label>
+                        <select name="Status" placeholder="Status" class="form-control" [(ngModel)]="userForm.Status">
+                          <option [ngValue]="null">Select</option>
+                          <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Password">Password <span class="help-block">*</span></label>
+                        <input name="Password" placeholder="Password" type="text" class="form-control" [(ngModel)]="userForm.Password"
+                          required>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="Email">Email<span class="help-block">*</span></label>
+                        <input name="Email" placeholder="Email" type="text" class="form-control" [(ngModel)]="userForm.Email "
+                          required>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="CompanyID">Company <span class="help-block">*</span></label>
+                        <select name="CompanyID" class="form-control" [(ngModel)]="userForm.CompanyID" required
+                          (change)="loadCompanyBranches()">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let company of companies" [ngValue]="company.ID">{{company.Name}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="BranchID">User Branches</label>
+                        <ng-multiselect-dropdown name="BranchID" [disabled]="!companyBranches ||companyBranches.length===0"
+                          [placeholder]="'User Branches'" [data]="companyBranches" [(ngModel)]="selectedItems"
+                          [settings]="dropdownSettings">
+                        </ng-multiselect-dropdown>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="BirthDate">Birth Date</label>
+                        <input name="BirthDate" placeholder="Birth Date" type="date" class="form-control" [ngModel]="userForm.BirthDate | date:'yyyy-MM-dd'"
+                          (ngModelChange)="userForm.BirthDate = $event">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="CountryID">Country</label>
+                        <select name="CountryID" class="form-control" [(ngModel)]="userForm.CountryID" required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="mobile">Mobile</label>
+                        <input name="Mobile" placeholder="Mobile" type="text" class="form-control" [(ngModel)]="userForm.Mobile">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="UserType">User Type <span class="help-block">*</span></label>
+                        <select name="UserType" placeholder="User Type" class="form-control" [(ngModel)]="userForm.UserType">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let userType of userTypes" [ngValue]="userType.ID">{{userType.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-4">
+                        <label for="Picture">Picture</label>
+
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                          <div class="form-control" data-trigger="fileinput">
+                            <span class="fileinput-filename">
+                              <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                              {{replaceFileName(userForm.PICTUER)}}
+                            </span>
+                          </div>
+                          <span class="input-group-addon btn btn-default btn-file" *ngIf="!userForm.PICTUER">
+                            <label for="PICTUER" class="custom-file-upload">
+                              <i class="fa fa-cloud-upload"></i> Upload
+                            </label>
+                          </span>
+                          <input id="PICTUER" name="PICTUER" type="file" [(ngModel)]="userForm.PICTUER" ng2FileSelect
+                            [uploader]="uploader">
+                          <a *ngIf="userForm.PICTUER" (click)="userForm.PICTUER=null" class="input-group-addon btn btn-default fileinput-exists"
+                            data-dismiss="fileinput">Remove</a>
+                        </div>
+
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12 text-right">
+                        <br>
+                        <br>
+                        <div class="btn-group">
+                          <input class="btn btn-default" type="reset" (click)="userForm={};submit=false;resetForm(form)"
+                            value="Reset" />
+                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+              <br>
+
+              <div class="col-md-12">
+                <div class="html5buttons">
+                  <br>
+                  <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
+                      [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                      <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','User')" placement="bottom"
+                      ngbTooltip="Export to CSV"><span>
+                        <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','user')" placement="bottom"
+                      ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','user')" placement="bottom"
+                      ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                  </div>
+                </div>
+                <br>
+                <mat-form-field>
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                </mat-form-field>
+                <div class="x">
+                  <div class="table-container">
+                    <table mat-table #table [dataSource]="usersDataSource" matSort>
+
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                          </mat-checkbox>
+                        </th>
+                        <td style="width: 5%" mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Username">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.UserName}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Name2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.Name2}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Company">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Company</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.CompanyID}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Country">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Country </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.CountryID}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>email </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.Email}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          <i (click)="updateUser(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteUser(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="userTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: userTableColumns;" (click)="updateUser(row)" class=" mat-row {{userForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                    </table>
+                  </div>
+                  <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+                </div>
+              </div>
+
+            </mat-tab>
+            <mat-tab label="Groups">
+
+              <div class="col-md-5">
+                <div class="table-container">
+                  <table mat-table #table2 [dataSource]="groupsDataSource" matSort>
+
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                          [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                        </mat-checkbox>
+                      </th>
+                      <td style="width: 5%" mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                          [checked]="selection2.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ID">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Name">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Name2">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{element.Name2}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="groupsTableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: groupsTableColumns;" class=" mat-row"></tr>
+
+                  </table>
+                </div>
+                <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+              </div>
+
+
+              <div class="col-md-2 text-center groups-arrows">
+                <div>
+                  <i class="fa fa-arrow-right" (click)="addGroup()"></i>
+                </div>
+
+                <div>
+                  <i class="fa fa-arrow-left" (click)="removeGroup()"></i>
+                </div>
+
+              </div>
+              <div class="col-md-5">
+                <div class="table-container">
+                  <table mat-table #table3 [dataSource]="userGroupsDataSource" matSort>
+
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle3() : null" [checked]="selection3.hasValue() && isAllSelected3()"
+                          [indeterminate]="selection3.hasValue() && !isAllSelected3()">
+                        </mat-checkbox>
+                      </th>
+                      <td style="width: 5%" mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection3.toggle(row) : null"
+                          [checked]="selection3.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ID">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Name">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Name2">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{element.Name2}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="userGroupsTableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: userGroupsTableColumns;" class=" mat-row"></tr>
+
+                  </table>
+                </div>
+                <mat-paginator #paginator3 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+              </div>
+
+
+            </mat-tab>
+
+          </mat-tab-group>
+
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+</div>

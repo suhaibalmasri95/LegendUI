@@ -1,0 +1,752 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-10">
+        <!-- <h2>{{formControls.Name}}</h2> -->
+        <h2>Organizations</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="index.html">Home</a>
+            </li>
+            <li>
+                <a>Organizations</a>
+            </li>
+            <li class="active">
+                <strong>Companies</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-sm-2">
+        <div class="title-action">
+            <!-- <a ui-sref="pages.edit-form({id:formControls.id})" class="btn btn-primary">Edit This form</a> -->
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="tabs-container">
+                <div class="panel-body">
+
+                    <fieldset>
+                        <legend>
+                            Companies
+                        </legend>
+                        <form #form="ngForm" (ngSubmit)="saveCompany(form)" class="{{submit?'submited':''}}">
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="Name">Name <span class="help-block">*</span></label>
+                                    <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="companyForm.Name"
+                                        required>
+                                    <!-- <span class="help-block" *ngIf="form.controls.Name&&form.controls.Name.invalid &&( form.controls.Name.touched|| form.controls.Name.dirty||form.submitted)">required</span> -->
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="Name2">Name 2</label>
+                                    <input name="Name2" placeholder="Name 2" type="text" class="form-control"
+                                        [(ngModel)]="companyForm.Name2">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="Phone">Phone <span class="help-block">*</span></label>
+                                    <input name="Phone" placeholder="Phone" type="text" class="form-control"
+                                        [(ngModel)]="companyForm.Phone" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="CountryCode">Phone Code<span class="help-block">*</span></label>
+                                    <input name="CountryCode" placeholder="Phone Code" type="text" class="form-control"
+                                        [(ngModel)]="companyForm.CountryCode" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="Mobile">Mobile<span class="help-block">*</span></label>
+                                    <input name="Mobile" placeholder="Mobile" type="text" class="form-control"
+                                        [(ngModel)]="companyForm.Mobile" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="Fax">Fax<span class="help-block">*</span></label>
+                                    <input name="Fax" placeholder="Fax" type="text" class="form-control" [(ngModel)]="companyForm.Fax"
+                                        required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="Email">Email<span class="help-block">*</span></label>
+                                    <input name="Email" placeholder="Email" type="email" class="form-control"
+                                        [(ngModel)]="companyForm.Email" required>
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="Website">Website </label>
+                                    <input name="Website" placeholder="Website" type="text" class="form-control"
+                                        [(ngModel)]="companyForm.Website">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="Address">Address</label>
+                                    <input name="Address" placeholder="Address" type="text" class="form-control"
+                                        [(ngModel)]="companyForm.Address">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="Address2">Address2</label>
+                                    <input name="Address2" placeholder="Address2" type="text" class="form-control"
+                                        [(ngModel)]="companyForm.Address2">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="CODE">Code</label>
+                                    <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="companyForm.Code">
+                                </div>
+                                <div class="form-group col-md-3">
+                                    <label for="CurrencyCode">Currency Code </label>
+
+                                    <select name="CurrencyCode" placeholder="Currency Code" class="form-control"
+                                        [(ngModel)]="companyForm.CurrencyCode">
+                                        <option [ngValue]="undefined">Select</option>
+                                        <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+                                    </select>
+
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    <label for="CountryID">Country</label>
+                                    <select name="CountryID" class="form-control" [(ngModel)]="companyForm.CountryID">
+                                        <option [ngValue]="undefined">Select</option>
+
+                                        <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-9">
+                                    <label for="Logo">Logo</label>
+
+                                    <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                        <div class="form-control" data-trigger="fileinput">
+
+                                            <span class="fileinput-filename">
+                                                <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                                                {{replaceFileName(companyForm.Logo)}}
+                                            </span>
+                                        </div>
+
+                                        <span class="input-group-addon btn btn-default btn-file" *ngIf="!companyForm.Logo">
+                                            <label for="Logo" class="custom-file-upload">
+                                                <i class="fa fa-cloud-upload"></i> Upload
+                                            </label>
+
+                                        </span>
+                                        <input id="Logo" name="Logo" type="file" [(ngModel)]="companyForm.Logo"
+                                            ng2FileSelect [uploader]="uploader">
+                                        <a *ngIf="companyForm.Logo" (click)="companyForm.Logo=null" class="input-group-addon btn btn-default fileinput-exists"
+                                            data-dismiss="fileinput">Remove</a>
+                                    </div>
+
+                                </div>
+                                
+
+
+                                <mat-accordion>
+                                    <mat-expansion-panel>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Password Setup
+                                            </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                        <div class="row">
+    
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordMinLength">Password Min length</label>
+                                                <input name="PasswordMinLength" placeholder="Password Min length" type="number"
+                                                    class="form-control" [(ngModel)]="companyForm.PasswordMinLength">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordMinUpperCase">Password Min Upper case</label>
+                                                <input name="PasswordMinUpperCase" placeholder="Password Min Upper case" type="number"
+                                                    class="form-control" [(ngModel)]="companyForm.PasswordMinUpperCase">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordMinLowerCase">Password Min Lower case</label>
+                                                <input name="PasswordMinLowerCase" placeholder="Password Min Lower case" type="number"
+                                                    class="form-control" [(ngModel)]="companyForm.PasswordMinLowerCase">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordMinNumbers">Password Min Numbers</label>
+                                                <input name="PasswordMinNumbers" placeholder="Password Min Numbers" type="number"
+                                                    class="form-control" [(ngModel)]="companyForm.PasswordMinNumbers">
+                                            </div>
+    
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordMinSpecialCharacters">Password Min Special Characters</label>
+                                                <input name="PasswordMinSpecialCharacters" placeholder="Password Min Special Characters"
+                                                    type="number" class="form-control" [(ngModel)]="companyForm.PasswordMinSpecialCharacters">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordExpiryDays">Password Expiry Days</label>
+                                                <input name="PasswordExpiryDays" placeholder="Password Expiry Days" type="number"
+                                                    class="form-control" [(ngModel)]="companyForm.PasswordExpiryDays">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordFailedLoginAttempts">Password Failed login attempts</label>
+                                                <input name="PasswordFailedLoginAttempts" placeholder="Password Failed login attempts"
+                                                    type="number" class="form-control" [(ngModel)]="companyForm.PasswordFailedLoginAttempts">
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <label for="PasswordRepeats">Password Repeats</label>
+                                                <input name="PasswordRepeats" placeholder="Password Repeats" type="number"
+                                                    class="form-control" [(ngModel)]="companyForm.PasswordRepeats">
+                                            </div>
+    
+    
+                                        </div>
+                                    </mat-expansion-panel>
+                                </mat-accordion>
+                                </div>
+                            <div class="row">
+                                
+                                <div class="col-md-11 text-right">
+                                    <br>
+                                    <br>
+                                    <div class="btn-group">
+                                        <input class="btn btn-default" type="reset" (click)="companyForm={};submit=false;resetForm(form)"
+                                            value="Reset" />
+                                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </fieldset>
+
+                    <br>
+
+                    <mat-tab-group (selectedTabChange)="showBranchAndDepartmentForm($event)">
+                        <mat-tab label="Companies">
+
+                            <div class="col-md-12">
+                                <div class="html5buttons">
+                                    <br>
+                                    <div class="dt-buttons btn-group">
+                                        <button class="btn btn-default" [disabled]="!selection.hasValue()"
+                                            mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
+                                            placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                                            <img src="assets/images/Trash-can.png"></button>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','company')"
+                                            placement="bottom" ngbTooltip="Export to CSV"><span>
+                                                <img src="assets/images/csv.jpg"></span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','company')"
+                                            placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','company')"
+                                            placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                                        <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
+                                                    src="assets/images/print.jpg"></span></a>
+                                    </div>
+                                </div>
+                                <br>
+                                <mat-form-field>
+                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                                </mat-form-field>
+                                <div class="x">
+                                    <div class="table-container">
+                                        <table mat-table #table [dataSource]="companiesDataSource" matSort>
+
+                                            <ng-container matColumnDef="select">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                                    </mat-checkbox>
+                                                </th>
+                                                <td style="width: 5%" mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                                        [checked]="selection.isSelected(row)">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                                                <td style="width: 5%" mat-cell *matCellDef="let element">
+                                                    {{element.ID}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="NAME">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                                                <td style="width: 15%" mat-cell *matCellDef="let element">
+                                                    {{element.Name}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="NAME2">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                                                <td style="width: 15%" mat-cell *matCellDef="let element">
+                                                    {{element.Name2}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="ST_CNT_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    {{getCountryName(element.CountryID)}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="ST_CUR_CODE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Currency code
+                                                </th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{element.CurrencyCode}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="PHONE_CODE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone code </th>
+                                                <td style="width: 5%" mat-cell *matCellDef="let element">
+                                                    {{element.CountryCode}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="PHONE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{element.Phone}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="MOBILE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{element.Mobile}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="EMAIL">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{element.Email}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="actions">
+                                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                                <td style="width: 20%" mat-cell *matCellDef="let element">
+                                                    <i (click)="updateCompany(element)" class="fa fa-edit" placement="left"
+                                                        ngbTooltip="Edit"></i>
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove"
+                                                        mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                        [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                        (confirm)="deleteCompany(element.ID)" ngbTooltip="Delete"></i>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="companyTableColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: companyTableColumns;" (click)="updateCompany(row)"
+                                                class=" mat-row {{companyForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                                        </table>
+                                    </div>
+                                    <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]"
+                                        [showFirstLastButtons]="true"></mat-paginator>
+
+                                </div>
+                            </div>
+
+                        </mat-tab>
+                        <mat-tab label="Company Branches">
+                            <div class="col-md-12">
+                                <div class="html5buttons">
+                                    <br>
+                                    <div class="dt-buttons btn-group">
+                                        <button class="btn btn-default" [disabled]="!selection2.hasValue()"
+                                            mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
+                                            placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                                            <img src="assets/images/Trash-can.png"></button>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','companybranch')"
+                                            placement="bottom" ngbTooltip="Export to CSV"><span>
+                                                <img src="assets/images/csv.jpg"></span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','companybranch')"
+                                            placement="bottom" ngbTooltip="Export to Excel"><span><img src="
+                                          assets/images/ExcelLogoSmall.scale-80.png">
+                                            </span> </a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','companybranch')"
+                                            placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                                        <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
+                                                    src="assets/images/print.jpg"></span></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field>
+                                        <mat-select placeholder="Companies" (selectionChange)="reloadCompanyBranchTable(companyBranchForm.CompanyID)"
+                                            [(ngModel)]="companyBranchForm.CompanyID">
+                                            <mat-option [value]=""> All </mat-option>
+                                            <mat-option *ngFor="let company of companies" [value]="company.ID">
+                                                {{company.Name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="x">
+                                    <div class="table-container">
+                                        <table mat-table #table2 [dataSource]="companyBranchesDataSource" matSort>
+
+                                            <ng-container matColumnDef="select">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                                                        [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                                                    </mat-checkbox>
+                                                </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                                                        [checked]="selection2.isSelected(row)">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="NAME">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="NAME2">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ST_COM_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Company</th>
+                                                <td mat-cell *matCellDef="let element">{{getCompanyName(element.CompanyID)}}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="ST_CNT_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
+                                                <td mat-cell *matCellDef="let element">{{getCountryName(element.CountryID)}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ST_CTY_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    {{getCityName(element.CityID)}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="CODE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{element.Code}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="PHONE">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
+                                                <td style="width: 10%" mat-cell *matCellDef="let element">
+                                                    {{element.Phone}} </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="actions">
+                                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <i (click)="updateCompanyBranch(element)" class="fa fa-edit"
+                                                        placement="left" ngbTooltip="Edit"></i>
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove"
+                                                        mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                        [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                        (confirm)="deleteCompanyBranch(element.ID)" ngbTooltip="Delete"></i>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="companyBranchTableColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: companyBranchTableColumns;"
+                                                (click)="updateCompanyBranch(row)" class=" mat-row {{companyBranchForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                                        </table>
+                                    </div>
+                                    <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]"
+                                        [showFirstLastButtons]="true"></mat-paginator>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+
+
+                                <div class="col-md-12 extra-form" *ngIf="extraForm==='CompanyBranch'">
+
+                                    <fieldset class="animated fadeInDown">
+                                        <legend>
+                                            Company Branches
+                                        </legend>
+                                        <form #form="ngForm" (ngSubmit)="saveCompanyBranch(form)" class="{{submit2?'submited':''}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="Name">Name <span class="help-block">*</span></label>
+                                                    <input name="Name" placeholder="Name" type="text" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Name" required>
+                                                    <!-- <span class="help-block" *ngIf="form.controls.Name&&form.controls.Name.invalid &&( form.controls.Name.touched|| form.controls.Name.dirty||form.submitted)">required</span> -->
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="Name2">Name 2</label>
+                                                    <input name="Name2" placeholder="Name 2" type="text" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Name2">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="CompanyID">Company <span class="help-block">*</span></label>
+                                                    <select name="CompanyID" class="form-control" [(ngModel)]="companyBranchForm.CompanyID"
+                                                        required>
+                                                        <option [ngValue]="undefined">Select</option>
+
+                                                        <option *ngFor="let company of companies" [ngValue]="company.ID">{{company.Name}}</option>
+                                                    </select>
+                                                    <!-- <span class="help-block" *ngIf="form.controls.ST_CNT_ID&&form.controls.ST_CNT_ID.invalid &&( form.controls.ST_CNT_ID.touched|| form.controls.ST_CNT_ID.dirty||form.submitted)">required</span> -->
+                                                </div>
+
+
+                                                <div class="form-group col-md-3">
+                                                    <label for="CountryID">Country </label>
+                                                    <select name="CountryID" class="form-control" [(ngModel)]="companyBranchForm.CountryID"
+                                                        (ngModelChange)="loadCities($event)">
+                                                        <option [ngValue]="undefined">Select</option>
+
+                                                        <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="CityID">City </label>
+                                                    <select name="CityID" class="form-control" [(ngModel)]="companyBranchForm.CityID">
+                                                        <option [ngValue]="undefined">Select</option>
+
+                                                        <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.Name}}</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="CurrencyCode">Currency Code </label>
+
+                                                    <select name="CurrencyCode" placeholder="Currency Code" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.CurrencyCode">
+                                                        <option [ngValue]="undefined">Select</option>
+                                                        <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="Code">Code</label>
+                                                    <input name="Code" placeholder="Code" type="text" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Code">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="Phone">Phone <span class="help-block">*</span></label>
+                                                    <input name="Phone" placeholder="Phone" type="text" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Phone" required>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="Fax">Fax <span class="help-block">*</span></label>
+                                                    <input name="Fax" placeholder="Fax" type="text" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Fax" required>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="Email">Email <span class="help-block">*</span></label>
+                                                    <input name="Email" placeholder="Email" type="email" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Email" required>
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="Address">Address</label>
+                                                    <input name="Address" placeholder="Address" type="text" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Address">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="Address2">Address2</label>
+                                                    <input name="Address2" placeholder="Address2" type="text" class="form-control"
+                                                        [(ngModel)]="companyBranchForm.Address2">
+                                                </div>
+
+
+                                                <div class="row">
+
+
+                                                <div class="col-md-11 text-right">
+                                                    <br>
+                                                    <br>
+                                                    <input class="btn btn-default" type="reset" (click)="companyBranchForm={};submit2=false;resetForm(form)"
+                                                        value="Reset" />
+
+                                                    <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                                                </div>  </div>
+                                            </div>
+                                        </form>
+                                    </fieldset>
+                                </div>
+
+                            </div>
+                        </mat-tab>
+                        <mat-tab label="Depratment">
+                            <div class="col-md-12">
+                                <div class="html5buttons">
+                                    <div class="dt-buttons btn-group">
+                                        <button class="btn btn-default" [disabled]="!selection3.hasValue()"
+                                            mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
+                                            placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                                            <img src="assets/images/Trash-can.png"></button>
+                                        <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','department')"
+                                            placement="bottom" ngbTooltip="Export to CSV"><span>
+                                                <img src="assets/images/csv.jpg"></span></a>
+                                        <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','department')"
+                                            placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                                        <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','department')"
+                                            placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                                        <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
+                                                    src="assets/images/print.jpg"></span></a>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field>
+                                            <mat-select placeholder="Company" (selectionChange)="reloadCompanyBranchTable(departmentFrom.CompanyID)"
+                                                [(ngModel)]="departmentFrom.CompanyID">
+                                                <mat-option [value]=""> All </mat-option>
+                                                <mat-option *ngFor="let company of companies" [value]="company.ID">
+                                                    {{company.Name}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                   
+                                </div>
+                                <div class="x">
+                                    <div class="table-container">
+                                        <table mat-table #table3 [dataSource]="departmentDataSource" matSort>
+                                            <ng-container matColumnDef="select">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="$event ? masterToggle3() : null" [checked]="selection3.hasValue() && isAllSelected3()"
+                                                        [indeterminate]="selection3.hasValue() && !isAllSelected3()">
+                                                    </mat-checkbox>
+                                                </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection3.toggle(row) : null"
+                                                        [checked]="selection3.isSelected(row)">
+                                                    </mat-checkbox>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="NAME">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="NAME2">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name2 </th>
+                                                <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="ST_COM_ID">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Company </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    {{getCompanyName(element.CompanyID)}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="EMAIL">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    {{element.Email}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="actions">
+                                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                                <td mat-cell *matCellDef="let element">
+                                                    <i (click)="updateDepartment(element)" class="fa fa-edit" placement="left"
+                                                        ngbTooltip="Edit"></i>
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove"
+                                                        mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                        [popoverMessage]="'are you sure to delete?'" placement="left"
+                                                        (confirm)="deleteDepartment(element.ID)" ngbTooltip="Delete"></i>
+                                                </td>
+                                            </ng-container>
+                                            <tr mat-header-row *matHeaderRowDef="departmentTableColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: departmentTableColumns;" (click)="updateDepartment(row)"
+                                                class=" mat-row {{departmentFrom.ID===row.ID?'active':'not-active'}}"></tr>
+                                        </table>
+                                    </div>
+
+                                    <mat-paginator #paginator3 [pageSizeOptions]="[10, 20, 30 ,40,50]"
+                                        showFirstLastButtons></mat-paginator>
+
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+
+
+
+                                <div class="col-md-12 extra-form" *ngIf="extraForm==='department'">
+                                    <fieldset class="animated fadeInDown">
+                                        <legend>
+                                            Department
+                                        </legend>
+                                        <form #form="ngForm" (ngSubmit)="saveDepartment(form)" class="{{submit3?'submited':''}}">
+                                            <div class="row">
+                                                <div class="form-group col-md-3">
+                                                    <label for="NAME">Name <span class="help-block">*</span></label>
+                                                    <input name="NAME" placeholder="Name" type="text" class="form-control"
+                                                        [(ngModel)]="departmentFrom.Name" required>
+                                                    <!-- <span class="help-block" *ngIf="form.controls.Name&&form.controls.Name.invalid &&( form.controls.Name.touched|| form.controls.Name.dirty||form.submitted)">required</span> -->
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="NAME2">Name 2</label>
+                                                    <input name="NAME2" placeholder="Name2" type="text" class="form-control"
+                                                        [(ngModel)]="departmentFrom.Name2">
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="CompanyID">Company  </label>
+                                                    <select name="CompanyID" placeholder="Company " class="form-control"
+                                                        [(ngModel)]="departmentFrom.CompanyID">
+                                                        <option ngValue="">Select</option>
+                                                        <option *ngFor="let company of companies" [ngValue]="company.ID">{{company.Name}}</option>
+
+                                                    </select>
+                                                    <!-- <span class="help-block" *ngIf="form.controls.ST_CNT_ID&&form.controls.ST_CNT_ID.invalid &&( form.controls.ST_CNT_ID.touched|| form.controls.ST_CNT_ID.dirty||form.submitted)">required</span> -->
+                                                </div>
+                                                <div class="form-group col-md-3">
+                                                    <label for="EMAIL">Email <span class="help-block">*</span></label>
+                                                    <input name="EMAIL" placeholder="Email" type="email" class="form-control"
+                                                        [(ngModel)]="departmentFrom.Email" required>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="form-group col-md-3">
+                                                    <label for="ADDRESS">Address</label>
+                                                    <input name="ADDRESS" placeholder="Address" type="text" class="form-control"
+                                                        [(ngModel)]="departmentFrom.Address">
+                                                </div>
+                                                <div class="col-md-8 text-right">
+                                                    <br>
+                                                    <br>
+                                                    <input class="btn btn-default" type="reset" (click)="departmentFrom={};submit3=false;resetForm(form)"
+                                                        value="Reset" />
+
+                                                    <input class="btn btn-primary " type="submit" value="Save" (click)="submit3=true" />
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
