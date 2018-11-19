@@ -23,7 +23,7 @@ import { CompanybranchComponent } from './companybranch/companybranch.component'
 import { UsersComponent } from './users/users.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { ReportsComponent } from './reports/reports.component';
-import { MenuDetails } from './menuDetails/menuDetails.component';
+import { MenuDetailsComponent } from './menuDetails/menuDetails.component';
 import { GroupsComponent } from './groups/groups.component';
 import { LineOfBusinessComponent } from './line-of-business/line-of-business.component';
 import { TreeviewModule } from 'ngx-treeview';
@@ -37,7 +37,7 @@ import { TreeviewModule } from 'ngx-treeview';
     CompanybranchComponent,
     UsersComponent,
     ReportsComponent,
-    MenuDetails,
+    MenuDetailsComponent,
     GroupsComponent,
     LineOfBusinessComponent
   ],

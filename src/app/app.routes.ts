@@ -19,7 +19,7 @@ import { CompanybranchComponent } from './views/appviews/companybranch/companybr
 import { CompanyBranchResolver } from './_resolvers/companyBranch-reolver.resolver';
 import { UsersComponent } from './views/appviews/users/users.component';
 import { ReportsComponent } from './views/appviews/reports/reports.component';
-import { MenuDetails } from './views/appviews/menuDetails/menuDetails.component';
+import { MenuDetailsComponent } from './views/appviews/menuDetails/menuDetails.component';
 import { GroupsComponent } from './views/appviews/groups/groups.component';
 import { GroubsResolver, UsersResolver } from './_resolvers/users.resolver';
 import { UserTypesResolver } from './_resolvers/userTypes-reolver.resolver';
@@ -95,7 +95,7 @@ export const ROUTES: Routes = [
           company: CompanyResolver,
           country: CountryResolver,
           userTypes: UserTypesResolver,
-          groups: GroubsResolver
+         // groups: GroubsResolver
         }
       },
       {
@@ -105,7 +105,7 @@ export const ROUTES: Routes = [
         }
       },
       {
-        path: 'menuDetails', component: MenuDetails,
+        path: 'menuDetails', component: MenuDetailsComponent,
         resolve: {
           systems: SystemsResolver
         }
@@ -135,7 +135,7 @@ export const ROUTES: Routes = [
           subLineOfBusinessLockUp: SubLineOfBusinessLockUpResolver,
           renisType: RenisTypeResolver,
           excessFrom: ExcessFromResolver,
-        
+
         }
       }
     ]

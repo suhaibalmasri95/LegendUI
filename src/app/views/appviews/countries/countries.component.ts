@@ -58,9 +58,9 @@ export class CountriesComponent implements OnInit {
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
   @ViewChild('table3', { read: MatSort }) sort3: MatSort;
 
-  constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute ,
-    private countryService: CountryService , private cityService: CityService , private areaService: AreaService
-     , private commonService: CommonService) { }
+  constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
+    private countryService: CountryService, private cityService: CityService, private areaService: AreaService
+    , private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -76,7 +76,7 @@ export class CountriesComponent implements OnInit {
     this.submit = false;
     this.submit2 = false;
     this.submit3 = false;
-    this.uploader = new FileUploader({ url: this.commonService.uploadImageUrl});
+    this.uploader = new FileUploader({ url: this.commonService.uploadImageUrl });
 
 
     this.route.data.subscribe(data => {
@@ -249,14 +249,14 @@ export class CountriesComponent implements OnInit {
   }
 
   deleteCountry(id) {
-    this.http.post(this.countryService.countryApiUrl + 'Delete' , {ID: id}).subscribe(res => {
+    this.http.post(this.countryService.countryApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCountryTable();
     });
-   /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCountry?countryID=' + id).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadCountryTable();
-    });*/
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCountry?countryID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadCountryTable();
+     });*/
   }
 
   updateCountry(country: Country) {
@@ -297,14 +297,14 @@ export class CountriesComponent implements OnInit {
   }
 
   deleteCity(id) {
-    this.http.post(this.cityService.cityApiUrl + 'Delete' , {ID: id}).subscribe(res => {
+    this.http.post(this.cityService.cityApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
     });
-   /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCity?cityID=' + id).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
-    });*/
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCity?cityID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadCityTable(this.countryForm.ID ? this.countryForm.ID : null);
+     });*/
   }
 
   updateCity(city: City) {
@@ -343,7 +343,7 @@ export class CountriesComponent implements OnInit {
   }
 
   deleteArea(id) {
-    this.http.post(this.areaService.areaApiUrl + 'Delete' , {ID: id}).subscribe(res => {
+    this.http.post(this.areaService.areaApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadAreaTable(this.cityForm.ID ? this.cityForm.ID : null, this.cityForm.CountryID ? this.cityForm.CountryID : null);
     });
@@ -385,13 +385,15 @@ export class CountriesComponent implements OnInit {
   export(type, data) {
     switch (type) {
       case 'pdf':
-       // this.coreService.ExportToPdf(data, data);
+        // this.coreService.ExportToPdf(data, data);
         break;
       case 'csv':
-       // this.coreService.ExportToCsv(data, data);
+        // this.coreService.ExportToCsv(data, data);
         break;
       case 'excel':
         // this.coreService.ExportToExcel(data, data);
+        console.log(this.countriesDataSource.data);
+
         break;
     }
 
@@ -463,7 +465,7 @@ export class CountriesComponent implements OnInit {
 
 
 
-deleteSelectedData() {
+  deleteSelectedData() {
 
     // tslint:disable-next-line:prefer-const
     let selectedData = [];
@@ -472,25 +474,25 @@ deleteSelectedData() {
         for (let index = 0; index < this.selection.selected.length; index++) {
           selectedData.push(this.selection.selected[index].ID);
         }
-        this.http.post(this.countryService.countryApiUrl + 'DeleteMultiple' ,   {IDs: selectedData} ).subscribe(res => {
+        this.http.post(this.countryService.countryApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadCountryTable();
         });
         break;
-        case 'city':
+      case 'city':
         for (let index = 0; index < this.selection2.selected.length; index++) {
           selectedData.push(this.selection2.selected[index].ID);
         }
-        this.http.post(this.cityService.cityApiUrl + 'DeleteMultiple' ,   {IDs: selectedData} ).subscribe(res => {
+        this.http.post(this.cityService.cityApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadCityTable();
         });
         break;
-        case 'area':
+      case 'area':
         for (let index = 0; index < this.selection3.selected.length; index++) {
           selectedData.push(this.selection3.selected[index].ID);
         }
-        this.http.post(this.areaService.areaApiUrl + 'DeleteMultiple' ,   {IDs: selectedData} ).subscribe(res => {
+        this.http.post(this.areaService.areaApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadAreaTable();
         });

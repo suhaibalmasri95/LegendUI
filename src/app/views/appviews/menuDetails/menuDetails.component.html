@@ -256,10 +256,10 @@
                                                     {{element.Order}} </td>
                                             </ng-container>
 
-                                            <ng-container matColumnDef="SubMenuID">
+                                            <ng-container matColumnDef="System">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>System</th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{getSystemName(element.SubMenuID)}}
+                                                    {{getSystemName(element.SubMenuID,1).Name}}
                                                 </td>
                                             </ng-container>
 
@@ -436,13 +436,13 @@
                                             <ng-container matColumnDef="System">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> System </th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{getSystemName(element.SubMenuID)}}
+                                                    {{getSystemName(element.SubMenuID,1).Name}}
                                                 </td>
                                             </ng-container>
                                             <ng-container matColumnDef="Module">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Module </th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{getSystemName(element.SubMenuID)}}
+                                                    {{getSystemName(element.SubMenuID,2).Name}}
                                                 </td>
                                             </ng-container>
                                             <ng-container matColumnDef="actions">
@@ -714,20 +714,20 @@
                                         <ng-container matColumnDef="System">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> System </th>
                                             <td mat-cell *matCellDef="let element">
-                                                {{getSystemName(element.System)}}
+                                                {{getSystemName(element.SubMenuID,1).Name}}
                                             </td>
                                         </ng-container>
                                         <ng-container matColumnDef="Module">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Module </th>
                                             <td mat-cell *matCellDef="let element">
-                                                {{getSystemName(element.SubMenuID)}}
+                                                {{getSystemName(element.SubMenuID,2).Name}}
                                             </td>
                                         </ng-container>
 
                                         <ng-container matColumnDef="subModule">
                                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub Module </th>
                                             <td mat-cell *matCellDef="let element">
-                                                {{getSystemName(element.SubMenuID)}}
+                                                {{getSystemName(element.SubMenuID,3).Name}}
                                             </td>
                                         </ng-container>
 
@@ -959,24 +959,24 @@
                                             <ng-container matColumnDef="System">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> System </th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{getSystemName(element.SubMenuID)}} </td>
+                                                    {{getSystemName(element.SubMenuID,1).Name}}</td>
                                             </ng-container>
                                             <ng-container matColumnDef="Module">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Module </th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{getSystemName(element.SubMenuID)}} </td>
+                                                    {{getSystemName(element.SubMenuID,2).Name}}</td>
                                             </ng-container>
 
                                             <ng-container matColumnDef="subModule">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub Module </th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{getSystemName(element.SubMenuID)}} </td>
+                                                    {{getSystemName(element.SubMenuID,3).Name}}</td>
                                             </ng-container>
 
                                             <ng-container matColumnDef="page">
                                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Page </th>
                                                 <td mat-cell *matCellDef="let element">
-                                                    {{getSystemName(element.SubMenuID)}} </td>
+                                                    {{getSystemName(element.SubMenuID,4).Name}} </td>
                                             </ng-container>
 
                                             <ng-container matColumnDef="actions">

@@ -1,6 +1,5 @@
-import { CoreService } from './../../../_services/CoreServices.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -227,14 +226,14 @@ export class LockupAndCurrencyComponent implements OnInit {
   }
 
   deleteMajorCode(id) {
-    this.http.post(this.lockUpService.lockUpApiUrl + 'Delete' , {ID: id}).subscribe(res => {
+    this.http.post(this.lockUpService.lockUpApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadMajorCodeTable();
     });
-   /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteLockUp?lockupID=' + id).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadMajorCodeTable();
-    });*/
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteLockUp?lockupID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadMajorCodeTable();
+     });*/
   }
 
   updateMajorCode(majorCode: LockUp) {
@@ -282,14 +281,14 @@ export class LockupAndCurrencyComponent implements OnInit {
   }
 
   deleteMinorCode(id) {
-    this.http.post(this.lockUpService.lockUpApiUrl + 'Delete' , {ID: id}).subscribe(res => {
+    this.http.post(this.lockUpService.lockUpApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadMinorCodeTable(this.majorCodeForm.ID ? this.majorCodeForm.ID : null);
     });
-   /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteLockUp?lockupID=' + id).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadMinorCodeTable(this.majorCodeForm.ID ? this.majorCodeForm.ID : null);
-    });*/
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteLockUp?lockupID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadMinorCodeTable(this.majorCodeForm.ID ? this.majorCodeForm.ID : null);
+     });*/
   }
 
   updateMinorCode(minorCode: LockUp) {
@@ -333,14 +332,11 @@ export class LockupAndCurrencyComponent implements OnInit {
   }
 
   deleteCurrency(id) {
-    this.http.post(this.currencyService.currencyApiUrl + 'Delete' , {ID: id}).subscribe(res => {
+    this.http.post(this.currencyService.currencyApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCurrenciesTable();
     });
-   /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteCurrency?currencyCode=' + id).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadCurrenciesTable();
-    });*/
+
   }
 
   updateCurrency(currency: Currency) {
@@ -478,38 +474,36 @@ export class LockupAndCurrencyComponent implements OnInit {
 
   deleteSelectedData() {
 
-
-      // tslint:disable-next-line:prefer-const
-      let selectedData = [];
-      switch (this.extraForm) {
-        case '':
-          for (let index = 0; index < this.selection.selected.length; index++) {
-            selectedData.push(this.selection.selected[index].ID);
-          }
-          this.http.post(this.lockUpService.lockUpApiUrl + 'DeleteMultiple' ,   {IDs: selectedData} ).subscribe(res => {
-            this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-            this.reloadMajorCodeTable();
-          });
-          break;
-          case 'minorCodes':
-          for (let index = 0; index < this.selection2.selected.length; index++) {
-            selectedData.push(this.selection2.selected[index].ID);
-          }
-          this.http.post(this.lockUpService.lockUpApiUrl + 'DeleteMultiple' ,   {IDs: selectedData} ).subscribe(res => {
-            this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-            this.reloadMinorCodeTable();
-          });
-          break;
-          case 'currencies':
-          for (let index = 0; index < this.selection3.selected.length; index++) {
-            selectedData.push(this.selection3.selected[index].Code);
-          }
-          this.http.post(this.currencyService.currencyApiUrl + 'DeleteMultiple' ,   {Codes: selectedData} ).subscribe(res => {
-            this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-            this.reloadCurrenciesTable();
-          });
-          break;
-      }
+    const selectedData = [];
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++) {
+          selectedData.push(this.selection.selected[index].ID);
+        }
+        this.http.post(this.lockUpService.lockUpApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadMajorCodeTable();
+        });
+        break;
+      case 'minorCodes':
+        for (let index = 0; index < this.selection2.selected.length; index++) {
+          selectedData.push(this.selection2.selected[index].ID);
+        }
+        this.http.post(this.lockUpService.lockUpApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadMinorCodeTable();
+        });
+        break;
+      case 'currencies':
+        for (let index = 0; index < this.selection3.selected.length; index++) {
+          selectedData.push(this.selection3.selected[index].Code);
+        }
+        this.http.post(this.currencyService.currencyApiUrl + 'DeleteMultiple', { Codes: selectedData }).subscribe(res => {
+          this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadCurrenciesTable();
+        });
+        break;
+    }
 
 
   }

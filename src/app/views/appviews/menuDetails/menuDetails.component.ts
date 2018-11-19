@@ -13,7 +13,7 @@ import { MenuDetailsService } from '../../../_services/_organization/MenuDetails
   templateUrl: 'menuDetails.component.html'
 })
 
-export class MenuDetails implements OnInit {
+export class MenuDetailsComponent implements OnInit {
   systemForm: System;
   systems: System[];
 
@@ -38,16 +38,16 @@ export class MenuDetails implements OnInit {
   systemTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'Url', 'actions'];
   systemsDataSource: MatTableDataSource<System>;
 
-  moduleTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'SubMenuID', 'actions'];
+  moduleTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'System', 'actions'];
   modulesDataSource: MatTableDataSource<System>;
 
   subModuleTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'System', 'Module', 'actions'];
   subModulesDataSource: MatTableDataSource<System>;
 
-  pageTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'System', 'Module', 'actions'];
+  pageTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'System', 'Module', 'subModule', 'actions'];
   pagesDataSource: MatTableDataSource<System>;
 
-  actionTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'System', 'Module', 'actions'];
+  actionTableColumns = ['select', 'ID', 'Name', 'Name2', 'Order', 'System', 'Module', 'subModule', 'page', 'actions'];
   actionsDataSource: MatTableDataSource<System>;
 
   AddUpdateUrl: string;
@@ -74,6 +74,7 @@ export class MenuDetails implements OnInit {
   @ViewChild('table4', { read: MatSort }) sort4: MatSort;
   @ViewChild('table5', { read: MatSort }) sort5: MatSort;
 
+
   constructor(public snackBar: MatSnackBar, private http: HttpClient,
     private route: ActivatedRoute, private menuDetailsService: MenuDetailsService) { }
 
@@ -98,6 +99,10 @@ export class MenuDetails implements OnInit {
     this.submit3 = false;
     this.submit4 = false;
     this.submit5 = false;
+
+    this.modules = [];
+    this.subModules = [];
+    this.pages = [];
 
     this.route.data.subscribe(data => {
       this.systems = data.systems;
@@ -140,15 +145,33 @@ export class MenuDetails implements OnInit {
           break;
         case 2:
           this.extraForm = 'subModule';
+          if (this.modules.length === 0) {
+            this.reloadModuleTable(this.systemForm.ID ? this.systemForm.SubMenuID : null);
+          }
           this.reloadSubModuleTable(this.moduleForm.ID ? this.moduleForm.SubMenuID : null);
 
           break;
         case 3:
           this.extraForm = 'page';
+          if (this.modules.length === 0) {
+            this.reloadModuleTable(null);
+          }
+          if (this.subModules.length === 0) {
+            this.reloadSubModuleTable(null);
+          }
           this.reloadPageTable(this.subModuleForm.ID ? this.subModuleForm.SubMenuID : null);
           break;
         case 4:
           this.extraForm = 'action';
+          if (this.modules.length === 0) {
+            this.reloadModuleTable(null);
+          }
+          if (this.subModules.length === 0) {
+            this.reloadSubModuleTable(null);
+          }
+          if (this.pages.length === 0) {
+            this.reloadPageTable(null);
+          }
           this.reloadActionTable(this.pageForm.ID ? this.pageForm.SubMenuID : null);
           break;
       }
@@ -162,8 +185,10 @@ export class MenuDetails implements OnInit {
     this.systemsDataSource.sort = this.sort;
     this.selection = new SelectionModel<System>(true, []);
     this.systemsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId])
+      if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
@@ -175,8 +200,10 @@ export class MenuDetails implements OnInit {
     this.modulesDataSource.sort = this.sort2;
     this.selection2 = new SelectionModel<System>(true, []);
     this.modulesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId])
+      if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
@@ -188,8 +215,10 @@ export class MenuDetails implements OnInit {
     this.subModulesDataSource.sort = this.sort3;
     this.selection3 = new SelectionModel<System>(true, []);
     this.subModulesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId])
+      if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
@@ -202,8 +231,10 @@ export class MenuDetails implements OnInit {
     this.pagesDataSource.sort = this.sort4;
     this.selection4 = new SelectionModel<System>(true, []);
     this.pagesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId])
+      if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
@@ -216,8 +247,10 @@ export class MenuDetails implements OnInit {
     this.actionsDataSource.sort = this.sort5;
     this.selection5 = new SelectionModel<System>(true, []);
     this.actionsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId])
+      if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
@@ -235,19 +268,19 @@ export class MenuDetails implements OnInit {
     });
   }
 
-  reloadSubModuleTable(SubMenuID) {
+  reloadSubModuleTable(SubMenuID = null) {
     this.menuDetailsService.load(3, SubMenuID).subscribe(data => {
       this.renderSubModuleTable(data);
     });
   }
 
-  reloadPageTable(SubMenuID) {
+  reloadPageTable(SubMenuID = null) {
     this.menuDetailsService.load(4, SubMenuID).subscribe(data => {
       this.renderPageTable(data);
     });
   }
 
-  reloadActionTable(SubMenuID) {
+  reloadActionTable(SubMenuID = null) {
     this.menuDetailsService.load(5, SubMenuID).subscribe(data => {
       this.renderActionTable(data);
     });
@@ -289,8 +322,8 @@ export class MenuDetails implements OnInit {
     this.systemForm = system;
     // this.systemForm.Name = system.Name;
     // this.systemForm.Name2 = system.Name2;
-    //this.systemForm.REFERNCE_NO = system.REFERNCE_NO;
-    //this.systemForm.LOC_STATUS = system.LOC_STATUS;
+    // this.systemForm.REFERNCE_NO = system.REFERNCE_NO;
+    // this.systemForm.LOC_STATUS = system.LOC_STATUS;
     this.systemForm.selected = true;
   }
 
@@ -319,8 +352,8 @@ export class MenuDetails implements OnInit {
     // this.moduleForm.Name = module.Name;
     // this.moduleForm.Name2 = module.Name2;
     // this.moduleForm.ST_CNT_ID = module.ST_CNT_ID;
-    //this.moduleForm.REFERNCE_NO = module.REFERNCE_NO;
-    //this.moduleForm.LOC_STATUS = module.LOC_STATUS;
+    // this.moduleForm.REFERNCE_NO = module.REFERNCE_NO;
+    // this.moduleForm.LOC_STATUS = module.LOC_STATUS;
     this.moduleForm.selected = true;
   }
 
@@ -458,10 +491,41 @@ export class MenuDetails implements OnInit {
 
   }
 
-  getSystemName(id: number) {
-    for (let index = 0; index < this.systems.length; index++)
-      if (this.systems[index].ID === id)
-        return this.systems[index].Name;
+  getSystemName(id: number, type: number) {
+    let tempSystem: System;
+    tempSystem = new System;
+
+    for (let index = 0; index < this.systems.length; index++) {
+      if (this.systems[index].ID === id) {
+        tempSystem = this.systems[index]; break;
+      }
+    }
+
+    for (let index = 0; index < this.modules.length; index++) {
+      if (this.modules[index].ID === id) {
+        tempSystem = this.modules[index]; break;
+      }
+    }
+
+    for (let index = 0; index < this.subModules.length; index++) {
+      if (this.subModules[index].ID === id) {
+        tempSystem = this.subModules[index]; break;
+      }
+    }
+
+    for (let index = 0; index < this.pages.length; index++) {
+      if (this.pages[index].ID === id) {
+        tempSystem = this.pages[index]; break;
+      }
+    }
+
+    if (type === tempSystem.Type) {
+      return tempSystem;
+    } else if (type > 0) {
+      return this.getSystemName(tempSystem.SubMenuID, type - 1);
+    } else {
+      return { ID: null, Name: '-' };
+    }
   }
 
   isAllSelected() {
@@ -508,56 +572,61 @@ export class MenuDetails implements OnInit {
 
   deleteSelectedData() {
 
-    var selectedData = [];
+    const selectedData = [];
 
 
-    // switch (this.extraForm) {
-    //   case '':
-    //     for (let index = 0; index < this.selection.selected.length; index++)
-    //       selectedData.push(this.selection.selected[index].ID)
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++) {
+          selectedData.push(this.selection.selected[index].ID);
+        }
 
-    //     this.http.request('DELETE', this.menuDetailsService.DeleteUrl + '/DeleteSystems', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadSystemTable();
-    //     });
-    //     break;
-    //   case 'module':
-    //     for (let index = 0; index < this.selection2.selected.length; index++)
-    //       selectedData.push(this.selection2.selected[index].ID)
+        this.http.post(this.menuDetailsService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadSystemTable();
+        });
+        break;
+      case 'module':
+        for (let index = 0; index < this.selection2.selected.length; index++) {
+          selectedData.push(this.selection2.selected[index].ID);
+        }
 
-    //     this.http.request('DELETE', this.menuDetailsService.DeleteUrl + '/DeleteModules', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadModuleTable();
-    //     });
-    //     break;
-    //   case 'subModule':
-    //     for (let index = 0; index < this.selection3.selected.length; index++)
-    //       selectedData.push(this.selection3.selected[index].ID)
+        this.http.post(this.menuDetailsService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadModuleTable(this.systemForm.ID ? this.systemForm.SubMenuID : null);
+        });
+        break;
+      case 'subModule':
+        for (let index = 0; index < this.selection3.selected.length; index++) {
+          selectedData.push(this.selection3.selected[index].ID);
+        }
 
-    //     this.http.request('DELETE', this.menuDetailsService.DeleteUrl + '/DeleteSubModules', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadSubModuleTable();
-    //     });
-    //     break;
-    //   case 'page':
-    //     for (let index = 0; index < this.selection4.selected.length; index++)
-    //       selectedData.push(this.selection4.selected[index].ID)
+        this.http.post(this.menuDetailsService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadSubModuleTable(this.moduleForm.ID ? this.moduleForm.SubMenuID : null);
+        });
+        break;
+      case 'page':
+        for (let index = 0; index < this.selection4.selected.length; index++) {
+          selectedData.push(this.selection4.selected[index].ID);
+        }
 
-    //     this.http.request('DELETE', this.menuDetailsService.DeleteUrl + '/DeleteSubModules', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadPageTable();
-    //     });
-    //     break;
-    //   case 'action':
-    //     for (let index = 0; index < this.selection5.selected.length; index++)
-    //       selectedData.push(this.selection5.selected[index].ID)
+        this.http.post(this.menuDetailsService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadPageTable(this.subModuleForm.ID ? this.subModuleForm.SubMenuID : null);
+        });
+        break;
+      case 'action':
+        for (let index = 0; index < this.selection5.selected.length; index++) {
+          selectedData.push(this.selection5.selected[index].ID);
+        }
 
-    //     this.http.request('DELETE', this.menuDetailsService.DeleteUrl + '/DeleteSubModules', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadActionTable();
-    //     });
-    //     break;
-    // }
+        this.http.post(this.menuDetailsService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadActionTable(this.pageForm.ID ? this.pageForm.SubMenuID : null);
+        });
+        break;
+    }
 
   }
 

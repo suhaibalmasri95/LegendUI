@@ -104,7 +104,7 @@ export class GroupsComponent implements OnInit {
   snackPosition: MatSnackBarHorizontalPosition;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient,
-    private route: ActivatedRoute, private groupService: GroupService, private userService: UserService ) { }
+    private route: ActivatedRoute, private groupService: GroupService, private userService: UserService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -435,22 +435,18 @@ export class GroupsComponent implements OnInit {
 
 
   deleteSelectedData() {
-
-    // var selectedData = [];
-
-    // switch (this.extraForm) {
-    //   case '':
-    //     for (let index = 0; index < this.selection.selected.length; index++)
-    //       selectedData.push(this.selection.selected[index].ID)
-
-    //     this.http.post('DELETE', this.groupService.apiUrl + 'DeleteGroups', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadGroupTable();
-    //     });
-
-    //     break;
-
-    // }
+    const selectedData = [];
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++) {
+          selectedData.push(this.selection.selected[index].ID);
+        }
+        this.http.post(this.groupService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadGroupTable();
+        });
+        break;
+    }
 
   }
 

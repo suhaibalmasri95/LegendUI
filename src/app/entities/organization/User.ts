@@ -1,5 +1,5 @@
-import { IEntity } from "../interfaces/IEntity";
-import { UserGroup } from "./UserGroup";
+import { IEntity } from '../interfaces/IEntity';
+import { UserGroup } from './UserGroup';
 
 export class User implements IEntity {
     selected: boolean;
@@ -17,6 +17,7 @@ export class User implements IEntity {
     CompanyID: number;
     BranchID: number;
     UserRelations: UserGroup[];
+    UserRelationID: number;
     BirthDate: Date;
     Picture: string;
     CountryID: number;
@@ -27,4 +28,5 @@ export class User implements IEntity {
     CreationDate: Date;
     ModifiedBy: string;
     ModificationDate: Date;
+    Branches: number[];
 }

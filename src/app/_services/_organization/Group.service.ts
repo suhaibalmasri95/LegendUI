@@ -11,14 +11,14 @@ export class GroupService {
   apiUrl: string = environment.azureUrl + 'Group/';
   commonapiUrl: string = environment.azureUrl + 'Common/';
   groups: Group[];
-  
+
   constructor(private http: HttpClient) { }
-  
-  
+
+
   load(): Observable<Group[]> {
     return this.http.get<Group[]>(this.apiUrl + 'Load ');
   }
-  
+
   add(group: Group) {
     return this.http.post(this.apiUrl + 'Create', group).map(
       (response) => {

@@ -8,7 +8,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { LineOfBusiness } from '../../../entities/Setup/lineOfBusiness';
 import { SubLineOfBusiness } from '../../../entities/Setup/SubLineOfBusiness';
 import { LockUp } from '../../../entities/organization/LockUp';
-import { Currency } from '../../../entities/organization/Currency';
 import { SubjectType } from '../../../entities/Setup/SubjectType';
 import { SubBusinessService } from '../../../_services/_setup/SubBusiness.service';
 import { LineOfBusinessService } from '../../../_services/_setup/LineOfBusiness.service';
@@ -66,7 +65,7 @@ export class LineOfBusinessComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private SubLineService: SubBusinessService, private lineOfBusService: LineOfBusinessService
-     , private SubjectTypeService: SubjectTypesService) { }
+    , private SubjectTypeService: SubjectTypesService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -152,9 +151,9 @@ export class LineOfBusinessComponent implements OnInit {
     };
   }
 
-  LoadparentSubjectTypes () {
+  LoadparentSubjectTypes() {
     this.SubjectTypeService.load().subscribe(res => {
-    this.parentSubjectTypes = res;
+      this.parentSubjectTypes = res;
     });
   }
   renderSubLineOfBusinessTable(data) {
@@ -203,7 +202,7 @@ export class LineOfBusinessComponent implements OnInit {
   }
 
   reloadSubjectTypeTable(lineOfBusinessId = null, subLineOfBusinessId = null) {
-   this.SubjectTypeService.load(null, lineOfBusinessId, subLineOfBusinessId , 1).subscribe(data => {
+    this.SubjectTypeService.load(null, lineOfBusinessId, subLineOfBusinessId, 1).subscribe(data => {
       this.renderSubjectTypeTable(data);
     });
   }
@@ -221,7 +220,7 @@ export class LineOfBusinessComponent implements OnInit {
     if (this.lineOfBusinessForm.selected) {
       this.AddUpdateUrl = this.lineOfBusService.LineOfApiUrl + 'Update';
     } else {
-      this.AddUpdateUrl = this.lineOfBusService.LineOfApiUrl  + 'Create';
+      this.AddUpdateUrl = this.lineOfBusService.LineOfApiUrl + 'Create';
     }
 
     this.http.post(this.AddUpdateUrl, this.lineOfBusinessForm).subscribe(res => {
@@ -235,7 +234,7 @@ export class LineOfBusinessComponent implements OnInit {
   }
 
   deleteLineOfBusiness(id) {
-    this.http.post(this.lineOfBusService.LineOfApiUrl + 'Delete', {ID: id}).subscribe(res => {
+    this.http.post(this.lineOfBusService.LineOfApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadLineOfBusinessTable();
@@ -249,8 +248,8 @@ export class LineOfBusinessComponent implements OnInit {
     this.lineOfBusinessForm.Name = lineOfBusiness.Name;
     this.lineOfBusinessForm.Name2 = lineOfBusiness.Name2;
     this.lineOfBusinessForm.Code = lineOfBusiness.Code;
-     this.lineOfBusinessForm.Status = lineOfBusiness.Status;
-     this.lineOfBusinessForm.LineOfBusiness = lineOfBusiness.LineOfBusiness;
+    this.lineOfBusinessForm.Status = lineOfBusiness.Status;
+    this.lineOfBusinessForm.LineOfBusiness = lineOfBusiness.LineOfBusiness;
     this.lineOfBusinessForm.Module = lineOfBusiness.Module;
     this.lineOfBusinessForm.selected = true;
   }
@@ -277,7 +276,7 @@ export class LineOfBusinessComponent implements OnInit {
   }
 
   deleteSubLineOfBusiness(id) {
-    this.http.post(this.SubLineService.SubBusinessApiUrl + 'Delete', {ID: id}).subscribe(res => {
+    this.http.post(this.SubLineService.SubBusinessApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadSubLineOfBusinessTable(this.lineOfBusinessForm.ID ? this.lineOfBusinessForm.ID : null);
     });
@@ -321,7 +320,7 @@ export class LineOfBusinessComponent implements OnInit {
   }
 
   deleteSubjectType(id) {
-    this.http.post(this.SubjectTypeService.sebjectTypeApiUrl + 'Delete', {ID: id}).subscribe(res => {
+    this.http.post(this.SubjectTypeService.sebjectTypeApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       // tslint:disable-next-line:max-line-length
@@ -335,20 +334,20 @@ export class LineOfBusinessComponent implements OnInit {
     this.subjectTypeForm.ID = subjectType.ID;
     this.subjectTypeForm.Name = subjectType.Name;
     this.subjectTypeForm.Name2 = subjectType.Name2;
-     this.subjectTypeForm.LineOfBusniessID = subjectType.LineOfBusniessID;
+    this.subjectTypeForm.LineOfBusniessID = subjectType.LineOfBusniessID;
     this.subjectTypeForm.SubLineOfBusniessID = subjectType.SubLineOfBusniessID;
-     this.subjectTypeForm.Parent = subjectType.Parent;
-     this.subjectTypeForm.ExcessPercentage = subjectType.ExcessPercentage;
-     this.subjectTypeForm.MinExcessAmount = subjectType.MinExcessAmount;
-     this.subjectTypeForm.MaxExcessAmount = subjectType.MaxExcessAmount;
-     this.subjectTypeForm.From = subjectType.From;
+    this.subjectTypeForm.Parent = subjectType.Parent;
+    this.subjectTypeForm.ExcessPercentage = subjectType.ExcessPercentage;
+    this.subjectTypeForm.MinExcessAmount = subjectType.MinExcessAmount;
+    this.subjectTypeForm.MaxExcessAmount = subjectType.MaxExcessAmount;
+    this.subjectTypeForm.From = subjectType.From;
     this.subjectTypeForm.selected = true;
   }
 
 
 
   loadSubLinesOfBusiness() {
-    this.SubLineService.load(null , this.lineOfBusinessForm.ID ? this.lineOfBusinessForm.ID : null, null, 1).subscribe(data => {
+    this.SubLineService.load(null, this.lineOfBusinessForm.ID ? this.lineOfBusinessForm.ID : null, null, 1).subscribe(data => {
       this.subLinesOfBusiness = data;
       this.subLinesOfBusinessDataSource = new MatTableDataSource<SubLineOfBusiness>(this.subLinesOfBusiness);
     });
@@ -356,18 +355,18 @@ export class LineOfBusinessComponent implements OnInit {
 
 
 
- export(type, data) {
-     /*switch (type) {
-      case 'pdf':
-        this.coreService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-        this.coreService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-        this.coreService.ExportToExcel(data, data);
-        break;
-    }*/
+  export(type, data) {
+    /*switch (type) {
+     case 'pdf':
+       this.coreService.ExportToPdf(data, data);
+       break;
+     case 'csv':
+       this.coreService.ExportToCsv(data, data);
+       break;
+     case 'excel':
+       this.coreService.ExportToExcel(data, data);
+       break;
+   }*/
 
   }
 
@@ -431,17 +430,8 @@ export class LineOfBusinessComponent implements OnInit {
 
 
 
-
-
-
-
-
-
   deleteSelectedData() {
-
-    // tslint:disable-next-line:prefer-const
-    let selectedData = [];
-
+    const selectedData = [];
 
     switch (this.extraForm) {
       case '':
@@ -449,7 +439,7 @@ export class LineOfBusinessComponent implements OnInit {
           selectedData.push(this.selection.selected[index].ID);
         }
 
-        this.http.post(this.lineOfBusService.LineOfApiUrl + 'DeleteMultiple', {IDs: selectedData} ).subscribe(res => {
+        this.http.post(this.lineOfBusService.LineOfApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadLineOfBusinessTable();
         });
@@ -458,7 +448,7 @@ export class LineOfBusinessComponent implements OnInit {
         for (let index = 0; index < this.selection2.selected.length; index++) {
           selectedData.push(this.selection2.selected[index].ID);
         }
-        this.http.post(this.SubLineService.SubBusinessApiUrl + 'DeleteMultiple', {IDs: selectedData } ).subscribe(res => {
+        this.http.post(this.SubLineService.SubBusinessApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadSubLineOfBusinessTable();
         });
@@ -467,7 +457,7 @@ export class LineOfBusinessComponent implements OnInit {
         for (let index = 0; index < this.selection3.selected.length; index++) {
           selectedData.push(this.selection3.selected[index].ID);
         }
-        this.http.post(this.SubjectTypeService.sebjectTypeApiUrl + 'DeleteMultiple', {IDs: selectedData} ).subscribe(res => {
+        this.http.post(this.SubjectTypeService.sebjectTypeApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadSubjectTypeTable();
         });

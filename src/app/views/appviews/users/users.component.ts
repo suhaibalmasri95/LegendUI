@@ -42,10 +42,10 @@ export class UsersComponent implements OnInit {
   userTableColumns = ['select', 'ID', 'Username', 'Name', 'Name2', 'Company', 'Country', 'email', 'actions'];
   usersDataSource: MatTableDataSource<User>;
 
-  groupsTableColumns = ['select', 'ID', 'Name',];
+  groupsTableColumns = ['select', 'ID', 'Name'];
   groupsDataSource: MatTableDataSource<Group>;
 
-  userGroupsTableColumns = ['select', 'ID', 'Name',];
+  userGroupsTableColumns = ['select', 'ID', 'Name'];
   userGroupsDataSource: MatTableDataSource<Group>;
 
 
@@ -67,7 +67,7 @@ export class UsersComponent implements OnInit {
   dropdownSettings = {};
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute, private countryService: CountryService,
-    private CompanyBranchService: CompanyBranchService, private lockUpService: LockUpService, private userService: UserService,
+    private companyBranchService: CompanyBranchService, private userService: UserService,
     private groupService: GroupService
   ) { }
 
@@ -84,7 +84,7 @@ export class UsersComponent implements OnInit {
       this.userTypes = data.userTypes;
       this.countries = data.country;
       this.companies = data.company;
-      this.groups = data.groups;
+      // this.groups = data.groups;
 
       this.renderUserTable(data.users ? data.users : []);
     });
@@ -141,6 +141,7 @@ export class UsersComponent implements OnInit {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
@@ -161,6 +162,7 @@ export class UsersComponent implements OnInit {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
 
@@ -172,21 +174,27 @@ export class UsersComponent implements OnInit {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
       }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
 
   reloadGroupsTables(userId) {
-    this.groupService.load().subscribe(data => {
-      this.userGroups = data;
-      this.renderGroupsTables(this.userGroups, this.groups);
-    });
+    if (userId) {
+      this.userService.loadUserGroups(userId).subscribe(data => {
+        this.userGroups = data.RelatedGroups;
+        this.groups = data.UnRelatedGroups;
+        this.renderGroupsTables(this.userGroups, this.groups);
+      });
+    } else {
+      this.renderGroupsTables([], []);
+    }
   }
 
 
   loadCompanyBranches() {
-
-    this.CompanyBranchService.loadCopmanyBranches(this.userForm.CompanyID ? Number(this.userForm.CompanyID) : null, null, 1).subscribe(data => {
+    // tslint:disable-next-line:max-line-length
+    this.companyBranchService.loadCopmanyBranches(null, this.userForm.CompanyID ? Number(this.userForm.CompanyID) : null, 1).subscribe(data => {
       this.companyBranches = data;
       if (this.userForm.UserRelations) {
         this.selectedItems = [];
@@ -194,8 +202,8 @@ export class UsersComponent implements OnInit {
           const element = this.userForm.UserRelations[index];
           for (let index2 = 0; index2 < this.companyBranches.length; index2++) {
             const element2 = this.companyBranches[index2];
-            if (element.UserRelationID == element2.ID) {
-              this.selectedItems.push({ 'ID': element2.ID, 'Name': element2.Name })
+            if (element.UserRelationID === element2.ID) {
+              this.selectedItems.push({ 'ID': element2.ID, 'Name': element2.Name });
             }
           }
         }
@@ -210,23 +218,24 @@ export class UsersComponent implements OnInit {
       return;
     }
     this.userForm = this.userForm.selected ? this.userForm : Object.assign({}, form.value);
-    this.userForm.CreatedBy = "Admin";
+    this.userForm.CreatedBy = 'Admin';
 
     this.userForm.EffectiveDate = new Date(this.userForm.EffectiveDate);
     this.userForm.ExpiryDate = new Date(this.userForm.ExpiryDate);
 
     this.userForm.UserRelations = [];
+    this.userForm.Branches = [];
     for (let index = 0; index < this.selectedItems.length; index++) {
       const element = this.selectedItems[index];
-      const obj = new UserGroup;
-      obj.UserRelationID = element.ID;
-      this.userForm.UserRelations.push(obj);
+      this.userForm.Branches.push(element.ID);
     }
+    this.userForm.UserRelationID = 1;
 
-    if (this.userForm.selected)
+    if (this.userForm.selected) {
       this.AddUpdateUrl = this.userService.userApiUrl + 'Update';
-    else
+    } else {
       this.AddUpdateUrl = this.userService.userApiUrl + 'Create';
+    }
 
     this.http.post(this.AddUpdateUrl, this.userForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
@@ -318,19 +327,20 @@ export class UsersComponent implements OnInit {
 
 
   deleteSelectedData() {
-    /* var selectedData = [];
-    
-     for (let index = 0; index < this.selection.selected.length; index++)
-       selectedData.push(this.selection.selected[index].ID)
-     this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteUsers', { body: selectedData }).subscribe(res => {
-       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-       this.reloadUserTable();
-     });*/
+    const selectedData = [];
+
+    for (let index = 0; index < this.selection.selected.length; index++) {
+      selectedData.push(this.selection.selected[index].ID);
+    }
+    this.http.post(this.userService.userApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+      this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadUserTable();
+    });
 
   }
 
   replaceFileName(fileName) {
-    return fileName ? fileName.substring(fileName.indexOf("Flags")) : '';
+    return fileName ? fileName.substring(fileName.indexOf('Flags')) : '';
   }
 
   addGroup() {
@@ -338,15 +348,21 @@ export class UsersComponent implements OnInit {
     if (!this.selection2.hasValue()) {
       return;
     }
-    for (let index = 0; index < this.selection2.selected.length; index++)
-      this.userGroups.push(this.selection2.selected[index])
+    const ids = [];
+    for (let index2 = 0; index2 < this.groups.length; index2++) {
+      ids.push(this.groups[index2].ID);
+    }
 
-    for (let index = 0; index < this.selection2.selected.length; index++)
-      for (let index2 = 0; index2 < this.groups.length; index2++)
-        if (this.selection2.selected[index].ID === this.groups[index2].ID) {
-          this.groups.splice(index2, 1);
-        }
-    this.renderGroupsTables(this.userGroups, this.groups);
+    this.http.post(this.userService.userGroupApiUrl + 'create',
+      {
+        GroupIDs: ids,
+        UserID: this.userForm.ID,
+        UserName: this.userForm.UserName,
+        UserRelation: 2
+      }).subscribe(res => {
+        this.snackBar.open('add successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadGroupsTables(this.userForm.ID ? this.userForm.ID : null);
+      });
 
   }
 
@@ -355,14 +371,17 @@ export class UsersComponent implements OnInit {
     if (!this.selection3.hasValue()) {
       return;
     }
-    for (let index = 0; index < this.selection3.selected.length; index++)
-      this.groups.push(this.selection3.selected[index])
+    for (let index = 0; index < this.selection3.selected.length; index++) {
+      this.groups.push(this.selection3.selected[index]);
+    }
 
-    for (let index = 0; index < this.selection3.selected.length; index++)
-      for (let index2 = 0; index2 < this.userGroups.length; index2++)
+    for (let index = 0; index < this.selection3.selected.length; index++) {
+      for (let index2 = 0; index2 < this.userGroups.length; index2++) {
         if (this.selection3.selected[index].ID === this.userGroups[index2].ID) {
           this.userGroups.splice(index2, 1);
         }
+      }
+    }
     this.renderGroupsTables(this.userGroups, this.groups);
 
   }

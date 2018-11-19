@@ -100,8 +100,10 @@ export class ReportsComponent implements OnInit {
     this.reportsGroupsDataSource.sort = this.sort;
     this.selection = new SelectionModel<ReportsGroup>(true, []);
     this.reportsGroupsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId])
+      if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
     };
@@ -114,8 +116,10 @@ export class ReportsComponent implements OnInit {
     this.reportsDataSource.sort = this.sort2;
     this.selection2 = new SelectionModel<Report>(true, []);
     this.reportsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId])
+      if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
@@ -179,8 +183,9 @@ export class ReportsComponent implements OnInit {
   // add update delete report
 
   saveReport(form) {
-    if (form.invalid)
+    if (form.invalid) {
       return;
+    }
     this.reportForm = this.reportForm.selected ? this.reportForm : Object.assign({}, form.value);
     this.AddUpdateUrl = this.reportService.apiUrl + (this.reportForm.selected ? 'Update' : 'Create');
 
@@ -210,7 +215,7 @@ export class ReportsComponent implements OnInit {
     // this.reportForm.CountryID = report.CountryID;
     // //this.reportForm.REFERNCE_NO = report.REFERNCE_NO;
     // this.reportForm.LOC_STATUS = report.LOC_STATUS;
-     this.reportForm.selected = true;
+    this.reportForm.selected = true;
   }
 
 
@@ -261,30 +266,30 @@ export class ReportsComponent implements OnInit {
 
   deleteSelectedData() {
 
-    var selectedData = [];
+    const selectedData = [];
 
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++) {
+          selectedData.push(this.selection.selected[index].ID);
+        }
 
-    // switch (this.extraForm) {
-    //   case '':
-    //     for (let index = 0; index < this.selection.selected.length; index++)
-    //       selectedData.push(this.selection.selected[index].ID)
+        this.http.post(this.reportGroupService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadReportsGroupTable();
+        });
+        break;
+      case 'report':
+        for (let index = 0; index < this.selection2.selected.length; index++) {
+          selectedData.push(this.selection2.selected[index].ID);
+        }
 
-    //     this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteReportsGroups', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadReportsGroupTable();
-    //     });
-    //     break;
-    //   case 'report':
-    //     for (let index = 0; index < this.selection2.selected.length; index++)
-    //       selectedData.push(this.selection2.selected[index].ID)
-
-    //     this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteReports', { body: selectedData }).subscribe(res => {
-    //       this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-    //       this.reloadReportTable();
-    //     });
-    //     break;
-
-    // }
+        this.http.post(this.reportService.apiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadReportTable(this.reportsGroupForm.selected ? this.reportsGroupForm.ID : null);
+        });
+        break;
+    }
 
   }
 
