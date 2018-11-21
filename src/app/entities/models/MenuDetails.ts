@@ -2,6 +2,7 @@ import { IEntity } from '../interfaces/IEntity';
 
 
 export class System implements IEntity {
+
     ID: number;
     LangID: number;
     selected: boolean;
@@ -10,6 +11,7 @@ export class System implements IEntity {
     Order: number;
     Type: number;
     SubMenuID: number;
+    GroupRelationID: number;
     Url: string;
 }
 

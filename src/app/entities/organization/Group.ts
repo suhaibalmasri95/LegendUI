@@ -20,6 +20,7 @@ export class Group implements IEntity {
     IsRefTemp: boolean;
     IsExcelTemp: boolean;
     IsExcelRecordTemp: boolean;
+    UserRelationID: number;
 }
 
 

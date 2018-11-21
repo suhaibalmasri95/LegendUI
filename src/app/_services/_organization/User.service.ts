@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 export class UserService {
   userApiUrl: string = environment.azureUrl + 'User/';
   userGroupApiUrl: string = environment.azureUrl + 'UserGroup/';
+  groupRelationApiUrl: string = environment.azureUrl + 'GroupRelation/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   users: User[];
 
@@ -22,6 +23,22 @@ export class UserService {
 
   loadUserGroups(userId: number): Observable<any> {
     return this.http.get(this.userGroupApiUrl + 'Load?userId=' + userId);
+  }
+
+  loadGroupUsers(groupId: number): Observable<any> {
+    return this.http.get(this.userGroupApiUrl + 'LoadUserGroup?groupID=' + groupId);
+  }
+
+  loadGroupMenus(groupId: number): Observable<any> {
+    return this.http.get(this.userGroupApiUrl + 'LoadUserGroup?groupID=' + groupId);
+  }
+
+  loadGroupActions(groupId: number): Observable<any> {
+    return this.http.get(this.groupRelationApiUrl + 'LoadActions?groupID=' + groupId);
+  }
+
+  loadGroupReports(groupId: number): Observable<any> {
+    return this.http.get(this.groupRelationApiUrl + 'LoadReports?groupID=' + groupId);
   }
 
   addUser(user: User) {

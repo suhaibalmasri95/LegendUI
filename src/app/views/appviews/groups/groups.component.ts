@@ -123,21 +123,14 @@ export class GroupsComponent implements OnInit {
     this.submit = false;
 
     this.route.data.subscribe(data => {
-      this.groups = data.group;
+      //  this.groups = data.group;
       this.LockUps = data.lockUp;
       // this.users = data.lockUp;
       // this.groups = data.groups;
       this.renderGroupTable(data.groups);
     });
-
-
-
-
   }
 
-  onFilterChange(value: string) {
-    console.log('filter:', value);
-  }
 
   applyFilter(filterValue: string) {
     switch (this.extraForm) {
@@ -167,12 +160,16 @@ export class GroupsComponent implements OnInit {
           break;
         case 2:
           this.extraForm = 'menus';
+          this.reloadMenusTables(this.groupForm.selected ? this.groupForm.ID : null);
           break;
         case 3:
           this.extraForm = 'actions';
+          this.reloadActionsTables(this.groupForm.selected ? this.groupForm.ID : null);
           break;
+
         case 4:
-          this.extraForm = 'group';
+          this.extraForm = 'Report';
+          this.reloadReportsTables(this.groupForm.selected ? this.groupForm.ID : null);
           break;
       }
     });
@@ -197,11 +194,56 @@ export class GroupsComponent implements OnInit {
 
 
   reloadUsersTables(groupId) {
-    this.userService.loadGroupUsers(groupId).subscribe(data => {
-      this.groupUsers = data;
-      this.renderUsersTables(this.groupUsers, this.users);
-    });
+    if (groupId) {
+      this.userService.loadGroupUsers(groupId).subscribe(data => {
+        this.groupUsers = data.RelatedGroups;
+        this.users = data.UnRelatedGroups;
+        this.renderUsersTables(this.groupUsers, this.users);
+      });
+    } else {
+      this.renderUsersTables([], []);
+    }
   }
+
+  reloadMenusTables(groupId) {
+    if (groupId) {
+      this.userService.loadGroupMenus(groupId).subscribe(data => {
+        this.groupUsers = data.RelatedGroups;
+        this.users = data.UnRelatedGroups;
+        this.renderMenusTables(this.groupUsers, this.users);
+      });
+    } else {
+      this.renderMenusTables([], []);
+    }
+  }
+
+
+  reloadActionsTables(groupId) {
+    if (groupId) {
+      this.userService.loadGroupActions(groupId).subscribe(data => {
+        this.groupActions = data.RelatedActions;
+        this.actions = data.UnRelatedActions;
+        this.renderActionsTables(this.groupActions, this.actions);
+      });
+    } else {
+      this.renderActionsTables([], []);
+    }
+  }
+
+
+
+  reloadReportsTables(groupId) {
+    if (groupId) {
+      this.userService.loadGroupReports(groupId).subscribe(data => {
+        this.groupReports = data.RelatedReports;
+        this.reports = data.UnRelatedReports;
+        this.renderReportsTables(this.groupReports, this.reports);
+      });
+    } else {
+      this.renderReportsTables([], []);
+    }
+  }
+
 
 
   renderUsersTables(groupUsers, users) {
@@ -228,6 +270,9 @@ export class GroupsComponent implements OnInit {
       // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
+  }
+
+  renderMenusTables(groupMenus, Menus) {
   }
 
   renderActionsTables(groupActions, actions) {
@@ -453,23 +498,26 @@ export class GroupsComponent implements OnInit {
 
 
   addUser() {
-
     if (!this.selection2.hasValue()) {
       return;
     }
+    const ids = [];
+    const usernames = [];
     for (let index = 0; index < this.selection2.selected.length; index++) {
-      this.users.push(this.selection2.selected[index]);
+      ids.push(this.selection2.selected[index].ID);
+      usernames.push(this.selection2.selected[index].UserName);
     }
 
-    for (let index = 0; index < this.selection2.selected.length; index++) {
-      for (let index2 = 0; index2 < this.groupUsers.length; index2++) {
-        if (this.selection2.selected[index].ID === this.groupUsers[index2].ID) {
-          this.groupUsers.splice(index2, 1);
-        }
-      }
-    }
-    this.renderUsersTables(this.groupUsers, this.users);
-
+    this.http.post(this.userService.userGroupApiUrl + 'AddUsersToGroup',
+      {
+        RefrenceID: this.groupForm.ID,
+        UserIDs: ids,
+        UserNames: usernames,
+        UserRelationID: 2
+      }).subscribe(res => {
+        this.snackBar.open('added successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadUsersTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
   }
 
 
@@ -477,39 +525,42 @@ export class GroupsComponent implements OnInit {
     if (!this.selection3.hasValue()) {
       return;
     }
+
+    const ids = [];
     for (let index = 0; index < this.selection3.selected.length; index++) {
-      this.users.push(this.selection3.selected[index]);
+      ids.push(this.selection3.selected[index].UserRelationID);
     }
 
-    for (let index = 0; index < this.selection3.selected.length; index++) {
-      for (let index2 = 0; index2 < this.users.length; index2++) {
-        if (this.selection3.selected[index].ID === this.users[index2].ID) {
-          this.users.splice(index2, 1);
-        }
-      }
-    }
-    this.renderUsersTables(this.groupUsers, this.users);
+    this.http.post(this.userService.userGroupApiUrl + 'DeleteMultiple',
+      {
+        IDs: ids
+      }).subscribe(res => {
+        this.snackBar.open('removed successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadUsersTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
 
   }
 
-  addAction() {
 
+  addAction() {
     if (!this.selection4.hasValue()) {
       return;
     }
+    const ids = [];
     for (let index = 0; index < this.selection4.selected.length; index++) {
-      this.actions.push(this.selection4.selected[index]);
+      ids.push(this.selection4.selected[index].ID);
     }
 
-    for (let index = 0; index < this.selection4.selected.length; index++) {
-      for (let index2 = 0; index2 < this.groups.length; index2++) {
-        if (this.selection4.selected[index].ID === this.groups[index2].ID) {
-          this.groups.splice(index2, 1);
-        }
-      }
-    }
-    this.renderActionsTables(this.groupActions, this.actions);
-
+    this.http.post(this.userService.groupRelationApiUrl + 'create',
+      {
+        GroupID: this.groupForm.ID,
+        GroupName: this.groupForm.Name,
+        RefrenceIDs: ids,
+        LockUpGroupCat: 2
+      }).subscribe(res => {
+        this.snackBar.open('added successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadActionsTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
   }
 
 
@@ -517,38 +568,41 @@ export class GroupsComponent implements OnInit {
     if (!this.selection5.hasValue()) {
       return;
     }
+
+    const ids = [];
     for (let index = 0; index < this.selection5.selected.length; index++) {
-      this.actions.push(this.selection5.selected[index]);
+      ids.push(this.selection5.selected[index].GroupRelationID);
     }
 
-    for (let index = 0; index < this.selection5.selected.length; index++) {
-      for (let index2 = 0; index2 < this.groupActions.length; index2++) {
-        if (this.selection5.selected[index].ID === this.groupActions[index2].ID) {
-          this.groupActions.splice(index2, 1);
-        }
-      }
-    }
-    this.renderActionsTables(this.groupActions, this.actions);
-
+    this.http.post(this.userService.groupRelationApiUrl + 'DeleteMultiple',
+      {
+        IDs: ids
+      }).subscribe(res => {
+        this.snackBar.open('removed successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadActionsTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
   }
 
   addReport() {
-
     if (!this.selection6.hasValue()) {
       return;
     }
+    const ids = [];
     for (let index = 0; index < this.selection6.selected.length; index++) {
-      this.groupReports.push(this.selection6.selected[index]);
+      ids.push(this.selection6.selected[index].ID);
     }
 
-    for (let index = 0; index < this.selection6.selected.length; index++) {
-      for (let index2 = 0; index2 < this.reports.length; index2++) {
-        if (this.selection6.selected[index].ID === this.reports[index2].ID) {
-          this.reports.splice(index2, 1);
-        }
-      }
-    }
-    this.renderReportsTables(this.groupReports, this.reports);
+    this.http.post(this.userService.groupRelationApiUrl + 'create',
+      {
+        GroupID: this.groupForm.ID,
+        GroupName: this.groupForm.Name,
+        RefrenceIDs: ids,
+        LockUpGroupCat: 3
+      }).subscribe(res => {
+        this.snackBar.open('added successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadReportsTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
+
 
   }
 
@@ -557,18 +611,19 @@ export class GroupsComponent implements OnInit {
     if (!this.selection7.hasValue()) {
       return;
     }
+
+    const ids = [];
     for (let index = 0; index < this.selection7.selected.length; index++) {
-      this.reports.push(this.selection7.selected[index]);
+      ids.push(this.selection7.selected[index].ReportRelationID);
     }
 
-    for (let index = 0; index < this.selection7.selected.length; index++) {
-      for (let index2 = 0; index2 < this.groupReports.length; index2++) {
-        if (this.selection7.selected[index].ID === this.groupReports[index2].ID) {
-          this.groupReports.splice(index2, 1);
-        }
-      }
-    }
-    this.renderReportsTables(this.groupReports, this.reports);
+    this.http.post(this.userService.groupRelationApiUrl + 'DeleteMultiple',
+      {
+        IDs: ids
+      }).subscribe(res => {
+        this.snackBar.open('removed successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadReportsTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
 
   }
 

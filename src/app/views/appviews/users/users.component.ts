@@ -349,8 +349,8 @@ export class UsersComponent implements OnInit {
       return;
     }
     const ids = [];
-    for (let index2 = 0; index2 < this.groups.length; index2++) {
-      ids.push(this.groups[index2].ID);
+    for (let index = 0; index < this.selection2.selected.length; index++) {
+      ids.push(this.selection2.selected[index].ID);
     }
 
     this.http.post(this.userService.userGroupApiUrl + 'create',
@@ -358,9 +358,9 @@ export class UsersComponent implements OnInit {
         GroupIDs: ids,
         UserID: this.userForm.ID,
         UserName: this.userForm.UserName,
-        UserRelation: 2
+        UserRelationID: 2
       }).subscribe(res => {
-        this.snackBar.open('add successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.snackBar.open('added successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
         this.reloadGroupsTables(this.userForm.ID ? this.userForm.ID : null);
       });
 
@@ -371,18 +371,20 @@ export class UsersComponent implements OnInit {
     if (!this.selection3.hasValue()) {
       return;
     }
-    for (let index = 0; index < this.selection3.selected.length; index++) {
-      this.groups.push(this.selection3.selected[index]);
-    }
+
+    const ids = [];
 
     for (let index = 0; index < this.selection3.selected.length; index++) {
-      for (let index2 = 0; index2 < this.userGroups.length; index2++) {
-        if (this.selection3.selected[index].ID === this.userGroups[index2].ID) {
-          this.userGroups.splice(index2, 1);
-        }
-      }
+      ids.push(this.selection3.selected[index].UserRelationID);
     }
-    this.renderGroupsTables(this.userGroups, this.groups);
+
+    this.http.post(this.userService.userGroupApiUrl + 'DeleteMultiple',
+      {
+        IDs: ids
+      }).subscribe(res => {
+        this.snackBar.open('removed successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadGroupsTables(this.userForm.ID ? this.userForm.ID : null);
+      });
 
   }
 

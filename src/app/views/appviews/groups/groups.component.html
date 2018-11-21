@@ -221,7 +221,7 @@
 
               <div class="col-md-5">
                 <div class="table-container">
-                  <table mat-table #table2 [dataSource]="groupsDataSource" matSort>
+                  <table mat-table #table2 [dataSource]="usersDataSource" matSort>
 
                     <ng-container matColumnDef="select">
                       <th mat-header-cell *matHeaderCellDef>
@@ -351,7 +351,7 @@
 
               <div class="col-md-5">
                 <div class="table-container">
-                  <table mat-table #table4 [dataSource]="actionDataSource" matSort>
+                  <table mat-table #table4 [dataSource]="actionsDataSource" matSort>
 
                     <ng-container matColumnDef="select">
                       <th mat-header-cell *matHeaderCellDef>
@@ -406,7 +406,7 @@
               </div>
               <div class="col-md-5">
                 <div class="table-container">
-                  <table mat-table #table5 [dataSource]="groupActionDataSource" matSort>
+                  <table mat-table #table5 [dataSource]="groupActionsDataSource" matSort>
 
                     <ng-container matColumnDef="select">
                       <th mat-header-cell *matHeaderCellDef>

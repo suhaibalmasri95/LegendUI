@@ -1,4 +1,3 @@
-
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -27,6 +26,7 @@ import { MenuDetailsComponent } from './menuDetails/menuDetails.component';
 import { GroupsComponent } from './groups/groups.component';
 import { LineOfBusinessComponent } from './line-of-business/line-of-business.component';
 import { TreeviewModule } from 'ngx-treeview';
+import { ChargesComponent } from './charges/charges.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +39,8 @@ import { TreeviewModule } from 'ngx-treeview';
     ReportsComponent,
     MenuDetailsComponent,
     GroupsComponent,
-    LineOfBusinessComponent
+    LineOfBusinessComponent,
+    ChargesComponent
   ],
   imports: [
     RouterModule,

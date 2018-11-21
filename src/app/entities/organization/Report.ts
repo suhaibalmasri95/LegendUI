@@ -9,4 +9,5 @@ export class Report implements IEntity {
     Code: number;
     Order: number;
     ReportGroupID: number;
+    ReportRelationID: number;
 }

@@ -32,6 +32,7 @@ import { RenisTypeResolver } from './_resolvers/reins-type.resolver';
 import { ExcessFromResolver } from './_resolvers/excess-from.resolver';
 import { LineOfBusinessResolver } from './_resolvers/line-of-business.resolver';
 import { SubLineOfBusinessLockUpResolver } from './_resolvers/sub-line-of-business-lock-up.resolver';
+import { ChargesComponent } from './views/appviews/charges/charges.component';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -95,7 +96,7 @@ export const ROUTES: Routes = [
           company: CompanyResolver,
           country: CountryResolver,
           userTypes: UserTypesResolver,
-         // groups: GroubsResolver
+          // groups: GroubsResolver
         }
       },
       {
@@ -134,8 +135,19 @@ export const ROUTES: Routes = [
           lineOfBusinessLockUp: LineOfBusinessLockUpResolver,
           subLineOfBusinessLockUp: SubLineOfBusinessLockUpResolver,
           renisType: RenisTypeResolver,
-          excessFrom: ExcessFromResolver,
-
+          excessFrom: ExcessFromResolver
+        }
+      },
+      {
+        path: 'charges', component: ChargesComponent,
+        resolve: {
+          lockUp: LockUpResolver,
+          module: ModuleResolver,
+          lineOfBusiness: LineOfBusinessResolver,
+          lineOfBusinessLockUp: LineOfBusinessLockUpResolver,
+          subLineOfBusinessLockUp: SubLineOfBusinessLockUpResolver,
+          renisType: RenisTypeResolver,
+          excessFrom: ExcessFromResolver
         }
       }
     ]
