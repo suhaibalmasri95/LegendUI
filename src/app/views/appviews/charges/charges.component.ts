@@ -1,4 +1,5 @@
-import { Discount, Fee, Cover } from './../../../entities/Setup/Charges';
+import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
+import { Discount, Fee, Cover, Commission } from './../../../entities/Setup/Charges';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
@@ -8,6 +9,7 @@ import { LockUp } from '../../../entities/organization/LockUp';
 import { DiscountService } from '../../../_services/_setup/Discount.service';
 import { CoversService } from '../../../_services/_setup//Covers.service';
 import { FeesService } from '../../../_services/_setup/Fees.service';
+import { CommissionService } from '../../../_services/_setup/Commission.service';
 
 @Component({
   selector: 'app-charges',
@@ -26,44 +28,57 @@ export class ChargesComponent implements OnInit {
   feeForm: Fee;
   fees: Fee[];
 
+  commissionForm: Commission;
+  commissions: Commission[];
+
   discountForm: Discount;
   discounts: Discount[];
 
   LockUps: LockUp[];
   AddUpdateUrl: string;
+
   submit: boolean;
   submit2: boolean;
   submit3: boolean;
+  submit4: boolean;
 
-  coverTableColumns = ['select', 'ID', 'MAJOR_CODE', 'NAME', 'NAME2', 'ST_LOCKUP_ID', 'actions'];
+  coverTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'BasicLobCode', 'ParentCover', 'actions'];
   coversDataSource: MatTableDataSource<Cover>;
 
-  feeTableColumns = ['select', 'ID', 'MAJOR_CODE', 'MINOR_CODE', 'NAME', 'NAME2', 'ST_LOCKUP_ID', 'actions'];
+  feeTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'FeeType', 'BasicLobCode', 'actions'];
   feesDataSource: MatTableDataSource<Fee>;
 
-  discountTableColumns = ['select', 'CODE', 'NAME', 'NAME2', 'actions'];
+  discountTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'BasicLobCode', 'actions'];
   discountDataSource: MatTableDataSource<Discount>;
+
+  commissionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'CommissionType', 'BasicLobCode', 'actions'];
+  commissionDataSource: MatTableDataSource<Commission>;
 
   selection: SelectionModel<Cover>;
   selection2: SelectionModel<Fee>;
   selection3: SelectionModel<Discount>;
+  selection4: SelectionModel<Commission>;
 
 
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
-  @ViewChild('paginator2') paginator3: MatPaginator;
+  @ViewChild('paginator3') paginator3: MatPaginator;
+  @ViewChild('paginator4') paginator4: MatPaginator;
 
   @ViewChild('table', { read: MatSort }) sort: MatSort;
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
   @ViewChild('table3', { read: MatSort }) sort3: MatSort;
+  @ViewChild('table4', { read: MatSort }) sort4: MatSort;
 
-  parentFees: LockUp[];
-  feeFilter: number;
-  parentFeeFilter: number;
-  filterParentFees: LockUp[];
+
+  BasicLobCodes: LineOfBusiness[];
+  feesTypes: LockUp[];
+  CommisionTypes: LockUp[];
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
-    private discountService: DiscountService, private coversService: CoversService, private feesService: FeesService) { }
+    private discountService: DiscountService, private coversService: CoversService,
+    private feesService: FeesService, private commissionService: CommissionService) { }
+
   ngOnInit() {
     this.extraForm = '';
     this.snackPosition = 'right';
@@ -71,23 +86,27 @@ export class ChargesComponent implements OnInit {
     this.selection = new SelectionModel<Cover>(true, []);
     this.selection2 = new SelectionModel<Fee>(true, []);
     this.selection3 = new SelectionModel<Discount>(true, []);
+    this.selection4 = new SelectionModel<Commission>(true, []);
 
 
     this.coverForm = new Cover();
     this.feeForm = new Fee();
     this.discountForm = new Discount();
+    this.commissionForm = new Commission();
 
     this.submit = false;
     this.submit2 = false;
     this.submit3 = false;
+    this.submit4 = false;
 
     this.route.data.subscribe(data => {
-      this.LockUps = data.lockUp;
+      this.BasicLobCodes = data.BasicLobCodes;
+      this.feesTypes = data.feesTypes;
+      this.CommisionTypes = data.CommisionTypes;
       this.renderCoverTable(data.cover);
-      this.renderDiscountsTable(data.discounts);
     });
-    this.parentFees = null;
-    this.filterParentFees = null;
+
+
 
   }
 
@@ -102,6 +121,9 @@ export class ChargesComponent implements OnInit {
         break;
       case 'discounts':
         this.discountDataSource.filter = filterValue.trim().toLowerCase();
+        break;
+      case 'commision':
+        this.commissionDataSource.filter = filterValue.trim().toLowerCase();
         break;
 
     }
@@ -122,6 +144,10 @@ export class ChargesComponent implements OnInit {
         case 2:
           this.extraForm = 'discounts';
           this.reloadDiscountsTable();
+          break;
+        case 3:
+          this.extraForm = 'commision';
+          this.reloadCommissionTable();
           break;
       }
     });
@@ -164,7 +190,6 @@ export class ChargesComponent implements OnInit {
     this.discountDataSource.paginator = this.paginator3;
     this.discountDataSource.sort = this.sort3;
     this.selection3 = new SelectionModel<Discount>(true, []);
-
     this.discountDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort3.direction === 'asc' ? '3' : '1';
@@ -174,20 +199,41 @@ export class ChargesComponent implements OnInit {
     };
   }
 
-  reloadCoverTable() {
+  renderCommissionTable(data) {
+    this.commissions = data;
+    this.commissionDataSource = new MatTableDataSource<Commission>(data);
+    this.commissionDataSource.paginator = this.paginator4;
+    this.commissionDataSource.sort = this.sort4;
+    this.selection3 = new SelectionModel<Commission>(true, []);
+    this.commissionDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort3.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+    };
+  }
+
+  reloadCoverTable(id?) {
     this.coversService.load().subscribe(data => {
       this.renderCoverTable(data);
     });
   }
 
-  reloadFeeTable() {
+  reloadFeeTable(id?) {
     this.feesService.load().subscribe(data => {
       this.renderFeeTable(data);
 
     });
   }
 
-  reloadDiscountsTable() {
+  reloadDiscountsTable(id?) {
+    this.discountService.load().subscribe(data => {
+      this.renderDiscountsTable(data);
+    });
+  }
+
+  reloadCommissionTable(id?) {
     this.discountService.load().subscribe(data => {
       this.renderDiscountsTable(data);
     });
@@ -308,6 +354,41 @@ export class ChargesComponent implements OnInit {
     this.discountForm.selected = true;
   }
 
+  // add update delete Commission
+
+  saveCommission(form) {
+    if (form.invalid) { return; }
+    this.commissionForm = this.commissionForm.selected ? this.commissionForm : Object.assign({}, form.value);
+    if (this.commissionForm.selected) {
+      this.AddUpdateUrl = this.commissionService.ApiUrl + 'Update';
+    } else {
+      this.AddUpdateUrl = this.commissionService.ApiUrl + 'Create';
+    }
+    this.http.post(this.AddUpdateUrl, this.commissionForm).subscribe(res => {
+      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadDiscountsTable();
+      this.commissionForm = new Commission;
+      this.submit4 = false;
+      form.resetForm();
+    });
+
+  }
+
+  deleteCommission(id) {
+    this.http.post(this.commissionService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadDiscountsTable();
+    });
+
+  }
+
+  updateCommission(commission: Commission) {
+    window.scroll(0, 0);
+    this.commissionForm = new Discount;
+    this.commissionForm = commission;
+    this.commissionForm.selected = true;
+  }
+
 
   loadFees() {
     this.feesService.load().subscribe(data => {
@@ -372,6 +453,13 @@ export class ChargesComponent implements OnInit {
   masterToggle3() {
     this.isAllSelected3() ? this.selection3.clear() : this.discountDataSource.data.forEach(row => this.selection3.select(row));
   }
+  isAllSelected4() {
+    return this.selection4.selected.length === this.commissionDataSource.data.length;
+  }
+  masterToggle4() {
+    this.isAllSelected4() ? this.selection4.clear() : this.commissionDataSource.data.forEach(row => this.selection4.select(row));
+  }
+
 
   resetForm(form) {
     form.reset();

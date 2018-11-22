@@ -50,3 +50,19 @@ export class Cover implements IEntity {
     ModifiedBy: string;
     ModificationDate: Date;
 }
+export class Commission implements IEntity {
+    selected: boolean;
+    ID: number;
+    Name: string;
+    Name2: string;
+    LangID: number;
+    Code: string;
+    LineOfBusiness: number;
+    Module: number;
+    StatusDate: Date;
+    Status: number;
+    CreatedBy: string;
+    CreationDate: Date;
+    ModifiedBy: string;
+    ModificationDate: Date;
+}
