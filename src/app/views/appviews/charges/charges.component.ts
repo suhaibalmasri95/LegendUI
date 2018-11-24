@@ -79,7 +79,7 @@ export class ChargesComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private discountService: DiscountService, private coversService: CoversService,
-    private feesService: FeesService, private commissionService: CommissionService , private lockUpService: LockUpService) { }
+    private feesService: FeesService, private commissionService: CommissionService, private lockUpService: LockUpService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -102,9 +102,9 @@ export class ChargesComponent implements OnInit {
     this.submit4 = false;
 
     this.route.data.subscribe(data => {
-      this.parentCodes = data. parentCover;
+      this.parentCodes = data.parentCover;
       this.BasicLobCodes = data.chargeType;
-     // this.chargeType = ;data.CoverResolver;
+      // this.chargeType = ;data.CoverResolver;
       // this.feesTypes = data.feesTypes;
       // this.CommisionTypes = data.CommisionTypes;
       this.renderCoverTable(data.parentCover);
@@ -151,7 +151,7 @@ export class ChargesComponent implements OnInit {
           this.renderCoverTable(this.covers);
           break;
         case 1:
-       this.loadFeesType();
+          this.loadFeesType();
           this.extraForm = 'fees';
           this.reloadFeeTable();
           break;
@@ -160,7 +160,7 @@ export class ChargesComponent implements OnInit {
           this.reloadDiscountsTable();
           break;
         case 3:
-       this.loadCommissionType();
+          this.loadCommissionType();
           this.extraForm = 'commision';
           this.reloadCommissionTable();
           break;
@@ -229,27 +229,28 @@ export class ChargesComponent implements OnInit {
     };
   }
 
-  reloadCoverTable(id?) {
-    this.coversService.load().subscribe(data => {
+  reloadCoverTable(LineOfBusinessCode?) {
+    this.coversService.load(null, 1, LineOfBusinessCode, null, 1).subscribe(data => {
       this.renderCoverTable(data);
     });
   }
 
-  reloadFeeTable(id?) {
-    this.feesService.load(null, 2 , null , null , 1).subscribe(data => {
+
+  reloadFeeTable(LineOfBusinessCode?, ChargeID?) {
+    this.feesService.load(null, 2, LineOfBusinessCode, ChargeID, 1).subscribe(data => {
       this.renderFeeTable(data);
 
     });
   }
 
-  reloadDiscountsTable(id?) {
-    this.discountService.load(null, 3 , null , null , 1).subscribe(data => {
+  reloadDiscountsTable(LineOfBusinessCode?) {
+    this.discountService.load(null, 3, LineOfBusinessCode, null, 1).subscribe(data => {
       this.renderDiscountsTable(data);
     });
   }
 
-  reloadCommissionTable(id?) {
-    this.discountService.load(null, 4 , null , null , 1).subscribe(data => {
+  reloadCommissionTable(LineOfBusinessCode?) {
+    this.discountService.load(null, 4, LineOfBusinessCode, null, 1).subscribe(data => {
       this.renderCommissionTable(data);
     });
   }
@@ -409,8 +410,8 @@ export class ChargesComponent implements OnInit {
   }
 
 
-  loadFees(type = 2 , lineofBusiness = null) {
-    this.feesService.load(null, type, lineofBusiness , null , 1).subscribe(data => {
+  loadFees(type = 2, lineofBusiness = null) {
+    this.feesService.load(null, type, lineofBusiness, null, 1).subscribe(data => {
       this.fees = data;
       this.feesDataSource = new MatTableDataSource<Fee>(this.fees);
     });
@@ -433,10 +434,10 @@ export class ChargesComponent implements OnInit {
   }
 
   getFeeName(id: number) {
-    if (this.fees) {
-      for (let index = 0; index < this.fees.length; index++) {
-        if (this.fees[index].ID === id) {
-          return this.fees[index].Name;
+    if (this.feesTypes) {
+      for (let index = 0; index < this.feesTypes.length; index++) {
+        if (this.feesTypes[index].ID === id) {
+          return this.feesTypes[index].Name;
         }
       }
     }
@@ -447,6 +448,22 @@ export class ChargesComponent implements OnInit {
     for (let index = 0; index < this.covers.length; index++) {
       if (this.covers[index].ID === id) {
         return this.covers[index].Name;
+      }
+    }
+  }
+
+  getLineOfBusinessName(id: number) {
+    for (let index = 0; index < this.BasicLobCodes.length; index++) {
+      if (this.BasicLobCodes[index].ID === id) {
+        return this.BasicLobCodes[index].Name;
+      }
+    }
+  }
+
+  getCommisionTypeName(id: number) {
+    for (let index = 0; index < this.CommisionTypes.length; index++) {
+      if (this.CommisionTypes[index].ID === id) {
+        return this.CommisionTypes[index].Name;
       }
     }
   }

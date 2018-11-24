@@ -62,7 +62,8 @@
 
                       <div class="form-group col-md-3">
                         <label for="LineOfBusinessCode">Basic Lob Code</label>
-                        <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="coverForm.LineOfBusinessCode" required>
+                        <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="coverForm.LineOfBusinessCode"
+                          required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
                         </select>
@@ -163,13 +164,13 @@
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.LineOfBusinessCode)}} </td>
+                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ParentCover">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Cover</th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.ChargeID}} </td>
+                          {{getCoverName(element.ChargeID)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -278,7 +279,8 @@
                   </div>
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadFeeTable(feeFilter)" [(ngModel)]="feeFilter">
+                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadFeeTable(feeFilter,null)"
+                        [(ngModel)]="feeFilter">
                         <mat-option [value]=""> All </mat-option>
                         <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
                           {{BasicLobCode.Name}}
@@ -289,11 +291,11 @@
 
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Fees Type" (selectionChange)="reloadFeeTable(feesTypeFilter)"
+                      <mat-select placeholder="Fees Type" (selectionChange)="reloadFeeTable(null, feesTypeFilter)"
                         [(ngModel)]="feesTypeFilter">
                         <mat-option [value]=""> All </mat-option>
                         <mat-option *ngFor="let feesType of feesTypes" [value]="feesType.ID">
-                          {{feesTypesName}}
+                          {{feesType.Name}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -336,13 +338,13 @@
                       <ng-container matColumnDef="FeeType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fee Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.ChargeType)}} </td>
+                          {{getFeeName(element.ChargeType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.LineOfBusinessCode)}} </td>
+                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -452,7 +454,7 @@
                   </div>
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadDiscountTable(discountFilter)"
+                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadDiscountsTable(discountFilter)"
                         [(ngModel)]="discountFilter">
                         <mat-option [value]=""> All </mat-option>
                         <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
@@ -498,7 +500,7 @@
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.LineOfBusinessCode)}} </td>
+                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -507,13 +509,13 @@
                           <i (click)="updateDiscount(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                           <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
                             [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                            (confirm)="deleteDiscount(element.Code)" ngbTooltip="Delete"></i>
+                            (confirm)="deleteDiscount(element.ID)" ngbTooltip="Delete"></i>
                         </td>
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="discountTableColumns"></tr>
                       <tr mat-row *matRowDef="let row; columns: discountTableColumns;" (click)="updateDiscount(row)"
-                        class=" mat-row {{discountForm.Code===row.Code?'active':'not-active'}}"></tr>
+                        class=" mat-row {{discountForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
                   </div>
@@ -609,20 +611,26 @@
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <mat-form-field>
-                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-                  </mat-form-field>
+                <div class="col-md-12">
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadCommissionTable(commisionFilter)"
+                        [(ngModel)]="commisionFilter">
+                        <mat-option [value]=""> All </mat-option>
+                        <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
+                          {{BasicLobCode.Name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
                 </div>
-
-                <mat-select placeholder="Basic Lob" (selectionChange)="reloadCommisionTable(commisionFilter)"
-                  [(ngModel)]="commisionFilter">
-                  <mat-option [value]=""> All </mat-option>
-                  <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
-                    {{BasicLobCode.Name}}
-                  </mat-option>
-                </mat-select>
-
                 <div class="x">
                   <div class="table-container">
                     <table mat-table #table4 [dataSource]="commissionDataSource" matSort>
@@ -658,13 +666,13 @@
                       <ng-container matColumnDef="CommissionType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.ChargeType)}} </td>
+                          {{getCommisionTypeName(element.ChargeType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.LineOfBusinessCode)}} </td>
+                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">

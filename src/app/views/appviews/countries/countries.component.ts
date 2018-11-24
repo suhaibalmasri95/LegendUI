@@ -383,40 +383,39 @@ export class CountriesComponent implements OnInit {
   }
 
   export(type, data) {
-    debugger;
-    if ( data === 'country') {
-   
-       let body = { 'items': this.countriesDataSource.data ,
-       'FieldName': 'Organization.Country',
-       'Type': type,
-      }
-    
+    if (data === 'country') {
+      const body = {
+        'items': this.countriesDataSource.data,
+        'FieldName': 'Organization.Country',
+        'Type': type,
+      };
+
       this.commonService.Export(body).subscribe(res => {
         window.open(res.FilePath);
       });
     }
-    if ( data === 'city') {
-   
-      let body = { 'items': this.citiesDataSource.data ,
-      'FieldName': 'Organization.City',
-      'Type': type,
-     }
-   
-     this.commonService.Export(body).subscribe(res => {
-       window.open(res.FilePath);
-     });
-   }
-   if ( data === 'area') {
-   
-    let body = { 'items': this.areasDataSource.data ,
-    'FieldName': 'Organization.Area',
-    'Type': type,
-   }
- 
-   this.commonService.Export(body).subscribe(res => {
-     window.open(res.FilePath);
-   });
- }
+    if (data === 'city') {
+      const body = {
+        'items': this.citiesDataSource.data,
+        'FieldName': 'Organization.City',
+        'Type': type,
+      };
+
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'area') {
+      const body = {
+        'items': this.areasDataSource.data,
+        'FieldName': 'Organization.Area',
+        'Type': type,
+      };
+
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
   }
 
 
