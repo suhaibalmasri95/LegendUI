@@ -11,7 +11,7 @@ import { Fee } from '../../entities/Setup/Charges';
 })
 export class FeesService {
 
-  ApiUrl: string = environment.azureUrl + 'Fees/';
+  ApiUrl: string = environment.azureUrl + 'Charge/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Fees: Fee[];
 
@@ -41,8 +41,29 @@ export class FeesService {
     );
   }
 
-  load(): Observable<Fee[]> {
-    return this.http.get<Fee[]>(this.ApiUrl + 'LoadFees');
-  }
+  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
+    ChargeID: number = null, langId: number = null): Observable<Fee[]> {
+    let queryString = '?ID=';
 
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&LockUpChargeType=';
+    if (LockUpChargeType != null) {
+      queryString += LockUpChargeType;
+    }
+    queryString += '&LineOfBusinessCode=';
+    if (LineOfBusinessCode != null) {
+      queryString += LineOfBusinessCode;
+    }
+    queryString += '&ChargeID=';
+    if (ChargeID != null) {
+      queryString += ChargeID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+      return this.http.get<Fee[]>(this.ApiUrl + 'Load' + queryString);
+    }
+  }
 }

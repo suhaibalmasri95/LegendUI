@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -104,7 +105,8 @@ export class GroupsComponent implements OnInit {
   snackPosition: MatSnackBarHorizontalPosition;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient,
-    private route: ActivatedRoute, private groupService: GroupService, private userService: UserService) { }
+    private route: ActivatedRoute, private groupService: GroupService,
+     private userService: UserService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -391,17 +393,33 @@ export class GroupsComponent implements OnInit {
 
 
   export(type, data) {
-    switch (type) {
-      case 'pdf':
-        //    this.groupService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-        //    this.groupService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-        //   this.groupService.ExportToExcel(data, data);
-        break;
+    if ( data === 'group') {
+       let body = { 'items': this.groupActionsDataSource.data ,
+       'FieldName': 'Organization.Company',
+       'Type': type,
+      }
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
+    if ( data === 'companybranch') {
+      let body = { 'items': this.groupActionsDataSource.data ,
+      'FieldName': 'Organization.CompanyBranch',
+      'Type': type,
+     }
+     this.commonService.Export(body).subscribe(res => {
+       window.open(res.FilePath);
+     });
+   }
+   if ( data === 'department') {
+    let body = { 'items': this.groupActionsDataSource.data ,
+    'FieldName': 'Organization.Department',
+    'Type': type,
+   }
+   this.commonService.Export(body).subscribe(res => {
+     window.open(res.FilePath);
+   });
+ }
   }
 
 

@@ -1,3 +1,4 @@
+import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
 import { Discount, Fee, Cover, Commission } from './../../../entities/Setup/Charges';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -24,7 +25,7 @@ export class ChargesComponent implements OnInit {
 
   coverForm: Cover;
   covers: Cover[];
-
+  parentCodes: Cover[];
   feeForm: Fee;
   fees: Fee[];
 
@@ -71,13 +72,14 @@ export class ChargesComponent implements OnInit {
   @ViewChild('table4', { read: MatSort }) sort4: MatSort;
 
 
-  BasicLobCodes: LineOfBusiness[];
+  BasicLobCodes: LockUp[];
+  chargeType: LockUp[];
   feesTypes: LockUp[];
   CommisionTypes: LockUp[];
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private discountService: DiscountService, private coversService: CoversService,
-    private feesService: FeesService, private commissionService: CommissionService) { }
+    private feesService: FeesService, private commissionService: CommissionService , private lockUpService: LockUpService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -100,10 +102,12 @@ export class ChargesComponent implements OnInit {
     this.submit4 = false;
 
     this.route.data.subscribe(data => {
-      this.BasicLobCodes = data.BasicLobCodes;
-      this.feesTypes = data.feesTypes;
-      this.CommisionTypes = data.CommisionTypes;
-      this.renderCoverTable(data.cover);
+      this.parentCodes = data. parentCover;
+      this.BasicLobCodes = data.chargeType;
+     // this.chargeType = ;data.CoverResolver;
+      // this.feesTypes = data.feesTypes;
+      // this.CommisionTypes = data.CommisionTypes;
+      this.renderCoverTable(data.parentCover);
     });
 
 
@@ -128,7 +132,16 @@ export class ChargesComponent implements OnInit {
 
     }
   }
-
+  loadFeesType() {
+    this.lockUpService.LoadLockUpsByMajorCode(8).subscribe(res => {
+      this.feesTypes = res;
+    });
+  }
+  loadCommissionType() {
+    this.lockUpService.LoadLockUpsByMajorCode(9).subscribe(res => {
+      this.CommisionTypes = res;
+    });
+  }
 
   changeTab($event) {
     setTimeout(() => {
@@ -138,6 +151,7 @@ export class ChargesComponent implements OnInit {
           this.renderCoverTable(this.covers);
           break;
         case 1:
+       this.loadFeesType();
           this.extraForm = 'fees';
           this.reloadFeeTable();
           break;
@@ -146,6 +160,7 @@ export class ChargesComponent implements OnInit {
           this.reloadDiscountsTable();
           break;
         case 3:
+       this.loadCommissionType();
           this.extraForm = 'commision';
           this.reloadCommissionTable();
           break;
@@ -221,21 +236,21 @@ export class ChargesComponent implements OnInit {
   }
 
   reloadFeeTable(id?) {
-    this.feesService.load().subscribe(data => {
+    this.feesService.load(null, 2 , null , null , 1).subscribe(data => {
       this.renderFeeTable(data);
 
     });
   }
 
   reloadDiscountsTable(id?) {
-    this.discountService.load().subscribe(data => {
+    this.discountService.load(null, 3 , null , null , 1).subscribe(data => {
       this.renderDiscountsTable(data);
     });
   }
 
   reloadCommissionTable(id?) {
-    this.discountService.load().subscribe(data => {
-      this.renderDiscountsTable(data);
+    this.discountService.load(null, 4 , null , null , 1).subscribe(data => {
+      this.renderCommissionTable(data);
     });
   }
 
@@ -248,12 +263,13 @@ export class ChargesComponent implements OnInit {
     }
     this.coverForm = this.coverForm.selected ? this.coverForm : Object.assign({}, form.value);
     this.coverForm.CreatedBy = 'Admin';
+    this.coverForm.LockUpChargeType = 1;
     // this.coverForm.LockUpType = 2;
 
     if (this.coverForm.selected) {
       this.AddUpdateUrl = this.coversService.ApiUrl + 'Update';
     } else {
-      this.AddUpdateUrl = this.coversService.ApiUrl + '/Create';
+      this.AddUpdateUrl = this.coversService.ApiUrl + 'Create';
     }
 
     this.http.post(this.AddUpdateUrl, this.coverForm).subscribe(res => {
@@ -289,6 +305,7 @@ export class ChargesComponent implements OnInit {
     this.feeForm = this.feeForm.selected ? this.feeForm : Object.assign({}, form.value);
     this.feeForm.CreatedBy = 'Admin';
     // this.feeForm.LockUpType = 2;
+    this.feeForm.LockUpChargeType = 2;
     if (this.feeForm.selected) {
       this.AddUpdateUrl = this.feesService.ApiUrl + 'Update';
     } else {
@@ -324,6 +341,7 @@ export class ChargesComponent implements OnInit {
   saveDiscount(form) {
     if (form.invalid) { return; }
     this.discountForm = this.discountForm.selected ? this.discountForm : Object.assign({}, form.value);
+    this.discountForm.LockUpChargeType = 3;
     if (this.discountForm.selected) {
       this.AddUpdateUrl = this.discountService.ApiUrl + 'Update';
     } else {
@@ -359,6 +377,7 @@ export class ChargesComponent implements OnInit {
   saveCommission(form) {
     if (form.invalid) { return; }
     this.commissionForm = this.commissionForm.selected ? this.commissionForm : Object.assign({}, form.value);
+    this.commissionForm.LockUpChargeType = 4;
     if (this.commissionForm.selected) {
       this.AddUpdateUrl = this.commissionService.ApiUrl + 'Update';
     } else {
@@ -366,7 +385,7 @@ export class ChargesComponent implements OnInit {
     }
     this.http.post(this.AddUpdateUrl, this.commissionForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadDiscountsTable();
+      this.reloadCommissionTable();
       this.commissionForm = new Commission;
       this.submit4 = false;
       form.resetForm();
@@ -384,14 +403,14 @@ export class ChargesComponent implements OnInit {
 
   updateCommission(commission: Commission) {
     window.scroll(0, 0);
-    this.commissionForm = new Discount;
+    this.commissionForm = new Commission;
     this.commissionForm = commission;
     this.commissionForm.selected = true;
   }
 
 
-  loadFees() {
-    this.feesService.load().subscribe(data => {
+  loadFees(type = 2 , lineofBusiness = null) {
+    this.feesService.load(null, type, lineofBusiness , null , 1).subscribe(data => {
       this.fees = data;
       this.feesDataSource = new MatTableDataSource<Fee>(this.fees);
     });
@@ -495,9 +514,9 @@ export class ChargesComponent implements OnInit {
         break;
       case 'discounts':
         for (let index = 0; index < this.selection3.selected.length; index++) {
-          selectedData.push(this.selection3.selected[index].Code);
+          selectedData.push(this.selection3.selected[index].ID);
         }
-        this.http.post(this.discountService.ApiUrl + 'DeleteMultiple', { Codes: selectedData }).subscribe(res => {
+        this.http.post(this.discountService.ApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadDiscountsTable();
         });

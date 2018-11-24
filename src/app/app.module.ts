@@ -1,3 +1,5 @@
+import { ChargeTypeResolver } from './_resolvers/chargeType.resolver';
+import { CoverResolver } from './_resolvers/cover-resolver.resolver';
 import { BankResolver } from './_resolvers/bank.resolver';
 import { CurrencyResolver } from './_resolvers/currency-reolver.resolver';
 import { AreaResolver } from './_resolvers/area-reolver.resolver';
@@ -69,7 +71,9 @@ import { LineOfBusinessLockUpResolver } from './_resolvers/line-of-business-lock
     LineOfBusinessLockUpResolver,
     ModuleResolver,
     ExcessFromResolver,
-    RenisTypeResolver
+    RenisTypeResolver,
+    CoverResolver,
+    ChargeTypeResolver
   ],
   bootstrap: [AppComponent]
 })

@@ -383,20 +383,40 @@ export class CountriesComponent implements OnInit {
   }
 
   export(type, data) {
-    switch (type) {
-      case 'pdf':
-        // this.coreService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-        // this.coreService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-        // this.coreService.ExportToExcel(data, data);
-        console.log(this.countriesDataSource.data);
-
-        break;
+    debugger;
+    if ( data === 'country') {
+   
+       let body = { 'items': this.countriesDataSource.data ,
+       'FieldName': 'Organization.Country',
+       'Type': type,
+      }
+    
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
-
+    if ( data === 'city') {
+   
+      let body = { 'items': this.citiesDataSource.data ,
+      'FieldName': 'Organization.City',
+      'Type': type,
+     }
+   
+     this.commonService.Export(body).subscribe(res => {
+       window.open(res.FilePath);
+     });
+   }
+   if ( data === 'area') {
+   
+    let body = { 'items': this.areasDataSource.data ,
+    'FieldName': 'Organization.Area',
+    'Type': type,
+   }
+ 
+   this.commonService.Export(body).subscribe(res => {
+     window.open(res.FilePath);
+   });
+ }
   }
 
 

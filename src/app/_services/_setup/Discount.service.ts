@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 })
 export class DiscountService {
 
-  ApiUrl: string = environment.azureUrl + 'Discounts/';
+  ApiUrl: string = environment.azureUrl + 'Charge/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Discounts: Discount[];
 
@@ -41,8 +41,30 @@ export class DiscountService {
     );
   }
 
-  load(): Observable<Discount[]> {
-    return this.http.get<Discount[]>(this.ApiUrl + 'LoadDiscounts');
+  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
+    ChargeID: number = null, langId: number = null): Observable<Discount[]> {
+    let queryString = '?ID=';
+
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&LockUpChargeType=';
+    if (LockUpChargeType != null) {
+      queryString += LockUpChargeType;
+    }
+    queryString += '&LineOfBusinessCode=';
+    if (LineOfBusinessCode != null) {
+      queryString += LineOfBusinessCode;
+    }
+    queryString += '&ChargeID=';
+    if (ChargeID != null) {
+      queryString += ChargeID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+      return this.http.get<Discount[]>(this.ApiUrl + 'Load' + queryString);
+    }
   }
 
 }

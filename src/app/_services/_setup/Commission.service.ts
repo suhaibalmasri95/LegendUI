@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 })
 export class CommissionService {
 
-  ApiUrl: string = environment.azureUrl + 'Commissions/';
+  ApiUrl: string = environment.azureUrl + 'Charge/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Commissions: Commission[];
 
@@ -41,8 +41,30 @@ export class CommissionService {
     );
   }
 
-  load(): Observable<Commission[]> {
-    return this.http.get<Commission[]>(this.ApiUrl + 'LoadCommissions');
+  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
+    ChargeID: number = null, langId: number = null): Observable<Commission[]> {
+    let queryString = '?ID=';
+
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&LockUpChargeType=';
+    if (LockUpChargeType != null) {
+      queryString += LockUpChargeType;
+    }
+    queryString += '&LineOfBusinessCode=';
+    if (LineOfBusinessCode != null) {
+      queryString += LineOfBusinessCode;
+    }
+    queryString += '&ChargeID=';
+    if (ChargeID != null) {
+      queryString += ChargeID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+      return this.http.get<Commission[]>(this.ApiUrl + 'Load' + queryString);
+    }
   }
 
 }

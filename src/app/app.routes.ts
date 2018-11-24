@@ -1,3 +1,4 @@
+import { CoverResolver } from './_resolvers/cover-resolver.resolver';
 
 import { BankResolver } from './_resolvers/bank.resolver';
 import { CountryResolver } from './_resolvers/country-reolver.resolver';
@@ -33,6 +34,7 @@ import { ExcessFromResolver } from './_resolvers/excess-from.resolver';
 import { LineOfBusinessResolver } from './_resolvers/line-of-business.resolver';
 import { SubLineOfBusinessLockUpResolver } from './_resolvers/sub-line-of-business-lock-up.resolver';
 import { ChargesComponent } from './views/appviews/charges/charges.component';
+import { ChargeTypeResolver } from './_resolvers/chargeType.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -141,13 +143,8 @@ export const ROUTES: Routes = [
       {
         path: 'charges', component: ChargesComponent,
         resolve: {
-          lockUp: LockUpResolver,
-          module: ModuleResolver,
-          lineOfBusiness: LineOfBusinessResolver,
-          lineOfBusinessLockUp: LineOfBusinessLockUpResolver,
-          subLineOfBusinessLockUp: SubLineOfBusinessLockUpResolver,
-          renisType: RenisTypeResolver,
-          excessFrom: ExcessFromResolver
+          parentCover: CoverResolver,
+          chargeType: ChargeTypeResolver
         }
       }
     ]

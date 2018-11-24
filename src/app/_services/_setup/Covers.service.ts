@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 })
 export class CoversService {
 
-  ApiUrl: string = environment.azureUrl + 'Covers/';
+  ApiUrl: string = environment.azureUrl + 'Charge/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Covers: Cover[];
 
@@ -41,8 +41,29 @@ export class CoversService {
     );
   }
 
-  load(): Observable<Cover[]> {
-    return this.http.get<Cover[]>(this.ApiUrl + 'LoadCovers');
-  }
+  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
+    ChargeID: number = null, langId: number = null): Observable<Cover[]> {
+    let queryString = '?ID=';
 
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&LockUpChargeType=';
+    if (LockUpChargeType != null) {
+      queryString += LockUpChargeType;
+    }
+    queryString += '&LineOfBusinessCode=';
+    if (LineOfBusinessCode != null) {
+      queryString += LineOfBusinessCode;
+    }
+    queryString += '&ChargeID=';
+    if (ChargeID != null) {
+      queryString += ChargeID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+      return this.http.get<Cover[]>(this.ApiUrl + 'Load' + queryString);
+    }
+  }
 }

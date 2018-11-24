@@ -416,18 +416,33 @@ export class CompanybranchComponent implements OnInit {
   }
 
   export(type, data) {
-    switch (type) {
-      case 'pdf':
-       // this.coreService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-       // this.coreService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-       // this.coreService.ExportToExcel(data, data);
-        break;
+    if ( data === 'company') {
+       let body = { 'items': this.companiesDataSource.data ,
+       'FieldName': 'Organization.Company',
+       'Type': type,
+      }
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
-
+    if ( data === 'companybranch') {
+      let body = { 'items': this.companyBranchesDataSource.data ,
+      'FieldName': 'Organization.CompanyBranch',
+      'Type': type,
+     }
+     this.commonService.Export(body).subscribe(res => {
+       window.open(res.FilePath);
+     });
+   }
+   if ( data === 'department') {
+    let body = { 'items': this.departmentDataSource.data ,
+    'FieldName': 'Organization.Department',
+    'Type': type,
+   }
+   this.commonService.Export(body).subscribe(res => {
+     window.open(res.FilePath);
+   });
+ }
   }
 
 

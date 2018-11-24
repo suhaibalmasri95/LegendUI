@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -60,7 +61,8 @@ export class BanksComponent implements OnInit {
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
-    private bankService: BanksService , private bankBranchService: BankBranchService, private cityService: CityService) { }
+    private bankService: BanksService , private bankBranchService: BankBranchService,
+    private cityService: CityService , private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -267,19 +269,27 @@ export class BanksComponent implements OnInit {
   }
 
 
-  export(type, data) {
-    switch (type) {
-      case 'pdf':
-       // this.coreService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-       // this.coreService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-       // this.coreService.ExportToExcel(data, data);
-        break;
+
+    export(type, data) {
+      if ( data === 'Bank') {
+         let body = { 'items': this.banksDataSource.data ,
+         'FieldName': 'Organization.Bank',
+         'Type': type,
+        }
+        this.commonService.Export(body).subscribe(res => {
+          window.open(res.FilePath);
+        });
+      }
+      if ( data === 'BankBranch') {
+        let body = { 'items': this.branchsDataSource.data ,
+        'FieldName': 'Organization.BankBranch',
+        'Type': type,
+       }
+       this.commonService.Export(body).subscribe(res => {
+         window.open(res.FilePath);
+       });
+     }
     }
-  }
 
   getBranchName(id: number) {
     if (this.branchs) {

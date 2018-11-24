@@ -52,8 +52,8 @@
                         <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="coverForm.Name2">
                       </div>
                       <div class="form-group col-md-3">
-                        <label for="parentCode">Parent Cover</label>
-                        <select name="parentCode" class="form-control" [(ngModel)]="coverForm.parentCode">
+                        <label for="ChargeID">Parent Cover</label>
+                        <select name="ChargeID" class="form-control" [(ngModel)]="coverForm.ChargeID">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let parentCode of parentCodes" [ngValue]="parentCode.ID">{{parentCode.Name}}</option>
                         </select>
@@ -61,8 +61,8 @@
 
 
                       <div class="form-group col-md-3">
-                        <label for="BasicLobCode">Basic Lob Code</label>
-                        <select name="BasicLobCode" class="form-control" [(ngModel)]="coverForm.BasicLobCode" required>
+                        <label for="LineOfBusinessCode">Basic Lob Code</label>
+                        <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="coverForm.LineOfBusinessCode" required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
                         </select>
@@ -163,13 +163,13 @@
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.BasicLobCode)}} </td>
+                          {{getCoverName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ParentCover">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Cover</th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.ParentCover}} </td>
+                          {{element.ChargeID}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -217,16 +217,16 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="FeesType">Fees Type</label>
-                          <select name="FeesType" class="form-control" [(ngModel)]="coverForm.FeesType" required>
+                          <label for="ChargeType">Fees Type</label>
+                          <select name="ChargeType" class="form-control" [(ngModel)]="coverForm.ChargeType" required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let feesType of feesTypes" [ngValue]="feesType.ID">{{feesType.Name}}</option>
                           </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="BasicLobCode">Basic Lob Code</label>
-                          <select name="BasicLobCode" class="form-control" [(ngModel)]="coverForm.BasicLobCode"
+                          <label for="LineOfBusinessCode">Basic Lob Code</label>
+                          <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="coverForm.LineOfBusinessCode"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
@@ -336,13 +336,13 @@
                       <ng-container matColumnDef="FeeType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Fee Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.FeeType)}} </td>
+                          {{getCoverName(element.ChargeType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.BasicLobCode)}} </td>
+                          {{getCoverName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -397,8 +397,8 @@
 
 
                         <div class="form-group col-md-3">
-                          <label for="BasicLobCode">Basic Lob Code</label>
-                          <select name="BasicLobCode" class="form-control" [(ngModel)]="coverForm.BasicLobCode"
+                          <label for="LineOfBusinessCode">Basic Lob Code</label>
+                          <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="coverForm.LineOfBusinessCode"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
@@ -498,7 +498,7 @@
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.BasicLobCode)}} </td>
+                          {{getCoverName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -536,7 +536,7 @@
                     <legend>
                       Commision
                     </legend>
-                    <form #form="ngForm" (ngSubmit)="saveCommision(form)" class="{{submit4?'submited':''}}">
+                    <form #form="ngForm" (ngSubmit)="saveCommission(form)" class="{{submit4?'submited':''}}">
                       <div class="row">
 
 
@@ -553,8 +553,8 @@
 
 
                         <div class="form-group col-md-3">
-                          <label for="CommisionType">Commision Type</label>
-                          <select name="CommisionType" class="form-control" [(ngModel)]="commissionForm.CommisionType"
+                          <label for="ChargeType">Commission Type</label>
+                          <select name="ChargeType" class="form-control" [(ngModel)]="commissionForm.ChargeType"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let commisionType of CommisionTypes" [ngValue]="commisionType.ID">{{commisionType.Name}}</option>
@@ -562,8 +562,8 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="BasicLobCode">Basic Lob Code</label>
-                          <select name="BasicLobCode" class="form-control" [(ngModel)]="commissionForm.BasicLobCode"
+                          <label for="LineOfBusinessCode">Basic Lob Code</label>
+                          <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="commissionForm.LineOfBusinessCode"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
@@ -577,7 +577,7 @@
                         <div class="col-md-12 text-right">
                           <br>
                           <br>
-                          <input class="btn btn-default" type="reset" (click)="commisionForm={};submit4=false;resetForm(form)"
+                          <input class="btn btn-default" type="reset" (click)="commissionForm={};submit4=false;resetForm(form)"
                             value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit4=true" />
                         </div>
@@ -658,28 +658,28 @@
                       <ng-container matColumnDef="CommissionType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.CommissionType)}} </td>
+                          {{getCoverName(element.ChargeType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="BasicLobCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCoverName(element.BasicLobCode)}} </td>
+                          {{getCoverName(element.LineOfBusinessCode)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
-                          <i (click)="updateDommision(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="updateCommission(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                           <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
                             [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                            (confirm)="deleteDommision(element.Code)" ngbTooltip="Delete"></i>
+                            (confirm)="deleteCommission(element.ID)" ngbTooltip="Delete"></i>
                         </td>
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="commissionTableColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: commissionTableColumns;" (click)="updateDommision(row)"
-                        class=" mat-row {{commisionForm.Code===row.Code?'active':'not-active'}}"></tr>
+                      <tr mat-row *matRowDef="let row; columns: commissionTableColumns;" (click)="updateCommission(row)"
+                        class=" mat-row {{commissionForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
                   </div>
