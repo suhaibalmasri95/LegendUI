@@ -42,7 +42,7 @@ export class CommissionService {
   }
 
   load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeID: number = null, langId: number = null): Observable<Commission[]> {
+    ChargeType: number = null, langId: number = null): Observable<Commission[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -56,9 +56,9 @@ export class CommissionService {
     if (LineOfBusinessCode != null) {
       queryString += LineOfBusinessCode;
     }
-    queryString += '&ChargeID=';
-    if (ChargeID != null) {
-      queryString += ChargeID;
+    queryString += '&ChargeType=';
+    if (ChargeType != null) {
+      queryString += ChargeType;
     }
     queryString += '&langId=';
     if (langId != null) {

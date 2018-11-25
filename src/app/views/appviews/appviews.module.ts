@@ -27,6 +27,7 @@ import { GroupsComponent } from './groups/groups.component';
 import { LineOfBusinessComponent } from './line-of-business/line-of-business.component';
 import { TreeviewModule } from 'ngx-treeview';
 import { ChargesComponent } from './charges/charges.component';
+import { DiagnosisComponent } from './diagnosis/diagnosis.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { ChargesComponent } from './charges/charges.component';
     MenuDetailsComponent,
     GroupsComponent,
     LineOfBusinessComponent,
-    ChargesComponent
+    ChargesComponent,
+    DiagnosisComponent
   ],
   imports: [
     RouterModule,

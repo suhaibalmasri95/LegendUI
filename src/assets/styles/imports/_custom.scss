@@ -211,3 +211,19 @@ cursor: pointer;
 td.mat-cell.cdk-column-actions.mat-column-actions i {
   display: inline;
 }
+
+ngx-treeview-item .row-item .fa{
+  display: inline;
+  font-size: 20px;
+  margin: 8px;
+}
+
+ngx-treeview-item .row-item>div{
+  display: inline-block;
+  width: 80%;
+  border-bottom: 1px solid #11c2a1;
+}
+
+ngx-treeview-item .row-item>div>input{
+  margin: 5px;
+}

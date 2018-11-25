@@ -1,40 +1,39 @@
-import { Cover } from './../../entities/Setup/Charges';
+import { Benefit } from './../../entities/Setup/Diagnosis';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
 
-
 @Injectable({
   providedIn: 'root'
 })
-export class CoversService {
+export class BenefitService {
 
   ApiUrl: string = environment.azureUrl + 'Charge/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
-  Covers: Cover[];
+  Benefits: Benefit[];
 
   constructor(private http: HttpClient) { }
 
-  add(cover: Cover) {
-    this.http.post(this.ApiUrl + 'Create', cover).map(
+  add(benefit: Benefit) {
+    this.http.post(this.ApiUrl + 'Create', benefit).map(
       (response) => {
         return response;
       }
     );
   }
 
-  update(cover: Cover) {
-    this.http.post(this.ApiUrl + 'Update', cover).map(
+  update(benefit: Benefit) {
+    this.http.post(this.ApiUrl + 'Update', benefit).map(
       (response) => {
         return response;
       }
     );
   }
 
-  delete(cover: Cover) {
-    this.http.post(this.ApiUrl + 'Delete', cover).map(
+  delete(benefit: Benefit) {
+    this.http.post(this.ApiUrl + 'Delete', benefit).map(
       (response) => {
         return response;
       }
@@ -42,7 +41,7 @@ export class CoversService {
   }
 
   load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeType: number = null, langId: number = null): Observable<Cover[]> {
+    ChargeID: number = null, langId: number = null): Observable<Benefit[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -56,14 +55,15 @@ export class CoversService {
     if (LineOfBusinessCode != null) {
       queryString += LineOfBusinessCode;
     }
-    queryString += '&ChargeType=';
-    if (ChargeType != null) {
-      queryString += ChargeType;
+    queryString += '&ChargeID=';
+    if (ChargeID != null) {
+      queryString += ChargeID;
     }
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<Cover[]>(this.ApiUrl + 'Load' + queryString);
+      return this.http.get<Benefit[]>(this.ApiUrl + 'Load' + queryString);
     }
   }
+
 }

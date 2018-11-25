@@ -35,6 +35,7 @@ import { LineOfBusinessResolver } from './_resolvers/line-of-business.resolver';
 import { SubLineOfBusinessLockUpResolver } from './_resolvers/sub-line-of-business-lock-up.resolver';
 import { ChargesComponent } from './views/appviews/charges/charges.component';
 import { ChargeTypeResolver } from './_resolvers/chargeType.resolver';
+import { DiagnosisComponent } from './views/appviews/diagnosis/diagnosis.component';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -142,6 +143,13 @@ export const ROUTES: Routes = [
       },
       {
         path: 'charges', component: ChargesComponent,
+        resolve: {
+          parentCover: CoverResolver,
+          chargeType: ChargeTypeResolver
+        }
+      },
+      {
+        path: 'diagnosis', component: DiagnosisComponent,
         resolve: {
           parentCover: CoverResolver,
           chargeType: ChargeTypeResolver

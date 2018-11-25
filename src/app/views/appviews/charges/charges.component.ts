@@ -1,5 +1,4 @@
 import { LockUpService } from './../../../_services/_organization/LockUp.service';
-import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
 import { Discount, Fee, Cover, Commission } from './../../../entities/Setup/Charges';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';

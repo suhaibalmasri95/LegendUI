@@ -1,5 +1,4 @@
 import { CommonService } from './../../../_services/Common.service';
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
@@ -22,6 +21,7 @@ import { GroupService } from './../../../_services/_organization/Group.service';
 })
 export class GroupsComponent implements OnInit {
   dropdownEnabled = true;
+
   items: TreeviewItem[];
   values: number[];
   config = TreeviewConfig.create({
@@ -106,7 +106,7 @@ export class GroupsComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient,
     private route: ActivatedRoute, private groupService: GroupService,
-     private userService: UserService, private commonService: CommonService) { }
+    private userService: UserService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -131,8 +131,42 @@ export class GroupsComponent implements OnInit {
       // this.groups = data.groups;
       this.renderGroupTable(data.groups);
     });
-  }
 
+
+    const coding = new TreeviewItem({
+      text: 'IT', value: 9, children: [
+        {
+          text: 'Programming', value: 91, children: [{
+            text: 'Frontend', value: 911, children: [
+              { text: 'Angular 1', value: 9111 },
+              { text: 'Angular 2', value: 9112 },
+              { text: 'ReactJS', value: 9113 }
+            ]
+          }, {
+            text: 'Backend', value: 912, children: [
+              { text: 'C#', value: 9121 },
+              { text: 'Java', value: 9122 },
+              { text: 'Python', value: 9123, checked: false }
+            ]
+          }]
+        },
+        {
+          text: 'Networking', value: 92, children: [
+            { text: 'Internet', value: 921 },
+            { text: 'Security', value: 922 }
+          ]
+        }
+      ]
+    });
+
+    // coding.children.push(new TreeviewItem({ text: 'jwt', value: 23, checked: false }));
+    coding.correctChecked();
+
+
+
+    this.items = [coding];
+
+  }
 
   applyFilter(filterValue: string) {
     switch (this.extraForm) {
@@ -393,33 +427,36 @@ export class GroupsComponent implements OnInit {
 
 
   export(type, data) {
-    if ( data === 'group') {
-       let body = { 'items': this.groupActionsDataSource.data ,
-       'FieldName': 'Organization.Company',
-       'Type': type,
-      }
+    if (data === 'group') {
+      const body = {
+        'items': this.groupActionsDataSource.data,
+        'FieldName': 'Organization.Company',
+        'Type': type,
+      };
       this.commonService.Export(body).subscribe(res => {
         window.open(res.FilePath);
       });
     }
-    if ( data === 'companybranch') {
-      let body = { 'items': this.groupActionsDataSource.data ,
-      'FieldName': 'Organization.CompanyBranch',
-      'Type': type,
-     }
-     this.commonService.Export(body).subscribe(res => {
-       window.open(res.FilePath);
-     });
-   }
-   if ( data === 'department') {
-    let body = { 'items': this.groupActionsDataSource.data ,
-    'FieldName': 'Organization.Department',
-    'Type': type,
-   }
-   this.commonService.Export(body).subscribe(res => {
-     window.open(res.FilePath);
-   });
- }
+    if (data === 'companybranch') {
+      const body = {
+        'items': this.groupActionsDataSource.data,
+        'FieldName': 'Organization.CompanyBranch',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'department') {
+      const body = {
+        'items': this.groupActionsDataSource.data,
+        'FieldName': 'Organization.Department',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
   }
 
 

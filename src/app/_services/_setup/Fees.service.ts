@@ -42,7 +42,7 @@ export class FeesService {
   }
 
   load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeID: number = null, langId: number = null): Observable<Fee[]> {
+    ChargeType: number = null, langId: number = null): Observable<Fee[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -56,9 +56,9 @@ export class FeesService {
     if (LineOfBusinessCode != null) {
       queryString += LineOfBusinessCode;
     }
-    queryString += '&ChargeID=';
-    if (ChargeID != null) {
-      queryString += ChargeID;
+    queryString += '&ChargeType=';
+    if (ChargeType != null) {
+      queryString += ChargeType;
     }
     queryString += '&langId=';
     if (langId != null) {
