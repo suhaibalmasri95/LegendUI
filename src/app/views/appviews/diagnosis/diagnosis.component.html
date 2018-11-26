@@ -1,7 +1,7 @@
 <div class="row wrapper border-bottom white-bg page-heading">
   <div class="col-sm-10">
     <!-- <h2>{{formControls.Name}}</h2> -->
-    <h2>Charges</h2>
+    <h2>Diagnosis, services and benefits</h2>
     <ol class="breadcrumb">
       <li>
         <a href="index.html">Home</a>
@@ -43,44 +43,87 @@
                     <div class="row">
 
                       <div class="form-group col-md-3">
+                        <label for="Code">Code <span class="help-block">*</span></label>
+                        <input name="Code" placeholder="Code" type="text" class="form-control" [(ngModel)]="diagnoseForm.Code"
+                          required>
+                      </div>
+
+                      <div class="form-group col-md-3">
                         <label for="Name">Name <span class="help-block">*</span></label>
                         <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="diagnoseForm.Name"
                           required>
                       </div>
+
                       <div class="form-group col-md-3">
                         <label for="Name2">Name 2</label>
                         <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="diagnoseForm.Name2">
                       </div>
-                      <div class="form-group col-md-3">
-                        <label for="ChargeID">Parent Diagnose</label>
-                        <select name="ChargeID" class="form-control" [(ngModel)]="diagnoseForm.ChargeID">
-                          <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let parentCode of parentCodes" [ngValue]="parentCode.ID">{{parentCode.Name}}</option>
-                        </select>
-                      </div>
 
 
                       <div class="form-group col-md-3">
-                        <label for="LineOfBusinessCode">Basic Lob Code</label>
-                        <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="diagnoseForm.LineOfBusinessCode"
+                        <label for="CodingSystem">Coding System</label>
+                        <select name="CodingSystem" class="form-control" [(ngModel)]="diagnoseForm.CodingSystem"
                           required>
                           <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
+                          <option *ngFor="let CodingSystem of CodingSystems" [ngValue]="CodingSystem.ID">{{CodingSystem.Name}}</option>
                         </select>
                       </div>
 
                     </div>
+
                     <div class="row">
 
+                      <div class="form-group col-md-3">
+                        <label for="ParentDiagnose">Parent Diagnose</label>
+                        <select name="ParentDiagnose" class="form-control" [(ngModel)]="diagnoseForm.ParentDiagnose">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let ParentDiagnos of diagnosis" [ngValue]="ParentDiagnos.ID">{{ParentDiagnos.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Gender">Gender</label>
+                        <select name="Gender" class="form-control" [(ngModel)]="diagnoseForm.Gender">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let Gender of Genders" [ngValue]="Gender.ID">{{Gender.Name}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="AgeFrom">Age from</label>
+                        <input name="AgeFrom" placeholder="Age from" type="number" class="form-control" [(ngModel)]="diagnoseForm.AgeFrom">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="AgeTo">Age to</label>
+                        <input name="AgeTo" placeholder="Age to" type="number" class="form-control" [(ngModel)]="diagnoseForm.AgeTo">
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="Frequency">Frequency</label>
+                        <input name="Frequency" placeholder="Frequency" type="number" class="form-control" [(ngModel)]="diagnoseForm.Frequency">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="FrequencyUnit">Frequency Unit</label>
+                        <select name="FrequencyUnit" class="form-control" [(ngModel)]="diagnoseForm.FrequencyUnit">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let FrequencyUnit of FrequencyUnits" [ngValue]="FrequencyUnit.ID">{{FrequencyUnit.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-2">
+                        <mat-checkbox name="IsChronic" [(ngModel)]="diagnoseForm.IsChronic">Is Chronic</mat-checkbox>
+                      </div>
 
                       <div class="col-md-12 text-right">
                         <br>
                         <br>
-                        <div class="btn-group">
-                          <input class="btn btn-default" type="reset" (click)="diagnoseForm={};submit=false;resetForm(form)"
-                            value="Reset" />
-                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
-                        </div>
+                        <input class="btn btn-default" type="reset" (click)="diagnoseForm={};submit1=false;resetForm(form)"
+                          value="Reset" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit1=true" />
                       </div>
                     </div>
                   </form>
@@ -114,17 +157,30 @@
                       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                     </mat-form-field>
                   </div>
+
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadDiagnoseTable(diagnoseFilter)" [(ngModel)]="diagnoseFilter">
+                      <mat-select placeholder="Coding System" (selectionChange)="reloadDiagnoseTable(CodingSystem,null)"
+                        [(ngModel)]="CodingSystem">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
-                          {{BasicLobCode.Name}}
+                        <mat-option *ngFor="let CodingSystem of CodingSystems" [value]="CodingSystems.ID">
+                          {{CodingSystem.Name}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
                   </div>
 
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Parent diagnosis" (selectionChange)="reloadDiagnoseTable(null,parentDiagnosis)"
+                        [(ngModel)]="parentDiagnosis">
+                        <mat-option [value]=""> All </mat-option>
+                        <mat-option *ngFor="let parentDiagnoses of Diagnosis" [value]="parentDiagnoses.ID">
+                          {{parentDiagnoses.Name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
                 </div>
                 <div class="x">
                   <div class="table-container">
@@ -143,28 +199,30 @@
                         </td>
                       </ng-container>
 
+
                       <ng-container matColumnDef="ID">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                        </td>
+                        <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="Code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Code}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
-                        </td>
+                        <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="NAME2">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                        <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{element.Name2}} </td>
+                        <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="BasicLobCode">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
+                      <ng-container matColumnDef="codingSystem">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Coding System</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
+                          {{getCodingSystemName(element.codingSystem)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ParentDiagnose">
@@ -184,7 +242,8 @@
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="diagnoseTableColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: diagnoseTableColumns;" (click)="updateDiagnose(row)" class=" mat-row {{diagnoseForm.ID===row.ID?'active':'not-active'}}"></tr>
+                      <tr mat-row *matRowDef="let row; columns: diagnoseTableColumns;" (click)="updateDiagnose(row)"
+                        class=" mat-row {{diagnoseForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
                   </div>
@@ -204,7 +263,14 @@
                       Service
                     </legend>
                     <form #form="ngForm" (ngSubmit)="saveService(form)" class="{{submit2?'submited':''}}">
+
                       <div class="row">
+
+                        <div class="form-group col-md-3">
+                          <label for="Code">Code <span class="help-block">*</span></label>
+                          <input name="Code" placeholder="Code" type="text" class="form-control" [(ngModel)]="serviceForm.Code"
+                            required>
+                        </div>
 
                         <div class="form-group col-md-3">
                           <label for="Name">Name <span class="help-block">*</span></label>
@@ -217,26 +283,58 @@
                           <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="serviceForm.Name2">
                         </div>
 
-                        <div class="form-group col-md-3">
-                          <label for="ChargeType">Services Type</label>
-                          <select name="ChargeType" class="form-control" [(ngModel)]="diagnoseForm.ChargeType" required>
-                            <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let servicesType of servicesTypes" [ngValue]="servicesType.ID">{{servicesType.Name}}</option>
-                          </select>
-                        </div>
 
                         <div class="form-group col-md-3">
-                          <label for="LineOfBusinessCode">Basic Lob Code</label>
-                          <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="diagnoseForm.LineOfBusinessCode"
+                          <label for="ServiceType">Service Type</label>
+                          <select name="ServiceType" class="form-control" [(ngModel)]="serviceForm.ServiceType"
                             required>
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
+                            <option *ngFor="let serviceType of serviceTypes" [ngValue]="serviceType.ID">{{serviceType.Name}}</option>
                           </select>
                         </div>
 
                       </div>
 
                       <div class="row">
+
+
+                        <div class="form-group col-md-3">
+                          <label for="Gender">Gender</label>
+                          <select name="Gender" class="form-control" [(ngModel)]="serviceForm.Gender">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let Gender of Genders" [ngValue]="Gender.ID">{{Gender.Name}}</option>
+                          </select>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                          <label for="AgeFrom">Age from</label>
+                          <input name="AgeFrom" placeholder="Age from" type="number" class="form-control" [(ngModel)]="serviceForm.AgeFrom">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="AgeTo">Age to</label>
+                          <input name="AgeTo" placeholder="Age to" type="number" class="form-control" [(ngModel)]="serviceForm.AgeTo">
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                          <label for="Frequency">Frequency</label>
+                          <input name="Frequency" placeholder="Frequency" type="number" class="form-control"
+                            [(ngModel)]="serviceForm.Frequency">
+                        </div>
+
+                      </div>
+
+                      <div class="row">
+
+                        <div class="form-group col-md-3">
+                          <label for="FrequencyUnit">Frequency Unit</label>
+                          <select name="FrequencyUnit" class="form-control" [(ngModel)]="serviceForm.FrequencyUnit">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let FrequencyUnit of FrequencyUnits" [ngValue]="FrequencyUnit.ID">{{FrequencyUnit.Name}}</option>
+                          </select>
+                        </div>
 
                         <div class="col-md-12 text-right">
                           <br>
@@ -279,11 +377,11 @@
                   </div>
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadServiceTable(serviceFilter,null)"
-                        [(ngModel)]="serviceFilter">
+                      <mat-select placeholder="Service Type" (selectionChange)="reloadServiceTable(serviceType,null)"
+                        [(ngModel)]="serviceType">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
-                          {{BasicLobCode.Name}}
+                        <mat-option *ngFor="let serviceType of serviceTypes" [value]="serviceType.ID">
+                          {{serviceType.Name}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -291,11 +389,11 @@
 
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Services Type" (selectionChange)="reloadServiceTable(null, servicesTypeFilter)"
-                        [(ngModel)]="servicesTypeFilter">
+                      <mat-select placeholder="Parent service" (selectionChange)="reloadServiceTable(null, parentService)"
+                        [(ngModel)]="parentService">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let servicesType of servicesTypes" [value]="servicesType.ID">
-                          {{servicesType.Name}}
+                        <mat-option *ngFor="let parentService of parentServices" [value]="parentService.ID">
+                          {{parentService.Name}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -323,7 +421,10 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
                         <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                       </ng-container>
-
+                      <ng-container matColumnDef="Code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Code}} </td>
+                      </ng-container>
 
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
@@ -338,13 +439,13 @@
                       <ng-container matColumnDef="ServiceType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getServiceName(element.ChargeType)}} </td>
+                          {{getServiceTypeName(element.ChargeType)}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="BasicLobCode">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
+                      <ng-container matColumnDef="ParentService">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Service</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
+                          {{getServiceName(element.ParentService)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -358,7 +459,8 @@
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="serviceTableColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: serviceTableColumns;" (click)="updateService(row)" class=" mat-row {{serviceForm.ID===row.ID?'active':'not-active'}}"></tr>
+                      <tr mat-row *matRowDef="let row; columns: serviceTableColumns;" (click)="updateService(row)"
+                        class=" mat-row {{serviceForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
                   </div>
@@ -387,6 +489,12 @@
 
 
                         <div class="form-group col-md-3">
+                          <label for="Code">Code <span class="help-block">*</span></label>
+                          <input name="Code" placeholder="Code" type="text" class="form-control" [(ngModel)]="benefitForm.Code"
+                            required>
+                        </div>
+
+                        <div class="form-group col-md-3">
                           <label for="Name">Name <span class="help-block">*</span></label>
                           <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="benefitForm.Name"
                             required>
@@ -399,17 +507,59 @@
 
 
                         <div class="form-group col-md-3">
-                          <label for="LineOfBusinessCode">Basic Lob Code</label>
-                          <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="diagnoseForm.LineOfBusinessCode"
+                          <label for="BenefitType">Benefit Type</label>
+                          <select name="BenefitType" class="form-control" [(ngModel)]="benefitForm.BenefitType"
                             required>
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
+                            <option *ngFor="let BenefitType of BenefitTypes" [ngValue]="BenefitType.ID">{{BenefitType.Name}}</option>
                           </select>
                         </div>
 
                       </div>
 
                       <div class="row">
+
+                        <div class="form-group col-md-3">
+                          <label for="ParentBenefit">Parent Benefit</label>
+                          <select name="ParentBenefit" class="form-control" [(ngModel)]="benefitForm.ParentBenefit">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let ParentBenefit of Benefits" [ngValue]="ParentBenefit.ID">{{ParentBenefit.Name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Gender">Gender</label>
+                          <select name="Gender" class="form-control" [(ngModel)]="benefitForm.Gender">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let Gender of Genders" [ngValue]="Gender.ID">{{Gender.Name}}</option>
+                          </select>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                          <label for="AgeFrom">Age from</label>
+                          <input name="AgeFrom" placeholder="Age from" type="number" class="form-control" [(ngModel)]="benefitForm.AgeFrom">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="AgeTo">Age to</label>
+                          <input name="AgeTo" placeholder="Age to" type="number" class="form-control" [(ngModel)]="benefitForm.AgeTo">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Frequency">Frequency</label>
+                          <input name="Frequency" placeholder="Frequency" type="number" class="form-control"
+                            [(ngModel)]="benefitForm.Frequency">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="FrequencyUnit">Frequency Unit</label>
+                          <select name="FrequencyUnit" class="form-control" [(ngModel)]="benefitForm.FrequencyUnit">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let FrequencyUnit of FrequencyUnits" [ngValue]="FrequencyUnit.ID">{{FrequencyUnit.Name}}</option>
+                          </select>
+                        </div>
+
 
                         <div class="col-md-12 text-right">
                           <br>
@@ -454,11 +604,23 @@
                   </div>
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadBenefitsTable(benefitFilter)"
-                        [(ngModel)]="benefitFilter">
+                      <mat-select placeholder="Benefit Type" (selectionChange)="reloadBenefitsTable(BenefitType,null)"
+                        [(ngModel)]="BenefitType">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
-                          {{BasicLobCode.Name}}
+                        <mat-option *ngFor="let BenefitType of BenefitTypes" [value]="BenefitType.ID">
+                          {{BenefitType.Name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-md-3">
+                    <mat-form-field>
+                      <mat-select placeholder="Parent benefit" (selectionChange)="reloadBenefitsTable(null,parentBenefit)"
+                        [(ngModel)]="parentBenefit">
+                        <mat-option [value]=""> All </mat-option>
+                        <mat-option *ngFor="let parentBenefit of parentBenefit" [value]="parentBenefit.ID">
+                          {{parentBenefit.Name}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -486,6 +648,10 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
                         <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                       </ng-container>
+                      <ng-container matColumnDef="Code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Code}} </td>
+                      </ng-container>
 
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
@@ -497,10 +663,16 @@
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="BasicLobCode">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
+                      <ng-container matColumnDef="BenefitType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Benefit Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
+                          {{getBenefitTypeName(element.BenefitType)}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ParentBenefit">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Benefit</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{getBenefitName(element.ParentBenefit)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -538,7 +710,7 @@
                     <legend>
                       Attribute
                     </legend>
-                    <form #form="ngForm" (ngSubmit)="saveCommission(form)" class="{{submit4?'submited':''}}">
+                    <form #form="ngForm" (ngSubmit)="saveAttribute(form)" class="{{submit4?'submited':''}}">
                       <div class="row">
 
 
@@ -555,26 +727,13 @@
 
 
                         <div class="form-group col-md-3">
-                          <label for="ChargeType">Commission Type</label>
-                          <select name="ChargeType" class="form-control" [(ngModel)]="attributeForm.ChargeType"
+                          <label for="AttributeType ">Attribute Type <span class="help-block">*</span></label>
+                          <select name="AttributeType " class="form-control" [(ngModel)]="attributeForm.AttributeType"
                             required>
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let attributeType of AttributeTypes" [ngValue]="attributeType.ID">{{attributeType.Name}}</option>
+                            <option *ngFor="let AttributeType of AttributeTypes" [ngValue]="AttributeType.ID">{{AttributeType.Name}}</option>
                           </select>
                         </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="LineOfBusinessCode">Basic Lob Code</label>
-                          <select name="LineOfBusinessCode" class="form-control" [(ngModel)]="attributeForm.LineOfBusinessCode"
-                            required>
-                            <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let lobCode of BasicLobCodes" [ngValue]="lobCode.ID">{{lobCode.Name}}</option>
-                          </select>
-                        </div>
-
-                      </div>
-
-                      <div class="row">
 
                         <div class="col-md-12 text-right">
                           <br>
@@ -620,11 +779,11 @@
 
                   <div class="col-md-3">
                     <mat-form-field>
-                      <mat-select placeholder="Basic Lob" (selectionChange)="reloadCommissionTable(attributeFilter)"
-                        [(ngModel)]="attributeFilter">
+                      <mat-select placeholder="Attribute Type" (selectionChange)="reloadAttributesTable(attributeType)"
+                        [(ngModel)]="attributeType">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
-                          {{BasicLobCode.Name}}
+                        <mat-option *ngFor="let attributeType of AttributeTypes" [value]="attributeType.ID">
+                          {{attributeType.Name}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -633,7 +792,7 @@
                 </div>
                 <div class="x">
                   <div class="table-container">
-                    <table mat-table #table4 [dataSource]="attributeDataSource" matSort>
+                    <table mat-table #table4 [dataSource]="attributesDataSource" matSort>
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
@@ -653,6 +812,11 @@
                         <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                       </ng-container>
 
+                      <ng-container matColumnDef="Code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Code}} </td>
+                      </ng-container>
+
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
@@ -663,30 +827,24 @@
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="BenefitType">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>BenefitType</th>
+                      <ng-container matColumnDef="AttributeType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Attribute Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getAttributeTypeName(element.BenefitType)}} </td>
-                      </ng-container>
-
-                      <ng-container matColumnDef="BasicLobCode">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Basic Lob Code</th>
-                        <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getLineOfBusinessName(element.LineOfBusinessCode)}} </td>
+                          {{getAttributeTypeName(element.AttributeType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
-                          <i (click)="updateCommission(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="updateAttribute(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                           <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
                             [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                            (confirm)="deleteCommission(element.ID)" ngbTooltip="Delete"></i>
+                            (confirm)="deleteAttribute(element.ID)" ngbTooltip="Delete"></i>
                         </td>
                       </ng-container>
 
-                      <tr mat-header-row *matHeaderRowDef="attributeTableColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: attributeTableColumns;" (click)="updateCommission(row)"
+                      <tr mat-header-row *matHeaderRowDef="attributesTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: attributesTableColumns;" (click)="updateAttribute(row)"
                         class=" mat-row {{attributeForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
@@ -697,6 +855,34 @@
 
 
               </div>
+
+              <div class="col-md-5">
+
+                <ngx-treeview [config]="config" [items]="items" (filterChange)="onFilterChange($event)"
+                  (selectedChange)="values = $event">
+                </ngx-treeview>
+
+              </div>
+
+
+              <div class="col-md-2 text-center groups-arrows">
+                <div>
+                  <i class="fa fa-arrow-right" (click)="addUser()"></i>
+                </div>
+
+                <div>
+                  <i class="fa fa-arrow-left" (click)="removeUser()"></i>
+                </div>
+
+              </div>
+              <div class="col-md-5">
+                <ngx-treeview [config]="config" [items]="items" (filterChange)="onFilterChange($event)"
+                  (selectedChange)="values = $event">
+                </ngx-treeview>
+
+              </div>
+
+
             </mat-tab>
 
 

@@ -16,22 +16,22 @@ export function correctHeight() {
   var wrapperHeight = pageWrapper.height();
 
   if (navbarHeight > wrapperHeight) {
-    pageWrapper.css("min-height", navbarHeight + "px");
+    pageWrapper.css('min-height', navbarHeight + 'px');
   }
 
   if (navbarHeight <= wrapperHeight) {
     if (navbarHeight < jQuery(window).height()) {
-      pageWrapper.css("min-height", jQuery(window).height() + "px");
+      pageWrapper.css('min-height', jQuery(window).height() + 'px');
     } else {
-      pageWrapper.css("min-height", navbarHeight + "px");
+      pageWrapper.css('min-height', navbarHeight + 'px');
     }
   }
 
   if (jQuery('body').hasClass('fixed-nav')) {
     if (navbarHeight > wrapperHeight) {
-      pageWrapper.css("min-height", navbarHeight + "px");
+      pageWrapper.css('min-height', navbarHeight + 'px');
     } else {
-      pageWrapper.css("min-height", jQuery(window).height() - 60 + "px");
+      pageWrapper.css('min-height', jQuery(window).height() - 60 + 'px');
     }
   }
 }

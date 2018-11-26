@@ -36,6 +36,7 @@ import { SubLineOfBusinessLockUpResolver } from './_resolvers/sub-line-of-busine
 import { ChargesComponent } from './views/appviews/charges/charges.component';
 import { ChargeTypeResolver } from './_resolvers/chargeType.resolver';
 import { DiagnosisComponent } from './views/appviews/diagnosis/diagnosis.component';
+import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUnitsResolver } from './_resolvers/Diagnosis.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -151,8 +152,10 @@ export const ROUTES: Routes = [
       {
         path: 'diagnosis', component: DiagnosisComponent,
         resolve: {
-          parentCover: CoverResolver,
-          chargeType: ChargeTypeResolver
+          Diagnosis: DiagnosisResolver,
+          CodingSystems: CodingSystemsResolver,
+          Genders: GendersResolver,
+          FrequencyUnits: FrequencyUnitsResolver
         }
       }
     ]

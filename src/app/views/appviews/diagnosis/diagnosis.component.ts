@@ -10,6 +10,7 @@ import { AttributesService } from '../../../_services/_setup/attributes.service'
 import { DiagnosisService } from '../../../_services/_setup/diagnosis.service';
 import { ServicesService } from '../../../_services/_setup/services.service';
 import { BenefitService } from '../../../_services/_setup/benefit.service';
+import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 
 @Component({
   selector: 'app-diagnosis',
@@ -42,17 +43,18 @@ export class DiagnosisComponent implements OnInit {
   submit3: boolean;
   submit4: boolean;
 
-  diagnoseTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'BasicLobCode', 'ParentDiagnose', 'actions'];
+  diagnoseTableColumns = ['select', 'ID', 'Code', 'NAME', 'NAME2', 'codingSystem', 'ParentDiagnose', 'actions'];
   diagnosisDataSource: MatTableDataSource<Diagnose>;
 
-  serviceTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ServiceType', 'BasicLobCode', 'actions'];
+  serviceTableColumns = ['select', 'ID', 'Code', 'NAME', 'NAME2', 'ServiceType', 'ParentService', 'actions'];
   servicesDataSource: MatTableDataSource<Service>;
 
-  attributesTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'BasicLobCode', 'actions'];
-  attributesDataSource: MatTableDataSource<Attribute>;
 
-  benefitTableColumns = ['select', 'ID', 'NAME', 'NAME2',   'BasicLobCode', 'actions'];
+  benefitTableColumns = ['select', 'ID', 'Code', 'NAME', 'NAME2', 'BenefitType', 'ParentBenefit', 'actions'];
   benefitDataSource: MatTableDataSource<Benefit>;
+
+  attributesTableColumns = ['select', 'ID', 'Code', 'NAME', 'NAME2', 'AttributeType', 'actions'];
+  attributesDataSource: MatTableDataSource<Attribute>;
 
   selection: SelectionModel<Diagnose>;
   selection2: SelectionModel<Service>;
@@ -74,7 +76,20 @@ export class DiagnosisComponent implements OnInit {
   BasicLobCodes: LockUp[];
   chargeType: LockUp[];
   servicesTypes: LockUp[];
-  CommisionTypes: LockUp[];
+  AttributeTypes: LockUp[];
+  benefitTypes: LockUp[];
+  CodingSystems: LockUp[];
+  Genders: LockUp[];
+  FrequencyUnits: LockUp[];
+
+  items: TreeviewItem[];
+  config = TreeviewConfig.create({
+    hasAllCheckBox: true,
+    hasFilter: true,
+    hasCollapseExpand: true,
+    decoupleChildFromParent: false,
+    maxHeight: 400
+  });
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private attributesService: AttributesService, private diagnosisService: DiagnosisService,
@@ -101,12 +116,10 @@ export class DiagnosisComponent implements OnInit {
     this.submit4 = false;
 
     this.route.data.subscribe(data => {
-      this.parentCodes = data.parentDiagnose;
-      this.BasicLobCodes = data.chargeType;
-      // this.chargeType = ;data.DiagnoseResolver;
-      // this.servicesTypes = data.servicesTypes;
-      // this.CommisionTypes = data.CommisionTypes;
-      this.renderDiagnoseTable(data.parentDiagnose);
+      this.CodingSystems = data.CodingSystems;
+      this.Genders = data.Genders;
+      this.FrequencyUnits = data.FrequencyUnits;
+      this.renderDiagnoseTable(data.Diagnosis);
     });
 
 
@@ -122,7 +135,7 @@ export class DiagnosisComponent implements OnInit {
       case 'services':
         this.servicesDataSource.filter = filterValue.trim().toLowerCase();
         break;
-      case 'attributes':
+      case 'attribute':
         this.attributesDataSource.filter = filterValue.trim().toLowerCase();
         break;
       case 'benefit':
@@ -136,9 +149,10 @@ export class DiagnosisComponent implements OnInit {
       this.servicesTypes = res;
     });
   }
+
   loadBenefitType() {
     this.lockUpService.LoadLockUpsByMajorCode(9).subscribe(res => {
-      this.CommisionTypes = res;
+      this.benefitTypes = res;
     });
   }
 
@@ -155,13 +169,13 @@ export class DiagnosisComponent implements OnInit {
           this.reloadServiceTable();
           break;
         case 2:
-          this.extraForm = 'attributes';
-          this.reloadAttributesTable();
-          break;
-        case 3:
           this.loadBenefitType();
           this.extraForm = 'benefit';
           this.reloadBenefitTable();
+          break;
+        case 3:
+          this.extraForm = 'attribute';
+          this.reloadAttributesTable();
           break;
       }
     });
@@ -242,19 +256,48 @@ export class DiagnosisComponent implements OnInit {
     });
   }
 
-  reloadAttributesTable(LineOfBusinessCode?) {
-    this.attributesService.load(null, 3, LineOfBusinessCode, null, 1).subscribe(data => {
-      this.renderAttributesTable(data);
-    });
-  }
-
   reloadBenefitTable(LineOfBusinessCode?) {
     this.attributesService.load(null, 4, LineOfBusinessCode, null, 1).subscribe(data => {
       this.renderBenefitTable(data);
     });
   }
 
+  reloadAttributesTable(LineOfBusinessCode?) {
+    this.attributesService.load(null, 3, LineOfBusinessCode, null, 1).subscribe(data => {
+      this.renderAttributesTable(data);
+    });
 
+    const coding = new TreeviewItem({
+      text: 'IT', value: 9, children: [
+        {
+          text: 'Programming', value: 91, children: [{
+            text: 'Frontend', value: 911, children: [
+              { text: 'Angular 1', value: 9111 },
+              { text: 'Angular 2', value: 9112 },
+              { text: 'ReactJS', value: 9113 }
+            ]
+          }, {
+            text: 'Backend', value: 912, children: [
+              { text: 'C#', value: 9121 },
+              { text: 'Java', value: 9122 },
+              { text: 'Python', value: 9123, checked: false }
+            ]
+          }]
+        },
+        {
+          text: 'Networking', value: 92, children: [
+            { text: 'Internet', value: 921 },
+            { text: 'Security', value: 922 }
+          ]
+        }
+      ]
+    });
+
+    coding.correctChecked();
+    this.items = [coding];
+
+
+  }
   // add update delete Diagnose
 
   saveDiagnose(form) {
@@ -336,42 +379,6 @@ export class DiagnosisComponent implements OnInit {
   }
 
 
-  // add update delete Attribute
-
-  saveAttribute(form) {
-    if (form.invalid) { return; }
-    this.attributeForm = this.attributeForm.selected ? this.attributeForm : Object.assign({}, form.value);
-    this.attributeForm.LockUpChargeType = 3;
-    if (this.attributeForm.selected) {
-      this.AddUpdateUrl = this.attributesService.ApiUrl + 'Update';
-    } else {
-      this.AddUpdateUrl = this.attributesService.ApiUrl + 'Create';
-    }
-    this.http.post(this.AddUpdateUrl, this.attributeForm).subscribe(res => {
-      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadAttributesTable();
-      this.attributeForm = new Attribute;
-      this.submit3 = false;
-      form.resetForm();
-    });
-
-  }
-
-  deleteAttribute(id) {
-    this.http.post(this.attributesService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadAttributesTable();
-    });
-
-  }
-
-  updateAttribute(attributes: Attribute) {
-    window.scroll(0, 0);
-    this.attributeForm = new Attribute;
-    this.attributeForm = attributes;
-    this.attributeForm.selected = true;
-  }
-
   // add update delete Benefit
 
   saveBenefit(form) {
@@ -408,6 +415,43 @@ export class DiagnosisComponent implements OnInit {
     this.benefitForm.selected = true;
   }
 
+  // add update delete Attribute
+
+  saveAttribute(form) {
+    if (form.invalid) { return; }
+    this.attributeForm = this.attributeForm.selected ? this.attributeForm : Object.assign({}, form.value);
+    this.attributeForm.LockUpChargeType = 3;
+    if (this.attributeForm.selected) {
+      this.AddUpdateUrl = this.attributesService.ApiUrl + 'Update';
+    } else {
+      this.AddUpdateUrl = this.attributesService.ApiUrl + 'Create';
+    }
+    this.http.post(this.AddUpdateUrl, this.attributeForm).subscribe(res => {
+      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadAttributesTable();
+      this.attributeForm = new Attribute;
+      this.submit3 = false;
+      form.resetForm();
+    });
+
+  }
+
+  deleteAttribute(id) {
+    this.http.post(this.attributesService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadAttributesTable();
+    });
+
+  }
+
+  updateAttribute(attributes: Attribute) {
+    window.scroll(0, 0);
+    this.attributeForm = new Attribute;
+    this.attributeForm = attributes;
+    this.attributeForm.selected = true;
+  }
+
+
 
   loadServices(type = 2, lineofBusiness = null) {
     this.servicesService.load(null, type, lineofBusiness, null, 1).subscribe(data => {
@@ -432,7 +476,49 @@ export class DiagnosisComponent implements OnInit {
     }
   }
 
+  getDiagnoseName(id: number) {
+    for (let index = 0; index < this.diagnosis.length; index++) {
+      if (this.diagnosis[index].ID === id) {
+        return this.diagnosis[index].Name;
+      }
+    }
+  }
+
+  getCodingSystemName(id: number) {
+    for (let index = 0; index < this.CodingSystems.length; index++) {
+      if (this.CodingSystems[index].ID === id) {
+        return this.CodingSystems[index].Name;
+      }
+    }
+  }
+
+  getBenefitName(id: number) {
+    for (let index = 0; index < this.benefits.length; index++) {
+      if (this.benefits[index].ID === id) {
+        return this.benefits[index].Name;
+      }
+    }
+  }
+
+  getBenefitTypeName(id: number) {
+    for (let index = 0; index < this.benefitTypes.length; index++) {
+      if (this.benefitTypes[index].ID === id) {
+        return this.benefitTypes[index].Name;
+      }
+    }
+  }
+
+
+
   getServiceName(id: number) {
+    for (let index = 0; index < this.services.length; index++) {
+      if (this.services[index].ID === id) {
+        return this.services[index].Name;
+      }
+    }
+  }
+
+  getServiceTypeName(id: number) {
     if (this.servicesTypes) {
       for (let index = 0; index < this.servicesTypes.length; index++) {
         if (this.servicesTypes[index].ID === id) {
@@ -443,26 +529,10 @@ export class DiagnosisComponent implements OnInit {
   }
 
 
-  getDiagnoseName(id: number) {
-    for (let index = 0; index < this.diagnosis.length; index++) {
-      if (this.diagnosis[index].ID === id) {
-        return this.diagnosis[index].Name;
-      }
-    }
-  }
-
-  getLineOfBusinessName(id: number) {
-    for (let index = 0; index < this.BasicLobCodes.length; index++) {
-      if (this.BasicLobCodes[index].ID === id) {
-        return this.BasicLobCodes[index].Name;
-      }
-    }
-  }
-
-  getCommisionTypeName(id: number) {
-    for (let index = 0; index < this.CommisionTypes.length; index++) {
-      if (this.CommisionTypes[index].ID === id) {
-        return this.CommisionTypes[index].Name;
+  getAttributeTypeName(id: number) {
+    for (let index = 0; index < this.AttributeTypes.length; index++) {
+      if (this.AttributeTypes[index].ID === id) {
+        return this.AttributeTypes[index].Name;
       }
     }
   }

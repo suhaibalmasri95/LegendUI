@@ -34,6 +34,7 @@ import { RenisTypeResolver } from './_resolvers/reins-type.resolver';
 import { SubLineOfBusinessLockUpResolver } from './_resolvers/sub-line-of-business-lock-up.resolver';
 import { LineOfBusinessResolver } from './_resolvers/line-of-business.resolver';
 import { LineOfBusinessLockUpResolver } from './_resolvers/line-of-business-lock-up.resolver';
+import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUnitsResolver } from './_resolvers/Diagnosis.resolver';
 
 
 
@@ -73,7 +74,11 @@ import { LineOfBusinessLockUpResolver } from './_resolvers/line-of-business-lock
     ExcessFromResolver,
     RenisTypeResolver,
     CoverResolver,
-    ChargeTypeResolver
+    ChargeTypeResolver,
+    DiagnosisResolver,
+    CodingSystemsResolver,
+    GendersResolver,
+    FrequencyUnitsResolver
   ],
   bootstrap: [AppComponent]
 })
