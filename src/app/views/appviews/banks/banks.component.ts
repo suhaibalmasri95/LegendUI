@@ -61,8 +61,8 @@ export class BanksComponent implements OnInit {
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
-    private bankService: BanksService , private bankBranchService: BankBranchService,
-    private cityService: CityService , private commonService: CommonService) { }
+    private bankService: BanksService, private bankBranchService: BankBranchService,
+    private cityService: CityService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -190,14 +190,14 @@ export class BanksComponent implements OnInit {
 
   deleteBank(id) {
 
-    this.http.post(this.bankService.BankApiUrl + 'Delete' ,   {ID: id} ).subscribe(res => {
+    this.http.post(this.bankService.BankApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBankTable();
     });
-   /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteBank?bankID=' + id).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadBankTable();
-    });*/
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteBank?bankID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadBankTable();
+     });*/
   }
 
   updateBank(bank: Bank) {
@@ -235,7 +235,7 @@ export class BanksComponent implements OnInit {
   }
 
   deleteBranch(id) {
-    this.http.post(this.bankBranchService.BankBranchApiUrl + 'Delete' ,   {ID: id} ).subscribe(res => {
+    this.http.post(this.bankBranchService.BankBranchApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBranchTable(this.bankForm.ID ? this.bankForm.ID : null);
     });
@@ -270,26 +270,29 @@ export class BanksComponent implements OnInit {
 
 
 
-    export(type, data) {
-      if ( data === 'Bank') {
-         let body = { 'items': this.banksDataSource.data ,
-         'FieldName': 'Organization.Bank',
-         'Type': type,
-        }
-        this.commonService.Export(body).subscribe(res => {
-          window.open(res.FilePath);
-        });
-      }
-      if ( data === 'BankBranch') {
-        let body = { 'items': this.branchsDataSource.data ,
+
+  export(type, data) {
+    if (data === 'Bank') {
+      const body = {
+        'items': this.banksDataSource.data,
+        'FieldName': 'Organization.Bank',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'BankBranch') {
+      const body = {
+        'items': this.branchsDataSource.data,
         'FieldName': 'Organization.BankBranch',
         'Type': type,
-       }
-       this.commonService.Export(body).subscribe(res => {
-         window.open(res.FilePath);
-       });
-     }
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
+  }
 
   getBranchName(id: number) {
     if (this.branchs) {
@@ -339,7 +342,7 @@ export class BanksComponent implements OnInit {
         for (let index = 0; index < this.selection.selected.length; index++) {
           selectedData.push(this.selection.selected[index].ID);
         }
-        this.http.post(this.bankService.BankApiUrl + 'DeleteMultiple' ,   {IDs: selectedData} ).subscribe(res => {
+        this.http.post(this.bankService.BankApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadBankTable();
         });
@@ -349,7 +352,7 @@ export class BanksComponent implements OnInit {
           selectedData.push(this.selection2.selected[index].ID);
         }
 
-        this.http.post(this.bankBranchService.BankBranchApiUrl + 'DeleteMultiple' ,   {IDs: selectedData} ).subscribe(res => {
+        this.http.post(this.bankBranchService.BankBranchApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
           this.reloadBranchTable();
         });

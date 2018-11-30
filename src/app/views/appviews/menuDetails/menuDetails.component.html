@@ -491,7 +491,7 @@
                                                 <div class="form-group col-md-3">
                                                     <label for="SubMenuID">Module <span class="help-block">*</span></label>
                                                     <select name="SubMenuID" placeholder="Module" class="form-control"
-                                                        [(ngModel)]="subModuleForm.SubMenuID" [disabled]="!systemTempvi ||!modules ||modules.length===0"
+                                                        [(ngModel)]="subModuleForm.SubMenuID" [disabled]="!systemTemp ||!modules ||modules.length===0"
                                                         required>
                                                         <option ngValue="">Select</option>
                                                         <option *ngFor="let module of modules" [ngValue]="module.ID">{{module.Name}}</option>

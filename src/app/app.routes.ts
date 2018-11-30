@@ -37,6 +37,7 @@ import { ChargesComponent } from './views/appviews/charges/charges.component';
 import { ChargeTypeResolver } from './_resolvers/chargeType.resolver';
 import { DiagnosisComponent } from './views/appviews/diagnosis/diagnosis.component';
 import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUnitsResolver } from './_resolvers/Diagnosis.resolver';
+import { QuestionnairesComponent } from './views/appviews/questionnaires/questionnaires.component';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -156,6 +157,15 @@ export const ROUTES: Routes = [
           CodingSystems: CodingSystemsResolver,
           Genders: GendersResolver,
           FrequencyUnits: FrequencyUnitsResolver
+        }
+      },
+      {
+        path: 'questionnaires', component: QuestionnairesComponent,
+        resolve: {
+          questionnaires: DiagnosisResolver,
+          //  CodingSystems: CodingSystemsResolver,
+          //  Genders: GendersResolver,
+          // FrequencyUnits: FrequencyUnitsResolver
         }
       }
     ]

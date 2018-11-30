@@ -1,0 +1,358 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-10">
+    <!-- <h2>{{formControls.Name}}</h2> -->
+    <h2>Questionnaires</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a>Setup</a>
+      </li>
+      <li class="active">
+        <strong>Questionnaires</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-sm-2">
+    <div class="title-action">
+      <!-- <a ui-sref="pages.edit-form({id:formControls.id})" class="btn btn-primary">Edit This form</a> -->
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="tabs-container">
+        <div class="panel-body">
+
+          <fieldset>
+            <legend>
+              Questionnaires
+            </legend>
+            <form #form="ngForm" (ngSubmit)="saveQuestionnaire(form)" class="{{submit?'submited':''}}">
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="CurrencyCode">Code</label>
+                  <input name="CurrencyCode" placeholder="Code" type="text" class="form-control" [(ngModel)]="questionnaireForm.CurrencyCode">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Name">Name <span class="help-block">*</span></label>
+                  <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionnaireForm.Name"
+                    required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Name2">Name 2</label>
+                  <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="questionnaireForm.Name2">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="PhoneCode">Phone Code</label>
+                  <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="questionnaireForm.PhoneCode">
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="Phone">Phone</label>
+                  <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="questionnaireForm.Phone">
+                </div>
+                <div class="col-md-7 text-right">
+                  <br>
+                  <br>
+                  <div class="btn-group">
+                    <input class="btn btn-default" type="reset" (click)="questionnaireForm={};submit=false;resetForm(form)"
+                      value="Reset" />
+                    <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </fieldset>
+
+          <br>
+
+          <mat-tab-group (selectedTabChange)="changeTab($event)">
+            <mat-tab label="Questionnaires">
+              <div class="col-md-12">
+                <div class="html5buttons">
+                  <br>
+                  <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
+                      [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                      <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Questionnaire')"
+                      placement="bottom" ngbTooltip="Export to CSV"><span>
+                        <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','Questionnaire')"
+                      placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','Questionnaire')"
+                      placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                  </div>
+                </div>
+                <br>
+                <mat-form-field>
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                </mat-form-field>
+                <div class="x">
+                  <div class="table-container">
+                    <table mat-table #table [dataSource]="questionnairesDataSource" matSort>
+
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                          </mat-checkbox>
+                        </th>
+                        <td style="width: 5%" mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.CurrencyCode}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.Name2}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="PHONE_CODE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Code </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.PhoneCode}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="PHONE">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.Phone}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          <i (click)="updateQuestionnaire(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteQuestionnaire(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="questionnaireTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: questionnaireTableColumns;" (click)="updateQuestionnaire(row)"
+                        class=" mat-row {{questionnaireForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                    </table>
+                  </div>
+                  <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+                </div>
+              </div>
+
+            </mat-tab>
+            <mat-tab label="Questiones">
+              <div class="col-md-12">
+                <div class="html5buttons">
+                  <br>
+                  <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
+                      [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                      <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','QuestionnaireQuestion')"
+                      placement="bottom" ngbTooltip="Export to CSV"><span>
+                        <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','QuestionnaireQuestion')"
+                      placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
+                    </a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','QuestionnaireQuestion')"
+                      placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-select placeholder="Questionnaire" (selectionChange)="reloadQuestionTable(questionForm.CountryID)"
+                      [(ngModel)]="questionForm.CountryID">
+                      <mat-option [value]=""> All </mat-option>
+                      <mat-option *ngFor="let questionnaire of questionnaires" [value]="questionnaire.ID">
+                        {{questionnaire.Name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="x">
+                  <div class="table-container">
+                    <table mat-table #table2 [dataSource]="questionsDataSource" matSort>
+
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                            [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                            [checked]="selection2.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="BANK">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Questionnaire</th>
+                        <td mat-cell *matCellDef="let element">{{getQuestionnaireName(element.QuestionnaireID)}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <i (click)="updateQuestion(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteQuestion(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="questionTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: questionTableColumns;" (click)="updateQuestion(row)"
+                        class=" mat-row {{questionForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                    </table>
+                  </div>
+                  <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="col-md-12 extra-form" *ngIf="extraForm==='questions'">
+
+                  <fieldset class="animated fadeInDown">
+                    <legend>
+                      Question
+                    </legend>
+                    <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit2?'submited':''}}">
+                      <div class="row">
+                        <div class="form-group col-md-3">
+                          <label for="CurrencyCode">Code</label>
+                          <input name="CurrencyCode" placeholder="Code" type="text" class="form-control" [(ngModel)]="questionForm.CurrencyCode">
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="Name">Name <span class="help-block">*</span></label>
+                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name"
+                            required>
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="Name2">Name 2</label>
+                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="questionForm.Name2">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="QuestionnaireID">Questionnaire <span class="help-block">*</span></label>
+                          <select name="QuestionnaireID" class="form-control" [(ngModel)]="questionForm.QuestionnaireID"
+                            required>
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let questionnaire of questionnaires" [ngValue]="questionnaire.ID">{{questionnaire.Name}}</option>
+                          </select>
+                        </div>
+
+                      </div>
+
+                      <div class="row">
+
+                        <div class="form-group col-md-3">
+                          <label for="CountryID">Country <span class="help-block">*</span></label>
+                          <select name="CountryID" placeholder="Country" class="form-control" [(ngModel)]="questionForm.CountryID"
+                            (change)="loadCities()" required>
+                            <option ngValue="">Select</option>
+                            <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="CityID">City <span class="help-block">*</span></label>
+                          <select name="CityID" placeholder="City" class="form-control" [(ngModel)]="questionForm.CityID"
+                            [disabled]="!cities ||cities.length===0" required>
+                            <option ngValue="">Select</option>
+                            <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.Name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="PhoneCode">Phone Code</label>
+                          <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="questionForm.PhoneCode">
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="Phone">Phone</label>
+                          <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="questionForm.Phone">
+                        </div>
+                        <div class="col-md-12 text-right">
+                          <br>
+                          <br>
+                          <input class="btn btn-default" type="reset" (click)="questionForm={};submit2=false;resetForm(form)"
+                            value="Reset" />
+                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                        </div>
+                      </div>
+                    </form>
+                  </fieldset>
+                </div>
+
+              </div>
+            </mat-tab>
+
+          </mat-tab-group>
+
+
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+</div>

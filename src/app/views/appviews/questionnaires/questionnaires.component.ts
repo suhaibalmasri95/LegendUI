@@ -1,0 +1,343 @@
+import { CommonService } from './../../../_services/Common.service';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Questionnaire, Question } from '../../../entities/Setup/Questionnaires';
+import { LockUp } from '../../../entities/organization/LockUp';
+import { Currency } from '../../../entities/organization/Currency';
+import { Country } from '../../../entities/organization/Country';
+import { City } from '../../../entities/organization/City';
+import { QuestionnairesService } from './../../../_services/_setup/Questionnaires.service';
+import { QuestionService } from './../../../_services/_setup/Question.service';
+
+
+@Component({
+  selector: 'app-questionnaires',
+  templateUrl: './questionnaires.component.html',
+  styleUrls: ['./questionnaires.component.css']
+})
+export class QuestionnairesComponent implements OnInit {
+
+  questionnaireForm: Questionnaire;
+
+  questionnaires: Questionnaire[];
+
+  questionForm: Question;
+  questions: Question[];
+
+  LockUps: LockUp[];
+  currencies: Currency[];
+
+  countries: Country[];
+  cities: City[];
+
+  submit: boolean;
+  submit2: boolean;
+  AddUpdateUrl: string;
+  questionnaireTableColumns = ['select', 'ID', 'CODE', 'NAME', 'NAME2', 'PHONE_CODE', 'PHONE', 'actions'];
+  questionnairesDataSource: MatTableDataSource<Questionnaire>;
+
+  questionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'BANK', 'actions'];
+  questionsDataSource: MatTableDataSource<Question>;
+
+  selection: SelectionModel<Questionnaire>;
+  selection2: SelectionModel<Question>;
+
+  extraForm: string;
+
+  snackPosition: MatSnackBarHorizontalPosition;
+
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginator2') paginator2: MatPaginator;
+
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('table2', { read: MatSort }) sort2: MatSort;
+
+  constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
+    private questionnaireService: QuestionnairesService, private questionService: QuestionService,
+    private commonService: CommonService) { }
+
+  ngOnInit() {
+    this.extraForm = '';
+    const initialSelection = [];
+
+    this.selection = new SelectionModel<Questionnaire>(true, initialSelection);
+    this.selection2 = new SelectionModel<Question>(true, initialSelection);
+
+    this.snackPosition = 'right';
+
+    this.questionnaireForm = new Questionnaire();
+    this.questionForm = new Question();
+
+    this.submit = false;
+    this.submit2 = false;
+    this.route.data.subscribe(data => {
+      this.LockUps = data.lockUp;
+      this.currencies = data.currencies;
+      this.countries = data.country;
+      this.renderQuestionnaireTable(data.questionnaires);
+    });
+
+
+  }
+
+
+  applyFilter(filterValue: string) {
+    switch (this.extraForm) {
+      case '':
+        this.questionnairesDataSource.filter = filterValue.trim().toLowerCase();
+        break;
+      case 'questions':
+        this.questionsDataSource.filter = filterValue.trim().toLowerCase();
+        break;
+    }
+  }
+
+
+  changeTab($event) {
+    setTimeout(() => {
+      switch ($event.index) {
+        case 0:
+          this.extraForm = '';
+          this.questionnairesDataSource.paginator = this.questionnairesDataSource.paginator ?
+            this.questionnairesDataSource.paginator : this.paginator;
+          break;
+        case 1:
+          this.extraForm = 'questions';
+          this.reloadBranchTable(this.questionnaireForm.ID ? this.questionnaireForm.ID : null);
+          break;
+      }
+    });
+  }
+
+  renderQuestionnaireTable(data) {
+    this.questionnaires = data;
+    this.questionnairesDataSource = new MatTableDataSource<Questionnaire>(data);
+    this.questionnairesDataSource.paginator = this.paginator;
+    this.questionnairesDataSource.sort = this.sort;
+    this.selection = new SelectionModel<Questionnaire>(true, []);
+    this.questionnairesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+    };
+  }
+
+  renderBranchTable(data) {
+    this.questions = data;
+    this.questionsDataSource = new MatTableDataSource<Question>(data);
+    this.questionsDataSource.paginator = this.paginator2;
+    this.questionsDataSource.sort = this.sort2;
+    this.selection2 = new SelectionModel<Question>(true, []);
+    this.questionsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort2.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+    };
+  }
+
+  reloadQuestionnaireTable() {
+
+    this.questionnaireService.load().subscribe(data => {
+      this.renderQuestionnaireTable(data);
+    });
+  }
+
+  reloadBranchTable(questionnaireId = null) {
+    this.questionService.load(questionnaireId, null, 1).subscribe(data => {
+      this.renderBranchTable(data);
+    });
+  }
+
+
+  // add update delete Questionnaire
+
+  saveQuestionnaire(form) {
+    if (form.invalid) {
+      return;
+    }
+    this.questionnaireForm = this.questionnaireForm.selected ? this.questionnaireForm : Object.assign({}, form.value);
+    if (this.questionnaireForm.selected) {
+      this.AddUpdateUrl = this.questionnaireService.ApiUrl + 'Update';
+    } else {
+      this.AddUpdateUrl = this.questionnaireService.ApiUrl + 'Create';
+    }
+    this.http.post(this.AddUpdateUrl, this.questionnaireForm).subscribe(res => {
+      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadQuestionnaireTable();
+      this.questionnaireForm = new Questionnaire();
+      this.submit = false;
+      form.resetForm();
+    });
+
+  }
+
+  deleteQuestionnaire(id) {
+
+    this.http.post(this.questionnaireService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadQuestionnaireTable();
+    });
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteQuestionnaire?questionnaireID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadQuestionnaireTable();
+     });*/
+  }
+
+  updateQuestionnaire(questionnaire: Questionnaire) {
+    window.scroll(0, 0);
+    this.questionnaireForm = new Questionnaire;
+    this.questionnaireForm.ID = questionnaire.ID;
+    this.questionnaireForm.Name = questionnaire.Name;
+    this.questionnaireForm.Name2 = questionnaire.Name2;
+    this.questionnaireForm.CurrencyCode = questionnaire.CurrencyCode;
+    this.questionnaireForm.PhoneCode = questionnaire.PhoneCode;
+    this.questionnaireForm.Phone = questionnaire.Phone;
+    this.questionnaireForm.selected = true;
+  }
+
+
+  // add update delete city
+
+  saveBranch(form) {
+    if (form.invalid) { return; }
+    this.questionForm = this.questionForm.selected ? this.questionForm : Object.assign({}, form.value);
+
+    if (this.questionForm.selected) {
+      this.AddUpdateUrl = this.questionService.ApiUrl + 'Update';
+    } else {
+      this.AddUpdateUrl = this.questionService.ApiUrl + 'Create';
+    }
+    this.http.post(this.AddUpdateUrl, this.questionForm).subscribe(res => {
+      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadBranchTable(this.questionnaireForm.ID ? this.questionnaireForm.ID : null);
+      this.questionForm = new Question;
+      this.submit2 = false;
+      form.resetForm();
+    });
+
+  }
+
+  deleteBranch(id) {
+    this.http.post(this.questionService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadBranchTable(this.questionnaireForm.ID ? this.questionnaireForm.ID : null);
+    });
+  }
+
+  updateBranch(questionnairecQuestion: Question) {
+    window.scroll(0, 1000);
+    this.questionForm = new Question;
+    this.questionForm = questionnairecQuestion;
+    this.questionForm.selected = true;
+  }
+
+
+  loadBranchs() {
+    this.questionService.load(this.questionnaireForm.ID ? this.questionnaireForm.ID : null, null, 1).subscribe(data => {
+      this.questions = data;
+      this.questionsDataSource = new MatTableDataSource<Question>(this.questions);
+    });
+  }
+
+
+
+  export(type, data) {
+    if (data === 'Questionnaire') {
+      const body = {
+        'items': this.questionnairesDataSource.data,
+        'FieldName': 'Organization.Questionnaire',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'Question') {
+      const body = {
+        'items': this.questionsDataSource.data,
+        'FieldName': 'Organization.Question',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+  }
+
+  getBranchName(id: number) {
+    if (this.questions) {
+      for (let index = 0; index < this.questions.length; index++) {
+        if (this.questions[index].ID === id) {
+          return this.questions[index].Name;
+        }
+      }
+    }
+  }
+
+
+  getQuestionnaireName(id: number) {
+    for (let index = 0; index < this.questionnaires.length; index++) {
+      if (this.questionnaires[index].ID === id) {
+        return this.questionnaires[index].Name;
+      }
+    }
+  }
+
+
+  isAllSelected() {
+    return this.selection.selected.length === this.questionnairesDataSource.data.length;
+  }
+  masterToggle() {
+    this.isAllSelected() ? this.selection.clear() : this.questionnairesDataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  isAllSelected2() {
+    return this.selection2.selected.length === this.questionsDataSource.data.length;
+  }
+  masterToggle2() {
+    this.isAllSelected2() ? this.selection2.clear() : this.questionsDataSource.data.forEach(row => this.selection2.select(row));
+  }
+
+  resetForm(form) {
+    form.reset();
+  }
+
+
+  deleteSelectedData() {
+
+    // tslint:disable-next-line:prefer-const
+    let selectedData = [];
+    switch (this.extraForm) {
+      case '':
+        for (let index = 0; index < this.selection.selected.length; index++) {
+          selectedData.push(this.selection.selected[index].ID);
+        }
+        this.http.post(this.questionnaireService.ApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadQuestionnaireTable();
+        });
+        break;
+      case 'questions':
+        for (let index = 0; index < this.selection2.selected.length; index++) {
+          selectedData.push(this.selection2.selected[index].ID);
+        }
+
+        this.http.post(this.questionService.ApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadBranchTable();
+        });
+        break;
+
+    }
+
+  }
+
+}
