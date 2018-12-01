@@ -39,6 +39,7 @@ export class QuestionnairesComponent implements OnInit {
   LockUps: LockUp[];
   QuestionLockUp: LockUp[];
   QuestionnaireLevel: LockUp[];
+
   QuestionType: LockUp[];
   LineOfBusinesses: LineOfBusiness[];
   SubLineOfBusinesses: SubLineOfBusiness[];
@@ -130,6 +131,7 @@ export class QuestionnairesComponent implements OnInit {
           break;
         case 1:
           this.extraForm = 'questions';
+          this.loadQuestType();
           this.reloadQuestionTableTable(this.questionForm.ID ? this.questionForm.ID : null);
           break;
           case 2:
@@ -140,6 +142,11 @@ export class QuestionnairesComponent implements OnInit {
     });
   }
 
+  loadQuestType() {
+    this.lockUpService.LoadLockUpsByMajorCode(18).subscribe(res => {
+      this.QuestionType = res;
+    });
+  }
   renderQuestionnaireTable(data) {
     this.questionnaires = data;
     this.questionnairesDataSource = new MatTableDataSource<Questionnaire>(data);
