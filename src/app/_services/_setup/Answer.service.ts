@@ -1,4 +1,4 @@
-import { Question } from './../../entities/Setup/Questionnaires';
+import { Answer } from './../../entities/Setup/Questionnaires';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -7,47 +7,43 @@ import 'rxjs/add/operator/catch';
 @Injectable({
   providedIn: 'root'
 })
-export class QuestionService {
-  ApiUrl: string = environment.azureUrl + ' Questions/';
+export class AnswerService {
+  ApiUrl: string = environment.azureUrl + ' Answers/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
-  Questions: Question[];
+  Answer: Answer[];
 
   constructor(private http: HttpClient) { }
 
-  add(questions: Question) {
-    this.http.post(this.ApiUrl + 'Create', questions).map(
+  add(answer: Answer) {
+    this.http.post(this.ApiUrl + 'Create', answer).map(
       (response) => {
         return response;
       }
     );
   }
 
-  update(questions: Question) {
-    this.http.post(this.ApiUrl + 'Update', questions).map(
+  update(answer: Answer) {
+    this.http.post(this.ApiUrl + 'Update', Answer).map(
       (response) => {
         return response;
       }
     );
   }
 
-  delete(questions: Question) {
-    this.http.post(this.ApiUrl + 'Delete', questions).map(
+  delete(answer: Answer) {
+    this.http.post(this.ApiUrl + 'Delete', answer).map(
       (response) => {
         return response;
       }
     );
   }
 
-  load(ID: number = null, QusType: number = null, QusID: number = null,
-     langId: number = null): Observable<Question[]> {
+  load(ID: number = null, QusID: number = null,
+     langId: number = null): Observable<Answer[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
-    }
-    queryString += '&QusType=';
-    if (QusType != null) {
-      queryString += QusType;
     }
     queryString += '&QusID=';
     if (QusID != null) {
@@ -56,7 +52,7 @@ export class QuestionService {
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<Question[]>(this.ApiUrl + 'Load' + queryString);
+      return this.http.get<Answer[]>(this.ApiUrl + 'Load' + queryString);
     }
   }
 

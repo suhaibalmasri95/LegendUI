@@ -1,3 +1,6 @@
+import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
+import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
+import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
 import { CoverResolver } from './_resolvers/cover-resolver.resolver';
 
 import { BankResolver } from './_resolvers/bank.resolver';
@@ -162,10 +165,11 @@ export const ROUTES: Routes = [
       {
         path: 'questionnaires', component: QuestionnairesComponent,
         resolve: {
-          questionnaires: DiagnosisResolver,
-          //  CodingSystems: CodingSystemsResolver,
-          //  Genders: GendersResolver,
-          // FrequencyUnits: FrequencyUnitsResolver
+          questionnaires: QuestionnaireResolver,
+          appliedOn: AppliedOnResolver,
+          lineOfBusiness: LineOfBusinessResolver,
+          subLineOfBusiness: SubLineOfBusinessResolver,
+          Status: LockUpResolver,
         }
       }
     ]

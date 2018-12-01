@@ -10,7 +10,7 @@ import 'rxjs/add/operator/catch';
 })
 export class QuestionnairesService {
 
-  ApiUrl: string = environment.azureUrl + 'Charge/';
+  ApiUrl: string = environment.azureUrl + 'Questionnaires/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Questionnaires: Questionnaire[];
 
@@ -40,24 +40,24 @@ export class QuestionnairesService {
     );
   }
 
-  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeID: number = null, langId: number = null): Observable<Questionnaire[]> {
+  load(ID: number = null, QusLevel: number = null, LineOfBusiness: number = null,
+    SubLineOfBusiness: number = null, langId: number = null): Observable<Questionnaire[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&LockUpChargeType=';
-    if (LockUpChargeType != null) {
-      queryString += LockUpChargeType;
+    queryString += '&QusLevel=';
+    if (QusLevel != null) {
+      queryString += QusLevel;
     }
-    queryString += '&LineOfBusinessCode=';
-    if (LineOfBusinessCode != null) {
-      queryString += LineOfBusinessCode;
+    queryString += '&LineOfBusiness=';
+    if (LineOfBusiness != null) {
+      queryString += LineOfBusiness;
     }
-    queryString += '&ChargeID=';
-    if (ChargeID != null) {
-      queryString += ChargeID;
+    queryString += '&SubLineOfBusiness=';
+    if (SubLineOfBusiness != null) {
+      queryString += SubLineOfBusiness;
     }
     queryString += '&langId=';
     if (langId != null) {
