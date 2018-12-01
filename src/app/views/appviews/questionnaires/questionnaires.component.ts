@@ -1,3 +1,5 @@
+import { Questionnaire } from './../../../entities/Setup/Questionnaires';
+import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { AnswerService } from './../../../_services/_setup/Answer.service';
 import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
 import { CommonService } from './../../../_services/Common.service';
@@ -35,6 +37,7 @@ export class QuestionnairesComponent implements OnInit {
   answers: Answer[];
 
   LockUps: LockUp[];
+  QuestionLockUp: LockUp[];
   QuestionnaireLevel: LockUp[];
   QuestionType: LockUp[];
   LineOfBusinesses: LineOfBusiness[];
@@ -73,7 +76,7 @@ export class QuestionnairesComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private questionnaireService: QuestionnairesService, private questionService: QuestionService,
-    private commonService: CommonService , private answerService: AnswerService) { }
+    private commonService: CommonService , private answerService: AnswerService , private lockUpService: LockUpService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -110,7 +113,7 @@ export class QuestionnairesComponent implements OnInit {
       case 'questions':
         this.questionsDataSource.filter = filterValue.trim().toLowerCase();
         break;
-        case 'answer':
+        case 'answers':
         this.answersDataSource.filter = filterValue.trim().toLowerCase();
         break;
     }
@@ -128,6 +131,10 @@ export class QuestionnairesComponent implements OnInit {
         case 1:
           this.extraForm = 'questions';
           this.reloadQuestionTableTable(this.questionForm.ID ? this.questionForm.ID : null);
+          break;
+          case 2:
+          this.extraForm = 'answers';
+          this.reloadAnswerTableTable(this.answerForm.ID ? this.answerForm.ID : null);
           break;
       }
     });
@@ -163,13 +170,13 @@ export class QuestionnairesComponent implements OnInit {
     };
   }
 
-  renderQuestionTable(data) {
+  renderAnswerTable(data) {
     this.answers = data;
     this.answersDataSource = new MatTableDataSource<Answer>(data);
     this.answersDataSource.paginator = this.paginator3;
     this.answersDataSource.sort = this.sort3;
     this.selection3 = new SelectionModel<Answer>(true, []);
-    this.questionsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+    this.answersDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort2.direction === 'asc' ? '3' : '1';
       }
@@ -191,11 +198,17 @@ export class QuestionnairesComponent implements OnInit {
   }
   reloadAnswerTableTable(answerID = null) {
     this.answerService.load(answerID, null, 1).subscribe(data => {
-      this.re(data);
+      this.renderAnswerTable(data);
     });
   }
 
-
+  onQuestionType($event) {
+    if ($event.toLowerCase() === '5') {
+      this.lockUpService.LoadLockUpsForQuestionnaire(1).subscribe(res => {
+        this.QuestionLockUp = res;
+      });
+    }
+  }
 
   // add update delete Questionnaire
 
@@ -250,7 +263,7 @@ export class QuestionnairesComponent implements OnInit {
     }
     this.http.post(this.AddUpdateUrl, this.answerForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadQuestionnaireTable();
+      this.reloadAnswerTableTable();
       this.answerForm = new Answer();
       this.submit = false;
       form.resetForm();
@@ -268,70 +281,78 @@ export class QuestionnairesComponent implements OnInit {
        this.reloadQuestionnaireTable();
      });*/
   }
+  deleteQuestion(id) {
 
+    this.http.post(this.questionService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadQuestionTableTable();
+    });
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteQuestionnaire?questionnaireID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadQuestionnaireTable();
+     });*/
+  }
+  deleteAnswer(id) {
+
+    this.http.post(this.answerService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadAnswerTableTable();
+    });
+    /* this.http.request('DELETE', this.coreService.DeleteUrl + '/DeleteQuestionnaire?questionnaireID=' + id).subscribe(res => {
+       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+       this.reloadQuestionnaireTable();
+     });*/
+  }
   updateQuestionnaire(questionnaire: Questionnaire) {
     window.scroll(0, 0);
     this.questionnaireForm = new Questionnaire;
     this.questionnaireForm.ID = questionnaire.ID;
     this.questionnaireForm.Name = questionnaire.Name;
     this.questionnaireForm.Name2 = questionnaire.Name2;
-    this.questionnaireForm.CurrencyCode = questionnaire.CurrencyCode;
-    this.questionnaireForm.PhoneCode = questionnaire.PhoneCode;
-    this.questionnaireForm.Phone = questionnaire.Phone;
+    this.questionnaireForm.QustionnaireLevel = questionnaire.QustionnaireLevel;
+    this.questionnaireForm.LineOfBusiness = questionnaire.LineOfBusiness;
+    this.questionnaireForm.SubLineOfBusiness = questionnaire.SubLineOfBusiness;
+    this.questionnaireForm.Status = questionnaire.Status;
+    this.questionnaireForm.StatusDate = questionnaire.StatusDate;
     this.questionnaireForm.selected = true;
   }
 
 
-  // add update delete city
-
-  saveBranch(form) {
-    if (form.invalid) { return; }
-    this.questionForm = this.questionForm.selected ? this.questionForm : Object.assign({}, form.value);
-
-    if (this.questionForm.selected) {
-      this.AddUpdateUrl = this.questionService.ApiUrl + 'Update';
-    } else {
-      this.AddUpdateUrl = this.questionService.ApiUrl + 'Create';
-    }
-    this.http.post(this.AddUpdateUrl, this.questionForm).subscribe(res => {
-      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadBranchTable(this.questionnaireForm.ID ? this.questionnaireForm.ID : null);
-      this.questionForm = new Question;
-      this.submit2 = false;
-      form.resetForm();
-    });
-
-  }
-
-  deleteBranch(id) {
-    this.http.post(this.questionService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
-      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadBranchTable(this.questionnaireForm.ID ? this.questionnaireForm.ID : null);
-    });
-  }
-
-  updateBranch(questionnairecQuestion: Question) {
+  updateQuestion(question: Question) {
     window.scroll(0, 1000);
     this.questionForm = new Question;
-    this.questionForm = questionnairecQuestion;
+    this.questionForm.ID = question.ID;
+    this.questionForm.Name = question.Name;
+    this.questionForm.Name2 = question.Name2;
+    this.questionForm.Description = question.Description;
+    this.questionForm.Description2 = question.Description2;
+    this.questionForm.QustionType = question.QustionType;
+    this.questionForm.QuestionnaireID = question.QuestionnaireID;
+    this.questionForm.QustionOrder = question.QustionOrder;
+    this.questionForm.Status = question.Status;
+    this.questionForm.StatusDate = question.StatusDate;
     this.questionForm.selected = true;
   }
 
 
-  loadBranchs() {
-    this.questionService.load(this.questionnaireForm.ID ? this.questionnaireForm.ID : null, null, 1).subscribe(data => {
-      this.questions = data;
-      this.questionsDataSource = new MatTableDataSource<Question>(this.questions);
-    });
-  }
 
+  updateAnswer(answer: Answer) {
+    window.scroll(0, 1000);
+    this.answerForm = new Answer;
+    this.answerForm.ID = answer.ID;
+    this.answerForm.Name = answer.Name;
+    this.answerForm.Name2 = answer.Name2;
+    this.answerForm.AnswerOrder = answer.AnswerOrder;
+    this.questionForm.QuestionnaireID = answer.QuestionnaireID;
+    this.questionForm.selected = true;
+  }
 
 
   export(type, data) {
     if (data === 'Questionnaire') {
       const body = {
         'items': this.questionnairesDataSource.data,
-        'FieldName': 'Organization.Questionnaire',
+        'FieldName': 'Setup.Questionnaire',
         'Type': type,
       };
       this.commonService.Export(body).subscribe(res => {
@@ -341,7 +362,17 @@ export class QuestionnairesComponent implements OnInit {
     if (data === 'Question') {
       const body = {
         'items': this.questionsDataSource.data,
-        'FieldName': 'Organization.Question',
+        'FieldName': 'Setup.Question',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'Answer') {
+      const body = {
+        'items': this.answersDataSource.data,
+        'FieldName': 'Setup.Answer',
         'Type': type,
       };
       this.commonService.Export(body).subscribe(res => {
@@ -350,15 +381,7 @@ export class QuestionnairesComponent implements OnInit {
     }
   }
 
-  getBranchName(id: number) {
-    if (this.questions) {
-      for (let index = 0; index < this.questions.length; index++) {
-        if (this.questions[index].ID === id) {
-          return this.questions[index].Name;
-        }
-      }
-    }
-  }
+
 
 
   getQuestionnaireName(id: number) {
@@ -383,6 +406,14 @@ export class QuestionnairesComponent implements OnInit {
   masterToggle2() {
     this.isAllSelected2() ? this.selection2.clear() : this.questionsDataSource.data.forEach(row => this.selection2.select(row));
   }
+
+  isAllSelected3() {
+    return this.selection3.selected.length === this.answersDataSource.data.length;
+  }
+  masterToggle3() {
+    this.isAllSelected2() ? this.selection3.clear() : this.answersDataSource.data.forEach(row => this.selection3.select(row));
+  }
+
 
   resetForm(form) {
     form.reset();
@@ -410,7 +441,17 @@ export class QuestionnairesComponent implements OnInit {
 
         this.http.post(this.questionService.ApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
           this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-          this.reloadBranchTable();
+          this.reloadQuestionTableTable();
+        });
+        break;
+        case 'answers':
+        for (let index = 0; index < this.selection2.selected.length; index++) {
+          selectedData.push(this.selection2.selected[index].ID);
+        }
+
+        this.http.post(this.answerService.ApiUrl + 'DeleteMultiple', { IDs: selectedData }).subscribe(res => {
+          this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadAnswerTableTable();
         });
         break;
 

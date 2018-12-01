@@ -120,37 +120,39 @@
                     </div>
                     <div class="form-group col-md-3">
                       <label for="QustionnaireLevel">Question Type</label>
-                      <select name="QustionnaireLevel" class="form-control" [(ngModel)]="questionForm.QustionnaireLevel">
+                      <select name="QustionnaireLevel" (ngModelChange)="onQuestionType($event)" class="form-control" [(ngModel)]="questionForm.QustionnaireLevel">
                         <option [ngValue]="undefined">Select</option>
                         <option *ngFor="let level of QuestionnaireLevel" [ngValue]="level.ID">{{level.Name}}</option>
                       </select>
                     </div>
                     <div class="form-group col-md-3">
-                      <label for="LineOfBusiness">Line Of Business</label>
-                      <select name="LineOfBusiness" class="form-control" [(ngModel)]="questionnaireForm.LineOfBusiness">
+                      <label for="QuestionnaireID">Questionnaire</label>
+                      <select name="QuestionnaireID" class="form-control" [(ngModel)]="questionForm.QuestionnaireID">
                         <option [ngValue]="undefined">Select</option>
-                        <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
+                        <option *ngFor="let questionnaire of questionnaires" [ngValue]="questionnaire.ID">{{questionnaire.Name}}</option>
                       </select>
                     </div>
                 <div class="form-group col-md-3">
-                  <label for="SubLineOfBusiness">Sub LOB</label>
-                  <select name="SubLineOfBusiness" class="form-control" [(ngModel)]="questionnaireForm.SubLineOfBusiness">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let sub of SubLineOfBusinesses" [ngValue]="sub.ID">{{sub.Name}}</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-3">
                   <label for="Status">Status</label>
-                  <select name="Status" class="form-control" [(ngModel)]="questionnaireForm.Status">
+                  <select name="Status" class="form-control" [(ngModel)]="questionForm.Status">
                     <option [ngValue]="undefined">Select</option>
                     <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
                   </select>
                 </div>
+              </div>
+              <div class="row">
+                  <div class="form-group col-md-3" *ngIf="QuestionLockUp == 5">
+                      <label for="Status">Lockup List</label>
+                      <select name="Status" class="form-control" [(ngModel)]="questionForm.LockUpID">
+                        <option [ngValue]="undefined">Select</option>
+                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                      </select>
+                    </div>
                 <div class="col-md-7 text-right">
                   <br>
                   <br>
                   <div class="btn-group">
-                    <input class="btn btn-default" type="reset" (click)="questionnaireForm={};submit=false;resetForm(form)"
+                    <input class="btn btn-default" type="reset" (click)="questionForm={};submit=false;resetForm(form)"
                       value="Reset" />
                     <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                   </div>
@@ -160,7 +162,39 @@
           </fieldset>
 
           <br>
-
+          <fieldset>
+              <legend>
+                Answers
+              </legend>
+              <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit?'submited':''}}">
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <label for="Name">Name</label>
+                    <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="Name2">Name2 <span class="help-block">*</span></label>
+                    <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="questionForm.Name2"
+                      required>
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="AnswerOrder">Order</label>
+                    <input name="AnswerOrder" placeholder="Order" type="number" class="form-control" [(ngModel)]="questionForm.AnswerOrder">
+                  </div>
+                  <div class="col-md-7 text-right">
+                    <br>
+                    <br>
+                    <div class="btn-group">
+                      <input class="btn btn-default" type="reset" (click)="questionForm={};submit=false;resetForm(form)"
+                        value="Reset" />
+                      <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </fieldset>
+  
+            <br>
           <mat-tab-group (selectedTabChange)="changeTab($event)">
             <mat-tab label="Questionnaires">
               <div class="col-md-12">
@@ -208,34 +242,34 @@
                         </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="CODE">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
-                        <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.CurrencyCode}} </td>
-                      </ng-container>
-
                       <ng-container matColumnDef="NAME">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
-                        </td>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.NAME}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="NAME2">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME2}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="APPLYON">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Apply on</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{element.Name2}} </td>
+                          {{element.QustionnaireLevel}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="PHONE_CODE">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone Code </th>
+                      <ng-container matColumnDef="LINEOFBUSINESS">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Line of Business </th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.PhoneCode}} </td>
+                          {{element.LineOfBusiness}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="PHONE">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone </th>
+                      <ng-container matColumnDef="SUBLINEOFBUSINESS">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub Line of Business </th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.Phone}} </td>
+                          {{element.SubLineOfBusiness}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -269,13 +303,13 @@
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
                       (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','QuestionnaireQuestion')"
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Question')"
                       placement="bottom" ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','QuestionnaireQuestion')"
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','Question')"
                       placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
                     </a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','QuestionnaireQuestion')"
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','Question')"
                       placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
@@ -286,15 +320,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-md-3">
-                  <mat-form-field>
-                    <mat-select placeholder="Questionnaire" (selectionChange)="reloadQuestionTable(questionForm.CountryID)"
-                      [(ngModel)]="questionForm.CountryID">
-                      <mat-option [value]=""> All </mat-option>
-                      <mat-option *ngFor="let questionnaire of questionnaires" [value]="questionnaire.ID">
-                        {{questionnaire.Name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                 
                 </div>
                 <div class="x">
                   <div class="table-container">
@@ -328,12 +354,21 @@
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="BANK">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Questionnaire</th>
-                        <td mat-cell *matCellDef="let element">{{getQuestionnaireName(element.QuestionnaireID)}}
+                      <ng-container matColumnDef="ORDER">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
+                        <td mat-cell *matCellDef="let element">{{element.QustionOrder}}
                         </td>
                       </ng-container>
-
+                      <ng-container matColumnDef="QUESTIONTYPE">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header>Question Type</th>
+                          <td mat-cell *matCellDef="let element">{{element.QustionType}}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="QUESTIONTYPE">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Question Type</th>
+                            <td mat-cell *matCellDef="let element">{{getQuestionnaireName(element.QuestionnaireID)}}
+                            </td>
+                          </ng-container>
                       <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
@@ -440,13 +475,13 @@
                       [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
                       (confirm)="deleteSelectedData()" ngbTooltip="Delete">
                       <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','QuestionnaireQuestion')"
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','Answer')"
                       placement="bottom" ngbTooltip="Export to CSV"><span>
                         <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','QuestionnaireQuestion')"
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','Answer')"
                       placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
                     </a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','QuestionnaireQuestion')"
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','Answer')"
                       placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
                     <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
                   </div>
@@ -457,19 +492,11 @@
                   </mat-form-field>
                 </div>
                 <div class="col-md-3">
-                  <mat-form-field>
-                    <mat-select placeholder="Questionnaire" (selectionChange)="reloadQuestionTable(questionForm.CountryID)"
-                      [(ngModel)]="questionForm.CountryID">
-                      <mat-option [value]=""> All </mat-option>
-                      <mat-option *ngFor="let questionnaire of questionnaires" [value]="questionnaire.ID">
-                        {{questionnaire.Name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+     
                 </div>
                 <div class="x">
                   <div class="table-container">
-                    <table mat-table #table2 [dataSource]="questionsDataSource" matSort>
+                    <table mat-table #table3 [dataSource]="answersDataSource" matSort>
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
@@ -499,25 +526,25 @@
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="BANK">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Questionnaire</th>
-                        <td mat-cell *matCellDef="let element">{{getQuestionnaireName(element.QuestionnaireID)}}
+                      <ng-container matColumnDef="ORDER">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
+                        <td mat-cell *matCellDef="let element">{{element.AnswerOrder}}
                         </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
-                          <i (click)="updateQuestion(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="updateAnswer(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
                           <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
                             [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                            (confirm)="deleteQuestion(element.ID)" ngbTooltip="Delete"></i>
+                            (confirm)="deleteAnswer(element.ID)" ngbTooltip="Delete"></i>
                         </td>
                       </ng-container>
 
-                      <tr mat-header-row *matHeaderRowDef="questionTableColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: questionTableColumns;" (click)="updateQuestion(row)"
-                        class=" mat-row {{questionForm.ID===row.ID?'active':'not-active'}}"></tr>
+                      <tr mat-header-row *matHeaderRowDef="answersTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: answersTableColumns;" (click)="updateAnswer(row)"
+                        class=" mat-row {{answerForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                     </table>
                   </div>

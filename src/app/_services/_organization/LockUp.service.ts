@@ -70,4 +70,12 @@ export class LockUpService {
     return this.http.get<LockUp[]>(this.lockUpApiUrl + '/LoadLockUpsMinorCode?' + queryString);
   }
 
+  LoadLockUpsForQuestionnaire(languageID: number): Observable<LockUp[]> {
+    let queryString = '';
+
+    if (languageID != null) {
+      queryString += 'languageID=' + languageID;
+    }
+    return this.http.get<LockUp[]>(this.lockUpApiUrl + '/LoadLockUpsForQuestionnaire?' + queryString);
+  }
 }
