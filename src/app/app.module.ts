@@ -35,6 +35,9 @@ import { SubLineOfBusinessLockUpResolver } from './_resolvers/sub-line-of-busine
 import { LineOfBusinessResolver } from './_resolvers/line-of-business.resolver';
 import { LineOfBusinessLockUpResolver } from './_resolvers/line-of-business-lock-up.resolver';
 import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUnitsResolver } from './_resolvers/Diagnosis.resolver';
+import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
+import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
+import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
 
 
 
@@ -78,7 +81,10 @@ import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUni
     DiagnosisResolver,
     CodingSystemsResolver,
     GendersResolver,
-    FrequencyUnitsResolver
+    FrequencyUnitsResolver,
+    QuestionnaireResolver,
+    AppliedOnResolver,
+    SubLineOfBusinessResolver
   ],
   bootstrap: [AppComponent]
 })

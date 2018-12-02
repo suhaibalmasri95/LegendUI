@@ -1,4 +1,3 @@
-import { Questionnaire } from './../../../entities/Setup/Questionnaires';
 import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { AnswerService } from './../../../_services/_setup/Answer.service';
 import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
@@ -9,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Questionnaire, Question , Answer } from '../../../entities/Setup/Questionnaires';
+import { Questionnaire, Question, Answer } from '../../../entities/Setup/Questionnaires';
 import { LockUp } from '../../../entities/organization/LockUp';
 import { Currency } from '../../../entities/organization/Currency';
 import { Country } from '../../../entities/organization/Country';
@@ -54,7 +53,7 @@ export class QuestionnairesComponent implements OnInit {
   questionnaireTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'APPLYON', 'LINEOFBUSINESS', 'SUBLINEOFBUSINESS', 'actions'];
   questionnairesDataSource: MatTableDataSource<Questionnaire>;
 
-  questionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ORDER', 'QUESTIONTYPE', 'QUESTIONNAIRE' , 'actions'];
+  questionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ORDER', 'QUESTIONTYPE', 'QUESTIONNAIRE', 'actions'];
   questionsDataSource: MatTableDataSource<Question>;
 
   answersTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'ORDER', 'actions'];
@@ -77,7 +76,7 @@ export class QuestionnairesComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private questionnaireService: QuestionnairesService, private questionService: QuestionService,
-    private commonService: CommonService , private answerService: AnswerService , private lockUpService: LockUpService) { }
+    private commonService: CommonService, private answerService: AnswerService, private lockUpService: LockUpService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -114,7 +113,7 @@ export class QuestionnairesComponent implements OnInit {
       case 'questions':
         this.questionsDataSource.filter = filterValue.trim().toLowerCase();
         break;
-        case 'answers':
+      case 'answers':
         this.answersDataSource.filter = filterValue.trim().toLowerCase();
         break;
     }
@@ -134,7 +133,7 @@ export class QuestionnairesComponent implements OnInit {
           this.loadQuestType();
           this.reloadQuestionTableTable(this.questionForm.ID ? this.questionForm.ID : null);
           break;
-          case 2:
+        case 2:
           this.extraForm = 'answers';
           this.reloadAnswerTableTable(this.answerForm.ID ? this.answerForm.ID : null);
           break;
@@ -451,7 +450,7 @@ export class QuestionnairesComponent implements OnInit {
           this.reloadQuestionTableTable();
         });
         break;
-        case 'answers':
+      case 'answers':
         for (let index = 0; index < this.selection2.selected.length; index++) {
           selectedData.push(this.selection2.selected[index].ID);
         }

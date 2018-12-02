@@ -10,7 +10,7 @@ import { Service } from './../../entities/Setup/Diagnosis';
 })
 export class ServicesService {
 
-  ApiUrl: string = environment.azureUrl + 'Charge/';
+  ApiUrl: string = environment.azureUrl + 'MedicalServices/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Services: Service[];
 
@@ -40,24 +40,28 @@ export class ServicesService {
     );
   }
 
-  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeID: number = null, langId: number = null): Observable<Service[]> {
+  load(ID: number = null, ServiceType: number = null, CodeingSystem: number = null,
+    IS_ICD_SERV_BEN: number = null, Parent: number = null, langId: number = null): Observable<Service[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&LockUpChargeType=';
-    if (LockUpChargeType != null) {
-      queryString += LockUpChargeType;
+    queryString += '&ServiceType=';
+    if (ServiceType != null) {
+      queryString += ServiceType;
     }
-    queryString += '&LineOfBusinessCode=';
-    if (LineOfBusinessCode != null) {
-      queryString += LineOfBusinessCode;
+    queryString += '&CodeingSystem=';
+    if (CodeingSystem != null) {
+      queryString += CodeingSystem;
     }
-    queryString += '&ChargeID=';
-    if (ChargeID != null) {
-      queryString += ChargeID;
+    queryString += '&IS_ICD_SERV_BEN=';
+    if (IS_ICD_SERV_BEN != null) {
+      queryString += IS_ICD_SERV_BEN;
+    }
+    queryString += '&Parent=';
+    if (Parent != null) {
+      queryString += Parent;
     }
     queryString += '&langId=';
     if (langId != null) {

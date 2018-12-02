@@ -115,7 +115,8 @@
                       </div>
 
                       <div class="form-group col-md-2">
-                        <mat-checkbox name="IsChronic" [(ngModel)]="diagnoseForm.IsChronic">Is Chronic</mat-checkbox>
+                        <br>
+                        <mat-checkbox name="IsChronicCeckbox" [(ngModel)]="diagnoseForm.IsChronicCeckbox">Is Chronic</mat-checkbox>
                       </div>
 
                       <div class="col-md-12 text-right">
@@ -289,7 +290,7 @@
                           <select name="ServiceType" class="form-control" [(ngModel)]="serviceForm.ServiceType"
                             required>
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let serviceType of serviceTypes" [ngValue]="serviceType.ID">{{serviceType.Name}}</option>
+                            <option *ngFor="let serviceType of servicesTypes" [ngValue]="serviceType.ID">{{serviceType.Name}}</option>
                           </select>
                         </div>
 
@@ -478,7 +479,7 @@
             <mat-tab label="Benefits">
               <div class="col-md-12">
 
-                <div class="col-md-12 extra-form" *ngIf="extraForm==='benefits'">
+                <div class="col-md-12 extra-form" *ngIf="extraForm==='benefit'">
 
                   <fieldset class="animated fadeInDown">
                     <legend>
@@ -511,7 +512,7 @@
                           <select name="BenefitType" class="form-control" [(ngModel)]="benefitForm.BenefitType"
                             required>
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let BenefitType of BenefitTypes" [ngValue]="BenefitType.ID">{{BenefitType.Name}}</option>
+                            <option *ngFor="let BenefitType of benefitTypes" [ngValue]="BenefitType.ID">{{BenefitType.Name}}</option>
                           </select>
                         </div>
 

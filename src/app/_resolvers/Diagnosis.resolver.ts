@@ -13,7 +13,7 @@ import { LockUpService } from '../_services/_organization/LockUp.service';
 export class DiagnosisResolver implements Resolve<Diagnose[]> {
     constructor(private diagnosisService: DiagnosisService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<Diagnose[]> {
-        return this.diagnosisService.load(null, 1, null, null , 1).pipe(catchError(error => {
+        return this.diagnosisService.load(null, null, null, 1, null, 1).pipe(catchError(error => {
             //   this.router.navigate(['/organizations']);
             return of(null);
         })

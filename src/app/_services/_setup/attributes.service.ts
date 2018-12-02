@@ -10,7 +10,7 @@ import 'rxjs/add/operator/catch';
 })
 export class AttributesService {
 
-  ApiUrl: string = environment.azureUrl + 'Charge/';
+  ApiUrl: string = environment.azureUrl + 'Attributes/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Attributes: Attribute[];
 
@@ -40,24 +40,14 @@ export class AttributesService {
     );
   }
 
-  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeID: number = null, langId: number = null): Observable<Attribute[]> {
+  load(ID: number = null, ServiceType: number = null, langId: number = null): Observable<Attribute[]> {
     let queryString = '?ID=';
-
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&LockUpChargeType=';
-    if (LockUpChargeType != null) {
-      queryString += LockUpChargeType;
-    }
-    queryString += '&LineOfBusinessCode=';
-    if (LineOfBusinessCode != null) {
-      queryString += LineOfBusinessCode;
-    }
-    queryString += '&ChargeID=';
-    if (ChargeID != null) {
-      queryString += ChargeID;
+    queryString += '&ServiceType=';
+    if (ServiceType != null) {
+      queryString += ServiceType;
     }
     queryString += '&langId=';
     if (langId != null) {

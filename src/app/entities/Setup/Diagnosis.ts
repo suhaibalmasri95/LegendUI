@@ -17,6 +17,7 @@ export class Diagnose implements IEntity {
    ServiceType: number;
    IS_ICD_SERV_BEN: number;
    selected: boolean;
+  IsChronicCeckbox: boolean;
 }
 
 export class Service implements IEntity {

@@ -25,7 +25,7 @@ export class DiagnosisComponent implements OnInit {
 
   diagnoseForm: Diagnose;
   diagnosis: Diagnose[];
-  parentCodes: Diagnose[];
+
   serviceForm: Service;
   services: Service[];
 
@@ -34,6 +34,8 @@ export class DiagnosisComponent implements OnInit {
 
   attributeForm: Attribute;
   attributes: Attribute[];
+
+  parentCodes: Diagnose[];
 
   LockUps: LockUp[];
   AddUpdateUrl: string;
@@ -58,8 +60,8 @@ export class DiagnosisComponent implements OnInit {
 
   selection: SelectionModel<Diagnose>;
   selection2: SelectionModel<Service>;
-  selection3: SelectionModel<Attribute>;
-  selection4: SelectionModel<Benefit>;
+  selection3: SelectionModel<Benefit>;
+  selection4: SelectionModel<Attribute>;
 
 
   @ViewChild('paginator') paginator: MatPaginator;
@@ -101,8 +103,8 @@ export class DiagnosisComponent implements OnInit {
 
     this.selection = new SelectionModel<Diagnose>(true, []);
     this.selection2 = new SelectionModel<Service>(true, []);
-    this.selection3 = new SelectionModel<Attribute>(true, []);
-    this.selection4 = new SelectionModel<Benefit>(true, []);
+    this.selection3 = new SelectionModel<Benefit>(true, []);
+    this.selection4 = new SelectionModel<Attribute>(true, []);
 
 
     this.diagnoseForm = new Diagnose();
@@ -145,14 +147,19 @@ export class DiagnosisComponent implements OnInit {
     }
   }
   loadServicesType() {
-    this.lockUpService.LoadLockUpsByMajorCode(8).subscribe(res => {
+    this.lockUpService.LoadLockUpsByMajorCode(13).subscribe(res => {
       this.servicesTypes = res;
     });
   }
 
   loadBenefitType() {
-    this.lockUpService.LoadLockUpsByMajorCode(9).subscribe(res => {
+    this.lockUpService.LoadLockUpsByMajorCode(14).subscribe(res => {
       this.benefitTypes = res;
+    });
+  }
+  loadAttributeTypes() {
+    this.lockUpService.LoadLockUpsByMajorCode(15).subscribe(res => {
+      this.AttributeTypes = res;
     });
   }
 
@@ -164,18 +171,21 @@ export class DiagnosisComponent implements OnInit {
           this.renderDiagnoseTable(this.diagnosis);
           break;
         case 1:
-          this.loadServicesType();
           this.extraForm = 'services';
           this.reloadServiceTable();
+          this.loadServicesType();
+
           break;
         case 2:
-          this.loadBenefitType();
+
           this.extraForm = 'benefit';
           this.reloadBenefitTable();
+          this.loadBenefitType();
           break;
         case 3:
           this.extraForm = 'attribute';
           this.reloadAttributesTable();
+          this.loadAttributeTypes();
           break;
       }
     });
@@ -212,20 +222,6 @@ export class DiagnosisComponent implements OnInit {
     };
   }
 
-  renderAttributesTable(data) {
-    this.attributes = data;
-    this.attributesDataSource = new MatTableDataSource<Attribute>(data);
-    this.attributesDataSource.paginator = this.paginator3;
-    this.attributesDataSource.sort = this.sort3;
-    this.selection3 = new SelectionModel<Attribute>(true, []);
-    this.attributesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId]) {
-        return this.sort3.direction === 'asc' ? '3' : '1';
-      }
-      // tslint:disable-next-line:max-line-length
-      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
-    };
-  }
 
   renderBenefitTable(data) {
     this.benefits = data;
@@ -242,28 +238,42 @@ export class DiagnosisComponent implements OnInit {
     };
   }
 
-  reloadDiagnoseTable(LineOfBusinessCode?) {
-    this.diagnosisService.load(null, 1, LineOfBusinessCode, null, 1).subscribe(data => {
+  renderAttributesTable(data) {
+    this.attributes = data;
+    this.attributesDataSource = new MatTableDataSource<Attribute>(data);
+    this.attributesDataSource.paginator = this.paginator3;
+    this.attributesDataSource.sort = this.sort3;
+    this.selection4 = new SelectionModel<Attribute>(true, []);
+    this.attributesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+      if (!sortData[sortHeaderId]) {
+        return this.sort3.direction === 'asc' ? '3' : '1';
+      }
+      // tslint:disable-next-line:max-line-length
+      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+    };
+  }
+  reloadDiagnoseTable(coding?, parent?) {
+    this.diagnosisService.load(null, null, coding, 1, parent, 1).subscribe(data => {
       this.renderDiagnoseTable(data);
     });
   }
 
 
-  reloadServiceTable(LineOfBusinessCode?, ChargeID?) {
-    this.servicesService.load(null, 2, LineOfBusinessCode, ChargeID, 1).subscribe(data => {
+  reloadServiceTable(type?, parent?) {
+    this.servicesService.load(null, type, null, 2, parent, 1).subscribe(data => {
       this.renderServiceTable(data);
 
     });
   }
 
-  reloadBenefitTable(LineOfBusinessCode?) {
-    this.attributesService.load(null, 4, LineOfBusinessCode, null, 1).subscribe(data => {
+  reloadBenefitTable(type?, parent?) {
+    this.benefitService.load(null, type, null, 3, parent, 1).subscribe(data => {
       this.renderBenefitTable(data);
     });
   }
 
-  reloadAttributesTable(LineOfBusinessCode?) {
-    this.attributesService.load(null, 3, LineOfBusinessCode, null, 1).subscribe(data => {
+  reloadAttributesTable(type?) {
+    this.attributesService.load(null, type, 1).subscribe(data => {
       this.renderAttributesTable(data);
     });
 
@@ -305,9 +315,8 @@ export class DiagnosisComponent implements OnInit {
       return;
     }
     this.diagnoseForm = this.diagnoseForm.selected ? this.diagnoseForm : Object.assign({}, form.value);
-    this.diagnoseForm.CreatedBy = 'Admin';
-    this.diagnoseForm.LockUpChargeType = 1;
-    // this.diagnoseForm.LockUpType = 2;
+    this.diagnoseForm.IsChronic = this.diagnoseForm.IsChronicCeckbox ? 1 : 0;
+    this.diagnoseForm.IS_ICD_SERV_BEN = 1;
 
     if (this.diagnoseForm.selected) {
       this.AddUpdateUrl = this.diagnosisService.ApiUrl + 'Update';
@@ -346,9 +355,8 @@ export class DiagnosisComponent implements OnInit {
 
     if (form.invalid) { return; }
     this.serviceForm = this.serviceForm.selected ? this.serviceForm : Object.assign({}, form.value);
-    this.serviceForm.CreatedBy = 'Admin';
-    // this.serviceForm.LockUpType = 2;
-    this.serviceForm.LockUpChargeType = 2;
+    this.diagnoseForm.IS_ICD_SERV_BEN = 2;
+
     if (this.serviceForm.selected) {
       this.AddUpdateUrl = this.servicesService.ApiUrl + 'Update';
     } else {
@@ -384,7 +392,7 @@ export class DiagnosisComponent implements OnInit {
   saveBenefit(form) {
     if (form.invalid) { return; }
     this.benefitForm = this.benefitForm.selected ? this.benefitForm : Object.assign({}, form.value);
-    this.benefitForm.LockUpChargeType = 4;
+    this.diagnoseForm.IS_ICD_SERV_BEN = 3;
     if (this.benefitForm.selected) {
       this.AddUpdateUrl = this.benefitService.ApiUrl + 'Update';
     } else {
@@ -394,7 +402,7 @@ export class DiagnosisComponent implements OnInit {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadBenefitTable();
       this.benefitForm = new Benefit;
-      this.submit4 = false;
+      this.submit3 = false;
       form.resetForm();
     });
 
@@ -420,7 +428,7 @@ export class DiagnosisComponent implements OnInit {
   saveAttribute(form) {
     if (form.invalid) { return; }
     this.attributeForm = this.attributeForm.selected ? this.attributeForm : Object.assign({}, form.value);
-    this.attributeForm.LockUpChargeType = 3;
+    // this.attributeForm.LockUpChargeType = 3;
     if (this.attributeForm.selected) {
       this.AddUpdateUrl = this.attributesService.ApiUrl + 'Update';
     } else {
@@ -430,7 +438,7 @@ export class DiagnosisComponent implements OnInit {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadAttributesTable();
       this.attributeForm = new Attribute;
-      this.submit3 = false;
+      this.submit4 = false;
       form.resetForm();
     });
 
@@ -553,16 +561,17 @@ export class DiagnosisComponent implements OnInit {
   }
 
   isAllSelected3() {
-    return this.selection3.selected.length === this.attributesDataSource.data.length;
+    return this.selection3.selected.length === this.benefitDataSource.data.length;
   }
   masterToggle3() {
-    this.isAllSelected3() ? this.selection3.clear() : this.attributesDataSource.data.forEach(row => this.selection3.select(row));
+    this.isAllSelected3() ? this.selection3.clear() : this.benefitDataSource.data.forEach(row => this.selection3.select(row));
   }
+
   isAllSelected4() {
-    return this.selection4.selected.length === this.benefitDataSource.data.length;
+    return this.selection4.selected.length === this.attributesDataSource.data.length;
   }
   masterToggle4() {
-    this.isAllSelected4() ? this.selection4.clear() : this.benefitDataSource.data.forEach(row => this.selection4.select(row));
+    this.isAllSelected4() ? this.selection4.clear() : this.attributesDataSource.data.forEach(row => this.selection4.select(row));
   }
 
 
