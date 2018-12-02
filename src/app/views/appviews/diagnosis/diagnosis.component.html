@@ -61,7 +61,7 @@
 
 
                       <div class="form-group col-md-3">
-                        <label for="CodingSystem">Coding System</label>
+                        <label for="CodingSystem">Coding System <span class="help-block">*</span></label>
                         <select name="CodingSystem" class="form-control" [(ngModel)]="diagnoseForm.CodingSystem"
                           required>
                           <option [ngValue]="undefined">Select</option>
@@ -119,12 +119,12 @@
                         <mat-checkbox name="IsChronicCeckbox" [(ngModel)]="diagnoseForm.IsChronicCeckbox">Is Chronic</mat-checkbox>
                       </div>
 
-                      <div class="col-md-12 text-right">
+                      <div class="col-md-4 text-right">
                         <br>
                         <br>
-                        <input class="btn btn-default" type="reset" (click)="diagnoseForm={};submit1=false;resetForm(form)"
+                        <input class="btn btn-default" type="reset" (click)="diagnoseForm={};submit=false;resetForm(form)"
                           value="Reset" />
-                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit1=true" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                       </div>
                     </div>
                   </form>
@@ -164,7 +164,7 @@
                       <mat-select placeholder="Coding System" (selectionChange)="reloadDiagnoseTable(CodingSystem,null)"
                         [(ngModel)]="CodingSystem">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let CodingSystem of CodingSystems" [value]="CodingSystems.ID">
+                        <mat-option *ngFor="let CodingSystem of CodingSystems" [value]="CodingSystem.ID">
                           {{CodingSystem.Name}}
                         </mat-option>
                       </mat-select>
@@ -176,7 +176,7 @@
                       <mat-select placeholder="Parent diagnosis" (selectionChange)="reloadDiagnoseTable(null,parentDiagnosis)"
                         [(ngModel)]="parentDiagnosis">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let parentDiagnoses of Diagnosis" [value]="parentDiagnoses.ID">
+                        <mat-option *ngFor="let parentDiagnoses of diagnosis" [value]="parentDiagnoses.ID">
                           {{parentDiagnoses.Name}}
                         </mat-option>
                       </mat-select>
@@ -186,7 +186,7 @@
                 <div class="x">
                   <div class="table-container">
 
-                    <table mat-table #table [dataSource]="diagnosesDataSource" matSort>
+                    <table mat-table #table [dataSource]="diagnosisDataSource" matSort>
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
                           <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -223,7 +223,7 @@
                       <ng-container matColumnDef="codingSystem">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Coding System</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getCodingSystemName(element.codingSystem)}} </td>
+                          {{getCodingSystemName(element.CodingSystem)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ParentDiagnose">
@@ -440,7 +440,7 @@
                       <ng-container matColumnDef="ServiceType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Service Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getServiceTypeName(element.ChargeType)}} </td>
+                          {{getServiceTypeName(element.ServiceType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ParentService">
@@ -508,8 +508,8 @@
 
 
                         <div class="form-group col-md-3">
-                          <label for="BenefitType">Benefit Type</label>
-                          <select name="BenefitType" class="form-control" [(ngModel)]="benefitForm.BenefitType"
+                          <label for="ServiceType">Benefit Type</label>
+                          <select name="ServiceType" class="form-control" [(ngModel)]="benefitForm.ServiceType"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let BenefitType of benefitTypes" [ngValue]="BenefitType.ID">{{BenefitType.Name}}</option>
@@ -521,10 +521,10 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="ParentBenefit">Parent Benefit</label>
-                          <select name="ParentBenefit" class="form-control" [(ngModel)]="benefitForm.ParentBenefit">
+                          <label for="Parent">Parent Benefit</label>
+                          <select name="Parent" class="form-control" [(ngModel)]="benefitForm.Parent">
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let ParentBenefit of Benefits" [ngValue]="ParentBenefit.ID">{{ParentBenefit.Name}}</option>
+                            <option *ngFor="let ParentBenefit of benefits" [ngValue]="ParentBenefit.ID">{{ParentBenefit.Name}}</option>
                           </select>
                         </div>
 
@@ -608,7 +608,7 @@
                       <mat-select placeholder="Benefit Type" (selectionChange)="reloadBenefitsTable(BenefitType,null)"
                         [(ngModel)]="BenefitType">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let BenefitType of BenefitTypes" [value]="BenefitType.ID">
+                        <mat-option *ngFor="let BenefitType of benefitTypes" [value]="BenefitType.ID">
                           {{BenefitType.Name}}
                         </mat-option>
                       </mat-select>
@@ -620,7 +620,7 @@
                       <mat-select placeholder="Parent benefit" (selectionChange)="reloadBenefitsTable(null,parentBenefit)"
                         [(ngModel)]="parentBenefit">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let parentBenefit of parentBenefit" [value]="parentBenefit.ID">
+                        <mat-option *ngFor="let parentBenefit of benefits" [value]="parentBenefit.ID">
                           {{parentBenefit.Name}}
                         </mat-option>
                       </mat-select>
@@ -667,7 +667,7 @@
                       <ng-container matColumnDef="BenefitType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Benefit Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getBenefitTypeName(element.BenefitType)}} </td>
+                          {{getBenefitTypeName(element.ServiceType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="ParentBenefit">
@@ -728,9 +728,8 @@
 
 
                         <div class="form-group col-md-3">
-                          <label for="AttributeType ">Attribute Type <span class="help-block">*</span></label>
-                          <select name="AttributeType " class="form-control" [(ngModel)]="attributeForm.AttributeType"
-                            required>
+                          <label for="Type">Attribute Type <span class="help-block">*</span></label>
+                          <select name="Type" class="form-control" [(ngModel)]="attributeForm.Type" required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let AttributeType of AttributeTypes" [ngValue]="AttributeType.ID">{{AttributeType.Name}}</option>
                           </select>
@@ -813,11 +812,6 @@
                         <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="Code">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Code</th>
-                        <td mat-cell *matCellDef="let element"> {{element.Code}} </td>
-                      </ng-container>
-
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
@@ -828,10 +822,10 @@
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="AttributeType">
+                      <ng-container matColumnDef="Type">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Attribute Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{getAttributeTypeName(element.AttributeType)}} </td>
+                          {{getAttributeTypeName(element.Type)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">

@@ -52,7 +52,7 @@ export class DiagnosisService {
     if (ServiceType != null) {
       queryString += ServiceType;
     }
-    queryString += '&CodeingSystem=';
+    queryString += '&CodingSystem=';
     if (CodeingSystem != null) {
       queryString += CodeingSystem;
     }

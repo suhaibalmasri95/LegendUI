@@ -1,4 +1,4 @@
-import { QuestionnairesService } from './../_services/_setup/questionnaires.service';
+import { QuestionnairesService } from '../_services/_setup/Questionnaires.service';
 import { Questionnaire } from '../entities/Setup/Questionnaires';
 
 import { Injectable } from '@angular/core';

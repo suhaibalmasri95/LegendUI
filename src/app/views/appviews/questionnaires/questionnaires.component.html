@@ -74,7 +74,7 @@
                     <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
                   </select>
                 </div>
-                <div class="col-md-7 text-right">
+                <div class="col-md-6 text-right">
                   <br>
                   <br>
                   <div class="btn-group">
@@ -88,112 +88,10 @@
           </fieldset>
 
           <!-- <br>
-          <fieldset>
-            <legend>
-              Questions
-            </legend>
-            <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit?'submited':''}}">
-              <div class="row">
-                <div class="form-group col-md-3">
-                  <label for="Name">Name</label>
-                  <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name">
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="Name2">Name2 <span class="help-block">*</span></label>
-                  <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="questionForm.Name2"
-                    required>
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="Description">Description</label>
-                  <input name="Description" placeholder="Description" type="text" class="form-control" [(ngModel)]="questionForm.Description">
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="Description2">Description2</label>
-                  <input name="Description2" placeholder="Description2" type="text" class="form-control" [(ngModel)]="questionForm.Description2">
-                </div>
-
-              </div>
-              <div class="row">
-                <div class="form-group col-md-3">
-                  <label for="QustionOrder">Order</label>
-                  <input name="QustionOrder" placeholder="Order" type="number" class="form-control" [(ngModel)]="questionForm.QustionOrder">
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="QustionnaireLevel">Question Type</label>
-                  <select name="QustionnaireLevel" (ngModelChange)="onQuestionType($event)" class="form-control"
-                    [(ngModel)]="questionForm.QustionnaireLevel">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let level of QuestionnaireLevel" [ngValue]="level.ID">{{level.Name}}</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="QuestionnaireID">Questionnaire</label>
-                  <select name="QuestionnaireID" class="form-control" [(ngModel)]="questionForm.QuestionnaireID">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let questionnaire of questionnaires" [ngValue]="questionnaire.ID">{{questionnaire.Name}}</option>
-                  </select>
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="Status">Status</label>
-                  <select name="Status" class="form-control" [(ngModel)]="questionForm.Status">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
-                  </select>
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-group col-md-3" *ngIf="QuestionLockUp == 5">
-                  <label for="Status">Lockup List</label>
-                  <select name="Status" class="form-control" [(ngModel)]="questionForm.LockUpID">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
-                  </select>
-                </div>
-                <div class="col-md-7 text-right">
-                  <br>
-                  <br>
-                  <div class="btn-group">
-                    <input class="btn btn-default" type="reset" (click)="questionForm={};submit=false;resetForm(form)"
-                      value="Reset" />
-                    <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
-                  </div>
-                </div>
-              </div>
-            </form>
-          </fieldset>
+         
 
           <br>
-          <fieldset>
-            <legend>
-              Answers
-            </legend>
-            <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit?'submited':''}}">
-              <div class="row">
-                <div class="form-group col-md-3">
-                  <label for="Name">Name</label>
-                  <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name">
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="Name2">Name2 <span class="help-block">*</span></label>
-                  <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="questionForm.Name2"
-                    required>
-                </div>
-                <div class="form-group col-md-3">
-                  <label for="AnswerOrder">Order</label>
-                  <input name="AnswerOrder" placeholder="Order" type="number" class="form-control" [(ngModel)]="questionForm.AnswerOrder">
-                </div>
-                <div class="col-md-7 text-right">
-                  <br>
-                  <br>
-                  <div class="btn-group">
-                    <input class="btn btn-default" type="reset" (click)="questionForm={};submit=false;resetForm(form)"
-                      value="Reset" />
-                    <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
-                  </div>
-                </div>
-              </div>
-            </form>
-          </fieldset> -->
+          -->
 
           <br>
           <mat-tab-group (selectedTabChange)="changeTab($event)">
@@ -243,15 +141,15 @@
                         </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="NAME">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+                      <ng-container matColumnDef="Name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.NAME}} </td>
+                          {{element.Name}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="NAME2">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME2</th>
-                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.NAME2}}
+                      <ng-container matColumnDef="Name2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name2}}
                         </td>
                       </ng-container>
 
@@ -345,12 +243,12 @@
                         <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="NAME">
+                      <ng-container matColumnDef="Name">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="NAME2">
+                      <ng-container matColumnDef="Name2">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
@@ -394,71 +292,77 @@
 
                 <div class="col-md-12 extra-form" *ngIf="extraForm==='questions'">
 
-                  <fieldset class="animated fadeInDown">
+                  <fieldset>
                     <legend>
-                      Question
+                      Questions
                     </legend>
-                    <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit2?'submited':''}}">
+                    <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit?'submited':''}}">
                       <div class="row">
                         <div class="form-group col-md-3">
-                          <label for="CurrencyCode">Code</label>
-                          <input name="CurrencyCode" placeholder="Code" type="text" class="form-control" [(ngModel)]="questionForm.CurrencyCode">
+                          <label for="Name">Name</label>
+                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name">
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name">Name <span class="help-block">*</span></label>
-                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name"
+                          <label for="Name2">Name2 <span class="help-block">*</span></label>
+                          <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="questionForm.Name2"
                             required>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name2">Name 2</label>
-                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="questionForm.Name2">
+                          <label for="Description">Description</label>
+                          <input name="Description" placeholder="Description" type="text" class="form-control"
+                            [(ngModel)]="questionForm.Description">
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="Description2">Description2</label>
+                          <input name="Description2" placeholder="Description2" type="text" class="form-control"
+                            [(ngModel)]="questionForm.Description2">
                         </div>
 
+                      </div>
+                      <div class="row">
                         <div class="form-group col-md-3">
-                          <label for="QuestionnaireID">Questionnaire <span class="help-block">*</span></label>
-                          <select name="QuestionnaireID" class="form-control" [(ngModel)]="questionForm.QuestionnaireID"
-                            required>
+                          <label for="QustionOrder">Order</label>
+                          <input name="QustionOrder" placeholder="Order" type="number" class="form-control" [(ngModel)]="questionForm.QustionOrder">
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="QustionType">Question Type</label>
+                          <select name="QustionType" (change)="onQuestionType(questionForm.QustionType)"
+                            class="form-control" [(ngModel)]="questionForm.QustionType">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let level of QuestionType" [ngValue]="level.ID">{{level.Name}}</option>
+                          </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="QuestionnaireID">Questionnaire</label>
+                          <select name="QuestionnaireID" class="form-control" [(ngModel)]="questionForm.QuestionnaireID">
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let questionnaire of questionnaires" [ngValue]="questionnaire.ID">{{questionnaire.Name}}</option>
                           </select>
                         </div>
-
+                        <div class="form-group col-md-3">
+                          <label for="Status">Status</label>
+                          <select name="Status" class="form-control" [(ngModel)]="questionForm.Status">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                          </select>
+                        </div>
                       </div>
-
                       <div class="row">
-
-                        <div class="form-group col-md-3">
-                          <label for="CountryID">Country <span class="help-block">*</span></label>
-                          <select name="CountryID" placeholder="Country" class="form-control" [(ngModel)]="questionForm.CountryID"
-                            (change)="loadCities()" required>
-                            <option ngValue="">Select</option>
-                            <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
+                        <div class="form-group col-md-3" *ngIf="minor.MinorCode  == 5">
+                          <label for="LockUpID">Lockup List</label>
+                          <select name="LockUpID" class="form-control" [(ngModel)]="questionForm.LockUpID">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let type of QuestionLockUp" [ngValue]="type.ID">{{type.Name}}</option>
                           </select>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="CityID">City <span class="help-block">*</span></label>
-                          <select name="CityID" placeholder="City" class="form-control" [(ngModel)]="questionForm.CityID"
-                            [disabled]="!cities ||cities.length===0" required>
-                            <option ngValue="">Select</option>
-                            <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.Name}}</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="PhoneCode">Phone Code</label>
-                          <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="questionForm.PhoneCode">
-                        </div>
-                        <div class="form-group col-md-3">
-                          <label for="Phone">Phone</label>
-                          <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="questionForm.Phone">
                         </div>
                         <div class="col-md-12 text-right">
                           <br>
                           <br>
-                          <input class="btn btn-default" type="reset" (click)="questionForm={};submit2=false;resetForm(form)"
-                            value="Reset" />
-                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                          <div class="btn-group">
+                            <input class="btn btn-default" type="reset" (click)="questionForm={};submit=false;resetForm(form)"
+                              value="Reset" />
+                            <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                          </div>
                         </div>
                       </div>
                     </form>
@@ -517,12 +421,12 @@
                         <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="NAME">
+                      <ng-container matColumnDef="Name">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="NAME2">
+                      <ng-container matColumnDef="Name2">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
@@ -554,73 +458,35 @@
                 <div class="hr-line-dashed"></div>
 
 
-                <div class="col-md-12 extra-form" *ngIf="extraForm==='questions'">
+                <div class="col-md-12 extra-form" *ngIf="extraForm==='answers'">
 
-                  <fieldset class="animated fadeInDown">
+                  <fieldset>
                     <legend>
-                      Question
+                      Answers
                     </legend>
-                    <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit2?'submited':''}}">
+                    <form #form="ngForm" (ngSubmit)="saveQuestion(form)" class="{{submit?'submited':''}}">
                       <div class="row">
                         <div class="form-group col-md-3">
-                          <label for="CurrencyCode">Code</label>
-                          <input name="CurrencyCode" placeholder="Code" type="text" class="form-control" [(ngModel)]="questionForm.CurrencyCode">
+                          <label for="Name">Name</label>
+                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name">
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name">Name <span class="help-block">*</span></label>
-                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="questionForm.Name"
+                          <label for="Name2">Name2 <span class="help-block">*</span></label>
+                          <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="questionForm.Name2"
                             required>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Name2">Name 2</label>
-                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="questionForm.Name2">
+                          <label for="AnswerOrder">Order</label>
+                          <input name="AnswerOrder" placeholder="Order" type="number" class="form-control" [(ngModel)]="questionForm.AnswerOrder">
                         </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="QuestionnaireID">Questionnaire <span class="help-block">*</span></label>
-                          <select name="QuestionnaireID" class="form-control" [(ngModel)]="questionForm.QuestionnaireID"
-                            required>
-                            <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let questionnaire of questionnaires" [ngValue]="questionnaire.ID">{{questionnaire.Name}}</option>
-                          </select>
-                        </div>
-
-                      </div>
-
-                      <div class="row">
-
-                        <div class="form-group col-md-3">
-                          <label for="CountryID">Country <span class="help-block">*</span></label>
-                          <select name="CountryID" placeholder="Country" class="form-control" [(ngModel)]="questionForm.CountryID"
-                            (change)="loadCities()" required>
-                            <option ngValue="">Select</option>
-                            <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="CityID">City <span class="help-block">*</span></label>
-                          <select name="CityID" placeholder="City" class="form-control" [(ngModel)]="questionForm.CityID"
-                            [disabled]="!cities ||cities.length===0" required>
-                            <option ngValue="">Select</option>
-                            <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.Name}}</option>
-                          </select>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="PhoneCode">Phone Code</label>
-                          <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="questionForm.PhoneCode">
-                        </div>
-                        <div class="form-group col-md-3">
-                          <label for="Phone">Phone</label>
-                          <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="questionForm.Phone">
-                        </div>
-                        <div class="col-md-12 text-right">
+                        <div class="col-md-3 text-right">
                           <br>
                           <br>
-                          <input class="btn btn-default" type="reset" (click)="questionForm={};submit2=false;resetForm(form)"
-                            value="Reset" />
-                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                          <div class="btn-group">
+                            <input class="btn btn-default" type="reset" (click)="questionForm={};submit=false;resetForm(form)"
+                              value="Reset" />
+                            <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                          </div>
                         </div>
                       </div>
                     </form>

@@ -55,7 +55,7 @@ export class DiagnosisComponent implements OnInit {
   benefitTableColumns = ['select', 'ID', 'Code', 'NAME', 'NAME2', 'BenefitType', 'ParentBenefit', 'actions'];
   benefitDataSource: MatTableDataSource<Benefit>;
 
-  attributesTableColumns = ['select', 'ID', 'Code', 'NAME', 'NAME2', 'AttributeType', 'actions'];
+  attributesTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Type', 'actions'];
   attributesDataSource: MatTableDataSource<Attribute>;
 
   selection: SelectionModel<Diagnose>;
@@ -124,7 +124,14 @@ export class DiagnosisComponent implements OnInit {
       this.renderDiagnoseTable(data.Diagnosis);
     });
 
-
+    this.BasicLobCodes = [];
+    this.chargeType = [];
+    this.servicesTypes = [];
+    this.AttributeTypes = [];
+    this.benefitTypes = [];
+    this.CodingSystems = [];
+    this.Genders = [];
+    this.FrequencyUnits = [];
 
   }
 
@@ -172,20 +179,19 @@ export class DiagnosisComponent implements OnInit {
           break;
         case 1:
           this.extraForm = 'services';
-          this.reloadServiceTable();
           this.loadServicesType();
-
+          this.reloadServiceTable();
           break;
         case 2:
 
           this.extraForm = 'benefit';
-          this.reloadBenefitTable();
           this.loadBenefitType();
+          this.reloadBenefitTable();
           break;
         case 3:
           this.extraForm = 'attribute';
-          this.reloadAttributesTable();
           this.loadAttributeTypes();
+          this.reloadAttributesTable();
           break;
       }
     });
@@ -355,7 +361,8 @@ export class DiagnosisComponent implements OnInit {
 
     if (form.invalid) { return; }
     this.serviceForm = this.serviceForm.selected ? this.serviceForm : Object.assign({}, form.value);
-    this.diagnoseForm.IS_ICD_SERV_BEN = 2;
+    this.serviceForm.IS_ICD_SERV_BEN = 2;
+    this.serviceForm.IsChronic = 0;
 
     if (this.serviceForm.selected) {
       this.AddUpdateUrl = this.servicesService.ApiUrl + 'Update';
@@ -392,7 +399,9 @@ export class DiagnosisComponent implements OnInit {
   saveBenefit(form) {
     if (form.invalid) { return; }
     this.benefitForm = this.benefitForm.selected ? this.benefitForm : Object.assign({}, form.value);
-    this.diagnoseForm.IS_ICD_SERV_BEN = 3;
+    this.benefitForm.IS_ICD_SERV_BEN = 3;
+    this.benefitForm.IsChronic = 0;
+
     if (this.benefitForm.selected) {
       this.AddUpdateUrl = this.benefitService.ApiUrl + 'Update';
     } else {
