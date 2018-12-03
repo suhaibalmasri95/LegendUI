@@ -1,0 +1,438 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-10">
+    <!-- <h2>{{formControls.Name}}</h2> -->
+    <h2>Dynamic categories and Columns</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a>Setup</a>
+      </li>
+      <li class="active">
+        <strong>Dynamic categories and Columns</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-sm-2">
+    <div class="title-action">
+      <!-- <a ui-sref="pages.edit-form({id:formControls.id})" class="btn btn-primary">Edit This form</a> -->
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="tabs-container">
+        <div class="panel-body">
+
+          <fieldset>
+            <legend>
+              Categories
+            </legend>
+            <form #form="ngForm" (ngSubmit)="saveCategory(form)" class="{{submit?'submited':''}}">
+
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="Name">Name <span class="help-block">*</span></label>
+                  <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="categoryForm.Name"
+                    required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Name2">Name 2</label>
+                  <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="categoryForm.Name2">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Label">Label <span class="help-block">*</span></label>
+                  <input name="Label" placeholder="Label" type="text" class="form-control" [(ngModel)]="categoryForm.Label"
+                    required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Label2">Label 2</label>
+                  <input name="Label2" placeholder="Label 2" type="text" class="form-control" [(ngModel)]="categoryForm.Label2">
+                </div>
+              </div>
+
+
+              <div class="row">
+
+                <div class="form-group col-md-3">
+                  <label for="LineOfBusiness">Line Of Business</label>
+                  <select name="LineOfBusiness" class="form-control" [(ngModel)]="categoryForm.LineOfBusiness">
+                    <option [ngValue]="undefined">Select</option>
+                    <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="SubLineOfBusiness">Sub LOB</label>
+                  <select name="SubLineOfBusiness" class="form-control" [(ngModel)]="categoryForm.SubLineOfBusiness">
+                    <option [ngValue]="undefined">Select</option>
+                    <option *ngFor="let sub of SubLineOfBusinesses" [ngValue]="sub.ID">{{sub.Name}}</option>
+                  </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label for="Status">Status</label>
+                  <select name="Status" class="form-control" [(ngModel)]="categoryForm.Status">
+                    <option [ngValue]="undefined">Select</option>
+                    <option *ngFor="let status of Status" [ngValue]="status.ID">{{status.Name}}</option>
+                  </select>
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label for="Level">Level</label>
+                  <select name="Level" class="form-control" [(ngModel)]="categoryForm.Level">
+                    <option [ngValue]="undefined">Select</option>
+                    <option *ngFor="let level of Levels" [ngValue]="level.ID">{{level.Name}}</option>
+                  </select>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="form-group col-md-2">
+                  <br>
+                  <mat-checkbox name="IsMultiRecords" [(ngModel)]="categoryForm.IsMultiRecords"> Multi Records</mat-checkbox>
+                </div>
+                <div class="col-md-8 text-right">
+                  <br>
+                  <br>
+                  <div class="btn-group">
+                    <input class="btn btn-default" type="reset" (click)="categoryForm={};submit=false;resetForm(form)"
+                      value="Reset" />
+                    <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </fieldset>
+
+          <br>
+
+          <mat-tab-group (selectedTabChange)="showColumnAreaForm($event)">
+            <mat-tab label="Categories">
+
+              <div class="col-md-12">
+                <div class="html5buttons">
+                  <br>
+                  <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
+                      [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                      <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','category')" placement="bottom"
+                      ngbTooltip="Export to CSV"><span>
+                        <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','category')"
+                      placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','category')" placement="bottom"
+                      ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                  </div>
+                </div>
+                <br>
+                <mat-form-field>
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                </mat-form-field>
+                <div class="x">
+                  <div class="table-container">
+                    <table mat-table #table [dataSource]="categoriesDataSource" matSort>
+
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                          </mat-checkbox>
+                        </th>
+                        <td style="width: 5%" mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td style="width: 5%" mat-cell *matCellDef="let element">
+                          {{element.ID}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.Name}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Name2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.Name2}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Label">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Label</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.Label}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Label2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Label2</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.Label2}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="LineOfBusiness">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Line of Business </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.LineOfBusiness}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="SubLineOfBusiness">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub Line of Business </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.SubLineOfBusiness}} </td>
+                      </ng-container>
+
+
+                      <ng-container matColumnDef="Level">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.Level}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="IsMultiRecords">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Records </th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.IsMultiRecords}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td style="width: 20%" mat-cell *matCellDef="let element">
+                          <i (click)="updateCategory(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteCategory(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="categoryTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: categoryTableColumns;" (click)="updateCategory(row)"
+                        class=" mat-row {{categoryForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                    </table>
+                  </div>
+                  <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+                </div>
+              </div>
+
+            </mat-tab>
+            <mat-tab label="Columns">
+              <div class="col-md-12">
+                <div class="html5buttons">
+                  <br>
+                  <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
+                      [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                      <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','column')" placement="bottom"
+                      ngbTooltip="Export to CSV"><span>
+                        <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','column')" placement="bottom"
+                      ngbTooltip="Export to Excel"><span><img src="
+                                            assets/images/ExcelLogoSmall.scale-80.png">
+                      </span> </a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','column')" placement="bottom"
+                      ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-select placeholder="Category" (selectionChange)="reloadColumnTable(columnForm.ColumnGroupID)"
+                      [(ngModel)]="columnForm.ColumnGroupID">
+                      <mat-option [value]=""> All </mat-option>
+                      <mat-option *ngFor="let category of categories" [value]="category.ID">
+                        {{category.Name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="x">
+                  <div class="table-container">
+                    <table mat-table #table2 [dataSource]="columnsDataSource" matSort>
+
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                            [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                            [checked]="selection2.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                      </ng-container>
+
+
+
+                      <ng-container matColumnDef="Name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Name2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+                        <td mat-cell *matCellDef="let element">{{element.Type}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Category">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Category </th>
+                        <td mat-cell *matCellDef="let element">{{getCategoryName(element.Category)}}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="ListReference">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>List reference </th>
+                        <td mat-cell *matCellDef="let element">{{element.ListReference}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <i (click)="updateColumn(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteColumn(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="columnTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: columnTableColumns;" (click)="updateColumn(row)" class=" mat-row {{columnForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                    </table>
+                  </div>
+                  <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="col-md-12 extra-form" *ngIf="extraForm==='column'">
+
+                  <fieldset class="animated fadeInDown">
+                    <legend>
+                      Column
+                    </legend>
+                    <form #form="ngForm" (ngSubmit)="saveColumn(form)" class="{{submit2?'submited':''}}">
+
+                      <div class="row">
+                        <div class="form-group col-md-3">
+                          <label for="Name">Name <span class="help-block">*</span></label>
+                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="columnForm.Name"
+                            required>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Name2">Name 2</label>
+                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="columnForm.Name2">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Label">Label <span class="help-block">*</span></label>
+                          <input name="Label" placeholder="Label" type="text" class="form-control" [(ngModel)]="columnForm.Label"
+                            required>
+                        </div>
+                        <div class="form-group col-md-3">
+                          <label for="Label2">Label 2</label>
+                          <input name="Label2" placeholder="Label 2" type="text" class="form-control" [(ngModel)]="columnForm.Label2">
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="form-group col-md-3">
+                          <label for="ColumnType">Column Type</label>
+                          <select name="ColumnType" class="form-control" [(ngModel)]="columnForm.ColumnType" (change)="checkColumnType(columnForm.ColumnType)">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let type of ColumnTypes" [ngValue]="type.ID">{{type.Name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Category">Category</label>
+                          <select name="Category" class="form-control" [(ngModel)]="columnForm.Category">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let category of categories" [ngValue]="category.ID">{{category.Name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-3" *ngIf="minor.MinorCode  == 4">
+                          <label for="LockUpID">Lockup List</label>
+                          <select name="LockUpID" class="form-control" [(ngModel)]="columnForm.LockUpID">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let type of columnLockUps" [ngValue]="type.ID">{{type.Name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Status">Status</label>
+                          <select name="Status" class="form-control" [(ngModel)]="columnForm.Status">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                          </select>
+                        </div>
+
+                      </div>
+
+
+                      <div class="row">
+
+                        <div class="col-md-8 text-right">
+                          <br>
+                          <br>
+                          <input class="btn btn-default" type="reset" (click)="columnForm={};submit2=false;resetForm(form)"
+                            value="Reset" />
+                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                        </div>
+                      </div>
+                    </form>
+                  </fieldset>
+                </div>
+
+              </div>
+            </mat-tab>
+
+          </mat-tab-group>
+
+
+        </div>
+
+
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -44,11 +44,10 @@ export class QuestionnairesComponent implements OnInit {
   SubLineOfBusinesses: SubLineOfBusiness[];
   currencies: Currency[];
   minor: LockUp;
-  countries: Country[];
-  cities: City[];
 
   submit: boolean;
   submit2: boolean;
+  submit3: boolean;
   AddUpdateUrl: string;
   questionnaireTableColumns = ['select', 'ID', 'Name', 'Name2', 'APPLYON', 'LINEOFBUSINESS', 'SUBLINEOFBUSINESS', 'actions'];
   questionnairesDataSource: MatTableDataSource<Questionnaire>;
@@ -89,6 +88,7 @@ export class QuestionnairesComponent implements OnInit {
 
     this.questionnaireForm = new Questionnaire();
     this.questionForm = new Question();
+    this.answerForm = new Answer();
 
     this.submit = false;
     this.submit2 = false;
@@ -131,11 +131,9 @@ export class QuestionnairesComponent implements OnInit {
           this.extraForm = 'questions';
           this.loadQuestType();
           this.reloadQuestionTable(this.questionnaireForm.ID ? this.questionnaireForm.ID : null);
+        //  this.reloadAnswerTableTable(this.questionForm.ID ? this.questionForm.ID : null);
           break;
-        case 2:
-          this.extraForm = 'answers';
-          this.reloadAnswerTableTable(this.answerForm.ID ? this.answerForm.ID : null);
-          break;
+
       }
     });
   }
@@ -200,8 +198,11 @@ export class QuestionnairesComponent implements OnInit {
       this.renderQuestionTable(data);
     });
   }
-  reloadAnswerTableTable(answerID = null) {
-    this.answerService.load(answerID, null, 1).subscribe(data => {
+  reloadAnswerTableTable(question = null) {
+    if (question === null) {
+      this.renderAnswerTable([]);
+    }
+    this.answerService.load(null, question, 1).subscribe(data => {
       this.renderAnswerTable(data);
     });
   }
@@ -256,11 +257,12 @@ export class QuestionnairesComponent implements OnInit {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadQuestionTable(this.questionnaireForm.ID ? this.questionnaireForm.ID : null);
       this.questionForm = new Question();
-      this.submit = false;
+      this.submit2 = false;
       form.resetForm();
     });
 
   }
+
   saveAnswer(form) {
     if (form.invalid) {
       return;
@@ -271,11 +273,12 @@ export class QuestionnairesComponent implements OnInit {
     } else {
       this.AddUpdateUrl = this.answerService.ApiUrl + 'Create';
     }
+    this.answerForm.QuestionnaireID = this.questionForm.ID;
     this.http.post(this.AddUpdateUrl, this.answerForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadAnswerTableTable();
+      this.reloadAnswerTableTable(this.questionForm.ID);
       this.answerForm = new Answer();
-      this.submit = false;
+      this.submit3 = false;
       form.resetForm();
     });
 
@@ -298,7 +301,7 @@ export class QuestionnairesComponent implements OnInit {
   deleteAnswer(id) {
     this.http.post(this.answerService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadAnswerTableTable();
+      this.reloadAnswerTableTable(this.questionForm.ID);
     });
   }
 
@@ -315,19 +318,17 @@ export class QuestionnairesComponent implements OnInit {
     this.questionForm = new Question;
     this.questionForm = question;
     this.questionForm.selected = true;
+
+    this.reloadAnswerTableTable(this.questionForm.ID);
   }
 
 
 
   updateAnswer(answer: Answer) {
-    window.scroll(0, 1000);
+    window.scroll(0, 0);
     this.answerForm = new Answer;
-    this.answerForm.ID = answer.ID;
-    this.answerForm.Name = answer.Name;
-    this.answerForm.Name2 = answer.Name2;
-    this.answerForm.AnswerOrder = answer.AnswerOrder;
-    this.questionForm.QuestionnaireID = answer.QuestionnaireID;
-    this.questionForm.selected = true;
+    this.answerForm = answer;
+    this.answerForm.selected = true;
   }
 
 

@@ -29,8 +29,9 @@ export class UserService {
     return this.http.get(this.userGroupApiUrl + 'LoadUserGroup?groupID=' + groupId);
   }
 
-  loadGroupMenus(groupId: number): Observable<any> {
-    return this.http.get(this.userGroupApiUrl + 'LoadUserGroup?groupID=' + groupId);
+
+  loadGroupMenus(groupId: number, LanguageID: number): Observable<any> {
+    return this.http.get(this.groupRelationApiUrl + 'LoadMenus?groupID=' + groupId + '&LanguageID=' + LanguageID);
   }
 
   loadGroupActions(groupId: number): Observable<any> {

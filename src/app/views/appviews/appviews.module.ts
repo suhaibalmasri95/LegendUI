@@ -29,6 +29,7 @@ import { TreeviewModule } from 'ngx-treeview';
 import { ChargesComponent } from './charges/charges.component';
 import { DiagnosisComponent } from './diagnosis/diagnosis.component';
 import { QuestionnairesComponent } from './questionnaires/questionnaires.component';
+import { DynamicCategoriesComponent } from './dynamicCategories/dynamicCategories.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { QuestionnairesComponent } from './questionnaires/questionnaires.compone
     LineOfBusinessComponent,
     ChargesComponent,
     DiagnosisComponent,
-    QuestionnairesComponent
+    QuestionnairesComponent,
+    DynamicCategoriesComponent
   ],
   imports: [
     RouterModule,

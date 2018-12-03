@@ -8,7 +8,7 @@ import 'rxjs/add/operator/catch';
   providedIn: 'root'
 })
 export class AnswerService {
-  ApiUrl: string = environment.azureUrl + ' Answers/';
+  ApiUrl: string = environment.azureUrl + 'Answers/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Answer: Answer[];
 

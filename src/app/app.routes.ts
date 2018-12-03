@@ -41,6 +41,8 @@ import { ChargeTypeResolver } from './_resolvers/chargeType.resolver';
 import { DiagnosisComponent } from './views/appviews/diagnosis/diagnosis.component';
 import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUnitsResolver } from './_resolvers/Diagnosis.resolver';
 import { QuestionnairesComponent } from './views/appviews/questionnaires/questionnaires.component';
+import { DynamicCategoriesComponent } from './views/appviews/dynamicCategories/dynamicCategories.component';
+import { CategoriesResolver, ColumnTypesResolver } from './_resolvers/categories.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -167,6 +169,17 @@ export const ROUTES: Routes = [
         resolve: {
           questionnaires: QuestionnaireResolver,
           appliedOn: AppliedOnResolver,
+          lineOfBusiness: LineOfBusinessResolver,
+          subLineOfBusiness: SubLineOfBusinessResolver,
+          Status: LockUpResolver,
+        }
+      },
+      {
+        path: 'dynamicCategories', component: DynamicCategoriesComponent,
+        resolve: {
+          category: QuestionnaireResolver,
+          Levels: CategoriesResolver,
+          ColumnTypes: ColumnTypesResolver,
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
           Status: LockUpResolver,

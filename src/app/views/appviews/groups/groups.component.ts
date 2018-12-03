@@ -23,9 +23,10 @@ export class GroupsComponent implements OnInit {
   dropdownEnabled = true;
 
   items: TreeviewItem[];
+  items2: TreeviewItem[];
   values: number[];
   config = TreeviewConfig.create({
-    hasAllCheckBox: true,
+    hasAllCheckBox: false,
     hasFilter: true,
     hasCollapseExpand: true,
     decoupleChildFromParent: false,
@@ -133,38 +134,6 @@ export class GroupsComponent implements OnInit {
     });
 
 
-    const coding = new TreeviewItem({
-      text: 'IT', value: 9, children: [
-        {
-          text: 'Programming', value: 91, children: [{
-            text: 'Frontend', value: 911, children: [
-              { text: 'Angular 1', value: 9111 },
-              { text: 'Angular 2', value: 9112 },
-              { text: 'ReactJS', value: 9113 }
-            ]
-          }, {
-            text: 'Backend', value: 912, children: [
-              { text: 'C#', value: 9121 },
-              { text: 'Java', value: 9122 },
-              { text: 'Python', value: 9123, checked: false }
-            ]
-          }]
-        },
-        {
-          text: 'Networking', value: 92, children: [
-            { text: 'Internet', value: 921 },
-            { text: 'Security', value: 922 }
-          ]
-        }
-      ]
-    });
-
-    // coding.children.push(new TreeviewItem({ text: 'jwt', value: 23, checked: false }));
-    coding.correctChecked();
-
-
-
-    this.items = [coding];
 
   }
 
@@ -243,10 +212,8 @@ export class GroupsComponent implements OnInit {
 
   reloadMenusTables(groupId) {
     if (groupId) {
-      this.userService.loadGroupMenus(groupId).subscribe(data => {
-        this.groupUsers = data.RelatedGroups;
-        this.users = data.UnRelatedGroups;
-        this.renderMenusTables(this.groupUsers, this.users);
+      this.userService.loadGroupMenus(groupId, 1).subscribe(data => {
+        this.renderMenusTables(data.unRelatedMenu, data.relatedMenu);
       });
     } else {
       this.renderMenusTables([], []);
@@ -309,6 +276,38 @@ export class GroupsComponent implements OnInit {
   }
 
   renderMenusTables(groupMenus, Menus) {
+    const tree1 = new TreeviewItem({ text: 'Related Menus', value: 0, children: groupMenus });
+    const tree2 = new TreeviewItem({ text: 'Unrelated Menus', value: 0, children: Menus });
+    // const coding = new TreeviewItem({
+    //   text: 'IT', value: 9, children: [
+    //     {
+    //       text: 'Programming', value: 91, children: [{
+    //         text: 'Frontend', value: 911, children: [
+    //           { text: 'Angular 1', value: 9111 },
+    //           { text: 'Angular 2', value: 9112 },
+    //           { text: 'ReactJS', value: 9113 }
+    //         ]
+    //       }, {
+    //         text: 'Backend', value: 912, children: [
+    //           { text: 'C#', value: 9121 },
+    //           { text: 'Java', value: 9122 },
+    //           { text: 'Python', value: 9123, checked: false }
+    //         ]
+    //       }]
+    //     },
+    //     {
+    //       text: 'Networking', value: 92, children: [
+    //         { text: 'Internet', value: 921 },
+    //         { text: 'Security', value: 922 }
+    //       ]
+    //     }
+    //   ]
+    // });
+    // coding.children.push(new TreeviewItem({ text: 'jwt', value: 23, checked: false }));
+    // coding.correctChecked();
+    this.items = [tree1];
+    this.items2 = [tree2];
+
   }
 
   renderActionsTables(groupActions, actions) {
