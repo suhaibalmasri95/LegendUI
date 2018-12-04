@@ -177,7 +177,7 @@ export const ROUTES: Routes = [
       {
         path: 'dynamicCategories', component: DynamicCategoriesComponent,
         resolve: {
-          category: QuestionnaireResolver,
+          category: CategoriesResolver,
           Levels: CategoriesResolver,
           ColumnTypes: ColumnTypesResolver,
           lineOfBusiness: LineOfBusinessResolver,

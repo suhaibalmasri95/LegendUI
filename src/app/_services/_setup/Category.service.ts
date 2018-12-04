@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 export class CategoryService {
 
 
-  ApiUrl: string = environment.azureUrl + 'Category/';
+  ApiUrl: string = environment.azureUrl + 'Categories/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Categories: Category[];
 
@@ -41,24 +41,24 @@ export class CategoryService {
     );
   }
 
-  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeType: number = null, langId: number = null): Observable<Category[]> {
-    let queryString = '?ID=';
+  load(ID: number = null, lineOfBussniess: number = null, subLineOfBussniess: number = null,
+    categoryLevel: number = null, langId: number = null): Observable<Category[]> {
 
+    let queryString = '?ID=';
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&LockUpChargeType=';
-    if (LockUpChargeType != null) {
-      queryString += LockUpChargeType;
+    queryString += '&lineOfBussniess=';
+    if (lineOfBussniess != null) {
+      queryString += lineOfBussniess;
     }
-    queryString += '&LineOfBusinessCode=';
-    if (LineOfBusinessCode != null) {
-      queryString += LineOfBusinessCode;
+    queryString += '&subLineOfBussniess=';
+    if (subLineOfBussniess != null) {
+      queryString += subLineOfBussniess;
     }
-    queryString += '&ChargeType=';
-    if (ChargeType != null) {
-      queryString += ChargeType;
+    queryString += '&categoryLevel=';
+    if (categoryLevel != null) {
+      queryString += categoryLevel;
     }
     queryString += '&langId=';
     if (langId != null) {
@@ -66,5 +66,5 @@ export class CategoryService {
       return this.http.get<Category[]>(this.ApiUrl + 'Load' + queryString);
     }
   }
-
 }
+

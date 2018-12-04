@@ -1,16 +1,25 @@
 import { IEntity } from '../interfaces/IEntity';
 
 export class Category implements IEntity {
+    ID: number;
     Name: string;
     Name2: string;
+    Label: string;
+    Label2: string;
     LangID: number;
-    ID: number;
+    ModifiedBy: string;
+    CreateBy: string;
+    LineOfBusniess: number;
+    SubLineOfBusniess: number;
     Status: number;
     StatusDate: Date;
-    QustionnaireLevel: number;
-    LineOfBusiness: number;
-    SubLineOfBusiness: number;
+    CreationDate: Date;
+    ModificationDate: Date;
+    CategoryLevel: number;
+    MultiRecord: number;
     selected: boolean;
+
+
 }
 
 export class Column implements IEntity {
