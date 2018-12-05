@@ -83,8 +83,8 @@
                 </div>
 
                 <div class="form-group col-md-3">
-                  <label for="CategoryLevel">Level</label>
-                  <select name="CategoryLevel" class="form-control" [(ngModel)]="categoryForm.CategoryLevel">
+                  <label for="CategoryLevel">Level <span class="help-block">*</span></label>
+                  <select name="CategoryLevel" class="form-control" [(ngModel)]="categoryForm.CategoryLevel" required>
                     <option [ngValue]="undefined">Select</option>
                     <option *ngFor="let level of Levels" [ngValue]="level.ID">{{level.Name}}</option>
                   </select>
@@ -95,7 +95,7 @@
               <div class="row">
                 <div class="form-group col-md-2">
                   <br>
-                  <mat-checkbox name="MultiRecord" [(ngModel)]="categoryForm.MultiRecord"> Multi Records</mat-checkbox>
+                  <mat-checkbox name="isMultiRecord" [(ngModel)]="categoryForm.isMultiRecord"> Multi Records</mat-checkbox>
                 </div>
                 <div class="col-md-8 text-right">
                   <br>
@@ -190,21 +190,21 @@
                       <ng-container matColumnDef="LineOfBusiness">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Line of Business </th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.LineOfBusiness}} </td>
+                          {{getLineOfBusinessesName(element.LineOfBusniess)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="SubLineOfBusiness">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub Line of Business </th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.SubLineOfBusiness}} </td>
+                          {{getSubLineOfBusinessesName(element.SubLineOfBusniess)}} </td>
                       </ng-container>
-
 
                       <ng-container matColumnDef="Level">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.Level}} </td>
+                          {{getSubLevelsName(element.CategoryLevel)}} </td>
                       </ng-container>
+
                       <ng-container matColumnDef="IsMultiRecords">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Records </th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
@@ -261,10 +261,9 @@
                 </div>
                 <div class="col-md-3">
                   <mat-form-field>
-                    <mat-select placeholder="Category" (selectionChange)="reloadColumnTable(columnForm.ColumnGroupID)"
-                      [(ngModel)]="columnForm.ColumnGroupID">
+                    <mat-select placeholder="Category" (selectionChange)="reloadColumnTable(columnForm.ID)" [(ngModel)]="columnForm.ID">
                       <mat-option [value]=""> All </mat-option>
-                      <mat-option *ngFor="let category of categories" [value]="category.ID">
+                      <mat-option *ngFor="let category of Categories" [value]="category.ID">
                         {{category.Name}}
                       </mat-option>
                     </mat-select>
@@ -306,18 +305,18 @@
 
                       <ng-container matColumnDef="Type">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-                        <td mat-cell *matCellDef="let element">{{element.Type}}
+                        <td mat-cell *matCellDef="let element">{{getTypeName(element.ColumnType)}}
                         </td>
                       </ng-container>
 
                       <ng-container matColumnDef="Category">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Category </th>
-                        <td mat-cell *matCellDef="let element">{{getCategoryName(element.Category)}}
+                        <td mat-cell *matCellDef="let element">{{getCategoryName(element.CategoryID)}}
                         </td>
                       </ng-container>
                       <ng-container matColumnDef="ListReference">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>List reference </th>
-                        <td mat-cell *matCellDef="let element">{{element.ListReference}}
+                        <td mat-cell *matCellDef="let element">{{getColumnLockUpsName(element.RefMajorCode)}}
                         </td>
                       </ng-container>
 
@@ -377,23 +376,23 @@
                           <label for="ColumnType">Column Type</label>
                           <select name="ColumnType" class="form-control" [(ngModel)]="columnForm.ColumnType" (change)="checkColumnType(columnForm.ColumnType)">
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let type of ColumnTypes" [ngValue]="type.ID">{{type.Name}}</option>
+                            <option *ngFor="let type of ColumnTypes" [ngValue]="type.MinorCode">{{type.Name}}</option>
                           </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="Category">Category</label>
-                          <select name="Category" class="form-control" [(ngModel)]="columnForm.Category">
+                          <label for="CategoryID">Category</label>
+                          <select name="CategoryID" class="form-control" [(ngModel)]="columnForm.CategoryID">
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let category of categories" [ngValue]="category.ID">{{category.Name}}</option>
+                            <option *ngFor="let category of Categories" [ngValue]="category.ID">{{category.Name}}</option>
                           </select>
                         </div>
 
-                        <div class="form-group col-md-3" *ngIf="minor.MinorCode  == 4">
-                          <label for="LockUpID">Lockup List</label>
-                          <select name="LockUpID" class="form-control" [(ngModel)]="columnForm.LockUpID">
+                        <div class="form-group col-md-3" *ngIf="minor.MinorCode  === 4">
+                          <label for="RefMajorCode">Lockup List</label>
+                          <select name="RefMajorCode" class="form-control" [(ngModel)]="columnForm.RefMajorCode">
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let type of columnLockUps" [ngValue]="type.ID">{{type.Name}}</option>
+                            <option *ngFor="let type of columnLockUps" [ngValue]="type.ID.toString()">{{type.Name}}</option>
                           </select>
                         </div>
 
@@ -401,7 +400,7 @@
                           <label for="Status">Status</label>
                           <select name="Status" class="form-control" [(ngModel)]="columnForm.Status">
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                            <option *ngFor="let status of Status" [ngValue]="status.ID">{{status.Name}}</option>
                           </select>
                         </div>
 
@@ -410,7 +409,7 @@
 
                       <div class="row">
 
-                        <div class="col-md-8 text-right">
+                        <div class="col-md-10 text-right">
                           <br>
                           <br>
                           <input class="btn btn-default" type="reset" (click)="columnForm={};submit2=false;resetForm(form)"

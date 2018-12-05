@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
-import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { SubLineOfBusiness } from '../../entities/Setup/SubLineOfBusiness';
 
 @Injectable({

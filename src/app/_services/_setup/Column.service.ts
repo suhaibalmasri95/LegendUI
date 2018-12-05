@@ -11,7 +11,7 @@ import { Column } from '../../entities/Setup/Categories';
 export class ColumnService {
 
 
-  ApiUrl: string = environment.azureUrl + 'Column/';
+  ApiUrl: string = environment.azureUrl + 'Columns/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Columns: Column[];
 
@@ -41,24 +41,28 @@ export class ColumnService {
     );
   }
 
-  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeType: number = null, langId: number = null): Observable<Column[]> {
+  load(ID: number = null, CategoryID: number = null, lineOfBussniess: number = null, subLineOfBussniess: number = null,
+    ColumnType: number = null, langId: number = null): Observable<Column[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&LockUpChargeType=';
-    if (LockUpChargeType != null) {
-      queryString += LockUpChargeType;
+    queryString += '&CategoryID=';
+    if (CategoryID != null) {
+      queryString += CategoryID;
     }
-    queryString += '&LineOfBusinessCode=';
-    if (LineOfBusinessCode != null) {
-      queryString += LineOfBusinessCode;
+    queryString += '&lineOfBussniess=';
+    if (lineOfBussniess != null) {
+      queryString += lineOfBussniess;
+    }
+    queryString += '&subLineOfBussniess=';
+    if (subLineOfBussniess != null) {
+      queryString += subLineOfBussniess;
     }
     queryString += '&ChargeType=';
-    if (ChargeType != null) {
-      queryString += ChargeType;
+    if (ColumnType != null) {
+      queryString += ColumnType;
     }
     queryString += '&langId=';
     if (langId != null) {

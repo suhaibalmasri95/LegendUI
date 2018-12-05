@@ -38,7 +38,7 @@ import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUni
 import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
 import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
 import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
-import { CategoriesResolver, ColumnTypesResolver } from './_resolvers/categories.resolver';
+import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
 
 
 
@@ -87,7 +87,8 @@ import { CategoriesResolver, ColumnTypesResolver } from './_resolvers/categories
     AppliedOnResolver,
     SubLineOfBusinessResolver,
     CategoriesResolver,
-    ColumnTypesResolver
+    ColumnTypesResolver,
+    CategoriesLevelsResolver
   ],
   bootstrap: [AppComponent]
 })

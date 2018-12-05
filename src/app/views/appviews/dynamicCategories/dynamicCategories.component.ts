@@ -64,7 +64,7 @@ export class DynamicCategoriesComponent implements OnInit {
 
     this.selection = new SelectionModel<Category>(true, []);
     this.selection2 = new SelectionModel<Column>(true, []);
-
+    this.columnLockUps = [];
     this.categoryForm = new Category();
     this.columnForm = new Column();
 
@@ -144,13 +144,13 @@ export class DynamicCategoriesComponent implements OnInit {
 
 
   reloadCategoryTable() {
-    this.columnGroupService.load().subscribe(data => {
+    this.columnGroupService.load(null, null, null, null, 1).subscribe(data => {
       this.renderCategoryTable(data);
     });
   }
 
   reloadColumnTable(categoryId = null) {
-    this.columnService.load(null, null, null, null, 1).subscribe(data => {
+    this.columnService.load(null, categoryId, null, null, null, 1).subscribe(data => {
       this.renderColumnTable(data);
     });
   }
@@ -164,7 +164,7 @@ export class DynamicCategoriesComponent implements OnInit {
     }
     this.categoryForm = this.categoryForm.selected ? this.categoryForm : Object.assign({}, form.value);
     this.AddUpdateUrl = this.columnGroupService.ApiUrl + (this.categoryForm.selected ? 'Update' : 'Create');
-
+    this.categoryForm.MultiRecord = this.categoryForm.isMultiRecord ? 1 : 0;
     this.http.post(this.AddUpdateUrl, this.categoryForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCategoryTable();
@@ -186,14 +186,8 @@ export class DynamicCategoriesComponent implements OnInit {
     window.scroll(0, 0);
     this.categoryForm = new Category;
     this.categoryForm = category;
-    // this.categoryForm.Name = category.Name;
-    // this.categoryForm.Name2 = category.Name2;
-    // //this.categoryForm.NATIONALITY = category.NATIONALITY;
-    // this.categoryForm.ST_CUR_CODE = category.ST_CUR_CODE;
-    // //this.categoryForm.REFERNCE_NO = category.REFERNCE_NO;
-    // //this.categoryForm.LOC_STATUS = category.LOC_STATUS;
-    // this.categoryForm.PHONE_CODE = category.PHONE_CODE;
-    // //this.categoryForm.FLAG = category.FLAG;
+    this.categoryForm.isMultiRecord = category.MultiRecord === 1;
+    this.columnForm.CategoryID = category.ID;
     this.categoryForm.selected = true;
   }
 
@@ -234,6 +228,7 @@ export class DynamicCategoriesComponent implements OnInit {
     // //this.columnForm.REFERNCE_NO = column.REFERNCE_NO;
     // this.columnForm.LOC_STATUS = column.LOC_STATUS;
     this.columnForm.selected = true;
+    this.checkColumnType(column.ColumnType);
   }
 
 
@@ -260,6 +255,42 @@ export class DynamicCategoriesComponent implements OnInit {
     }
   }
 
+  getLineOfBusinessesName(id: number) {
+    for (let index = 0; index < this.LineOfBusinesses.length; index++) {
+      if (this.LineOfBusinesses[index].ID === id) {
+        return this.LineOfBusinesses[index].Name;
+      }
+    }
+  }
+  getSubLineOfBusinessesName(id: number) {
+    for (let index = 0; index < this.SubLineOfBusinesses.length; index++) {
+      if (this.SubLineOfBusinesses[index].ID === id) {
+        return this.SubLineOfBusinesses[index].Name;
+      }
+    }
+  }
+  getTypeName(id: number) {
+    for (let index = 0; index < this.ColumnTypes.length; index++) {
+      if (this.ColumnTypes[index].MinorCode === id) {
+        return this.ColumnTypes[index].Name;
+      }
+    }
+  }
+  getSubLevelsName(id: number) {
+    for (let index = 0; index < this.Levels.length; index++) {
+      if (this.Levels[index].ID === id) {
+        return this.Levels[index].Name;
+      }
+    }
+  }
+  getColumnLockUpsName(id: any) {
+    for (let index = 0; index < this.columnLockUps.length; index++) {
+      if (this.columnLockUps[index].ID.toString() === id) {
+        return this.columnLockUps[index].Name;
+      }
+    }
+  }
+
 
   isAllSelected() {
     return this.selection.selected.length === this.categoriesDataSource.data.length;
@@ -278,13 +309,14 @@ export class DynamicCategoriesComponent implements OnInit {
 
   checkColumnType(type) {
     for (let index = 0; index < this.ColumnTypes.length; index++) {
-      if (this.ColumnTypes[index].ID === type) {
+      if (this.ColumnTypes[index].MinorCode === type) {
         this.minor = this.ColumnTypes[index];
       }
     }
     if (this.minor.MinorCode === 4) {
       this.lockUpService.LoadLockUpsForQuestionnaire(1).subscribe(res => {
         this.columnLockUps = res;
+        this.columnForm.RefMajorCode = this.columnForm.RefMajorCode;
       });
     }
   }

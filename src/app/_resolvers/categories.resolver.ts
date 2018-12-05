@@ -34,3 +34,17 @@ export class ColumnTypesResolver implements Resolve<LockUp[]> {
         );
     }
 }
+
+
+@Injectable()
+export class CategoriesLevelsResolver implements Resolve<LockUp[]> {
+    constructor(private lockupService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockupService.LoadLockUpsByMajorCode(19).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}

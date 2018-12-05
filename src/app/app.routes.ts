@@ -42,7 +42,7 @@ import { DiagnosisComponent } from './views/appviews/diagnosis/diagnosis.compone
 import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUnitsResolver } from './_resolvers/Diagnosis.resolver';
 import { QuestionnairesComponent } from './views/appviews/questionnaires/questionnaires.component';
 import { DynamicCategoriesComponent } from './views/appviews/dynamicCategories/dynamicCategories.component';
-import { CategoriesResolver, ColumnTypesResolver } from './_resolvers/categories.resolver';
+import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -178,7 +178,7 @@ export const ROUTES: Routes = [
         path: 'dynamicCategories', component: DynamicCategoriesComponent,
         resolve: {
           category: CategoriesResolver,
-          Levels: CategoriesResolver,
+          Levels: CategoriesLevelsResolver,
           ColumnTypes: ColumnTypesResolver,
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
