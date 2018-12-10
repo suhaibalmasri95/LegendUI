@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
@@ -65,7 +66,7 @@ export class LineOfBusinessComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private SubLineService: SubBusinessService, private lineOfBusService: LineOfBusinessService
-    , private SubjectTypeService: SubjectTypesService) { }
+    , private SubjectTypeService: SubjectTypesService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -355,19 +356,38 @@ export class LineOfBusinessComponent implements OnInit {
 
 
 
-  export(type, data) {
-    /*switch (type) {
-     case 'pdf':
-       this.coreService.ExportToPdf(data, data);
-       break;
-     case 'csv':
-       this.coreService.ExportToCsv(data, data);
-       break;
-     case 'excel':
-       this.coreService.ExportToExcel(data, data);
-       break;
-   }*/
 
+  export(type, data) {
+    if (data === 'BusinessLine') {
+      const body = {
+        'items': this.linesOfBusinessDataSource.data,
+        'FieldName': 'Setup.BusinessLine',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'SubLineOfBusnies') {
+      const body = {
+        'items': this.subLinesOfBusinessDataSource.data,
+        'FieldName': 'Setup.SubLineOfBusnies',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'SubjectType') {
+      const body = {
+        'items': this.subjectTypesDataSource.data,
+        'FieldName': 'Setup.SubjectType',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
   }
 
 

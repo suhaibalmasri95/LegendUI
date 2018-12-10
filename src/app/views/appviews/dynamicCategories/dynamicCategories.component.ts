@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { LockUp } from './../../../entities/organization/LockUp';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -56,7 +57,8 @@ export class DynamicCategoriesComponent implements OnInit {
   minor: LockUp;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
-    private columnService: ColumnService, private columnGroupService: CategoryService, private lockUpService: LockUpService) { }
+    private columnService: ColumnService, private columnGroupService: CategoryService,
+    private lockUpService: LockUpService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -233,19 +235,29 @@ export class DynamicCategoriesComponent implements OnInit {
 
 
   export(type, data) {
-    switch (type) {
-      // case 'pdf':
-      //   this.coreService.ExportToPdf(data, data);
-      //   break;
-      // case 'csv':
-      //   this.coreService.ExportToCsv(data, data);
-      //   break;
-      // case 'excel':
-      //   this.coreService.ExportToExcel(data, data);
-      //   break;
+    if (data === 'category') {
+      const body = {
+        'items': this.categoriesDataSource.data,
+        'FieldName': 'Setup.Category',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'column') {
+      const body = {
+        'items': this.columnsDataSource.data,
+        'FieldName': 'Setup.Column',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
 
   }
+
 
   getCategoryName(id: number) {
     for (let index = 0; index < this.Categories.length; index++) {

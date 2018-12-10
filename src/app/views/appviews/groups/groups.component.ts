@@ -428,34 +428,15 @@ export class GroupsComponent implements OnInit {
   export(type, data) {
     if (data === 'group') {
       const body = {
-        'items': this.groupActionsDataSource.data,
-        'FieldName': 'Organization.Company',
+        'items': this.groupsDataSource.data,
+        'FieldName': 'Organization.Group',
         'Type': type,
       };
       this.commonService.Export(body).subscribe(res => {
         window.open(res.FilePath);
       });
     }
-    if (data === 'companybranch') {
-      const body = {
-        'items': this.groupActionsDataSource.data,
-        'FieldName': 'Organization.CompanyBranch',
-        'Type': type,
-      };
-      this.commonService.Export(body).subscribe(res => {
-        window.open(res.FilePath);
-      });
-    }
-    if (data === 'department') {
-      const body = {
-        'items': this.groupActionsDataSource.data,
-        'FieldName': 'Organization.Department',
-        'Type': type,
-      };
-      this.commonService.Export(body).subscribe(res => {
-        window.open(res.FilePath);
-      });
-    }
+
   }
 
 

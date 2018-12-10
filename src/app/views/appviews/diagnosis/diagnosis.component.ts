@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { Attribute, Service, Diagnose, Benefit } from './../../../entities/Setup/Diagnosis';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -95,7 +96,9 @@ export class DiagnosisComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private attributesService: AttributesService, private diagnosisService: DiagnosisService,
-    private servicesService: ServicesService, private benefitService: BenefitService, private lockUpService: LockUpService) { }
+    private servicesService: ServicesService, private benefitService: BenefitService,
+    private commonService: CommonService,
+    private lockUpService: LockUpService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -480,18 +483,48 @@ export class DiagnosisComponent implements OnInit {
 
 
   export(type, data) {
-    switch (type) {
-      case 'pdf':
-        // this.coreService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-        // this.coreService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-        // this.coreService.ExportToExcel(data, data);
-        break;
+    if (data === 'diagnosis') {
+      const body = {
+        'items': this.diagnosisDataSource.data,
+        'FieldName': 'Setup.Diagnosis',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'services') {
+      const body = {
+        'items': this.servicesDataSource.data,
+        'FieldName': 'Setup.Diagnosis',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'Benefit') {
+      const body = {
+        'items': this.benefitDataSource.data,
+        'FieldName': 'Setup.Diagnosis',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'Attribute') {
+      const body = {
+        'items': this.attributesDataSource.data,
+        'FieldName': 'Setup.Acttribute',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
   }
+
 
   getDiagnoseName(id: number) {
     for (let index = 0; index < this.diagnosis.length; index++) {

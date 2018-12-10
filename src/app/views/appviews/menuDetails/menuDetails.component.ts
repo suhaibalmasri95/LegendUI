@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
@@ -76,7 +77,7 @@ export class MenuDetailsComponent implements OnInit {
 
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient,
-    private route: ActivatedRoute, private menuDetailsService: MenuDetailsService) { }
+    private route: ActivatedRoute, private menuDetailsService: MenuDetailsService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -477,19 +478,58 @@ export class MenuDetailsComponent implements OnInit {
 
 
   export(type, data) {
-    // switch (type) {
-    //   case 'pdf':
-    //     this.menuDetailsService.ExportToPdf(data, data);
-    //     break;
-    //   case 'csv':
-    //     this.menuDetailsService.ExportToCsv(data, data);
-    //     break;
-    //   case 'excel':
-    //     this.menuDetailsService.ExportToExcel(data, data);
-    //     break;
-    // }
-
+    if (data === 'system') {
+      const body = {
+        'items': this.systemsDataSource.data,
+        'FieldName': 'Organization.Menu',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'module') {
+      const body = {
+        'items': this.modulesDataSource.data,
+        'FieldName': 'Organization.Menu',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'subModule') {
+      const body = {
+        'items': this.subModulesDataSource.data,
+        'FieldName': 'Organization.Menu',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'pages') {
+      const body = {
+        'items': this.pagesDataSource.data,
+        'FieldName': 'Organization.Menu',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'actions') {
+      const body = {
+        'items': this.actionsDataSource.data,
+        'FieldName': 'Organization.Menu',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
   }
+
 
   getSystemName(id: number, type: number) {
     let tempSystem: System;

@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { Discount, Fee, Cover, Commission } from './../../../entities/Setup/Charges';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -78,7 +79,8 @@ export class ChargesComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private discountService: DiscountService, private coversService: CoversService,
-    private feesService: FeesService, private commissionService: CommissionService, private lockUpService: LockUpService) { }
+    private feesService: FeesService, private commissionService: CommissionService,
+    private lockUpService: LockUpService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -419,16 +421,45 @@ export class ChargesComponent implements OnInit {
 
 
   export(type, data) {
-    switch (type) {
-      case 'pdf':
-        // this.coreService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-        // this.coreService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-        // this.coreService.ExportToExcel(data, data);
-        break;
+    if (data === 'covers') {
+      const body = {
+        'items': this.coversDataSource.data,
+        'FieldName': 'Setup.Charge',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'fees') {
+      const body = {
+        'items': this.feesDataSource.data,
+        'FieldName': 'Setup.Charge',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'discount') {
+      const body = {
+        'items': this.discountDataSource.data,
+        'FieldName': 'Setup.Charge',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
+    if (data === 'commission') {
+      const body = {
+        'items': this.commissionDataSource.data,
+        'FieldName': 'Setup.Charge',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
   }
 

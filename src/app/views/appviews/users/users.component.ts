@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -68,7 +69,7 @@ export class UsersComponent implements OnInit {
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute, private countryService: CountryService,
     private companyBranchService: CompanyBranchService, private userService: UserService,
-    private groupService: GroupService
+    private groupService: GroupService, private commonService: CommonService
   ) { }
 
   ngOnInit() {
@@ -273,22 +274,18 @@ export class UsersComponent implements OnInit {
     this.userForm.selected = true;
   }
 
-
-
   export(type, data) {
-    switch (type) {
-      case 'pdf':
-        // this.coreService.ExportToPdf(data, data);
-        break;
-      case 'csv':
-        //  this.coreService.ExportToCsv(data, data);
-        break;
-      case 'excel':
-        // this.coreService.ExportToExcel(data, data);
-        break;
+    if (data === 'User') {
+      const body = {
+        'items': this.usersDataSource.data,
+        'FieldName': 'Setup.Category',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
   }
-
 
   getUserName(id: number) {
     for (let index = 0; index < this.users.length; index++) {
