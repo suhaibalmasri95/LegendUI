@@ -379,7 +379,7 @@
                     <br>-->
 
                 <ngx-treeview [config]="config" [items]="items" (filterChange)="onFilterChange($event)"
-                  (selectedChange)="values = $event">
+                  (selectedChange)="setSelected( $event)">
                 </ngx-treeview>
 
               </div>
@@ -387,17 +387,17 @@
 
               <div class="col-md-2 text-center groups-arrows">
                 <div>
-                  <i class="fa fa-arrow-right" (click)="addUser()"></i>
+                  <i class="fa fa-arrow-right" (click)="addMenu()"></i>
                 </div>
 
                 <div>
-                  <i class="fa fa-arrow-left" (click)="removeUser()"></i>
+                  <i class="fa fa-arrow-left" (click)="removeMenu()"></i>
                 </div>
 
               </div>
               <div class="col-md-5">
                 <ngx-treeview [config]="config" [items]="items2" (filterChange)="onFilterChange($event)"
-                  (selectedChange)="values = $event">
+                  (selectedChange)="setSelected( $event)">
                 </ngx-treeview>
 
               </div>

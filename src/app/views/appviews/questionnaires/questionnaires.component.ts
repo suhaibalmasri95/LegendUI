@@ -11,8 +11,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Questionnaire, Question, Answer } from '../../../entities/Setup/Questionnaires';
 import { LockUp } from '../../../entities/organization/LockUp';
 import { Currency } from '../../../entities/organization/Currency';
-import { Country } from '../../../entities/organization/Country';
-import { City } from '../../../entities/organization/City';
 import { QuestionnairesService } from '../../../_services/_setup/Questionnaires.service';
 import { QuestionService } from './../../../_services/_setup/Question.service';
 import { SubLineOfBusiness } from './../../../entities/Setup/SubLineOfBusiness';

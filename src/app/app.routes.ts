@@ -43,13 +43,12 @@ import { DiagnosisResolver, CodingSystemsResolver, GendersResolver, FrequencyUni
 import { QuestionnairesComponent } from './views/appviews/questionnaires/questionnaires.component';
 import { DynamicCategoriesComponent } from './views/appviews/dynamicCategories/dynamicCategories.component';
 import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
+import { ProductsComponent } from './views/appviews/products/products.component';
 
 export const ROUTES: Routes = [
   // Main redirect
   { path: '', redirectTo: 'organizations', pathMatch: 'full' },
 
-  // Handle all other routes
-  // { path: '**', redirectTo: 'organizations' },
 
   // App views
 
@@ -187,5 +186,26 @@ export const ROUTES: Routes = [
       }
     ]
   },
+  {
+    path: 'products-setup', component: BasicLayoutComponent,
+    children: [
+      {
+        path: 'products', component: ProductsComponent,
+        resolve: {
+          category: CategoriesResolver,
+          Levels: CategoriesLevelsResolver,
+          ColumnTypes: ColumnTypesResolver,
+          lineOfBusiness: LineOfBusinessResolver,
+          subLineOfBusiness: SubLineOfBusinessResolver,
+          Status: LockUpResolver,
+        }
+      }
+    ]
+  },
+
+
+  // Handle all other routes
+  { path: '**', redirectTo: 'organizations', pathMatch: 'full' },
+
 
 ];
