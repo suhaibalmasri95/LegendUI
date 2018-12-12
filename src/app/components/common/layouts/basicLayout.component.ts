@@ -7,6 +7,7 @@ declare var jQuery: any;
 @Component({
   selector: 'basic',
   templateUrl: 'basicLayout.template.html',
+  // tslint:disable-next-line:use-host-property-decorator
   host: {
     '(window:resize)': 'onResize()'
   }

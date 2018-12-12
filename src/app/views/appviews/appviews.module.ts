@@ -30,6 +30,7 @@ import { ChargesComponent } from './charges/charges.component';
 import { DiagnosisComponent } from './diagnosis/diagnosis.component';
 import { QuestionnairesComponent } from './questionnaires/questionnaires.component';
 import { DynamicCategoriesComponent } from './dynamicCategories/dynamicCategories.component';
+import { ProductsComponent } from './products/products.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { DynamicCategoriesComponent } from './dynamicCategories/dynamicCategorie
     ChargesComponent,
     DiagnosisComponent,
     QuestionnairesComponent,
-    DynamicCategoriesComponent
+    DynamicCategoriesComponent,
+    ProductsComponent
   ],
   imports: [
     RouterModule,

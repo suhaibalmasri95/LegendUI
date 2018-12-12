@@ -1,3 +1,4 @@
+import { CommonService } from './../../../_services/Common.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
@@ -43,7 +44,7 @@ export class ReportsComponent implements OnInit {
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
-    private reportService: ReportService, private reportGroupService: ReportsGroupService) { }
+    private reportService: ReportService, private reportGroupService: ReportsGroupService, private commonService: CommonService) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -220,19 +221,28 @@ export class ReportsComponent implements OnInit {
 
 
   export(type, data) {
-    switch (type) {
-      // case 'pdf':
-      //   this.coreService.ExportToPdf(data, data);
-      //   break;
-      // case 'csv':
-      //   this.coreService.ExportToCsv(data, data);
-      //   break;
-      // case 'excel':
-      //   this.coreService.ExportToExcel(data, data);
-      //   break;
+    if (data === 'reportsGroup') {
+      const body = {
+        'items': this.reportsGroupsDataSource.data,
+        'FieldName': 'Organization.ReportGroup',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
     }
-
+    if (data === 'report') {
+      const body = {
+        'items': this.reportsDataSource.data,
+        'FieldName': 'Organization.Report',
+        'Type': type,
+      };
+      this.commonService.Export(body).subscribe(res => {
+        window.open(res.FilePath);
+      });
+    }
   }
+
 
   getReportsGroupName(id: number) {
     for (let index = 0; index < this.reportsGroups.length; index++) {

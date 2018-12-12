@@ -24,7 +24,7 @@ export class GroupsComponent implements OnInit {
 
   items: TreeviewItem[];
   items2: TreeviewItem[];
-  values: number[];
+  values: any[];
   config = TreeviewConfig.create({
     hasAllCheckBox: false,
     hasFilter: true,
@@ -33,17 +33,6 @@ export class GroupsComponent implements OnInit {
     maxHeight: 400
   });
 
-  buttonClasses = [
-    'btn-outline-primary',
-    'btn-outline-secondary',
-    'btn-outline-success',
-    'btn-outline-danger',
-    'btn-outline-warning',
-    'btn-outline-info',
-    'btn-outline-light',
-    'btn-outline-dark'
-  ];
-  buttonClass = this.buttonClasses[0];
 
   groupForm: Group;
   groups: Group[];
@@ -304,7 +293,8 @@ export class GroupsComponent implements OnInit {
     //   ]
     // });
     // coding.children.push(new TreeviewItem({ text: 'jwt', value: 23, checked: false }));
-    // coding.correctChecked();
+    tree1.correctChecked();
+    tree2.correctChecked();
     this.items = [tree1];
     this.items2 = [tree2];
 
@@ -428,34 +418,15 @@ export class GroupsComponent implements OnInit {
   export(type, data) {
     if (data === 'group') {
       const body = {
-        'items': this.groupActionsDataSource.data,
-        'FieldName': 'Organization.Company',
+        'items': this.groupsDataSource.data,
+        'FieldName': 'Organization.Group',
         'Type': type,
       };
       this.commonService.Export(body).subscribe(res => {
         window.open(res.FilePath);
       });
     }
-    if (data === 'companybranch') {
-      const body = {
-        'items': this.groupActionsDataSource.data,
-        'FieldName': 'Organization.CompanyBranch',
-        'Type': type,
-      };
-      this.commonService.Export(body).subscribe(res => {
-        window.open(res.FilePath);
-      });
-    }
-    if (data === 'department') {
-      const body = {
-        'items': this.groupActionsDataSource.data,
-        'FieldName': 'Organization.Department',
-        'Type': type,
-      };
-      this.commonService.Export(body).subscribe(res => {
-        window.open(res.FilePath);
-      });
-    }
+
   }
 
 
@@ -662,6 +633,51 @@ export class GroupsComponent implements OnInit {
 
 
   removeReport() {
+    if (!this.selection7.hasValue()) {
+      return;
+    }
+
+    const ids = [];
+    for (let index = 0; index < this.selection7.selected.length; index++) {
+      ids.push(this.selection7.selected[index].ReportRelationID);
+    }
+
+    this.http.post(this.userService.groupRelationApiUrl + 'DeleteMultiple',
+      {
+        IDs: ids
+      }).subscribe(res => {
+        this.snackBar.open('removed successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadReportsTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
+
+  }
+
+  setSelected(e) {
+    debugger;
+    this.values = e;
+  }
+
+  addMenu() {
+    if (!this.selection7.hasValue()) {
+      return;
+    }
+
+    const ids = [];
+    for (let index = 0; index < this.selection7.selected.length; index++) {
+      ids.push(this.selection7.selected[index].ReportRelationID);
+    }
+
+    this.http.post(this.userService.groupRelationApiUrl + 'DeleteMultiple',
+      {
+        IDs: ids
+      }).subscribe(res => {
+        this.snackBar.open('removed successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+        this.reloadReportsTables(this.groupForm.ID ? this.groupForm.ID : null);
+      });
+
+  }
+
+  removeMenu() {
     if (!this.selection7.hasValue()) {
       return;
     }
