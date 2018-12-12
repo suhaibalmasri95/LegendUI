@@ -63,7 +63,7 @@
                                     <br>
                                     <br>
                                     <div class="btn-group">
-                                        <input class="btn btn-default" type="reset" (click)="systemForm={};submit=false;resetForm(form1)"
+                                        <input class="btn btn-default" type="reset" (click)="resetForm(form1)"
                                             value="Reset" />
                                         <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                                     </div>
@@ -333,7 +333,7 @@
                                                 <div class="col-md-8 text-right">
                                                     <br>
                                                     <br>
-                                                    <input class="btn btn-default" type="reset" (click)="moduleForm={};submit2=false;resetForm(form2)"
+                                                    <input class="btn btn-default" type="reset" (click)="resetForm(form2)"
                                                         value="Reset" />
 
                                                     <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
@@ -523,7 +523,7 @@
                                                 <div class="col-md-5 text-right">
                                                     <br>
                                                     <br>
-                                                    <input class="btn btn-default" type="reset" (click)="subModuleForm={};submit3=false;resetForm(form3)"
+                                                    <input class="btn btn-default" type="reset" (click)="resetForm(form3)"
                                                         value="Reset" />
                                                     <input class="btn btn-primary " type="submit" value="Save" (click)="submit3=true" />
                                                 </div>
@@ -599,7 +599,7 @@
                                             <div class="col-md-12 text-right">
                                                 <br>
                                                 <br>
-                                                <input class="btn btn-default" type="reset" (click)="pageForm={};submit4=false;resetForm(form4)"
+                                                <input class="btn btn-default" type="reset" (click)="resetForm(form4)"
                                                     value="Reset" />
 
                                                 <input class="btn btn-primary " type="submit" value="Save" (click)="submit4=true" />
@@ -661,7 +661,7 @@
                                     <div class="col-md-3">
                                         <mat-form-field>
                                             <mat-select placeholder="Sub Module" [disabled]="!subModules ||subModules.length===0"
-                                                [(ngModel)]="pageForm.SubMenuID" (selectionChange)="reloadPageTable(pageForm.subModule)">
+                                                [(ngModel)]="pageForm.SubMenuID" (selectionChange)="reloadPageTable(pageForm.SubMenuID)">
                                                 <mat-option [value]=""> All </mat-option>
                                                 <mat-option *ngFor="let subModule of subModules" [value]="subModule.ID">
                                                     {{subModule.Name}}
@@ -831,7 +831,7 @@
                                                 <div class="col-md-12 text-right">
                                                     <br>
                                                     <br>
-                                                    <input class="btn btn-default" type="reset" (click)="actionForm={};submit4=false;resetForm(form5)"
+                                                    <input class="btn btn-default" type="reset" (click)="resetForm(form5)"
                                                         value="Reset" />
                                                     <input class="btn btn-primary " type="submit" value="Save" (click)="submit5=true" />
                                                 </div>
@@ -871,7 +871,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <mat-form-field>
-                                            <mat-select placeholder="System" (selectionChange)="reloadActionsTable(actionForm.SubMenuID)"
+                                            <mat-select placeholder="System" (selectionChange)="reloadActionTable(actionForm.SubMenuID)"
                                                 [(ngModel)]="subModuleForm.SubMenuID">
                                                 <mat-option [value]=""> All </mat-option>
                                                 <mat-option *ngFor="let system of systems" [value]="system.ID">
@@ -883,7 +883,7 @@
                                     <div class="col-md-3">
                                         <mat-form-field>
                                             <mat-select placeholder="module" [disabled]="!modules ||modules.length===0"
-                                                [(ngModel)]="subModuleForm.SubMenuID" (selectionChange)="reloadActionsTable(actionForm.SubMenuID)">
+                                                [(ngModel)]="subModuleForm.SubMenuID" (selectionChange)="reloadActionTable(actionForm.SubMenuID)">
                                                 <mat-option [value]=""> All </mat-option>
                                                 <mat-option *ngFor="let module of modules" [value]="module.ID">
                                                     {{module.Name}}
@@ -894,7 +894,7 @@
                                     <div class="col-md-3">
                                         <mat-form-field>
                                             <mat-select placeholder="Sub Module" [disabled]="!subModules ||subModules.length===0"
-                                                [(ngModel)]="subModuleForm.SubMenuID" (selectionChange)="reloadActionsTable(actionForm.subModule)">
+                                                [(ngModel)]="subModuleForm.SubMenuID" (selectionChange)="reloadActionTable(actionForm.SubMenuID)">
                                                 <mat-option [value]=""> All </mat-option>
                                                 <mat-option *ngFor="let subModule of subModules" [value]="subModule.ID">
                                                     {{subModule.Name}}
@@ -905,7 +905,7 @@
                                     <div class="col-md-3">
                                         <mat-form-field>
                                             <mat-select placeholder="Page" [disabled]="!pages ||pages.length===0"
-                                                [(ngModel)]="pageForm.SubMenuID" (selectionChange)="reloadActionsTable(actionForm.subModule)">
+                                                [(ngModel)]="pageForm.SubMenuID" (selectionChange)="reloadActionTable(actionForm.SubMenuID)">
                                                 <mat-option [value]=""> All </mat-option>
                                                 <mat-option *ngFor="let page of pages" [value]="page.ID">
                                                     {{page.Name}}

@@ -398,6 +398,8 @@ export class QuestionnairesComponent implements OnInit {
 
 
   resetForm(form) {
+    this.questionnaireForm = new Questionnaire();
+    this.submit = false;
     form.reset();
   }
 

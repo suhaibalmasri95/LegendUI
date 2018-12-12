@@ -499,6 +499,8 @@ export class GroupsComponent implements OnInit {
     this.isAllSelected7() ? this.selection7.clear() : this.groupReportsDataSource.data.forEach(row => this.selection7.select(row));
   }
   resetForm(form) {
+    this.groupForm = new Group();
+    this.submit = false;
     form.reset();
   }
 

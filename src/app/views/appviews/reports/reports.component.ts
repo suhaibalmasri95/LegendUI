@@ -270,6 +270,8 @@ export class ReportsComponent implements OnInit {
 
 
   resetForm(form) {
+    this.reportsGroupForm = new ReportsGroup();
+    this.submit = false;
     form.reset();
   }
 

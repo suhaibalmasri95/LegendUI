@@ -444,6 +444,8 @@ export class LineOfBusinessComponent implements OnInit {
   }
 
   resetForm(form) {
+    this.lineOfBusinessForm = new LineOfBusiness();
+    this.submit = false;
     form.reset();
   }
 

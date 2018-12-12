@@ -136,17 +136,17 @@
                           <div class="form-control" data-trigger="fileinput">
                             <span class="fileinput-filename">
                               <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                              {{replaceFileName(userForm.PICTUER)}}
+                              {{replaceFileName(userForm.Picture)}}
                             </span>
                           </div>
-                          <span class="input-group-addon btn btn-default btn-file" *ngIf="!userForm.PICTUER">
-                            <label for="PICTUER" class="custom-file-upload">
+                          <span class="input-group-addon btn btn-default btn-file" *ngIf="!userForm.Picture">
+                            <label for="Picture" class="custom-file-upload">
                               <i class="fa fa-cloud-upload"></i> Upload
                             </label>
                           </span>
-                          <input id="PICTUER" name="PICTUER" type="file" [(ngModel)]="userForm.PICTUER" ng2FileSelect
+                          <input id="Picture" name="Picture" type="file" [(ngModel)]="userForm.Picture" ng2FileSelect
                             [uploader]="uploader">
-                          <a *ngIf="userForm.PICTUER" (click)="userForm.PICTUER=null" class="input-group-addon btn btn-default fileinput-exists"
+                          <a *ngIf="userForm.Picture" (click)="userForm.Picture=null" class="input-group-addon btn btn-default fileinput-exists"
                             data-dismiss="fileinput">Remove</a>
                         </div>
 
@@ -158,7 +158,7 @@
                         <br>
                         <br>
                         <div class="btn-group">
-                          <input class="btn btn-default" type="reset" (click)="userForm={};submit=false;resetForm(form)"
+                          <input class="btn btn-default" type="reset" (click)="resetForm(form)"
                             value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                         </div>

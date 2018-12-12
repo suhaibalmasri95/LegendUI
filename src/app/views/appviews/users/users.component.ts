@@ -17,7 +17,7 @@ import { LockUpService } from './../../../_services/_organization/LockUp.service
 import { UserService } from './../../../_services/_organization/User.service';
 import { GroupService } from './../../../_services/_organization/Group.service';
 import { UserGroup } from '../../../entities/organization/UserGroup';
-
+import { FileUploader } from 'ng2-file-upload';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -50,6 +50,7 @@ export class UsersComponent implements OnInit {
   userGroupsDataSource: MatTableDataSource<Group>;
 
 
+  uploader: FileUploader;
   selection: SelectionModel<User>;
   selection2: SelectionModel<Group>;
   selection3: SelectionModel<Group>;
@@ -79,7 +80,7 @@ export class UsersComponent implements OnInit {
     this.snackPosition = 'right';
     this.userForm = new User();
     this.submit = false;
-
+    this.uploader = new FileUploader({ url: this.commonService.uploadImageUrl});
     this.route.data.subscribe(data => {
       this.LockUps = data.lockUp;
       this.userTypes = data.userTypes;
@@ -319,6 +320,8 @@ export class UsersComponent implements OnInit {
 
 
   resetForm(form) {
+  this.userForm = new User();
+    this.submit = false;
     form.reset();
   }
 

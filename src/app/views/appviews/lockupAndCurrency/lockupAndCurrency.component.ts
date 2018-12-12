@@ -412,6 +412,9 @@ export class LockupAndCurrencyComponent implements OnInit {
   }
 
   resetForm(form) {
+    this.minorCodeForm.MajorCode = null;
+    this.majorCodeForm = new LockUp();
+    this.submit = false;
     form.reset();
   }
 

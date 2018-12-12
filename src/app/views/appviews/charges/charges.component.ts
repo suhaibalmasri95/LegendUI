@@ -22,6 +22,11 @@ export class ChargesComponent implements OnInit {
 
   extraForm: string;
   snackPosition: MatSnackBarHorizontalPosition;
+  coverFilter: number;
+  feeFilter: number;
+  feesTypeFilter: number;
+  discountFilter: number;
+  commisionFilter: number;
 
   coverForm: Cover;
   covers: Cover[];
@@ -528,6 +533,8 @@ export class ChargesComponent implements OnInit {
 
 
   resetForm(form) {
+    this.coverForm = new Cover();
+    this.submit = false;
     form.reset();
   }
 

@@ -87,9 +87,6 @@ export class CountriesComponent implements OnInit {
     });
 
   }
-
-
-
   applyFilter(filterValue: string) {
     switch (this.extraForm) {
       case '':
@@ -472,6 +469,8 @@ export class CountriesComponent implements OnInit {
   }
 
   resetForm(form) {
+    this.countryForm = new Country();
+    this.submit = false;
     form.reset();
   }
 

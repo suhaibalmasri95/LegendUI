@@ -504,6 +504,8 @@ export class CompanybranchComponent implements OnInit {
   }
 
   resetForm(form) {
+    this.companyForm = new Company();
+    this.submit = false;
     form.reset();
   }
 

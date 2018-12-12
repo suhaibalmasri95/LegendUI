@@ -398,6 +398,8 @@ export class ProductsComponent implements OnInit {
 
 
   resetForm(form) {
+    this.productForm = new Product();
+    this.submit = false;
     form.reset();
   }
 

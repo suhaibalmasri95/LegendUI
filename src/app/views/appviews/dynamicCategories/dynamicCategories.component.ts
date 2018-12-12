@@ -335,6 +335,8 @@ export class DynamicCategoriesComponent implements OnInit {
 
 
   resetForm(form) {
+   this.categoryForm = new Category();
+   this.submit = false;
     form.reset();
   }
 

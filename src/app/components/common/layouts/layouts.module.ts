@@ -6,7 +6,7 @@ import { BsDropdownModule } from 'ngx-bootstrap';
 
 import { BasicLayoutComponent } from './basicLayout.component';
 import { BlankLayoutComponent } from './blankLayout.component';
-import { TopNavigationLayoutComponent } from './topNavigationlayout.component';
+
 
 import { NavigationComponent } from './../navigation/navigation.component';
 import { FooterComponent } from './../footer/footer.component';
@@ -15,6 +15,7 @@ import { TopNavigationNavbarComponent } from './../topnavbar/topnavigationnavbar
 import { BlockUIModule } from 'ng-block-ui';
 import { BlockUIHttpModule } from 'ng-block-ui/http';
 import { HttpClientModule } from '@angular/common/http';
+import { TopNavigationLayoutComponent } from './TopNavigationLayoutComponent';
 
 @NgModule({
   declarations: [

@@ -329,6 +329,8 @@ export class BanksComponent implements OnInit {
   }
 
   resetForm(form) {
+    this.bankForm = new Bank();
+    this.submit = false;
     form.reset();
   }
 

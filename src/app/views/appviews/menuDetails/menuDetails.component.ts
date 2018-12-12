@@ -17,7 +17,9 @@ import { MenuDetailsService } from '../../../_services/_organization/MenuDetails
 export class MenuDetailsComponent implements OnInit {
   systemForm: System;
   systems: System[];
-
+  systemTemp: number;
+  moduleTemp: number;
+  subModuleTemp: number;
   moduleForm: System;
   modules: System[];
 
@@ -606,6 +608,16 @@ export class MenuDetailsComponent implements OnInit {
 
 
   resetForm(form) {
+    this.systemForm = new System();
+    this.submit = false;
+    this.moduleForm = new System();
+    this.submit2 = false;
+    this.subModuleForm = new System();
+    this.submit3 = false;
+    this.pageForm = new System();
+    this.submit4 = false;
+    this.actionForm =  new System();
+    this.submit5 = false;
     form.reset();
   }
 

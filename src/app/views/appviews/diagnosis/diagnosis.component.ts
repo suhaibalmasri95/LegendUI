@@ -23,7 +23,8 @@ export class DiagnosisComponent implements OnInit {
 
   extraForm: string;
   snackPosition: MatSnackBarHorizontalPosition;
-
+  attributeType: number;
+ 
   diagnoseForm: Diagnose;
   diagnosis: Diagnose[];
 
@@ -82,9 +83,14 @@ export class DiagnosisComponent implements OnInit {
   AttributeTypes: LockUp[];
   benefitTypes: LockUp[];
   CodingSystems: LockUp[];
+  CodeingSystem: number;
+  ServiceType: number;
   Genders: LockUp[];
   FrequencyUnits: LockUp[];
-
+  parentDiagnosis: number;
+  BenefitType: number;
+  parentBenefit: number;
+  parentService: number;
   items: TreeviewItem[];
   config = TreeviewConfig.create({
     hasAllCheckBox: true,
@@ -618,6 +624,8 @@ export class DiagnosisComponent implements OnInit {
 
 
   resetForm(form) {
+    this.diagnoseForm = new Diagnose();
+    this.submit = false;
     form.reset();
   }
 

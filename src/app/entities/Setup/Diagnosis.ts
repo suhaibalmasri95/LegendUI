@@ -7,6 +7,8 @@ export class Diagnose implements IEntity {
     Name2: string;
     LangID: number;
     CodeingSystem: number;
+    Code: string;
+    ServiceType: number;
     Parent: number;
     Gender: number;
     AgeFrom: number;
@@ -14,7 +16,6 @@ export class Diagnose implements IEntity {
     Frequency: number;
     FrequencyUnit: number;
     IsChronic: number;
-    ServiceType: number;
     IS_ICD_SERV_BEN: number;
     selected: boolean;
     IsChronicCeckbox: boolean;
@@ -27,13 +28,14 @@ export class Service implements IEntity {
     LangID: number;
     CodeingSystem: number;
     Parent: number;
+    Code: string;
+    ServiceType: number;
     Gender: number;
     AgeFrom: number;
     AgeTo: number;
     Frequency: number;
     FrequencyUnit: number;
     IsChronic: number;
-    ServiceType: number;
     IS_ICD_SERV_BEN: number;
     selected: boolean;
     IsChronicCeckbox: boolean;
@@ -44,6 +46,7 @@ export class Benefit implements IEntity {
     Name: string;
     Name2: string;
     LangID: number;
+    Code: string;
     CodeingSystem: number;
     Parent: number;
     Gender: number;
