@@ -39,6 +39,9 @@ import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
 import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
 import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
 import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
+import { AlertifyService } from './_services/alertify.service';
+import { AuthGuard } from './_guards/auth.guard';
+import { AuthService } from './_services/auth.service';
 
 
 
@@ -55,7 +58,10 @@ import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } fro
     BrowserAnimationsModule,
   ],
 
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy},
+    AuthService,
+    AlertifyService,
+    AuthGuard,
     LockUpResolver,
     CityResolver,
     CountryResolver,

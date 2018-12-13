@@ -44,23 +44,26 @@ import { QuestionnairesComponent } from './views/appviews/questionnaires/questio
 import { DynamicCategoriesComponent } from './views/appviews/dynamicCategories/dynamicCategories.component';
 import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
 import { ProductsComponent } from './views/appviews/products/products.component';
+import { AuthGuard } from './_guards/auth.guard';
 
 export const ROUTES: Routes = [
   // Main redirect
+
   { path: '', redirectTo: 'organizations', pathMatch: 'full' },
-
-
-  // App views
-
   {
     path: '', component: BlankLayoutComponent,
     children: [
       { path: 'login', component: LoginComponent },
     ]
   },
-  {
-    path: 'organizations', component: BasicLayoutComponent,
+  { path: '',
+  runGuardsAndResolvers: 'always' ,
+  canActivate: [AuthGuard] ,
+
     children: [
+      {
+        path: 'organizations', component: BasicLayoutComponent,
+      },
       {
         path: 'countries', component: CountriesComponent,
         resolve: {
@@ -133,8 +136,11 @@ export const ROUTES: Routes = [
     ]
   },
   {
-    path: 'setup', component: BasicLayoutComponent,
+    path: '',
+  runGuardsAndResolvers: 'always' ,
+  canActivate: [AuthGuard] ,
     children: [
+      { path: 'setup', component: BasicLayoutComponent},
       {
         path: 'lineOfBusiness', component: LineOfBusinessComponent,
         resolve: {
