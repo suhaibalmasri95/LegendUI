@@ -48,22 +48,21 @@ import { AuthGuard } from './_guards/auth.guard';
 
 export const ROUTES: Routes = [
   // Main redirect
-
   { path: '', redirectTo: 'organizations', pathMatch: 'full' },
+
+
+  // App views
+
   {
     path: '', component: BlankLayoutComponent,
     children: [
       { path: 'login', component: LoginComponent },
     ]
   },
-  { path: '',
-  runGuardsAndResolvers: 'always' ,
-  canActivate: [AuthGuard] ,
-
+  {
+    path: 'organizations', component: BasicLayoutComponent, runGuardsAndResolvers: 'always' ,
+    canActivate: [AuthGuard] ,
     children: [
-      {
-        path: 'organizations', component: BasicLayoutComponent,
-      },
       {
         path: 'countries', component: CountriesComponent,
         resolve: {
@@ -136,11 +135,9 @@ export const ROUTES: Routes = [
     ]
   },
   {
-    path: '',
-  runGuardsAndResolvers: 'always' ,
-  canActivate: [AuthGuard] ,
+    path: 'setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always' ,
+    canActivate: [AuthGuard] ,
     children: [
-      { path: 'setup', component: BasicLayoutComponent},
       {
         path: 'lineOfBusiness', component: LineOfBusinessComponent,
         resolve: {
@@ -193,7 +190,8 @@ export const ROUTES: Routes = [
     ]
   },
   {
-    path: 'products-setup', component: BasicLayoutComponent,
+    path: 'products-setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always' ,
+    canActivate: [AuthGuard] ,
     children: [
       {
         path: 'products', component: ProductsComponent,

@@ -32,7 +32,7 @@ export class NavigationComponent {
   logout() {
     this.authService.userToken = null;
     this.authService.currentUser = null;
-    localStorage.removeItem('token');
+    localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     this.alertify.message('logged out');
     this.router.navigate(['/login']);

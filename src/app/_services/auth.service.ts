@@ -5,7 +5,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { IfObservable } from 'rxjs/observable/IfObservable';
 import { Observable } from 'rxjs/Observable';
-import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { User } from '../entities/organization/user';
 import { environment } from '../../environments/environment';
@@ -16,7 +16,7 @@ export class AuthService {
   userToken: any;
   decoderToken: any;
   currentUser: User;
-  jwHelper: JwtHelper = new JwtHelper();
+  jwHelper: JwtHelperService = new JwtHelperService();
   private photoUrl = new BehaviorSubject<string>('../../assets/user.png');
   currentPhotoUrl = this.photoUrl.asObservable();
   constructor(private http: HttpClient) {}
@@ -32,7 +32,7 @@ export class AuthService {
         const res: any = respone;
         const user: any = res.user;
         if (user) {
-          localStorage.setItem('token', res.tokenString);
+          localStorage.setItem('access_token', res.tokenString);
           localStorage.setItem('user', JSON.stringify(user));
           this.decoderToken = this.jwHelper.decodeToken(res.tokenString);
           this.currentUser = user;
@@ -42,7 +42,10 @@ export class AuthService {
   }
 
   loggedIn() {
-    return tokenNotExpired('token');
+    const token = localStorage.getItem('access_token');
+    if (!token) { return false; }
+
+    return !this.jwHelper.isTokenExpired(token);
   }
   private handelError(error: any) {
     const applicationError = error.headers.get('Application-Error');

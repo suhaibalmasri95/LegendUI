@@ -42,6 +42,7 @@ import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } fro
 import { AlertifyService } from './_services/alertify.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthService } from './_services/auth.service';
+import { JwtModule } from '@auth0/angular-jwt';
 
 
 
@@ -56,6 +57,11 @@ import { AuthService } from './_services/auth.service';
     AppviewsModule,
     RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: jwtTokenGetter
+      }
+    }),
   ],
 
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy},
@@ -99,3 +105,6 @@ import { AuthService } from './_services/auth.service';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+export function jwtTokenGetter() {
+  return localStorage.getItem('access_token');
+}
