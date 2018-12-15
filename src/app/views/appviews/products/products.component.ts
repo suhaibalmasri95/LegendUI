@@ -50,15 +50,23 @@ export class ProductsComponent implements OnInit {
   productTableColumns = ['select', 'ID', 'Name', 'Name2', 'APPLYON', 'LINEOFBUSINESS', 'SUBLINEOFBUSINESS', 'actions'];
   productsDataSource: MatTableDataSource<Product>;
 
-  productsDetailTableColumns = ['select', 'ID', 'Name', 'Name2', 'ORDER', 'QUESTIONTYPE', 'QUESTIONNAIRE', 'actions'];
+  productsDetailTableColumns = ['select', 'ID', 'lob', 'subLob', 'EffectiveDate', 'ExpiryDate'];
   productsDetailsDataSource: MatTableDataSource<ProductsDetail>;
 
-  subjectTypesTableColumns = ['select', 'ID', 'Name', 'Name2', 'ORDER', 'actions'];
-  subjectTypesDataSource: MatTableDataSource<SubjectType>;
+  subLineOfBusinessTableColumns = ['select', 'ID', 'lob', 'subLob'];
+  subLOBDataSource: MatTableDataSource<ProductsDetail>;
+
+  subjectTypesLobTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob'];
+  subjectTypesLobDataSource: MatTableDataSource<SubjectType>;
+
+  subjectTypesPDTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob', 'Product', 'ProductDetail'];
+  subjectTypesPDDataSource: MatTableDataSource<SubjectType>;
 
   selection: SelectionModel<Product>;
   selection2: SelectionModel<ProductsDetail>;
-  selection3: SelectionModel<SubjectType>;
+  selection3: SelectionModel<ProductsDetail>;
+  selection4: SelectionModel<SubjectType>;
+  selection5: SelectionModel<SubjectType>;
   extraForm: string;
 
   snackPosition: MatSnackBarHorizontalPosition;
@@ -66,10 +74,14 @@ export class ProductsComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
   @ViewChild('paginator3') paginator3: MatPaginator;
+  @ViewChild('paginator4') paginator4: MatPaginator;
+  @ViewChild('paginator5') paginator5: MatPaginator;
 
   @ViewChild('table', { read: MatSort }) sort: MatSort;
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
   @ViewChild('table3', { read: MatSort }) sort3: MatSort;
+  @ViewChild('table4', { read: MatSort }) sort4: MatSort;
+  @ViewChild('table5', { read: MatSort }) sort5: MatSort;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private productService: ProductsService, private productsDetailService: ProductsDetailService,
@@ -81,6 +93,9 @@ export class ProductsComponent implements OnInit {
 
     this.selection = new SelectionModel<Product>(true, initialSelection);
     this.selection2 = new SelectionModel<ProductsDetail>(true, initialSelection);
+    this.selection3 = new SelectionModel<ProductsDetail>(true, initialSelection);
+    this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
+    this.selection5 = new SelectionModel<SubjectType>(true, initialSelection);
 
     this.snackPosition = 'right';
 
@@ -111,9 +126,9 @@ export class ProductsComponent implements OnInit {
       case 'productsDetails':
         this.productsDetailsDataSource.filter = filterValue.trim().toLowerCase();
         break;
-      case 'subjectTypes':
-        this.subjectTypesDataSource.filter = filterValue.trim().toLowerCase();
-        break;
+      // case 'subjectTypes':
+      //   this.subjectTypesDataSource.filter = filterValue.trim().toLowerCase();
+      //   break;
     }
   }
 
@@ -173,11 +188,11 @@ export class ProductsComponent implements OnInit {
 
   renderSubjectTypeTable(data) {
     this.subjectTypes = data;
-    this.subjectTypesDataSource = new MatTableDataSource<SubjectType>(data);
-    this.subjectTypesDataSource.paginator = this.paginator3;
-    this.subjectTypesDataSource.sort = this.sort3;
-    this.selection3 = new SelectionModel<SubjectType>(true, []);
-    this.subjectTypesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+    this.subjectTypesLobDataSource = new MatTableDataSource<SubjectType>(data);
+    this.subjectTypesLobDataSource.paginator = this.paginator3;
+    this.subjectTypesLobDataSource.sort = this.sort3;
+    this.selection4 = new SelectionModel<SubjectType>(true, []);
+    this.subjectTypesLobDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort2.direction === 'asc' ? '3' : '1';
       }
@@ -353,7 +368,7 @@ export class ProductsComponent implements OnInit {
     }
     if (data === 'SubjectType') {
       const body = {
-        'items': this.subjectTypesDataSource.data,
+        'items': this.subjectTypesPDDataSource.data,
         'FieldName': 'Setup.SubjectType',
         'Type': type,
       };
@@ -390,10 +405,24 @@ export class ProductsComponent implements OnInit {
   }
 
   isAllSelected3() {
-    return this.selection3.selected.length === this.subjectTypesDataSource.data.length;
+    return this.selection3.selected.length === this.subLOBDataSource.data.length;
   }
   masterToggle3() {
-    this.isAllSelected2() ? this.selection3.clear() : this.subjectTypesDataSource.data.forEach(row => this.selection3.select(row));
+    this.isAllSelected3() ? this.selection3.clear() : this.subLOBDataSource.data.forEach(row => this.selection3.select(row));
+  }
+
+  isAllSelected4() {
+    return this.selection4.selected.length === this.subjectTypesLobDataSource.data.length;
+  }
+  masterToggle4() {
+    this.isAllSelected4() ? this.selection4.clear() : this.subjectTypesLobDataSource.data.forEach(row => this.selection4.select(row));
+  }
+
+  isAllSelected5() {
+    return this.selection5.selected.length === this.subjectTypesPDDataSource.data.length;
+  }
+  masterToggle5() {
+    this.isAllSelected5() ? this.selection5.clear() : this.subjectTypesPDDataSource.data.forEach(row => this.selection5.select(row));
   }
 
 

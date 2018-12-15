@@ -24,7 +24,7 @@ export class DiagnosisComponent implements OnInit {
   extraForm: string;
   snackPosition: MatSnackBarHorizontalPosition;
   attributeType: number;
- 
+
   diagnoseForm: Diagnose;
   diagnosis: Diagnose[];
 
@@ -630,6 +630,15 @@ export class DiagnosisComponent implements OnInit {
   }
 
 
+
+
+  addUser() {
+
+  }
+
+  removeUser() {
+
+  }
 
 
 

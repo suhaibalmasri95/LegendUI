@@ -25,6 +25,7 @@
     "@auth0/angular-jwt": "^2.1.0",
     "@ng-bootstrap/ng-bootstrap": "^3.2.2",
     "alertify": "^0.3.0",
+    "alertifyjs": "^1.11.2",
     "angular-confirmation-popover": "^4.2.0",
     "angular-datatables": "^6.0.0",
     "angular-datatables-5": "^5.1.2",

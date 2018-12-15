@@ -655,7 +655,7 @@ export class GroupsComponent implements OnInit {
   }
 
   setSelected(e) {
-    debugger;
+    // debugger;
     this.values = e;
   }
 
