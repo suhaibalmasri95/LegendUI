@@ -39,34 +39,61 @@
                   <label for="Name">Name</label>
                   <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="productForm.Name">
                 </div>
+
                 <div class="form-group col-md-3">
                   <label for="Name2">Name2 <span class="help-block">*</span></label>
                   <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="productForm.Name2"
                     required>
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="QustionnaireLevel">Applied on</label>
-                  <select name="QustionnaireLevel" class="form-control" [(ngModel)]="productForm.QustionnaireLevel">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let level of ProductLevel" [ngValue]="level.ID">{{level.Name}}</option>
-                  </select>
+                  <label for="ProductCode">Product Code</label>
+                  <input name="ProductCode" placeholder="ProductCode" type="text" class="form-control" [(ngModel)]="productForm.ProductCode">
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="LineOfBusiness">Line Of Business</label>
-                  <select name="LineOfBusiness" class="form-control" [(ngModel)]="productForm.LineOfBusiness">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
-                  </select>
+                  <label for="ProductCode">Product Code</label>
+                  <input name="ProductCode" placeholder="ProductCode" type="text" class="form-control" [(ngModel)]="productForm.ProductCode">
                 </div>
+
               </div>
+
               <div class="row">
+
                 <div class="form-group col-md-3">
-                  <label for="SubLineOfBusiness">Sub LOB</label>
-                  <select name="SubLineOfBusiness" class="form-control" [(ngModel)]="productForm.SubLineOfBusiness">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let sub of SubLineOfBusinesses" [ngValue]="sub.ID">{{sub.Name}}</option>
-                  </select>
+                  <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+                  <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control"
+                    [ngModel]="productForm.EffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="productForm.EffectiveDate = $event">
                 </div>
+
+                <div class="form-group col-md-3">
+                  <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+                  <input name="ExpiryDate" required placeholder="Expiry Date" type="date" class="form-control"
+                    [ngModel]="productForm.ExpiryDate  | date:'yyyy-MM-dd'" (ngModelChange)="productForm.ExpiryDate = $event">
+                </div>
+
+
+                <div class="form-group col-md-3">
+                  <label for="Picture">Picture</label>
+
+                  <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                    <div class="form-control" data-trigger="fileinput">
+                      <span class="fileinput-filename">
+                        <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                        {{replaceFileName(productForm.Picture)}}
+                      </span>
+                    </div>
+                    <span class="input-group-addon btn btn-default btn-file" *ngIf="!productForm.Picture">
+                      <label for="Picture" class="custom-file-upload">
+                        <i class="fa fa-cloud-upload"></i> Upload
+                      </label>
+                    </span>
+                    <input id="Picture" name="Picture" type="file" [(ngModel)]="productForm.Picture" ng2FileSelect
+                      [uploader]="uploader">
+                    <a *ngIf="productForm.Picture" (click)="productForm.Picture=null" class="input-group-addon btn btn-default fileinput-exists"
+                      data-dismiss="fileinput">Remove</a>
+                  </div>
+                </div>
+
+
                 <div class="form-group col-md-3">
                   <label for="Status">Status</label>
                   <select name="Status" class="form-control" [(ngModel)]="productForm.Status">
@@ -74,16 +101,30 @@
                     <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
                   </select>
                 </div>
-                <div class="col-md-6 text-right">
+
+              </div>
+
+              <div class="row">
+
+                <div class="form-group col-md-3">
+                  <label for="Group/Individual">Group/Individual</label>
+                  <select name="Group/Individual" class="form-control" [(ngModel)]="productForm.GroupIndividual">
+                    <option [ngValue]="undefined">Select</option>
+                    <option *ngFor="let lockup of GroupIndividualLockups" [ngValue]="lockup.ID">{{lockup.Name}}</option>
+                  </select>
+                </div>
+
+                <div class="col-md-7 text-right">
                   <br>
                   <br>
                   <div class="btn-group">
-                    <input class="btn btn-default" type="reset" (click)="resetForm(form)"
-                      value="Reset" />
+                    <input class="btn btn-default" type="reset" (click)="resetForm(form)" value="Reset" />
                     <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                   </div>
                 </div>
+
               </div>
+
             </form>
           </fieldset>
 
@@ -199,8 +240,8 @@
 
                     <ng-container matColumnDef="select">
                       <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle4() : null" [checked]="selection4.hasValue() && isAllSelected4()"
-                          [indeterminate]="selection4.hasValue() && !isAllSelected4()">
+                        <mat-checkbox (change)="$event ? masterToggle4() : null" [checked]="selection4.hasValue() && isAllSelected2()"
+                          [indeterminate]="selection4.hasValue() && !isAllSelected2()">
                         </mat-checkbox>
                       </th>
                       <td style="width: 5%" mat-cell *matCellDef="let row">
@@ -256,8 +297,8 @@
 
                     <ng-container matColumnDef="select">
                       <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle5() : null" [checked]="selection5.hasValue() && isAllSelected5()"
-                          [indeterminate]="selection5.hasValue() && !isAllSelected5()">
+                        <mat-checkbox (change)="$event ? masterToggle5() : null" [checked]="selection5.hasValue() && isAllSelected3()"
+                          [indeterminate]="selection5.hasValue() && !isAllSelected3()">
                         </mat-checkbox>
                       </th>
                       <td style="width: 5%" mat-cell *matCellDef="let row">
@@ -308,6 +349,7 @@
 
 
               <div class="col-md-12 extra-form" *ngIf="extraForm==='productsDetails'">
+                <div class="hr-line-dashed"></div>
 
                 <fieldset>
                   <legend>
@@ -315,32 +357,57 @@
                   </legend>
                   <form #form="ngForm" (ngSubmit)="saveProductsDetail(form)" class="{{submit2?'submited':''}}">
                     <div class="row">
+
                       <div class="form-group col-md-3">
-                        <label for="Name">Name</label>
-                        <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="productsDetailForm.Name">
+                        <label for="ProductID">Product</label>
+                        <select name="ProductID" class="form-control" [(ngModel)]="productsDetailForm.ProductID">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
+                        </select>
                       </div>
+
                       <div class="form-group col-md-3">
-                        <label for="Name2">Name2 <span class="help-block">*</span></label>
-                        <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="productsDetailForm.Name2"
+                        <label for="LineOfBusiness">Line of Business <span class="help-block">*</span></label>
+                        <select name="LineOfBusiness" placeholder="Basic LOB" class="form-control" [(ngModel)]="productsDetailForm.LineOfBusiness"
                           required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
+                        </select>
                       </div>
+
+
                       <div class="form-group col-md-3">
-                        <label for="Description">Description</label>
-                        <input name="Description" placeholder="Description" type="text" class="form-control"
-                          [(ngModel)]="productsDetailForm.Description">
+                        <label for="SLOB">Sub Line of Business</label>
+                        <select name="SLOB" placeholder="Sub Line of Business" class="form-control" [(ngModel)]="productsDetailForm.BasicLineOfBusniess">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
+                        </select>
                       </div>
+
                       <div class="form-group col-md-3">
-                        <label for="Description2">Description2</label>
-                        <input name="Description2" placeholder="Description2" type="text" class="form-control"
-                          [(ngModel)]="productsDetailForm.Description2">
+                        <label for="Status">Status</label>
+                        <select name="Status" class="form-control" [(ngModel)]="productsDetailForm.Status">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                        </select>
                       </div>
 
                     </div>
                     <div class="row">
+
+
                       <div class="form-group col-md-3">
-                        <label for="QustionOrder">Order</label>
-                        <input name="QustionOrder" placeholder="Order" type="number" class="form-control" [(ngModel)]="productsDetailForm.QustionOrder">
+                        <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+                        <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control"
+                          [ngModel]="productsDetailForm.EffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="productsDetailForm.EffectiveDate = $event">
                       </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+                        <input name="ExpiryDate" required placeholder="Expiry Date" type="date" class="form-control"
+                          [ngModel]="productsDetailForm.ExpiryDate  | date:'yyyy-MM-dd'" (ngModelChange)="productsDetailForm.ExpiryDate = $event">
+                      </div>
+
                       <div class="form-group col-md-3">
                         <label for="QustionType">Products Detail Type</label>
                         <select name="QustionType" (change)="onProductsDetailType(productsDetailForm.QustionType)"
@@ -349,29 +416,11 @@
                           <option *ngFor="let level of ProductsDetailType" [ngValue]="level.ID">{{level.Name}}</option>
                         </select>
                       </div>
-                      <div class="form-group col-md-3">
-                        <label for="ProductID">Product</label>
-                        <select name="ProductID" class="form-control" [(ngModel)]="productsDetailForm.ProductID">
-                          <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
-                        </select>
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label for="Status">Status</label>
-                        <select name="Status" class="form-control" [(ngModel)]="productsDetailForm.Status">
-                          <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
-                        </select>
-                      </div>
+
+
                     </div>
                     <div class="row">
-                      <div class="form-group col-md-3" *ngIf="minor.MinorCode  == 5">
-                        <label for="LockUpID">Lockup List</label>
-                        <select name="LockUpID" class="form-control" [(ngModel)]="productsDetailForm.LockUpID">
-                          <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let type of ProductsDetailLockUp" [ngValue]="type.ID">{{type.Name}}</option>
-                        </select>
-                      </div>
+                  
                       <div class="col-md-12 text-right">
                         <br>
                         <br>
@@ -445,7 +494,7 @@
 
                   </table>
                 </div>
-                <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+                <mat-paginator #paginator4 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
 
               </div>
 
@@ -523,41 +572,109 @@
 
                   </table>
                 </div>
-                <mat-paginator #paginator3 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+                <mat-paginator #paginator5 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
 
               </div>
 
               <div class="hr-line-dashed"></div>
 
               <div class="col-md-12 extra-form">
+                <fieldset>
+                  <legend>
+                    Subject types
+                  </legend>
+                  <form #form="ngForm" (ngSubmit)="saveSubjectType(form)" class="{{submit3?'submited':''}}">
 
-                <form #form="ngForm" (ngSubmit)="saveSubjectType(form)" class="{{submit3?'submited':''}}">
-                  <div class="row">
-                    <div class="form-group col-md-3">
-                      <label for="Name">Name</label>
-                      <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="subjectTypeForm.Name">
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="ProductID">Product</label>
+                        <select name="ProductID" class="form-control" [(ngModel)]="subjectTypeForm.ProductID">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="ProductDetail">Product Detail</label>
+                        <select name="ProductDetail" class="form-control" [(ngModel)]="subjectTypeForm.ProductDetail">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let ProductDetail of ProductDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="LineOfBusiness">Line of Business <span class="help-block">*</span></label>
+                        <select name="LineOfBusiness" placeholder="Basic LOB" class="form-control" [(ngModel)]="subjectTypeForm.LineOfBusiness"
+                          required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="SLOB">Sub Line of Business</label>
+                        <select name="SLOB" placeholder="Sub Line of Business" class="form-control" [(ngModel)]="subjectTypeForm.BasicLineOfBusniess">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
+                        </select>
+                      </div>
+
+
                     </div>
-                    <div class="form-group col-md-3">
-                      <label for="Name2">Name2 <span class="help-block">*</span></label>
-                      <input name="Name2" placeholder="Name2" type="text" class="form-control" [(ngModel)]="subjectTypeForm.Name2"
-                        required>
+
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="SubjectType">Subject Type</label>
+                        <select name="SubjectType" placeholder="Subject Type" class="form-control" [(ngModel)]="subjectTypeForm.SubjectType">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let  SubjectType of SubjectTypes" [ngValue]="SubjectType.ID">{{SubjectType.Name}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="ExcessPercentage">Excess %</label>
+                        <input name="ExcessPercentage" placeholder="Excess %" type="number" class="form-control"
+                          [(ngModel)]="subjectTypeForm.ExcessPercentage">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="MinExcessAmount">Min Excess Amount</label>
+                        <input name="MinExcessAmount" placeholder="Min Excess Amount" type="number" class="form-control"
+                          [(ngModel)]="subjectTypeForm.MinExcessAmount">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="MaxExcessAmount">Max Excess Amount</label>
+                        <input name="MaxExcessAmount" placeholder="Max Excess Amount" type="number" class="form-control"
+                          [(ngModel)]="subjectTypeForm.MaxExcessAmount">
+                      </div>
+
                     </div>
-                    <div class="form-group col-md-3">
-                      <label for="SubjectTypeOrder">Order</label>
-                      <input name="SubjectTypeOrder" placeholder="Order" type="number" class="form-control" [(ngModel)]="subjectTypeForm.SubjectTypeOrder">
-                    </div>
-                    <div class="col-md-3 text-right">
-                      <br>
-                      <br>
-                      <div class="btn-group">
-                        <input class="btn btn-default" type="reset" (click)="subjectTypeForm={};submit3=false;resetForm(form)"
-                          value="Reset" />
-                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit3=true" />
+
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="From">Excess From <span class="help-block">*</span></label>
+                        <select name="From" placeholder="Excess From" class="form-control" [(ngModel)]="subjectTypeForm.From"
+                          required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let excessFrom of excessFroms" [ngValue]="excessFrom.ID">{{excessFrom.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="col-md-3 text-right">
+                        <br>
+                        <br>
+                        <div class="btn-group">
+                          <input class="btn btn-default" type="reset" (click)="subjectTypeForm={};submit3=false;resetForm(form)"
+                            value="Reset" />
+                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit3=true" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </form>
-
+                  </form>
+                </fieldset>
               </div>
 
 
@@ -566,6 +683,132 @@
 
             </mat-tab>
 
+
+            <mat-tab label="Questionnaires">
+
+
+              <div class="col-md-5">
+
+                <br>
+                <div class="table-container">
+                  <table mat-table #table6 [dataSource]="notRelatedQuestionnairesDataSource" matSort>
+
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle6() : null" [checked]="selection6.hasValue() && isAllSelected6()"
+                          [indeterminate]="selection6.hasValue() && !isAllSelected6()">
+                        </mat-checkbox>
+                      </th>
+                      <td style="width: 5%" mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection6.toggle(row) : null"
+                          [checked]="selection6.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ID">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="lob">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.lob}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="subLob">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{element.sublob}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="notRelatedQuestionnairesTableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: notRelatedQuestionnairesTableColumns;" class=" mat-row"></tr>
+
+                  </table>
+                </div>
+                <mat-paginator #paginator6 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+              </div>
+
+              <div class="col-md-2 text-center groups-arrows">
+                <div>
+                  <i class="fa fa-arrow-right" (click)="addSubLineOfBusiness()"></i>
+                </div>
+
+                <div>
+                  <i class="fa fa-arrow-left" (click)="removeSubLineOfBusiness()"></i>
+                </div>
+
+              </div>
+
+              <div class="col-md-5">
+
+                <br>
+                <div class="table-container">
+                  <table mat-table #table7 [dataSource]="relatedQuestionnairesDataSource" matSort>
+
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle7() : null" [checked]="selection7.hasValue() && isAllSelected7()"
+                          [indeterminate]="selection7.hasValue() && !isAllSelected7()">
+                        </mat-checkbox>
+                      </th>
+                      <td style="width: 5%" mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection7.toggle(row) : null"
+                          [checked]="selection7.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ID">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="lob">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.lob}}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="subLob">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{element.sublob}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Product">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{element.Product}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="ProductDetail">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{element.ProductDetail}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="relatedQuestionnairesTableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: relatedQuestionnairesTableColumns;" class=" mat-row"></tr>
+
+                  </table>
+                </div>
+                <mat-paginator #paginator7 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true">
+                </mat-paginator>
+
+              </div>
+
+
+
+            </mat-tab>
+
+
+
+
           </mat-tab-group>
 
 
@@ -573,7 +816,7 @@
 
 
       </div>
-    </div>
 
+    </div>
   </div>
 </div>

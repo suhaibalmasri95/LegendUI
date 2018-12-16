@@ -45,6 +45,7 @@ import { DynamicCategoriesComponent } from './views/appviews/dynamicCategories/d
 import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
 import { ProductsComponent } from './views/appviews/products/products.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { ProductsResolver } from './_resolvers/products.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -60,8 +61,8 @@ export const ROUTES: Routes = [
     ]
   },
   {
-    path: 'organizations', component: BasicLayoutComponent, runGuardsAndResolvers: 'always' ,
-    canActivate: [AuthGuard] ,
+    path: 'organizations', component: BasicLayoutComponent, runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'countries', component: CountriesComponent,
@@ -135,8 +136,8 @@ export const ROUTES: Routes = [
     ]
   },
   {
-    path: 'setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always' ,
-    canActivate: [AuthGuard] ,
+    path: 'setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'lineOfBusiness', component: LineOfBusinessComponent,
@@ -190,15 +191,15 @@ export const ROUTES: Routes = [
     ]
   },
   {
-    path: 'products-setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always' ,
-    canActivate: [AuthGuard] ,
+    path: 'products-setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
     children: [
       {
         path: 'products', component: ProductsComponent,
         resolve: {
-          category: CategoriesResolver,
-          Levels: CategoriesLevelsResolver,
-          ColumnTypes: ColumnTypesResolver,
+          products: ProductsResolver,
+          excessFrom: ExcessFromResolver,
+          GroupIndividualLockups: ColumnTypesResolver,
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
           Status: LockUpResolver,

@@ -1,3 +1,4 @@
+import { Questionnaire } from './../../../entities/Setup/Questionnaires';
 import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { SubjectTypeService } from './../../../_services/_setup/SubjectType.service';
 import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
@@ -35,13 +36,14 @@ export class ProductsComponent implements OnInit {
 
   LockUps: LockUp[];
   ProductsDetailLockUp: LockUp[];
-  ProductLevel: LockUp[];
 
   ProductsDetailType: LockUp[];
   LineOfBusinesses: LineOfBusiness[];
   SubLineOfBusinesses: SubLineOfBusiness[];
-  currencies: Currency[];
-  minor: LockUp;
+
+  excessFroms: LockUp[];
+  GroupIndividualLockups: LockUp[];
+
 
   submit: boolean;
   submit2: boolean;
@@ -62,11 +64,19 @@ export class ProductsComponent implements OnInit {
   subjectTypesPDTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob', 'Product', 'ProductDetail'];
   subjectTypesPDDataSource: MatTableDataSource<SubjectType>;
 
+  notRelatedQuestionnairesColumns = ['select', 'ID', 'lob', 'subLob'];
+  notRelatedQuestionnairesDataSource: MatTableDataSource<Questionnaire>;
+
+  relatedQuestionnairesTableColumns = ['select', 'ID', 'lob', 'subLob', 'Product', 'ProductDetail'];
+  relatedQuestionnairesDataSource: MatTableDataSource<Questionnaire>;
+
   selection: SelectionModel<Product>;
   selection2: SelectionModel<ProductsDetail>;
   selection3: SelectionModel<ProductsDetail>;
   selection4: SelectionModel<SubjectType>;
   selection5: SelectionModel<SubjectType>;
+  selection6: SelectionModel<Questionnaire>;
+  selection7: SelectionModel<Questionnaire>;
   extraForm: string;
 
   snackPosition: MatSnackBarHorizontalPosition;
@@ -76,12 +86,16 @@ export class ProductsComponent implements OnInit {
   @ViewChild('paginator3') paginator3: MatPaginator;
   @ViewChild('paginator4') paginator4: MatPaginator;
   @ViewChild('paginator5') paginator5: MatPaginator;
+  @ViewChild('paginator6') paginator6: MatPaginator;
+  @ViewChild('paginator7') paginator7: MatPaginator;
 
   @ViewChild('table', { read: MatSort }) sort: MatSort;
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
   @ViewChild('table3', { read: MatSort }) sort3: MatSort;
   @ViewChild('table4', { read: MatSort }) sort4: MatSort;
   @ViewChild('table5', { read: MatSort }) sort5: MatSort;
+  @ViewChild('table6', { read: MatSort }) sort6: MatSort;
+  @ViewChild('table7', { read: MatSort }) sort7: MatSort;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private productService: ProductsService, private productsDetailService: ProductsDetailService,
@@ -96,6 +110,8 @@ export class ProductsComponent implements OnInit {
     this.selection3 = new SelectionModel<ProductsDetail>(true, initialSelection);
     this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
     this.selection5 = new SelectionModel<SubjectType>(true, initialSelection);
+    this.selection6 = new SelectionModel<Questionnaire>(true, initialSelection);
+    this.selection7 = new SelectionModel<Questionnaire>(true, initialSelection);
 
     this.snackPosition = 'right';
 
@@ -107,14 +123,15 @@ export class ProductsComponent implements OnInit {
     this.submit2 = false;
     this.route.data.subscribe(data => {
       this.products = data.products;
-      this.ProductLevel = data.appliedOn;
       this.LineOfBusinesses = data.lineOfBusiness;
       this.SubLineOfBusinesses = data.subLineOfBusiness;
       this.LockUps = data.Status;
+      this.excessFroms = data.excessFrom;
+      this.GroupIndividualLockups = data.GroupIndividualLockups;
+
       this.renderProductTable(data.products);
     });
 
-    this.minor = new LockUp();
   }
 
 
@@ -221,18 +238,7 @@ export class ProductsComponent implements OnInit {
   }
 
 
-  onProductsDetailType(productsDetailType) {
-    for (let index = 0; index < this.ProductsDetailType.length; index++) {
-      if (this.ProductsDetailType[index].ID === productsDetailType) {
-        this.minor = this.ProductsDetailType[index];
-      }
-    }
-    if (this.minor.MinorCode === 5) {
-      this.lockUpService.LoadLockUpsForQuestionnaire(1).subscribe(res => {
-        this.ProductsDetailLockUp = res;
-      });
-    }
-  }
+
 
   // add update delete Product
 
@@ -425,6 +431,21 @@ export class ProductsComponent implements OnInit {
     this.isAllSelected5() ? this.selection5.clear() : this.subjectTypesPDDataSource.data.forEach(row => this.selection5.select(row));
   }
 
+  isAllSelected6() {
+    return this.selection6.selected.length === this.notRelatedQuestionnairesDataSource.data.length;
+  }
+  masterToggle6() {
+    this.isAllSelected6() ? this.selection6.clear() :
+      this.notRelatedQuestionnairesDataSource.data.forEach(row => this.selection6.select(row));
+  }
+
+  isAllSelected7() {
+    return this.selection7.selected.length === this.relatedQuestionnairesDataSource.data.length;
+  }
+  masterToggle7() {
+    this.isAllSelected7() ? this.selection7.clear() : this.relatedQuestionnairesDataSource.data.forEach(row => this.selection7.select(row));
+  }
+
 
   resetForm(form) {
     this.productForm = new Product();
@@ -470,6 +491,11 @@ export class ProductsComponent implements OnInit {
 
     }
 
+  }
+
+
+  replaceFileName(fileName) {
+    return fileName ? fileName.substring(fileName.indexOf('Images')) : '';
   }
 
 }

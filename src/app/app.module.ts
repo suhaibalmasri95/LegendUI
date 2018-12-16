@@ -43,6 +43,7 @@ import { AlertifyService } from './_services/alertify.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthService } from './_services/auth.service';
 import { JwtModule } from '@auth0/angular-jwt';
+import { ProductsResolver } from './_resolvers/products.resolver';
 
 
 
@@ -64,7 +65,7 @@ import { JwtModule } from '@auth0/angular-jwt';
     }),
   ],
 
-  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy},
+  providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
     AuthService,
     AlertifyService,
     AuthGuard,
@@ -100,7 +101,8 @@ import { JwtModule } from '@auth0/angular-jwt';
     SubLineOfBusinessResolver,
     CategoriesResolver,
     ColumnTypesResolver,
-    CategoriesLevelsResolver
+    CategoriesLevelsResolver,
+    ProductsResolver
   ],
   bootstrap: [AppComponent]
 })
