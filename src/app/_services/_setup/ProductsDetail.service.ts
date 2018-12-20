@@ -11,8 +11,8 @@ import 'rxjs/add/operator/catch';
 export class ProductsDetailService {
 
 
-  ApiUrl: string = environment.azureUrl + 'ProductsDetails/';
-  commonApiUrl: string = environment.azureUrl + 'Common/';
+  ApiUrl: string = environment.azureUrl + 'ProductDetails/';
+  commonApiUrl: string = environment.azureUrl + 'ProductDetails/';
   ProductsDetails: ProductsDetail[];
 
   constructor(private http: HttpClient) { }
@@ -41,24 +41,15 @@ export class ProductsDetailService {
     );
   }
 
-  load(ID: number = null, QusLevel: number = null, LineOfBusiness: number = null,
-    SubLineOfBusiness: number = null, langId: number = null): Observable<ProductsDetail[]> {
+  load(ID: number = null, producID: number = null, langId: number = null): Observable<ProductsDetail[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&QusLevel=';
-    if (QusLevel != null) {
-      queryString += QusLevel;
-    }
-    queryString += '&LineOfBusiness=';
-    if (LineOfBusiness != null) {
-      queryString += LineOfBusiness;
-    }
-    queryString += '&SubLineOfBusiness=';
-    if (SubLineOfBusiness != null) {
-      queryString += SubLineOfBusiness;
+    queryString += '&productID=';
+    if (producID != null) {
+      queryString += producID;
     }
     queryString += '&langId=';
     if (langId != null) {
@@ -67,4 +58,29 @@ export class ProductsDetailService {
     }
   }
 
+  loadRelated(producID: number = null, langId: number = null): Observable<any> {
+    let queryString = '?productID=';
+    if (producID != null) {
+      queryString += producID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+
+      return this.http.get<any>(this.ApiUrl + 'LoadRelatedProduct' + queryString);
+    }
+  }
+
+  loadSubjectTypes(productDetailID: number = null, langId: number = null): Observable<any> {
+    let queryString = '?productDetailID=';
+    if (productDetailID != null) {
+      queryString += productDetailID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+
+      return this.http.get<any>(this.ApiUrl + 'LoadSubjectType' + queryString);
+    }
+  }
 }

@@ -539,7 +539,7 @@
                         <div class="form-group col-md-3">
                           <label for="From">Excess From <span class="help-block">*</span></label>
                           <select name="From" placeholder="Excess From" class="form-control" [(ngModel)]="subjectTypeForm.From"
-                            required>
+                            >
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let excessFrom of excessFroms" [ngValue]="excessFrom.ID">{{excessFrom.Name}}</option>
                           </select>

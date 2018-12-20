@@ -45,7 +45,7 @@ import { DynamicCategoriesComponent } from './views/appviews/dynamicCategories/d
 import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
 import { ProductsComponent } from './views/appviews/products/products.component';
 import { AuthGuard } from './_guards/auth.guard';
-import { ProductsResolver } from './_resolvers/products.resolver';
+import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/products.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -199,7 +199,7 @@ export const ROUTES: Routes = [
         resolve: {
           products: ProductsResolver,
           excessFrom: ExcessFromResolver,
-          GroupIndividualLockups: ColumnTypesResolver,
+          GroupIndividualLockups: GroupIndividualLockupsResolver,
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
           Status: LockUpResolver,

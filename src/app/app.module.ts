@@ -43,7 +43,7 @@ import { AlertifyService } from './_services/alertify.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthService } from './_services/auth.service';
 import { JwtModule } from '@auth0/angular-jwt';
-import { ProductsResolver } from './_resolvers/products.resolver';
+import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/products.resolver';
 
 
 
@@ -102,7 +102,8 @@ import { ProductsResolver } from './_resolvers/products.resolver';
     CategoriesResolver,
     ColumnTypesResolver,
     CategoriesLevelsResolver,
-    ProductsResolver
+    ProductsResolver,
+    GroupIndividualLockupsResolver
   ],
   bootstrap: [AppComponent]
 })
