@@ -1,15 +1,15 @@
+import { ProductSubjectTypes } from './../../../_services/_setup/ProductSubjectTypes.service';
 import { SubjectTypesService } from './../../../_services/_setup/SubjectTypes.service';
 import { ProductQuestionnaireService } from './../../../_services/_setup/productQuestionnaires.service';
 import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
 import { CommonService } from './../../../_services/Common.service';
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Product, ProductsDetail, SubjectType, ProductQuestionnaire } from '../../../entities/Setup/Products';
+import { Product, ProductsDetail, ProductSubjectType, ProductQuestionnaire } from '../../../entities/Setup/Products';
 import { LockUp } from '../../../entities/organization/LockUp';
 import { ProductsService } from '../../../_services/_setup/Products.service';
 import { ProductsDetailService } from './../../../_services/_setup/ProductsDetail.service';
@@ -31,8 +31,8 @@ export class ProductsComponent implements OnInit {
   productsDetailForm: ProductsDetail;
   productsDetails: ProductsDetail[];
 
-  subjectTypeForm: SubjectType;
-  subjectTypes: SubjectType[];
+  subjectTypeForm: ProductSubjectType;
+  subjectTypes: ProductSubjectType[];
 
   LockUps: LockUp[];
   ProductsDetailLockUp: LockUp[];
@@ -60,10 +60,10 @@ export class ProductsComponent implements OnInit {
   subLOBDataSource: MatTableDataSource<ProductsDetail>;
 
   subjectTypesLobTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob'];
-  subjectTypesLobDataSource: MatTableDataSource<SubjectType>;
+  subjectTypesLobDataSource: MatTableDataSource<ProductSubjectType>;
 
   subjectTypesPDTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob', 'Product', 'ProductDetail'];
-  subjectTypesPDDataSource: MatTableDataSource<SubjectType>;
+  subjectTypesPDDataSource: MatTableDataSource<ProductSubjectType>;
 
   notRelatedQuestionnairesColumns = ['select', 'ID', 'lob', 'subLob'];
   notRelatedQuestionnairesDataSource: MatTableDataSource<ProductQuestionnaire>;
@@ -74,8 +74,8 @@ export class ProductsComponent implements OnInit {
   selection: SelectionModel<Product>;
   selection2: SelectionModel<ProductsDetail>;
   selection3: SelectionModel<ProductsDetail>;
-  selection4: SelectionModel<SubjectType>;
-  selection5: SelectionModel<SubjectType>;
+  selection4: SelectionModel<ProductSubjectType>;
+  selection5: SelectionModel<ProductSubjectType>;
   selection6: SelectionModel<ProductQuestionnaire>;
   selection7: SelectionModel<ProductQuestionnaire>;
   extraForm: string;
@@ -102,7 +102,8 @@ export class ProductsComponent implements OnInit {
     private productService: ProductsService, private productsDetailService: ProductsDetailService,
     private productQuestionnaireService: ProductQuestionnaireService,
     private subLineService: SubBusinessService, private commonService: CommonService,
-    private subjectTypesService: SubjectTypesService) { }
+    private subjectTypesService: SubjectTypesService ,
+    private productSubjectTypeService: ProductSubjectTypes) { }
 
   ngOnInit() {
     this.extraForm = '';
@@ -111,8 +112,8 @@ export class ProductsComponent implements OnInit {
     this.selection = new SelectionModel<Product>(true, initialSelection);
     this.selection2 = new SelectionModel<ProductsDetail>(true, initialSelection);
     this.selection3 = new SelectionModel<ProductsDetail>(true, initialSelection);
-    this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
-    this.selection5 = new SelectionModel<SubjectType>(true, initialSelection);
+    this.selection4 = new SelectionModel<ProductSubjectType>(true, initialSelection);
+    this.selection5 = new SelectionModel<ProductSubjectType>(true, initialSelection);
     this.selection6 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
     this.selection7 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
 
@@ -120,7 +121,7 @@ export class ProductsComponent implements OnInit {
 
     this.productForm = new Product();
     this.productsDetailForm = new ProductsDetail();
-    this.subjectTypeForm = new SubjectType();
+    this.subjectTypeForm = new ProductSubjectType();
 
     this.submit = false;
     this.submit2 = false;
@@ -220,10 +221,10 @@ export class ProductsComponent implements OnInit {
 
   renderSubjectTypeTable(RelatedSubject, UnRelatedSubject) {
     this.subjectTypes = RelatedSubject;
-    this.subjectTypesLobDataSource = new MatTableDataSource<SubjectType>(RelatedSubject);
+    this.subjectTypesLobDataSource = new MatTableDataSource<ProductSubjectType>(RelatedSubject);
     this.subjectTypesLobDataSource.paginator = this.paginator3;
     this.subjectTypesLobDataSource.sort = this.sort3;
-    this.selection4 = new SelectionModel<SubjectType>(true, []);
+    this.selection4 = new SelectionModel<ProductSubjectType>(true, []);
     this.subjectTypesLobDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort3.direction === 'asc' ? '3' : '1';
@@ -232,10 +233,10 @@ export class ProductsComponent implements OnInit {
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
 
-    this.subjectTypesPDDataSource = new MatTableDataSource<SubjectType>(UnRelatedSubject);
+    this.subjectTypesPDDataSource = new MatTableDataSource<ProductSubjectType>(UnRelatedSubject);
     this.subjectTypesPDDataSource.paginator = this.paginator5;
     this.subjectTypesPDDataSource.sort = this.sort5;
-    this.selection5 = new SelectionModel<SubjectType>(true, []);
+    this.selection5 = new SelectionModel<ProductSubjectType>(true, []);
     this.subjectTypesPDDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort5.direction === 'asc' ? '3' : '1';
@@ -358,20 +359,21 @@ export class ProductsComponent implements OnInit {
   }
 
   saveSubjectType(form) {
+    debugger;
     if (form.invalid) {
       return;
     }
     this.subjectTypeForm = this.subjectTypeForm.selected ? this.subjectTypeForm : Object.assign({}, form.value);
     if (this.subjectTypeForm.selected) {
-      this.AddUpdateUrl = this.subjectTypesService.sebjectTypeApiUrl + 'Update';
+      this.AddUpdateUrl = this.productSubjectTypeService.sebjectTypeApiUrl + 'Update';
     } else {
-      this.AddUpdateUrl = this.subjectTypesService.sebjectTypeApiUrl + 'Create';
+      this.AddUpdateUrl = this.productSubjectTypeService.sebjectTypeApiUrl + 'Create';
     }
     this.subjectTypeForm.QuestionnaireID = this.productsDetailForm.ID;
     this.http.post(this.AddUpdateUrl, this.subjectTypeForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadSubjectType(this.productsDetailForm.ID);
-      this.subjectTypeForm = new SubjectType();
+      this.subjectTypeForm = new ProductSubjectType();
       this.submit3 = false;
       form.resetForm();
     });
@@ -423,9 +425,9 @@ export class ProductsComponent implements OnInit {
 
 
 
-  updateSubjectType(subjectType: SubjectType) {
+  updateSubjectType(subjectType: ProductSubjectType) {
     window.scroll(0, 0);
-    this.subjectTypeForm = new SubjectType;
+    this.subjectTypeForm = new ProductSubjectType();
     this.subjectTypeForm = subjectType;
     this.subjectTypeForm.selected = true;
   }
@@ -538,6 +540,8 @@ export class ProductsComponent implements OnInit {
   resetForm(form) {
     this.productForm = new Product();
     this.submit = false;
+   this.subjectTypeForm = new ProductSubjectType();
+    this.submit3 = false;
     form.reset();
   }
 

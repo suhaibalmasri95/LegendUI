@@ -60,7 +60,7 @@ export class ProductQuestionnaire implements IEntity {
 
 
 }
-export class SubjectType implements IEntity {
+export class ProductSubjectType implements IEntity {
     selected: boolean;
     Name: string;
     Name2: string;

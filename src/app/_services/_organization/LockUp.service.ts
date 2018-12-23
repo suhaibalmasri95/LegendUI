@@ -48,6 +48,9 @@ export class LockUpService {
   LoadLockUpsByMajorCode(majorCode: number = 1): Observable<LockUp[]> {
     return this.http.get<LockUp[]>(this.lockUpApiUrl + 'LoadLockUps?MajorCode=' + majorCode);
   }
+ GetLockUpsByMajorCode(majorCode: number = 1): Observable<LockUp[]> {
+    return this.http.get<LockUp[]>(this.lockUpApiUrl + 'GetLockUps?MajorCode=' + majorCode);
+  }
   LoadLockUpStatus(majorCode: number = 1): Observable<LockUp[]> {
     return this.http.get<LockUp[]>(this.lockUpApiUrl + 'Load?MajorCode=' + majorCode);
   }

@@ -1,3 +1,11 @@
+import { OpenCoverType } from './_resolvers/open-cover-type';
+import { PaymentType } from './_resolvers/payment-type.resolver';
+import { CalculationBase } from './_resolvers/calculation-base.resolver';
+import { DistributionChannel } from './_resolvers/distribution-Channel.resolver';
+import { AccountedFor } from './_resolvers/accounted-for.resolver';
+import { UserCompany } from './_resolvers/usercompany.resolver';
+import { BusinessTypes } from './_resolvers/business-types.resolver';
+
 import { ChargeTypeResolver } from './_resolvers/chargeType.resolver';
 import { CoverResolver } from './_resolvers/cover-resolver.resolver';
 import { BankResolver } from './_resolvers/bank.resolver';
@@ -42,6 +50,7 @@ import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } fro
 import { AlertifyService } from './_services/alertify.service';
 import { AuthGuard } from './_guards/auth.guard';
 import { AuthService } from './_services/auth.service';
+import { SidenavService } from './_services/sidenav/sidenav.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/products.resolver';
 
@@ -68,12 +77,15 @@ import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/p
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
     AuthService,
     AlertifyService,
+    SidenavService,
     AuthGuard,
     LockUpResolver,
     CityResolver,
     CountryResolver,
     AreaResolver,
     CurrencyResolver,
+    AccountedFor,
+    DistributionChannel,
     BankResolver,
     BankBranchResolver,
     MajorCodeResolver,
@@ -103,7 +115,12 @@ import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/p
     ColumnTypesResolver,
     CategoriesLevelsResolver,
     ProductsResolver,
-    GroupIndividualLockupsResolver
+    GroupIndividualLockupsResolver,
+    BusinessTypes,
+    UserCompany,
+    CalculationBase,
+    PaymentType,
+    OpenCoverType
   ],
   bootstrap: [AppComponent]
 })
