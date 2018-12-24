@@ -1,0 +1,16 @@
+<fieldset>
+  <legend>
+    {{category.Lable}}
+  </legend>
+  <div class="row">
+   
+<div *ngFor="let item of category.Columns">
+<app-dynamic-columns [column]="item"></app-dynamic-columns>
+</div>
+       
+      
+      
+      </div>
+      
+      
+      </fieldset>

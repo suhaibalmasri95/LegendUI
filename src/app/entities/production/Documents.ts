@@ -1,3 +1,4 @@
+import { Risk } from './Risk';
 import { IEntity } from '../interfaces/IEntity';
 
 export class Documents implements IEntity {
@@ -57,4 +58,5 @@ export class Documents implements IEntity {
     CommAmountLc: number;
     GrossAmmount: number;
     GrossAmountLc: number;
+    Risks: Risk[];
 }

@@ -1,3 +1,5 @@
+import { DynamicComponentComponent } from './dynamic-component/dynamic-component.component';
+import { DynamicColumnsComponent } from './dynamic-component/dynamic-columns/dynamic-columns.component';
 import { QuotationComponent } from './quotation/quotation.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -57,6 +59,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     QuotationComponent,
     SummaryComponent,
     SidenavComponent,
+    DynamicComponentComponent,
+    DynamicColumnsComponent
+
   ],
   imports: [
     RouterModule,

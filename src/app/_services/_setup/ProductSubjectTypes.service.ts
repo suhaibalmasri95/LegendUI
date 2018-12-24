@@ -1,3 +1,4 @@
+import { ProductSubjectType } from './../../entities/Setup/Products';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -10,33 +11,32 @@ import { SubjectType } from '../../entities/Setup/SubjectType';
   providedIn: 'root'
 })
 export class ProductSubjectTypes {
-
   sebjectTypeApiUrl: string = environment.azureUrl + 'ProductsSubjectTypes/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   SsbjectTypes: SubjectType[];
   constructor(private http: HttpClient) {}
 
   // tslint:disable-next-line:max-line-length
-  load(ID: number = null, LineOfBusniess: number = null, SubLineOfBusniess: number = null, langId: number = null): Observable<SubjectType[]> {
+  load(ID: number = null, productID: number = null, productDetailsID: number = null, langId: number = null): Observable<ProductSubjectType[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&LineOfBusniess=';
-    if (LineOfBusniess != null) {
-      queryString += LineOfBusniess;
-    }
-    queryString += '&SubLineOfBusniess=';
-    if (SubLineOfBusniess != null) {
-      queryString += SubLineOfBusniess;
-    }
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
     }
+    queryString += '&productID=';
+    if (productID != null) {
+      queryString += productID;
+    }
+    queryString += '&productDetailsID=';
+    if (productDetailsID != null) {
+      queryString += productDetailsID;
+    }
     // tslint:disable-next-line:max-line-length
-    return this.http.get<SubjectType[]>(this.sebjectTypeApiUrl + 'Load' + queryString);
+    return this.http.get<ProductSubjectType[]>(this.sebjectTypeApiUrl + 'Load' + queryString);
   }
 
 add(sebjectType: SubjectType) {

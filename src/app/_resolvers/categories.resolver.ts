@@ -26,7 +26,7 @@ export class CategoriesResolver implements Resolve<Category[]> {
 export class ColumnTypesResolver implements Resolve<LockUp[]> {
     constructor(private lockupService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockupService.LoadLockUpsByMajorCode(20).pipe(
+        return this.lockupService.GetLockUpsByMajorCode(20).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
@@ -40,7 +40,7 @@ export class ColumnTypesResolver implements Resolve<LockUp[]> {
 export class CategoriesLevelsResolver implements Resolve<LockUp[]> {
     constructor(private lockupService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockupService.LoadLockUpsByMajorCode(19).pipe(
+        return this.lockupService.GetLockUpsByMajorCode(19).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
