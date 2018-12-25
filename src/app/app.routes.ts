@@ -1,3 +1,5 @@
+import { ReportsGroupResolver } from './_resolvers/reports.resolver';
+import { ProductAttachmentsComponent } from './views/appviews/productAttachments/productAttachments.component';
 import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
 import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
 import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
@@ -29,7 +31,6 @@ import { GroubsResolver, UsersResolver } from './_resolvers/users.resolver';
 import { UserTypesResolver } from './_resolvers/userTypes-reolver.resolver';
 import { LineOfBusinessComponent } from './views/appviews/line-of-business/line-of-business.component';
 import { SystemsResolver } from './_resolvers/menuDetails.resolver';
-import { ReportsGroupResolver } from './_resolvers/reports.resolver';
 import { ModuleResolver } from './_resolvers/module.resolver';
 import { LineOfBusinessLockUpResolver } from './_resolvers/line-of-business-lock-up.resolver';
 import { RenisTypeResolver } from './_resolvers/reins-type.resolver';
@@ -45,7 +46,12 @@ import { DynamicCategoriesComponent } from './views/appviews/dynamicCategories/d
 import { CategoriesResolver, ColumnTypesResolver, CategoriesLevelsResolver } from './_resolvers/categories.resolver';
 import { ProductsComponent } from './views/appviews/products/products.component';
 import { AuthGuard } from './_guards/auth.guard';
-import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/products.resolver';
+import {
+  ProductsResolver, GroupIndividualLockupsResolver, WordingTypesResolver,
+  ReportLevelResolver,
+  ServicesResolver,
+  AttachmentLevelResolver
+} from './_resolvers/products.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -203,6 +209,20 @@ export const ROUTES: Routes = [
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
           Status: LockUpResolver,
+        }
+      },
+      {
+        path: 'productAttachments', component: ProductAttachmentsComponent,
+        resolve: {
+          Products: ProductsResolver,
+          Status: LockUpResolver,
+          ReportLevels: ReportLevelResolver,
+          lineOfBusiness: LineOfBusinessResolver,
+          Services: ServicesResolver,
+          AttachmentLevels: AttachmentLevelResolver,
+          WordingTypes: WordingTypesResolver,
+          GroupIndividualLockups: GroupIndividualLockupsResolver,
+
         }
       }
     ]

@@ -1,6 +1,5 @@
 import { SubjectTypesService } from './../../../_services/_setup/SubjectTypes.service';
 import { ProductQuestionnaireService } from './../../../_services/_setup/productQuestionnaires.service';
-import { LockUpService } from './../../../_services/_organization/LockUp.service';
 import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
 import { CommonService } from './../../../_services/Common.service';
 
@@ -9,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Product, ProductsDetail, SubjectType, ProductQuestionnaire } from '../../../entities/Setup/Products';
+import { Product, ProductsDetail, SubjectType, ProductQuestionnaire } from '../../../entities/Product/Products';
 import { LockUp } from '../../../entities/organization/LockUp';
 import { ProductsService } from '../../../_services/_setup/Products.service';
 import { ProductsDetailService } from './../../../_services/_setup/ProductsDetail.service';

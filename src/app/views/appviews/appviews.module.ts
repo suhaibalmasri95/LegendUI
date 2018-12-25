@@ -1,3 +1,4 @@
+import { ProductAttachmentsComponent } from './productAttachments/productAttachments.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -31,6 +32,7 @@ import { DiagnosisComponent } from './diagnosis/diagnosis.component';
 import { QuestionnairesComponent } from './questionnaires/questionnaires.component';
 import { DynamicCategoriesComponent } from './dynamicCategories/dynamicCategories.component';
 import { ProductsComponent } from './products/products.component';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,8 @@ import { ProductsComponent } from './products/products.component';
     DiagnosisComponent,
     QuestionnairesComponent,
     DynamicCategoriesComponent,
-    ProductsComponent
+    ProductsComponent,
+    ProductAttachmentsComponent
   ],
   imports: [
     RouterModule,
@@ -76,7 +79,8 @@ import { ProductsComponent } from './products/products.component';
     MatCheckboxModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatExpansionModule,
-    TreeviewModule.forRoot()
+    TreeviewModule.forRoot(),
+    MatCardModule
 
   ],
   exports: [

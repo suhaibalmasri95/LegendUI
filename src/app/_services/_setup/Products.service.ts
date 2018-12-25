@@ -1,4 +1,4 @@
-import { Product } from './../../entities/Setup/Products';
+import { Product } from './../../entities/Product/Products';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
