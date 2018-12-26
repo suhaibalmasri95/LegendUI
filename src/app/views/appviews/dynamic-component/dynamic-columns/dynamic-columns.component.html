@@ -24,13 +24,7 @@
         <option *ngFor="let lock of item.LockUps" [ngValue]="lock.MinorCode">{{lock.Name}}</option>
       </select></div>
       <div *ngFor="let child of item.ChildrenList" >
-          <div class="form-group col-md-3" >
-              <label for="{{child.Lable}}">{{child.Lable}}</label>
-              <select name="{{child.Lable}}" class="form-control" [(ngModel)]="child.ValueAmount">
-                <option [ngValue]="undefined">Select</option>
-                <option *ngFor="let childLock of lockups" [ngValue]="childLock.MinorCode">{{childLock.Name}}</option>
-              </select>
-            </div>
+         <app-select-component [child]="child"></app-select-component>
     </div>    
   
   </div>  

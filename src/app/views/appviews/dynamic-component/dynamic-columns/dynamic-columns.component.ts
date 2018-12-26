@@ -1,8 +1,7 @@
-import { LockUp } from './../../../../entities/organization/LockUp';
-import { LockUpService } from './../../../../_services/_organization/LockUp.service';
+
 import { ProductDynamicColumn } from './../../../../entities/Dynamic/ProductDynamicColumn';
 import { Component, OnInit, Input } from '@angular/core';
-
+import { SharedService } from './../../../../_services/sharedService.service';
 @Component({
   selector: 'app-dynamic-columns',
   templateUrl: './dynamic-columns.component.html',
@@ -16,16 +15,15 @@ export class DynamicColumnsComponent implements OnInit {
   @Input('withChildren') Cddl: ProductDynamicColumn[];
   // tslint:disable-next-line:no-input-rename
   @Input('withoutChildren') Pddl: ProductDynamicColumn[];
-  lockups: LockUp[];
-  constructor(private lockUpServce: LockUpService) { }
+  
+  constructor(private dataShareing: SharedService) { }
 
   ngOnInit() {
   }
 
   getChildLockUp(majorCode: number) {
-    this.lockUpServce.GetLockUpsByMajorCode(majorCode).subscribe( res => {
-      this.lockups = res;
-    });
+    this.dataShareing.changeCode(majorCode);
+  
   }
 
 }

@@ -1,0 +1,7 @@
+<div class="form-group col-md-3" >
+  <label for="{{child.Lable}}">{{child.Lable}}</label>
+  <select name="{{child.Lable}}" class="form-control" [(ngModel)]="child.ValueAmount">
+    <option [ngValue]="undefined">Select</option>
+    <option *ngFor="let childLock of lockups" [ngValue]="childLock.MinorCode">{{childLock.Name}}</option>
+  </select>
+</div>
