@@ -2,15 +2,15 @@
   <legend>
     {{category.Lable}}
   </legend>
-  <div class="row">
+
    
-<div *ngFor="let item of category.Columns">
-<app-dynamic-columns [column]="item"></app-dynamic-columns>
-</div>
+
+<app-dynamic-columns [column]="category.Columns" [withChildren] ="category.ListWithChildren" [withoutChildren] = "category.OriginalList" ></app-dynamic-columns>
+
        
       
       
-      </div>
+  
       
       
       </fieldset>

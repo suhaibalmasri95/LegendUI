@@ -49,7 +49,7 @@ export class QuotationComponent implements OnInit {
    user: any;
    userCompany: any;
    status: LockUp[];
-   productDynamicCategories: ProductDynmicCategory[]
+   productDynamicCategories: ProductDynmicCategory[];
    productDetails: ProductsDetail[];
    productDetailsSubjectTypes: ProductSubjectType[];
    isLessThan: boolean;

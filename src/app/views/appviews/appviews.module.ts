@@ -1,3 +1,4 @@
+import { DynmicListComponent } from './dynamic-component/dynmic-list/dynmic-list.component';
 import { DynamicComponentComponent } from './dynamic-component/dynamic-component.component';
 import { DynamicColumnsComponent } from './dynamic-component/dynamic-columns/dynamic-columns.component';
 import { QuotationComponent } from './quotation/quotation.component';

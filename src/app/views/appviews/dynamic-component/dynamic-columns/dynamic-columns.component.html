@@ -1,4 +1,4 @@
-
+<div *ngFor="let column of columns">
 <div class="form-group col-md-3" *ngIf="column.ColumnType ===1">
     <label for="{{column.Lable}}">{{column.Lable}}</label>
     <input name="{{column.Lable}}"  placeholder="{{column.label}}" type="text" class="form-control" [(ngModel)]="column.ValueDesc">
@@ -11,4 +11,33 @@
   <div class="form-group col-md-3" *ngIf="column.ColumnType ===2">
       <label for="{{column.Lable}}">{{column.Lable}}</label>
       <input name="{{column.Lable}}"  placeholder="{{column.Lable}}" type="number" class="form-control" [(ngModel)]="column.ValueAmount"  >
-    </div>
+    </div></div>
+  
+ 
+    <div *ngFor="let item of Cddl">
+
+
+    <div class="form-group col-md-3" *ngIf="item.ColumnType ==4">
+      <label for="{{item.Lable}}">{{item.Lable}}</label>
+      <select name="{{item.Lable}}" class="form-control" [(ngModel)]="item.ValueAmount" (change) ="getChildLockUp(item.ValueAmount)">
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let lock of item.LockUps" [ngValue]="lock.MinorCode">{{lock.Name}}</option>
+      </select></div>
+      <div *ngFor="let child of item.ChildrenList" >
+          <div class="form-group col-md-3" >
+              <label for="{{child.Lable}}">{{child.Lable}}</label>
+              <select name="{{child.Lable}}" class="form-control" [(ngModel)]="child.ValueAmount">
+                <option [ngValue]="undefined">Select</option>
+                <option *ngFor="let childLock of lockups" [ngValue]="childLock.MinorCode">{{childLock.Name}}</option>
+              </select>
+            </div>
+    </div>    
+  
+  </div>  
+  <div *ngFor="let without of Pddl">
+  <div class="form-group col-md-3" *ngIf="without.ColumnType ==4">
+      <label for="{{without.Lable}}">{{without.Lable}}</label>
+      <select name="{{without.Lable}}" class="form-control" [(ngModel)]="without.ValueAmount" >
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let withlock of without.LockUps" [ngValue]="withlock.MinorCode">{{withlock.Name}}</option>
+      </select></div>  </div>
