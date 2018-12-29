@@ -42,7 +42,7 @@ import {MatIconModule} from '@angular/material';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import { CdkTableModule} from '@angular/cdk/table';
 @NgModule({
   declarations: [
     LoginComponent,
@@ -91,6 +91,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatIconModule,
     MatAutocompleteModule,
     MatSidenavModule,
+    CdkTableModule,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
     }),

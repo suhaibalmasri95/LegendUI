@@ -1,3 +1,4 @@
+import { SharedColumn } from './_services/sharedColumn.service';
 import { SharedService } from './_services/sharedService.service';
 import { OpenCoverType } from './_resolvers/open-cover-type';
 import { PaymentType } from './_resolvers/payment-type.resolver';
@@ -81,6 +82,7 @@ import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/p
     SidenavService,
     AuthGuard,
     SharedService,
+    SharedColumn,
     LockUpResolver,
     CityResolver,
     CountryResolver,

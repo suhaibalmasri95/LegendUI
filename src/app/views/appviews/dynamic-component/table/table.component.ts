@@ -1,3 +1,5 @@
+import { SharedColumn } from './../../../../_services/sharedColumn.service';
+import { DynamicDatasource } from './../../../../entities/Dynamic/dynamicDatasource';
 import { DynamicTable } from './../../../../entities/Dynamic/dynamicTable';
 import { SharedService } from './../../../../_services/sharedService.service';
 import { ProductDynamicColumn } from './../../../../entities/Dynamic/ProductDynamicColumn';
@@ -11,20 +13,26 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnInit {
-  tableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Value'];
+  tableColumns = ['select' , 'ID'];
+  dynamicDataSource: any[] = [];
   dataSource: MatTableDataSource<DynamicTable>;
   selection: SelectionModel<DynamicTable>;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('table', { read: MatSort }) sort: MatSort;
   columns: DynamicTable[];
   column: DynamicTable;
-  constructor(private shareService: SharedService) { }
+  constructor(private shareService: SharedService , private sharedColumn: SharedColumn) { }
 
   ngOnInit() {
     this.column = new DynamicTable();
-    this.shareService.currentColumn.subscribe( res => {
-      this.renderTable(res);
-
+    this.sharedColumn.currentColumn.subscribe(res => {
+      res.forEach(element => {
+        this.tableColumns.push(element);
+      });
+    });
+    this.shareService.currentColumn.subscribe(res => {
+      this.dynamicDataSource.push(res);
+      this.renderTable(this.dynamicDataSource);
     });
   }
 
@@ -32,7 +40,7 @@ export class TableComponent implements OnInit {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    renderTable(columns: DynamicTable[]) {
+    renderTable(columns: any[]) {
       this.columns = columns;
       this.dataSource = new MatTableDataSource<DynamicTable>(columns);
       this.dataSource.paginator = this.paginator;
