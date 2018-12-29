@@ -1,3 +1,5 @@
+import { TableComponent } from './dynamic-component/table/table.component';
+import { SelectComponentComponent } from './dynamic-component/select-component/SelectComponentComponent';
 
 import { DynamicComponentComponent } from './dynamic-component/dynamic-component.component';
 import { DynamicColumnsComponent } from './dynamic-component/dynamic-columns/dynamic-columns.component';
@@ -40,7 +42,7 @@ import {MatIconModule} from '@angular/material';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import { SelectComponentComponent } from './dynamic-component/select-component/select-component.component';
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -63,7 +65,8 @@ import { SelectComponentComponent } from './dynamic-component/select-component/s
     SidenavComponent,
     DynamicComponentComponent,
     DynamicColumnsComponent,
-    SelectComponentComponent
+    SelectComponentComponent,
+    TableComponent
 
   ],
   imports: [

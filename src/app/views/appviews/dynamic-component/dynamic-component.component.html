@@ -1,16 +1,15 @@
+
 <fieldset>
   <legend>
     {{category.Lable}}
   </legend>
+<app-dynamic-columns [column]="category.Columns" [list] ="category.OriginalList" ></app-dynamic-columns>
+    
+<div *ngIf="category.IsMulitRecords">
 
-   
-
-<app-dynamic-columns [column]="category.Columns" [withChildren] ="category.ListWithChildren" [withoutChildren] = "category.OriginalList" ></app-dynamic-columns>
-
-       
-      
-      
-  
-      
-      
-      </fieldset>
+  <input class="btn btn-primary" type="submit" value="Save" (click)="saveColumnsDataToTable(category)" />
+</div>
+<div *ngIf="childsValue.length > 0">
+  <app-table></app-table>
+</div>
+</fieldset>

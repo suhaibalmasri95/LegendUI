@@ -14,24 +14,23 @@
     </div></div>
   
  
-    <div *ngFor="let item of Cddl">
+    <div *ngFor="let item of list">
 
 
     <div class="form-group col-md-3" *ngIf="item.ColumnType ==4">
       <label for="{{item.Lable}}">{{item.Lable}}</label>
-      <select name="{{item.Lable}}" class="form-control" [(ngModel)]="item.ValueAmount" (change) ="getChildLockUp(item.ValueAmount)">
+      <select name="{{item.Lable}}" class="form-control" [(ngModel)]="item.ValueLockUpID" (change) ="getChildren(item)">
         <option [ngValue]="undefined">Select</option>
         <option *ngFor="let lock of item.LockUps" [ngValue]="lock.MinorCode">{{lock.Name}}</option>
       </select></div>
-      <div *ngFor="let child of item.ChildrenList" >
-         <app-select-component [child]="child"></app-select-component>
-    </div>    
-  
+      
+
   </div>  
-  <div *ngFor="let without of Pddl">
-  <div class="form-group col-md-3" *ngIf="without.ColumnType ==4">
-      <label for="{{without.Lable}}">{{without.Lable}}</label>
-      <select name="{{without.Lable}}" class="form-control" [(ngModel)]="without.ValueAmount" >
-        <option [ngValue]="undefined">Select</option>
-        <option *ngFor="let withlock of without.LockUps" [ngValue]="withlock.MinorCode">{{withlock.Name}}</option>
-      </select></div>  </div>
+  <div *ngFor="let item of childs">
+    <app-select-component [child]="item" (parent)="getChildren($event)"></app-select-component>
+  </div>
+
+ 
+   
+
+  

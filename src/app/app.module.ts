@@ -1,3 +1,4 @@
+import { SharedService } from './_services/sharedService.service';
 import { OpenCoverType } from './_resolvers/open-cover-type';
 import { PaymentType } from './_resolvers/payment-type.resolver';
 import { CalculationBase } from './_resolvers/calculation-base.resolver';
@@ -79,6 +80,7 @@ import { ProductsResolver, GroupIndividualLockupsResolver } from './_resolvers/p
     AlertifyService,
     SidenavService,
     AuthGuard,
+    SharedService,
     LockUpResolver,
     CityResolver,
     CountryResolver,

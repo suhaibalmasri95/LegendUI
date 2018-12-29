@@ -1,0 +1,69 @@
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+</mat-form-field>
+<div class="x">
+    <div class="table-container">
+        <table mat-table #table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td style="width: 5%" mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                <td style="width: 5%" mat-cell *matCellDef="let element">
+                    {{element.ID}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="NAME">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                <td style="width: 15%" mat-cell *matCellDef="let element">
+                    {{element.Lable}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="NAME2">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                <td style="width: 15%" mat-cell *matCellDef="let element">
+                    {{element.Lable2}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="Value">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Value Text</th>
+
+                
+                <td style="width: 20%" mat-cell *matCellDef="let element" >
+                    {{element.Value}} </td>
+                    
+            </ng-container>
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td style="width: 20%" mat-cell *matCellDef="let element">
+                    <i (click)="update(element)" class="fa fa-edit" placement="left"
+                        ngbTooltip="Edit"></i>
+                    <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                        [popoverMessage]="'are you sure to delete?'" placement="left"
+                        (confirm)="delete(element.ID)" ngbTooltip="Delete"></i>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: tableColumns;" (click)="update(row)"
+                class=" mat-row {{column.ID===row.ID?'active':'not-active'}}"></tr>
+
+        </table>
+    </div>
+    <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]"
+        [showFirstLastButtons]="true"></mat-paginator>
+
+</div>

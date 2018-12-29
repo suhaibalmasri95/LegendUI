@@ -25,4 +25,5 @@ export class ProductDynmicCategory implements IEntity {
     SubLineOfBuisness: number;
     Columns: ProductDynamicColumn[];
     Lists: ProductDynamicColumn[];
+    OriginalList: ProductDynamicColumn[];
 }

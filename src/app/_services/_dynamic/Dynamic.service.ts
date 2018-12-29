@@ -1,3 +1,5 @@
+import { ProductDynamicColumn } from './../../entities/Dynamic/ProductDynamicColumn';
+import { Filter } from './../../entities/filter/filter';
 import { Observable } from 'rxjs';
 import { ProductDynmicCategory } from './../../entities/Dynamic/ProductDynmicCategory';
 import { HttpClient } from '@angular/common/http';
@@ -55,5 +57,26 @@ export class DynamicService {
     // tslint:disable-next-line:max-line-length
     return this.http.get<ProductDynmicCategory[]>(this.dynamicApiUrl + 'Load' + queryString);
   }
+  loadChildren(fileterObject: Filter): Observable<ProductDynamicColumn[]> {
 
+    let queryString = '?parentID=';
+
+    if (fileterObject.parentID != null) {
+      queryString += fileterObject.parentID;
+    }
+    queryString += '&MajorCode=';
+    if (fileterObject.MajorCode != null) {
+      queryString += fileterObject.MajorCode;
+    }
+    queryString += '&MinorCode=';
+    if (fileterObject.MinorCode != null) {
+      queryString += fileterObject.MinorCode;
+    }
+    queryString += '&LangID=';
+    if (fileterObject.LangID != null) {
+      queryString += fileterObject.LangID;
+    }
+
+    return this.http.get<ProductDynamicColumn[]>(this.dynamicApiUrl + 'LoadChild' + queryString);
+  }
 }

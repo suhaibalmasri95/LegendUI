@@ -1,6 +1,5 @@
-import { LockUp } from './../organization/LockUp';
 import { IEntity } from './../interfaces/IEntity';
-export class ProductDynamicColumn implements IEntity {
+export class DynamicTable implements IEntity {
     selected: boolean;
     Name: string;
     Name2: string;
@@ -38,7 +37,6 @@ export class ProductDynamicColumn implements IEntity {
     UnderWritingDocID: number;
     ExecludedColumn: number;
     MajorCode: number;
-    LockUps: LockUp[];
     ChildCounts: number;
-    milesecond: number;
+    Value: any;
 }

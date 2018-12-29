@@ -1,7 +1,16 @@
+
 <div class="form-group col-md-3" >
   <label for="{{child.Lable}}">{{child.Lable}}</label>
+  <select name="{{child.Lable}}" class="form-control" [(ngModel)]="child.ValueLockUpID" (change) ="getChildrenForChildComponent(child)">
+    <option [ngValue]="undefined">Select</option>
+    <option *ngFor="let childLock of child.LockUps" [ngValue]="childLock.MinorCode">{{childLock.Name}}</option>
+  </select>
+</div>
+
+<!--<div class="form-group col-md-3" *ngIf="child.ChildCounts > 0">
+  <label for="{{child.Lable}}">test</label>
   <select name="{{child.Lable}}" class="form-control" [(ngModel)]="child.ValueAmount">
     <option [ngValue]="undefined">Select</option>
     <option *ngFor="let childLock of lockups" [ngValue]="childLock.MinorCode">{{childLock.Name}}</option>
   </select>
-</div>
+</div>-->
