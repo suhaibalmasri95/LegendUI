@@ -1,4 +1,10 @@
+
 import { ProductAttachmentsComponent } from './productAttachments/productAttachments.component';
+import { TableComponent } from './dynamic-component/table/table.component';
+import { SelectComponentComponent } from './dynamic-component/select-component/SelectComponentComponent';
+import { DynamicComponentComponent } from './dynamic-component/dynamic-component.component';
+import { DynamicColumnsComponent } from './dynamic-component/dynamic-columns/dynamic-columns.component';
+import { QuotationComponent } from './quotation/quotation.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -12,7 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DataTablesModule } from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule, MatExpansionModule } from '@angular/material';
+import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule, MatExpansionModule, MatSidenavModule } from '@angular/material';
 import { MatSortModule, MatSelectModule, MatSnackBarModule } from '@angular/material';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { MatDividerModule } from '@angular/material/divider';
@@ -33,6 +39,12 @@ import { QuestionnairesComponent } from './questionnaires/questionnaires.compone
 import { DynamicCategoriesComponent } from './dynamicCategories/dynamicCategories.component';
 import { ProductsComponent } from './products/products.component';
 import {MatCardModule} from '@angular/material/card';
+import { SummaryComponent } from './Summary/Summary.component';
+import {MatIconModule} from '@angular/material';
+import { SidenavComponent } from './sidenav/sidenav.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { CdkTableModule} from '@angular/cdk/table';
 
 @NgModule({
   declarations: [
@@ -51,7 +63,14 @@ import {MatCardModule} from '@angular/material/card';
     QuestionnairesComponent,
     DynamicCategoriesComponent,
     ProductsComponent,
-    ProductAttachmentsComponent
+    ProductAttachmentsComponent,
+    QuotationComponent,
+    SummaryComponent,
+    SidenavComponent,
+    DynamicComponentComponent,
+    DynamicColumnsComponent,
+    SelectComponentComponent,
+    TableComponent
   ],
   imports: [
     RouterModule,
@@ -72,6 +91,10 @@ import {MatCardModule} from '@angular/material/card';
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatSidenavModule,
+    CdkTableModule,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
     }),
@@ -80,7 +103,8 @@ import {MatCardModule} from '@angular/material/card';
     NgMultiSelectDropDownModule.forRoot(),
     MatExpansionModule,
     TreeviewModule.forRoot(),
-    MatCardModule
+    MatCardModule,
+    BsDatepickerModule.forRoot()
 
   ],
   exports: [

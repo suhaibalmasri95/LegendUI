@@ -37,6 +37,7 @@ export class ProductsDetail implements IEntity {
     CreationDate: Date;
     ModifiedBy: string;
     CreateBy: string;
+    SubjectTypeDesc: string;
     selected: boolean;
 }
 
@@ -60,7 +61,7 @@ export class ProductQuestionnaire implements IEntity {
 
 
 }
-export class SubjectType implements IEntity {
+export class ProductSubjectType implements IEntity {
     selected: boolean;
     Name: string;
     Name2: string;
@@ -68,5 +69,6 @@ export class SubjectType implements IEntity {
     ID: number;
     AnswerOrder: number;
     QuestionnaireID: number;
+  SubjectTypeDesc: string;
 
 }

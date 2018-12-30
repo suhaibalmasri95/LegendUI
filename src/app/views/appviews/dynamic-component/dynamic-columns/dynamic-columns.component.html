@@ -1,0 +1,36 @@
+<div *ngFor="let column of columns">
+<div class="form-group col-md-3" *ngIf="column.ColumnType ===1">
+    <label for="{{column.Lable}}">{{column.Lable}}</label>
+    <input name="{{column.Lable}}"  placeholder="{{column.label}}" type="text" class="form-control" [(ngModel)]="column.ValueDesc">
+  </div>
+<div class="form-group col-md-3" *ngIf="column.ColumnType ===3">
+    <label for="{{column.Lable}}">{{column.Lable}} <span class="help-block">*</span></label>
+    <input name="{{column.Lable}}"  required placeholder="{{column.Lable}}" type="date" class="form-control" [ngModel]="column.ValueDate | date:'yyyy-MM-dd'"
+      (ngModelChange)="column.ValueDate = $event">
+  </div>
+  <div class="form-group col-md-3" *ngIf="column.ColumnType ===2">
+      <label for="{{column.Lable}}">{{column.Lable}}</label>
+      <input name="{{column.Lable}}"  placeholder="{{column.Lable}}" type="number" class="form-control" [(ngModel)]="column.ValueAmount"  >
+    </div></div>
+  
+ 
+    <div *ngFor="let item of list">
+
+
+    <div class="form-group col-md-3" *ngIf="item.ColumnType ==4">
+      <label for="{{item.Lable}}">{{item.Lable}}</label>
+      <select name="{{item.Lable}}" class="form-control" [(ngModel)]="item.ValueLockUpID" (change) ="getChildren(item)">
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let lock of item.LockUps" [ngValue]="lock.MinorCode">{{lock.Name}}</option>
+      </select></div>
+      
+
+  </div>  
+  <div *ngFor="let item of childs">
+    <app-select-component [child]="item" (parent)="getChildren($event)"></app-select-component>
+  </div>
+
+ 
+   
+
+  

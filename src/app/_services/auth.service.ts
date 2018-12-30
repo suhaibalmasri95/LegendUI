@@ -31,9 +31,11 @@ export class AuthService {
       .map((respone: Response) => {
         const res: any = respone;
         const user: any = res.user;
+        const userCompany: any = res.userCompany;
         if (user) {
           localStorage.setItem('access_token', res.tokenString);
           localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('company', JSON.stringify(userCompany));
           this.decoderToken = this.jwHelper.decodeToken(res.tokenString);
           this.currentUser = user;
           this.userToken = res.tokenString;

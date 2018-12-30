@@ -1,0 +1,592 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-10">
+    <!-- <h2>{{formControls.Name}}</h2> -->
+    <h2>Production</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a>Production</a>
+      </li>
+      <li class="active">
+        <strong>Quotation</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-sm-2">
+    <div class="title-action">
+      <!-- <a ui-sref="pages.edit-form({id:formControls.id})" class="btn btn-primary">Edit This form</a> -->
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+  <fieldset>
+    <legend>
+      Document
+    </legend>
+        <div class="row">
+                <div class="form-group col-md-3" *ngIf="documentForm.DocumentSegment">
+                        <label for="DocumentSegment">Document Segment</label>
+                        <input name="DocumentSegment" placeholder="Document Segment" disabled type="text" class="form-control" [(ngModel)]="documentForm.DocumentSegment">
+                      </div>
+                      <div class="form-group col-md-3" *ngIf="documentForm.UwYear">
+                            <label for="UwYear">Under Writing Year</label>
+                            <input name="UwYear" placeholder="Under Writing Year" disabled  type="number" class="form-control" [(ngModel)]="documentForm.UwYear">
+                          </div>
+        </div>
+
+  <div class="row">
+
+    <div class="form-group col-md-3">
+      <label for="DocumentType">Document Type</label>
+      <select name="DocumentType" class="form-control" [(ngModel)]="documentForm.DocumentType">
+        <option [ngValue]="undefined">Select</option>
+        <option [ngValue]="1">Policy</option>
+        <option [ngValue]="2">Quotation</option>
+      </select>
+    </div>
+    <!---->
+    <div class="form-group col-md-3">
+      <label for="LocBustId">Business Type</label>
+      <select name="LocBustId" class="form-control" [(ngModel)]="documentForm.LocBustId">
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let business of businessTypes" [ngValue]="business.ID">{{business.Name}}</option>
+      </select>
+    </div>
+
+
+    <div class="form-group col-md-3">
+      <label for="ProductId">Product</label>
+      <select name="ProductId" class="form-control" [(ngModel)]="documentForm.ProductId" (change)="getProductDetails(documentForm.ProductId)">
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="StBrnId">Branches</label>
+      <select name="StBrnId" class="form-control" [(ngModel)]="documentForm.StBrnId">
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{branch.Name}}</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+
+    <div class="form-group col-md-3">
+      <label for="IssueDate">Issue Date <span class="help-block">*</span></label>
+      <input name="IssueDate" required placeholder="Issue Date" type="date" class="form-control" [ngModel]="documentForm.IssueDate | date:'yyyy-MM-dd'"
+      (ngModelChange)="changeFinancialDate($event)" 
+      >
+    </div>
+
+    <div class="form-group col-md-3">
+      <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+      <input  name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control" [ngModel]="documentForm.EffectiveDate | date:'yyyy-MM-dd'"
+        (ngModelChange)="changeUwYear($event)">
+    </div>
+    <div class="form-group col-md-3">
+      <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+      <input name="ExpiryDate" disabled required placeholder="Expiry Date" type="date" class="form-control" [ngModel]="documentForm.ExpiryDate | date:'yyyy-MM-dd'"
+        (ngModelChange)="documentForm.ExpiryDate = $event">
+    </div>
+
+
+    <div class="form-group col-md-3">
+      <label for="QutValidity">Policy Holder</label>
+
+      <input class="form-control" type="text" placeholder="Policy Holder" matInput [formControl]="policyholderSearch"
+        [matAutocomplete]="policyHoldersauto">
+
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #policyHoldersauto="matAutocomplete">
+        <mat-option *ngFor="let Holder of policyHolders" [value]="Holder.ID">
+          {{ Holder.Name }}
+        </mat-option>
+      </mat-autocomplete>
+
+    </div>
+
+
+  </div>
+  <div class="row">
+    <div class="form-group col-md-3">
+      <label for="Beneficiary">Beneficiary</label>
+
+      <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
+        [matAutocomplete]="beneficiariesauto">
+
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #beneficiariesauto="matAutocomplete">
+        <mat-option *ngFor="let bene of beneficiaries" [value]="bene.ID">
+          {{ bene.Name }}
+        </mat-option>
+      </mat-autocomplete>
+
+    </div>
+    <div class="form-group col-md-3">
+      <label for="LocDistChnales">Distribution Channel</label>
+      <select name="LocDistChnales" class="form-control" [(ngModel)]="documentForm.LocDistChnales" (change)="setDocumentShare(documentForm.LocDistChnales)">
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let dis of distributionChannel" [ngValue]="dis.MinorCode">{{dis.Name}}</option>
+      </select>
+    </div>
+
+    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales ==2">
+      <label for="SalesPreson">Sales Preson</label>
+
+      <input class="form-control" type="text" placeholder="SalesPreson" matInput [formControl]="beneficiarySearch"
+        [matAutocomplete]="salesPersonsauto">
+
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #salesPersonsauto="matAutocomplete">
+        <mat-option *ngFor="let sale of salesPersons" [value]="sale.ID">
+          {{ sale.Name }}
+        </mat-option>
+      </mat-autocomplete>
+
+    </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales ==3">
+      <label for="Agent">Agent</label>
+
+      <input class="form-control" type="text" placeholder="Agent" matInput [formControl]="beneficiarySearch"
+        [matAutocomplete]="agentsauto">
+
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #agentsauto="matAutocomplete">
+        <mat-option *ngFor="let agent of agents" [value]="agent.ID">
+          {{ agent.Name }}
+        </mat-option>
+      </mat-autocomplete>
+
+    </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales ==4">
+      <label for="Broker">Broker</label>
+
+      <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
+        [matAutocomplete]="brokerssauto">
+
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #brokerssauto="matAutocomplete">
+        <mat-option *ngFor="let broker of brokers" [value]="broker.ID">
+          {{ broker.Name }}
+        </mat-option>
+      </mat-autocomplete>
+
+    </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType ==2">
+      <label for="QutValidity">Quotation Validity</label>
+      <input name="QutValidity" placeholder="Quotation Validity" type="number" class="form-control" [(ngModel)]="documentForm.QutValidity">
+    </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType ==1">
+      <label for="QutValidity">Accounted For Validity</label>
+      <select name="StBrnId" class="form-control" [(ngModel)]="documentForm.StBrnId">
+        <option [ngValue]="undefined">Select</option>
+        <option *ngFor="let acc of accountedFor" [ngValue]="acc.MinorCode">{{acc.Name}}</option>
+      </select>
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            More Details
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="CurrencyCode">Currency</label>
+            <select name="CurrencyCode" class="form-control" [(ngModel)]="documentForm.CurrencyCode">
+              <option [ngValue]="undefined">Select</option>
+              <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+            </select>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="Exrate">Exrate</label>
+            <input name="Exrate" placeholder="Exrate" type="number" class="form-control" [(ngModel)]="documentForm.Exrate" (change) ="calculateSumInsuredLc(riskForm.Suminsured,documentForm.Exrate)" >
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="PaymentId">Payment Type</label>
+            <select name="PaymentId" class="form-control" [(ngModel)]="documentForm.PaymentId">
+              <option [ngValue]="undefined">Select</option>
+              <option *ngFor="let paym of paymentType" [ngValue]="paym.MinorCode">{{paym.Name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="CalcBases">Calculation Base</label>
+            <select name="CalcBases" class="form-control" [(ngModel)]="documentForm.CalcBases">
+              <option [ngValue]="undefined">Select</option>
+              <option *ngFor="let calc of calculateBase" [ngValue]="calc.MinorCode">{{calc.Name}}</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="DocumentShare">Document Share</label>
+            <input name="DocumentShare" placeholder="Document Share" 
+            type="number" class="form-control" min="1" max="100" [formControl]="documentShareControl" [(ngModel)]="documentForm.DocumentShare" [disabled]="documentForm.LocDistChnales === 251">
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="ReferenceNo">Reference No</label>
+            <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="documentForm.ReferenceNo"></textarea>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="Notes">Notes</label>
+            <textarea rows="1" name="Notes" placeholder="Notes" type="text" class="form-control" [(ngModel)]="documentForm.Notes"></textarea>
+          </div>
+          <div class="form-group col-md-3">
+            <label for="Notes2">Notes2</label>
+            <textarea rows="1" name="Notes2" placeholder="Notes2" type="text" class="form-control" [(ngModel)]="documentForm.Notes2"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-3">
+            <label for="OpenCoverType">Open Cover Type</label>
+            <select name="OpenCoverType" class="form-control" [(ngModel)]="documentForm.OpenCoverType">
+              <option [ngValue]="undefined">Select</option>
+              <option *ngFor="let cover of openCoverType" [ngValue]="cover.MinorCode">{{cover.Name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-3">
+                <label for="DocumentNo">Document No</label>
+                <input name="DocumentNo" disabled placeholder="Document No" type="number" class="form-control" [(ngModel)]="documentForm.DocumentNo">
+              </div>
+              <div class="form-group col-md-3">
+                    <label for="TrnSerial">Serial</label>
+                    <input name="TrnSerial" disabled placeholder="Serial" type="number" class="form-control" [(ngModel)]="documentForm.TrnSerial">
+                  </div>
+                  <div class="form-group col-md-3">
+                        <label for="FinancialDate">Financial Date <span class="help-block">*</span></label>
+                        <input name="FinancialDate" required placeholder="Finanvial Date" type="date" class="form-control" [ngModel]="documentForm.FinancialDate | date:'yyyy-MM-dd'"
+                          (ngModelChange)="documentForm.FinancialDate = $event">
+                      </div>
+        </div>
+        <div class="row">
+                <div class="form-group col-md-3">
+                        <label for="FyrYear">Financial Year</label>
+                        <input name="FyrYear" disabled placeholder="Finanvial Year" type="number" class="form-control" [(ngModel)]="documentForm.FyrYear">
+                      </div>
+                      <div class="form-group col-md-3">
+                            <label for="NetAmount">Net Amount</label>
+                            <input name="NetAmount" disabled placeholder="Net Amount" type="number" class="form-control" [(ngModel)]="documentForm.NetAmount">
+                          </div>
+                          <div class="form-group col-md-3">
+                                <label for="NetAmountLc">Net Amount LC</label>
+                                <input name="NetAmountLc" disabled placeholder="Net Amount LC" type="number" class="form-control" [(ngModel)]="documentForm.NetAmountLc">
+                              </div>
+                              <div class="form-group col-md-3">
+                                    <label for="LoadingAmount">Loading Amount</label>
+                                    <input name="LoadingAmount" disabled placeholder="Finanvial Year" type="number" class="form-control" [(ngModel)]="documentForm.LoadingAmount">
+                                  </div>
+        </div>
+        <div class="row">
+                <div class="form-group col-md-3">
+                        <label for="LoadingAmountLc">Loading Amount LC</label>
+                        <input name="LoadingAmountLc" disabled placeholder="Loading Amount LC" type="number" class="form-control" [(ngModel)]="documentForm.LoadingAmountLc">
+                      </div>
+                      <div class="form-group col-md-3">
+                            <label for="DiscountAmount">Discount Amount </label>
+                            <input name="DiscountAmount" disabled placeholder="Discount Amount" type="number" class="form-control" [(ngModel)]="documentForm.DiscountAmount">
+                          </div>
+                          <div class="form-group col-md-3">
+                                <label for="DiscountAmountLc">Discount Amount LC</label>
+                                <input name="DiscountAmountLc" disabled placeholder="Discount Amount LC" type="number" class="form-control" [(ngModel)]="documentForm.DiscountAmountLc">
+                              </div>
+                              <div class="form-group col-md-3">
+                                    <label for="ChargesAmount">Charge Amount</label>
+                                    <input name="ChargesAmount" disabled placeholder="Charge Amount" type="number" class="form-control" [(ngModel)]="documentForm.ChargesAmount">
+                                  </div>
+            </div>
+            <div class="row">
+                    <div class="form-group col-md-3">
+                            <label for="ChargesAmountLc">Charge Amount LC</label>
+                            <input name="ChargesAmountLc" disabled placeholder="Charge Amount LC" type="number" class="form-control" [(ngModel)]="documentForm.ChargesAmountLc">
+                          </div>
+                          <div class="form-group col-md-3">
+                                <label for="CommAmount">Commision Amount</label>
+                                <input name="CommAmount" disabled placeholder="Commision Amount" type="number" class="form-control" [(ngModel)]="documentForm.CommAmount">
+                              </div>
+                              <div class="form-group col-md-3">
+                                    <label for="CommAmountLc">Commision Amount LC</label>
+                                    <input name="CommAmountLc" disabled placeholder="Commision Amount LC" type="number" class="form-control" [(ngModel)]="documentForm.CommAmountLc">
+                                  </div>
+                                  <div class="form-group col-md-3">
+                                        <label for="GrossAmmount">Gross Amount</label>
+                                        <input name="GrossAmmount" disabled placeholder="Gross Amount" type="number" class="form-control" [(ngModel)]="documentForm.GrossAmmount">
+                                      </div>
+                </div>
+                <div class="row">
+                        <div class="form-group col-md-3">
+                                <label for="GrossAmountLc">Gross Amount LC</label>
+                                <input name="GrossAmountLc" disabled placeholder="Gross Amount LC" type="number" class="form-control" [(ngModel)]="documentForm.GrossAmountLc">
+                              </div>
+                            
+                              <div class="form-group col-md-3">
+                                    <label for="CreatedBy">Created By</label>
+                                    <input name="CreatedBy" disabled placeholder="Created By" type="text" class="form-control" [(ngModel)]="documentForm.CreatedBy">
+                                  </div>
+
+                                  <div class="form-group col-md-3">
+                                        <label for="CreationDate">Creation Date <span class="help-block">*</span></label>
+                                        <input name="CreationDate" disabled required placeholder="Creation Date" type="date" class="form-control" [ngModel]="documentForm.CreationDate | date:'yyyy-MM-dd'"
+                                          (ngModelChange)="documentForm.CreationDate = $event">
+                                      </div>
+                                  <div class="form-group col-md-3">
+                                        <label for="ModifiedBy">Modified By</label>
+                                        <input name="ModifiedBy" disabled placeholder="Modified By" type="text" class="form-control" [(ngModel)]="documentForm.ModifiedBy">
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="form-group col-md-3">
+                                            <label for="ModificationDate">Modification Date <span class="help-block">*</span></label>
+                                            <input name="ModificationDate" disabled required placeholder="Modification Date" type="date" class="form-control" [ngModel]="documentForm.ModificationDate | date:'yyyy-MM-dd'"
+                                              (ngModelChange)="documentForm.ModificationDate = $event">
+                                          </div>
+                                          <div class="form-group col-md-3">
+                                                <label for="Status">Status </label>
+                                                <select name="Status" class="form-control" [(ngModel)]="documentForm.Status" disabled>
+                                                  <option [ngValue]="undefined">Select</option>
+                                                  <option *ngFor="let state of status" [ngValue]="state.MinorCode" disabled>{{state.Name}}</option>
+                                                </select>
+                                              </div>
+                                          <div class="form-group col-md-3">
+                                                <label for="StatusDate">Status Date <span class="help-block">*</span></label>
+                                                <input name="StatusDate" required placeholder="Status Date" type="date" class="form-control" [ngModel]="documentForm.StatusDate | date:'yyyy-MM-dd'"
+                                                  (ngModelChange)="documentForm.StatusDate = $event" disabled>
+                                              </div>
+
+                    </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <div class="row" *ngFor="let item of productDynamicCategories">
+    <app-dynamic-component [category]="item"></app-dynamic-component>
+  </div>
+  </fieldset>
+
+
+  <fieldset>
+    <legend>
+      Risk
+    </legend>
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label for="ProductDetail">ProductDetail</label>
+            <select name="ProductDetail" class="form-control" [(ngModel)]="riskForm.ProductDetailID" (change)="getProductDetailSubjectType(riskForm.ProductDetailID)">
+              <option [ngValue]="undefined">Select</option>
+              <option *ngFor="let detail of productDetails" [ngValue]="detail.ID">{{detail.SubjectTypeDesc}}</option>
+            </select>
+          </div>
+   
+      <div class="form-group col-md-3">
+        <label for="SubjectTypeID">Subject Type </label>
+        <select name="SubjectTypeID" class="form-control" [(ngModel)]="riskForm.SubjectTypeID" >
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let subject of productDetailsSubjectTypes" [ngValue]="subject.ID" disabled>{{subject.SubjectTypeDesc}}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+          <label for="Serial">Serial</label>
+          <input name="Serial"  placeholder="Serial" type="text" class="form-control" [(ngModel)]="riskForm.Serial">
+        </div>
+      
+
+      <div class="form-group col-md-3">
+          <label for="Name">Name</label>
+          <input name="Name"  placeholder="Name" type="text" class="form-control" [(ngModel)]="riskForm.Name">
+        </div>
+      </div>
+      <div class="row">
+      <div class="form-group col-md-3">
+          <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+          <input  name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control" [ngModel]="riskForm.EffectiveDate | date:'yyyy-MM-dd'"
+            (ngModelChange)="CheckIfLessThan($event)">
+            <span  *ngIf="isLessThan">Effective Date Greater or Equal Document Effective Date </span>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+          <input name="ExpiryDate" disabled required placeholder="Expiry Date" type="date" class="form-control" [ngModel]="riskForm.ExpiryDate | date:'yyyy-MM-dd'"
+            (ngModelChange)="riskForm.ExpiryDate = $event">
+           
+        </div>
+        <div class="form-group col-md-3">
+            <label for="Suminsured">Sum Insured</label>
+            <input name="Suminsured"  placeholder="Sum Insured" type="number" class="form-control" [(ngModel)]="riskForm.Suminsured" (change) ="calculateSumInsuredLc(riskForm.Suminsured,documentForm.Exrate)" >
+          </div>
+        
+  
+        <div class="form-group col-md-3">
+            <label for="SuminsuredLC">Sum Insured LC</label>
+            <input name="SuminsuredLC" disabled placeholder="Sum Insured LC" disabled type="number" class="form-control" [(ngModel)]="riskForm.SuminsuredLC">
+          </div>
+      </div>
+      <div class="row">
+          <div class="form-group col-md-3" >
+              <label for="SubjectTypeID">Parent Risk </label>
+              <select name="SubjectTypeID" class="form-control" [(ngModel)]="riskForm.SubjectTypeID" >
+                <option [ngValue]="undefined">Select</option>
+                <option *ngFor="let subject of productDetailsSubjectTypes" [ngValue]="subject.ID" disabled>{{subject.SubjectTypeDesc}}</option>
+              </select>
+            </div>
+        </div>
+        <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  More Details
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="row">
+                  <div class="form-group col-md-3">
+                      <label for="Description">Description</label>
+                      <textarea rows="1" name="Description" placeholder="Description" type="text" class="form-control" [(ngModel)]="riskForm.Description"  ></textarea>
+                    </div>
+                <div class="form-group col-md-3">
+                  <label for="MinExcessAmount">Minmum Excess Amount</label>
+                  <input name="MinExcessAmount" placeholder="Minmum Excess Amount" type="number" class="form-control" [(ngModel)]="riskForm.MinExcessAmount"  >
+                </div>
+      
+                <div class="form-group col-md-3">
+                    <label for="MaxExcessAmount">Max Excess Amount</label>
+                    <input name="MaxExcessAmount" placeholder="Max Excess Amount" type="number" class="form-control" [(ngModel)]="riskForm.MaxExcessAmount"  >
+                  </div>
+      
+                  <div class="form-group col-md-3">
+                  <label for="ReferenceNo">Reference NO</label>
+                  <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="riskForm.ReferenceNo"  ></textarea>
+                </div>
+      
+              </div>
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="UwDocumentID">Under Writing Document ID</label>
+                  <input name="UwDocumentID" placeholder="Under Writing Document ID" 
+                  type="number" class="form-control" disabled [(ngModel)]="riskForm.UwDocumentID" >
+                </div>
+      
+                <div class="form-group col-md-3">
+                    <label for="NetPremium">Net Premium</label>
+                    <input name="NetPremium" disabled placeholder="Net Premium" type="number" class="form-control" [(ngModel)]="riskForm.NetPremium"  >
+                  </div>
+        
+                  <div class="form-group col-md-3">
+                      <label for="NetPremiumLc">Net Premium LC</label>
+                      <input name="NetPremiumLc"disabled placeholder="Net Premium LC" type="number" class="form-control" [(ngModel)]="riskForm.NetPremiumLc"  >
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="GrossPremium">Gross Premium</label>
+                        <input name="GrossPremium" disabled placeholder="Gross Premium" type="number" class="form-control" [(ngModel)]="riskForm.GrossPremium"  >
+                      </div>
+              </div>
+              <div class="row">
+                  <div class="form-group col-md-3">
+                      <label for="GrossPremiumLc">Gross Premium LC</label>
+                      <input name="GrossPremiumLc" disabled placeholder="Gross Premium LC" type="number" class="form-control" [(ngModel)]="riskForm.GrossPremiumLc"  >
+                    </div>
+      
+                    <div class="form-group col-md-3">
+                        <label for="CreatedBy">Created By</label>
+                        <input name="CreatedBy" disabled placeholder="Created By" type="text" class="form-control" [(ngModel)]="riskForm.CreatedBy">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                            <label for="CreationDate">Creation Date <span class="help-block">*</span></label>
+                            <input name="CreationDate" disabled required placeholder="Creation Date" type="date" class="form-control" [ngModel]="riskForm.CreationDate | date:'yyyy-MM-dd'"
+                              (ngModelChange)="documentForm.CreationDate = $event">
+                          </div>
+                      <div class="form-group col-md-3">
+                            <label for="ModifiedBy">Modified By</label>
+                            <input name="ModifiedBy" disabled placeholder="Modified By" type="text" class="form-control" [(ngModel)]="riskForm.ModifiedBy">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="form-group col-md-3">
+                                <label for="ModificationDate">Modification Date <span class="help-block">*</span></label>
+                                <input name="ModificationDate" disabled required placeholder="Modification Date" type="date" class="form-control" [ngModel]="riskForm.ModificationDate | date:'yyyy-MM-dd'"
+                                  (ngModelChange)="documentForm.ModificationDate = $event">
+                              </div>
+                
+                      
+              </div>
+         
+                   
+            </mat-expansion-panel>
+          </mat-accordion>
+    </fieldset>
+
+
+
+
+</div>
+
+  <!-- <div class="col-xs-12 col-12 col-md-4 form-group">
+    <input
+      placeholder="Datepicker"
+      class="form-control"
+      #dp="bsDatepicker"
+      bsDatepicker="{ dateInputFormat: 'DD-MM-YYYY' }">
+  </div>-->
+
+  <!--<div class="pull-right">
+        <a (click)="sidenav.toggle()">
+        <i class="material-icons">
+            keyboard_arrow_left
+
+            </i> </a>
+            <app-sidenav></app-sidenav>
+        </div> -->
+  <div class="pull-right">
+    <a (click)="click()">
+      <i class="material-icons">
+        keyboard_arrow_left
+
+      </i> </a>
+
+  </div>
+  <div *ngIf="icon">
+    <div class="pull-right">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Quotation Summary
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <app-summary [text]="text" [value]="value"></app-summary>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+<br/>
+<br/>
+<br/>
+  <div class="row">
+        <div id="footer">
+                <div class="form-group col-md-2" *ngIf="documentForm.IsClaimed === 1">
+        <h3><i class="fa fa-check"><span>Clamied</span></i></h3>
+    </div> 
+    <div class="form-group col-md-2" *ngIf="documentForm.IsPrinted === 1">
+            <h3><i class="fa fa-check"><span>Printed</span></i></h3>
+        </div>
+        <div class="form-group col-md-2" *ngIf="documentForm.IsReinsured === 1">
+                <h3><i class="fa fa-check"><span>Reinsured</span></i></h3>
+            </div>
+            <div class="form-group col-md-2" *ngIf="documentForm.IsPosted === 1">
+                    <h3><i class="fa fa-check"><span>Posted</span></i></h3>
+                </div>
+                <div class="form-group col-md-2" *ngIf="documentForm.IsCancelled === 1"> 
+                        <h3><i class="fa fa-check"><span>Canceled</span></i></h3>
+                    </div>
+      </div>    
+    </div>
+

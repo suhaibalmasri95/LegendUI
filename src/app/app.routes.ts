@@ -1,5 +1,11 @@
 import { ReportsGroupResolver } from './_resolvers/reports.resolver';
 import { ProductAttachmentsComponent } from './views/appviews/productAttachments/productAttachments.component';
+import { PaymentType } from './_resolvers/payment-type.resolver';
+import { CalculationBase } from './_resolvers/calculation-base.resolver';
+import { DistributionChannel } from './_resolvers/distribution-Channel.resolver';
+import { UserCompany } from './_resolvers/usercompany.resolver';
+import { BusinessTypes } from './_resolvers/business-types.resolver';
+import { QuotationComponent } from './views/appviews/quotation/quotation.component';
 import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
 import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
 import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
@@ -52,6 +58,8 @@ import {
   ServicesResolver,
   AttachmentLevelResolver
 } from './_resolvers/products.resolver';
+import { AccountedFor } from './_resolvers/accounted-for.resolver';
+import { OpenCoverType } from './_resolvers/open-cover-type';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -226,6 +234,26 @@ export const ROUTES: Routes = [
         }
       }
     ]
+  },
+  {
+    path: 'production', component: BasicLayoutComponent, runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'quotation', component: QuotationComponent,
+        resolve: {
+          busniessTypes: BusinessTypes,
+          products: ProductsResolver,
+          branches: UserCompany,
+          accountedFor: AccountedFor,
+          currency: CurrencyResolver,
+          distributionChannel: DistributionChannel,
+          openCoverType: OpenCoverType,
+          calculateBase: CalculationBase,
+          paymentType: PaymentType,
+          status: LockUpResolver,
+        }
+      }]
   },
 
 
