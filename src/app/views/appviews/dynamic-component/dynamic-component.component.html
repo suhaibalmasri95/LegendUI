@@ -9,7 +9,7 @@
 
   <input class="btn btn-primary" type="submit" value="Save" (click)="saveColumnsDataToTable(category)" />
 </div>
-<div *ngIf="childsValue.length > 0">
-  <app-table></app-table>
+<div *ngIf="childsValue.length > 0  ">
+  <app-table #tableSelector [tableColumns]='dataSource' [list]='meregedArray' [dynamicDataSource]='dynamicDataSources' (parent)='updateChild($event)'></app-table>
 </div>
 </fieldset>

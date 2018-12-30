@@ -1,3 +1,4 @@
+import { TableComponent } from './table/table.component';
 import { SharedColumn } from './../../../_services/sharedColumn.service';
 import { DynamicDatasource } from './../../../entities/Dynamic/dynamicDatasource';
 import { MajorCode } from './../../../entities/models/majorCode';
@@ -5,50 +6,65 @@ import { DynamicTable } from './../../../entities/Dynamic/dynamicTable';
 import { SharedService } from './../../../_services/sharedService.service';
 import { ProductDynamicColumn } from './../../../entities/Dynamic/ProductDynamicColumn';
 import { ProductDynmicCategory } from './../../../entities/Dynamic/ProductDynmicCategory';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
 
 @Component({
   selector: 'app-dynamic-component',
   templateUrl: './dynamic-component.component.html',
   styleUrls: ['./dynamic-component.component.css']
 })
-export class DynamicComponentComponent implements OnInit {
+export class DynamicComponentComponent implements OnInit , AfterViewInit {
 
   // tslint:disable-next-line:no-input-rename
   @Input('category') category: ProductDynmicCategory;
-  meregedArray: ProductDynamicColumn[];
-  childsValue: DynamicTable[];
+  @ViewChildren('tableSelector')  tableSelector: QueryList<TableComponent>;
+  meregedArray: ProductDynamicColumn[] = [];
+  childsValue: DynamicTable[] = [];
   childValue: DynamicTable;
   newObject: ProductDynamicColumn;
   dataSource: string[];
-
-  dynamicDataSource: {};
-  constructor(private shareService: SharedService, private sharedColumn: SharedColumn) { }
+  dynamicDataSources: any[] = [];
+  temp: any[] = [];
+  dynamicDataSource: any;
+  controlsOn = false;
+  updatedIndex: number;
+  isUpdate: boolean = false;
+  constructor() { }
 
   ngOnInit() {
-    this.childsValue = [];
-    this.dataSource = [];
-    this.dynamicDataSource = {};
-    this.meregedArray = [];
+   // this.table = new TableComponent();
+   console.log('on init', this.tableSelector);
   }
 
   saveColumnsDataToTable(category: ProductDynmicCategory) {
+    this.childsValue = [];
+    this.dataSource = ['select'];
+    this.meregedArray = [];
+    this.dynamicDataSources = [];
     this.resetData(category.Columns, category.OriginalList);
     console.log(category);
    //
-    //this.shareService.changeDataSoruce(this.dataSource);
-    this.sharedColumn.changeColumn(this.dataSource);
-    this.shareService.changeColumn(this.dynamicDataSource);
+    if (this.isUpdate) {
+      this.temp[this.updatedIndex] = this.dynamicDataSource;
+      this.isUpdate = false;
+    } else {
+   this.temp.push(this.dynamicDataSource); }
+
+   this.dynamicDataSources = this.temp;
+   this.controlsOn = true;
   }
 
 
   resetData(columns: ProductDynamicColumn[] , dropDownList: ProductDynamicColumn[] ) {
+    this.dynamicDataSource = {};
     this.meregedArray = [...columns , ...dropDownList];
-    let i = 0;
+    let i = 1;
     this.meregedArray.forEach(element => {
       this.childValue = new DynamicTable();
       this.childValue = this.mapFeilds(this.childValue, element) ;
+      if (!this.dataSource.includes(element.Lable)) {
       this.dataSource.push(element.Lable);
+    }
       if (element.ColumnType === 1) {
         this.dynamicDataSource['value' + i] = element.ValueDesc;
         this.childValue.Value = element.ValueDesc;
@@ -65,7 +81,7 @@ export class DynamicComponentComponent implements OnInit {
         this.dynamicDataSource['value' + i] = element.ValueLockUpID;
         this.childValue.Value = element.ValueLockUpID;
       }
-      this.dynamicDataSource = this.mapToAny(i , this.dynamicDataSource , element);
+      this.dynamicDataSource = this.mapToAny(i , this.dynamicDataSource , this.childValue);
       i++;
       element = this.clearFileds(element);
       this.childsValue.push(this.childValue);
@@ -115,7 +131,7 @@ export class DynamicComponentComponent implements OnInit {
     return table;
   }
 
-  mapToAny(index: number , table: any , filed: ProductDynamicColumn ) {
+  mapToAny(index: number , table: any , filed: DynamicTable ) {
     table['selected' + index] = filed.selected ;
     table['Name' + index] = filed.Name ;
     table['Name2' + index] = filed.Name2 ;
@@ -162,6 +178,64 @@ export class DynamicComponentComponent implements OnInit {
     filed.ValueAmount = this.newObject.ValueAmount;
     filed.ValueDesc = this.newObject.ValueDesc;
     filed.ValueLockUpID = this.newObject.ValueLockUpID;
+    return filed;
+  }
+
+
+ngAfterViewInit() {
+
+    // this returns null
+  
+}
+updateChild(index: number) {
+  const data = this.dynamicDataSources[index];
+  let x = 1;
+  this.isUpdate = true;
+  this.updatedIndex = index;
+  this.meregedArray.forEach(element => {
+   this.mapAnyToProductDynamicColumn(x , data , element);
+   x++;
+  });
+}
+mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicColumn ) {
+  filed.selected = table['selected' + index];
+  filed.Name = table['Name' + index];
+  filed.Name2 = table['Name2' + index];
+  filed.LangID = table['LangID' + index];
+  filed.ID = table['ID' + index];
+  filed.Lable = table['Lable' + index];
+  filed.Lable2 = table['Lable2' + index];
+  filed.Status = table['Status' + index];
+  filed.StatusDate = table['StatusDate' + index];
+  filed.CreatedBy = table['CreatedBy' + index];
+  filed.CreationDate = table['CreationDate' + index];
+  filed.ModifiedBy =  table['ModifiedBy' + index];
+  filed.ModificationDate = table['ModificationDate' + index];
+  filed.ColumnType = table['ColumnType' + index];
+  filed.LineOfBuisness =  table['LineOfBuisness' + index];
+  filed.SubLineOfBuisness = table['SubLineOfBuisness' + index];
+  filed.LockUpLevel = table['LockUpLevel' + index];
+  filed.ProductColumnID = table['ProductColumnID' + index];
+  filed.ProductCategoryID = table['ProductCategoryID' + index];
+  filed.CategoryID = table['CategoryID' + index];
+  filed.ProductID = table['ProductID' + index];
+  filed.ProductDetailID = table['ProductDetailID' + index];
+  filed.ColumnOrder = table['ColumnOrder' + index];
+  filed.Dictionary = table['Dictionary' + index];
+  filed.DictionaryColumnID = table['DictionaryColumnID' + index];
+  filed.ReferenceTable = table['ReferenceTable' + index];
+  filed.WhereCondition = table['WhereCondition' + index];
+  filed.UnderWritingColCatID = table['UnderWritingColCatID' + index];
+  filed.UnderWritingProductColumnID = table['UnderWritingProductColumnID' + index];
+  filed.ValueDate = table['ValueDate' + index];
+  filed.ValueAmount = table['ValueAmount' + index];
+  filed.ValueDesc = table['ValueDesc' + index];
+  filed.ValueLockUpID = table['ValueLockUpID' + index];
+  filed.UnderWritingRiskID = table['UnderWritingRiskID' + index];
+  filed.UnderWritingDocID = table['UnderWritingDocID' + index];
+  filed.ExecludedColumn = table['ExecludedColumn' + index];
+  filed.MajorCode = table['MajorCode' + index];
+  filed.ChildCounts = table['ChildCounts' + index];
     return filed;
   }
 }
