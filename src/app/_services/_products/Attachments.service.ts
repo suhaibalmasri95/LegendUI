@@ -1,9 +1,9 @@
+import { ProductAttachment } from './../../entities/Product/Attachment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
-import { Column } from '../../entities/Setup/Categories';
 
 @Injectable({
   providedIn: 'root'
@@ -11,51 +11,53 @@ import { Column } from '../../entities/Setup/Categories';
 export class AttachmentsService {
 
 
-  ApiUrl: string = environment.azureUrl + 'Products/';
-  commonApiUrl: string = environment.azureUrl + 'Products/';
-  Columns: Column[];
+  ApiUrl: string = environment.azureUrl + 'ProductAttachment/';
+  commonApiUrl: string = environment.azureUrl + 'ProductAttachment/';
+  ProductAttachments: ProductAttachment[];
 
   constructor(private http: HttpClient) { }
 
-  add(column: Column) {
-    this.http.post(this.ApiUrl + 'Create', column).map(
+  add(productAttachment: ProductAttachment) {
+    this.http.post(this.ApiUrl + 'Create', productAttachment).map(
       (response) => {
         return response;
       }
     );
   }
 
-  update(column: Column) {
-    this.http.post(this.ApiUrl + 'Update', column).map(
+  update(productAttachment: ProductAttachment) {
+    this.http.post(this.ApiUrl + 'Update', productAttachment).map(
       (response) => {
         return response;
       }
     );
   }
 
-  delete(column: Column) {
-    this.http.post(this.ApiUrl + 'Delete', column).map(
+  delete(productAttachment: ProductAttachment) {
+    this.http.post(this.ApiUrl + 'Delete', productAttachment).map(
       (response) => {
         return response;
       }
     );
   }
-
-  load(ID: number = null, productID: number = null, langId: number = null): Observable<Column[]> {
+  load(ID: number = null, ProductID: number = null, ProductDetailID: number = null, langId: number = null):
+    Observable<ProductAttachment[]> {
     let queryString = '?ID=';
-
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&productID=';
-    if (productID != null) {
-      queryString += productID;
+    queryString += '&ProductID=';
+    if (ProductID != null) {
+      queryString += ProductID;
     }
-
+    queryString += '&ProductDetailID=';
+    if (ProductDetailID != null) {
+      queryString += ProductDetailID;
+    }
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<Column[]>(this.ApiUrl + 'Load' + queryString);
+      return this.http.get<ProductAttachment[]>(this.ApiUrl + 'Load' + queryString);
     }
   }
 

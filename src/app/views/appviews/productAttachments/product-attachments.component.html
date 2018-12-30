@@ -142,7 +142,7 @@
                       <mat-select placeholder="Product Detail" (selectionChange)="reloadAttachmentTable(productdetail,null)"
                         [(ngModel)]="productdetail">
                         <mat-option [value]=""> All </mat-option>
-                        <mat-option *ngFor="let productdetail of productdetails" [value]="productdetail.ID">
+                        <mat-option *ngFor="let productdetail of ProductDetails" [value]="productdetail.ID">
                           {{productdetail.Name}}
                         </mat-option>
                       </mat-select>
@@ -247,14 +247,14 @@
 
                         <div class="form-group col-md-3">
                           <label for="Product">Product </label>
-                          <select name="Product" class="form-control" [(ngModel)]="attachmentForm.Product" required>
+                          <select name="Product" class="form-control" [(ngModel)]="attachmentForm.ProductId" required  (change)="loadProductDetails(attachmentForm.ProductId)">
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let Product of Products" [ngValue]="Product.ID">{{Product.Name}}</option>
                           </select>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="ProductDetails">Product Details </label>
-                          <select name="ProductDetails" class="form-control" [(ngModel)]="attachmentForm.ProductDetails"
+                          <label for="ProductDetailId">Product Details </label>
+                          <select name="ProductDetailId" class="form-control" [(ngModel)]="attachmentForm.ProductDetailId" 
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let ProductDetail of ProductDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.Name}}</option>
@@ -269,8 +269,8 @@
                           </select>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Attachment">Attachment</label>
-                          <select name="Attachment" class="form-control" [(ngModel)]="attachmentForm.Attachment"
+                          <label for="AttachmentID">Attachment</label>
+                          <select name="AttachmentID" class="form-control" [(ngModel)]="attachmentForm.AttachmentID"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let Attachment of Attachments" [ngValue]="Attachment.ID">{{Attachment.Name}}</option>
@@ -282,7 +282,7 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <mat-checkbox name="IsRequired" [(ngModel)]="attachmentForm.IsRequired">Is Required
+                          <mat-checkbox name="IsRequiredTemp" [(ngModel)]="attachmentForm.IsRequiredTemp">Is Required
                           </mat-checkbox>
                         </div>
 
@@ -298,9 +298,9 @@
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
-                          <select name="LineOfBusniess" class="form-control" [(ngModel)]="attachmentForm.LineOfBusniess"
-                            (change)="loadSubLinesOfBusiness(attachmentForm.LineOfBusniess)" required>
+                          <label for="LineOfBusiness">Line of Business <span class="help-block">*</span></label>
+                          <select name="LineOfBusiness" class="form-control" [(ngModel)]="attachmentForm.LineOfBusiness"
+                            (change)="loadSubLinesOfBusiness(attachmentForm.LineOfBusiness)" required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                           </select>
@@ -312,8 +312,8 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="SubLineOfBusniess">Sub Line of Business</label>
-                          <select name="SubLineOfBusniess" class="form-control" [(ngModel)]="attachmentForm.SubLineOfBusniess"
+                          <label for="SubLineOfBusiness">Sub Line of Business</label>
+                          <select name="SubLineOfBusiness" class="form-control" [(ngModel)]="attachmentForm.SubLineOfBusiness"
                             [disabled]="!SubLobs ||SubLobs.length===0">
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
@@ -463,35 +463,32 @@
                     <form #form="ngForm" (ngSubmit)="saveWording(form)" class="{{submit2?'submited':''}}">
                       <div class="row">
 
-
-
-
                         <div class="form-group col-md-3">
                           <label for="Product">Product </label>
-                          <select name="Product" class="form-control" [(ngModel)]="wordingForm.Product" required>
+                          <select name="Product" class="form-control" [(ngModel)]="wordingForm.ProductId" required  (change)="loadProductDetails(wordingForm.ProductId)">
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let Product of Products" [ngValue]="Product.ID">{{Product.Name}}</option>
                           </select>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="ProductDetails">Product Details </label>
-                          <select name="ProductDetails" class="form-control" [(ngModel)]="wordingForm.ProductDetails"
+                          <label for="ProductDetailId">Product Details </label>
+                          <select name="ProductDetailId" class="form-control" [(ngModel)]="wordingForm.ProductDetailId"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let ProductDetail of ProductDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.Name}}</option>
                           </select>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="WordingType">Wording Type</label>
-                          <select name="WordingType" class="form-control" [(ngModel)]="wordingForm.WordingType"
+                          <label for="LockUpType">Wording Type</label>
+                          <select name="LockUpType" class="form-control" [(ngModel)]="wordingForm.LockUpType"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let WordingType of WordingTypes" [ngValue]="WordingType.ID">{{WordingType.Name}}</option>
                           </select>
                         </div>
                         <div class="form-group col-md-3">
-                          <label for="Attachment">Attachment</label>
-                          <select name="Attachment" class="form-control" [(ngModel)]="wordingForm.Attachment" required>
+                          <label for="AttachmentID">Attachment</label>
+                          <select name="AttachmentID" class="form-control" [(ngModel)]="wordingForm.AttachmentID" required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let Attachment of Attachments" [ngValue]="Attachment.ID">{{Attachment.Name}}</option>
                           </select>
@@ -528,17 +525,17 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
-                          <select name="LineOfBusniess" class="form-control" [(ngModel)]="wordingForm.LineOfBusniess"
-                            (change)="loadSubLinesOfBusiness(wordingForm.LineOfBusniess)" required>
+                          <label for="LineOfBusiness">Line of Business <span class="help-block">*</span></label>
+                          <select name="LineOfBusiness" class="form-control" [(ngModel)]="wordingForm.LineOfBusiness"
+                            (change)="loadSubLinesOfBusiness(wordingForm.LineOfBusiness)" required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                           </select>
                         </div>
 
                         <div class="form-group col-md-3">
-                          <label for="SubLineOfBusniess">Sub Line of Business</label>
-                          <select name="SubLineOfBusniess" class="form-control" [(ngModel)]="wordingForm.SubLineOfBusniess"
+                          <label for="SubLineOfBusiness">Sub Line of Business</label>
+                          <select name="SubLineOfBusiness" class="form-control" [(ngModel)]="wordingForm.SubLineOfBusiness"
                             [disabled]="!SubLobs ||SubLobs.length===0">
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
@@ -693,7 +690,7 @@
 
                           <div class="form-group col-md-3">
                             <label for="Product">Product </label>
-                            <select name="Product" class="form-control" [(ngModel)]="wordingDetailsForm.Product"
+                            <select name="Product" class="form-control" [(ngModel)]="wordingDetailsForm.ProductId"
                               required>
                               <option [ngValue]="undefined">Select</option>
                               <option *ngFor="let Product of Products" [ngValue]="Product.ID">{{Product.Name}}</option>
@@ -701,8 +698,8 @@
                           </div>
 
                           <div class="form-group col-md-3">
-                            <label for="ProductDetails">Product Details </label>
-                            <select name="ProductDetails" class="form-control" [(ngModel)]="wordingDetailsForm.ProductDetails"
+                            <label for="ProductDetailId">Product Details </label>
+                            <select name="ProductDetailId" class="form-control" [(ngModel)]="wordingDetailsForm.ProductDetailId"
                               required>
                               <option [ngValue]="undefined">Select</option>
                               <option *ngFor="let ProductDetail of ProductDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.Name}}</option>
@@ -710,8 +707,8 @@
                           </div>
 
                           <div class="form-group col-md-3">
-                            <label for="WordingType">Wording Type</label>
-                            <select name="WordingType" class="form-control" [(ngModel)]="wordingDetailsForm.WordingType"
+                            <label for="LockUpType">Wording Type</label>
+                            <select name="LockUpType" class="form-control" [(ngModel)]="wordingDetailsForm.LockUpType"
                               required>
                               <option [ngValue]="undefined">Select</option>
                               <option *ngFor="let WordingType of WordingTypes" [ngValue]="WordingType.ID">{{WordingType.Name}}</option>
@@ -723,7 +720,7 @@
                         <div class="row">
 
                           <div class="form-group col-md-3">
-                            <mat-checkbox name="IsRequired" [(ngModel)]="wordingDetailsForm.AutoAdd">Auto Add
+                            <mat-checkbox name="IsRequiredTemp" [(ngModel)]="wordingDetailsForm.AutoAdd">Auto Add
                             </mat-checkbox>
                           </div>
 
@@ -752,17 +749,17 @@
                         <div class="row">
 
                           <div class="form-group col-md-3">
-                            <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
-                            <select name="LineOfBusniess" class="form-control" [(ngModel)]="wordingDetailsForm.LineOfBusniess"
-                              (change)="loadSubLinesOfBusiness(wordingDetailsForm.LineOfBusniess)" required>
+                            <label for="LineOfBusiness">Line of Business <span class="help-block">*</span></label>
+                            <select name="LineOfBusiness" class="form-control" [(ngModel)]="wordingDetailsForm.LineOfBusiness"
+                              (change)="loadSubLinesOfBusiness(wordingDetailsForm.LineOfBusiness)" required>
                               <option [ngValue]="undefined">Select</option>
                               <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                             </select>
                           </div>
 
                           <div class="form-group col-md-3">
-                            <label for="SubLineOfBusniess">Sub Line of Business</label>
-                            <select name="SubLineOfBusniess" class="form-control" [(ngModel)]="wordingDetailsForm.SubLineOfBusniess"
+                            <label for="SubLineOfBusiness">Sub Line of Business</label>
+                            <select name="SubLineOfBusiness" class="form-control" [(ngModel)]="wordingDetailsForm.SubLineOfBusiness"
                               [disabled]="!SubLobs ||SubLobs.length===0">
                               <option [ngValue]="undefined">Select</option>
                               <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
@@ -881,7 +878,7 @@
                   </mat-select>
                 </mat-form-field>
 
-                <mat-checkbox name="IsRequired" [(ngModel)]="IsRequired">Is Required</mat-checkbox>
+                <mat-checkbox name="IsRequiredTemp" [(ngModel)]="IsRequiredTemp">Is Required</mat-checkbox>
 
 
                 <div>

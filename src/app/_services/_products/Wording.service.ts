@@ -11,8 +11,8 @@ import { Column } from '../../entities/Setup/Categories';
 export class WordingService {
 
 
-  ApiUrl: string = environment.azureUrl + 'Products/';
-  commonApiUrl: string = environment.azureUrl + 'Products/';
+  ApiUrl: string = environment.azureUrl + 'ProductWordings/';
+  commonApiUrl: string = environment.azureUrl + 'ProductWordingDetails/';
   Columns: Column[];
 
   constructor(private http: HttpClient) { }
@@ -41,7 +41,7 @@ export class WordingService {
     );
   }
 
-  load(ID: number = null, productID: number = null, langId: number = null): Observable<Column[]> {
+  load(ID: number = null, productID: number = null, ProductDetailID: number = null, langId: number = null): Observable<Column[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -51,11 +51,37 @@ export class WordingService {
     if (productID != null) {
       queryString += productID;
     }
+    queryString += '&ProductDetailID=';
+    if (ProductDetailID != null) {
+      queryString += ProductDetailID;
+    }
 
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
       return this.http.get<Column[]>(this.ApiUrl + 'Load' + queryString);
+    }
+  }
+
+  loadDetails(ID: number = null, productID: number = null, ProductDetailID: number = null, langId: number = null): Observable<Column[]> {
+    let queryString = '?ID=';
+
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&productID=';
+    if (productID != null) {
+      queryString += productID;
+    }
+    queryString += '&ProductDetailID=';
+    if (ProductDetailID != null) {
+      queryString += ProductDetailID;
+    }
+
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+      return this.http.get<Column[]>(this.commonApiUrl + 'Load' + queryString);
     }
   }
 

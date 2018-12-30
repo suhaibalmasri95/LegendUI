@@ -11,8 +11,8 @@ import { Column } from '../../entities/Setup/Categories';
 export class ProductReportService {
 
 
-  ApiUrl: string = environment.azureUrl + 'Products/';
-  commonApiUrl: string = environment.azureUrl + 'Products/';
+  ApiUrl: string = environment.azureUrl + 'ProductReports/';
+  commonApiUrl: string = environment.azureUrl + 'ProductReports/';
   Columns: Column[];
 
   constructor(private http: HttpClient) { }
@@ -41,7 +41,7 @@ export class ProductReportService {
     );
   }
 
-  load(ID: number = null, productID: number = null, langId: number = null): Observable<Column[]> {
+  load(ID: number = null, productID: number = null, ProductDetailID: number = null, langId: number = null): Observable<Column[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -50,6 +50,11 @@ export class ProductReportService {
     queryString += '&productID=';
     if (productID != null) {
       queryString += productID;
+    }
+
+    queryString += '&ProductDetailID=';
+    if (ProductDetailID != null) {
+      queryString += ProductDetailID;
     }
 
     queryString += '&langId=';

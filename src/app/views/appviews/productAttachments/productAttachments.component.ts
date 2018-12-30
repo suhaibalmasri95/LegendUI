@@ -5,8 +5,7 @@ import { SubBusinessService } from './../../../_services/_setup/SubBusiness.serv
 import { ProductsDetailService } from './../../../_services/_setup/ProductsDetail.service';
 import { Product, ProductsDetail } from './../../../entities/Product/Products';
 import { CommonService } from './../../../_services/Common.service';
-import { LockUpService } from './../../../_services/_organization/LockUp.service';
-import { Wording, Attachment, ProductReport, WordingDetail } from './../../../entities/Product/Attachment';
+import { Wording, ProductAttachment, ProductReport, WordingDetail, Attachment } from './../../../entities/Product/Attachment';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
@@ -15,7 +14,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { LockUp } from '../../../entities/organization/LockUp';
 import { WordingService } from '../../../_services/_products/Wording.service';
 import { AttachmentsService } from '../../../_services/_products/Attachments.service';
-import { ProductReportService } from '../../../_services/_products/ProductReport.service';
 
 @Component({
   selector: 'app-product-attachments',
@@ -42,14 +40,16 @@ export class ProductAttachmentsComponent implements OnInit {
   Products: Product[];
   parentCodes: Product[];
 
-  attachmentForm: Attachment;
+  attachmentForm: ProductAttachment;
+  productAttachment: ProductAttachment[];
+
   Attachments: Attachment[];
 
   wordingForm: Wording;
   wordings: Wording[];
 
-  wordingDetailsForm: Wording;
-  wordingDetails: Wording[];
+  wordingDetailsForm: WordingDetail;
+  wordingDetails: WordingDetail[];
 
   productReportForm: ProductReport;
   productReports: ProductReport[];
@@ -64,13 +64,13 @@ export class ProductAttachmentsComponent implements OnInit {
   productsDataSource: MatTableDataSource<Product>;
 
   attachmentTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'AttachmentLevel', 'IsRequired', 'Product', 'ProductDetail', 'actions'];
-  attachmentsDataSource: MatTableDataSource<Attachment>;
+  attachmentsDataSource: MatTableDataSource<ProductAttachment>;
 
   wordingTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Type', 'Product', 'ProductDetail', 'actions'];
   wordingDataSource: MatTableDataSource<Wording>;
 
   wordingDetailsTableColumns = ['select', 'ID', 'Serial', 'Product', 'ProductDetail', 'Service', 'AutoAdd', 'actions'];
-  wordingDetailsDataSource: MatTableDataSource<Wording>;
+  wordingDetailsDataSource: MatTableDataSource<WordingDetail>;
 
   unrelatedProductReportTableColumns = ['select', 'ID', 'ReportName', 'ReportCode', 'ReportGroup'];
   unrelatedProductReportDataSource: MatTableDataSource<ProductReport>;
@@ -80,7 +80,7 @@ export class ProductAttachmentsComponent implements OnInit {
 
   productReportDataSource: MatTableDataSource<ProductReport>;
 
-  selection: SelectionModel<Attachment>;
+  selection: SelectionModel<ProductAttachment>;
   selection2: SelectionModel<Wording>;
   selection3: SelectionModel<WordingDetail>;
   selection4: SelectionModel<ProductReport>;
@@ -121,7 +121,7 @@ export class ProductAttachmentsComponent implements OnInit {
     this.extraForm = 'attachments';
     this.snackPosition = 'right';
 
-    this.selection = new SelectionModel<Attachment>(true, []);
+    this.selection = new SelectionModel<ProductAttachment>(true, []);
     this.selection2 = new SelectionModel<Wording>(true, []);
     this.selection3 = new SelectionModel<WordingDetail>(true, []);
     this.selection4 = new SelectionModel<ProductReport>(true, []);
@@ -130,9 +130,9 @@ export class ProductAttachmentsComponent implements OnInit {
 
     this.selectedProduct = new Product();
 
-    this.attachmentForm = new Attachment();
+    this.attachmentForm = new ProductAttachment();
     this.wordingForm = new Wording();
-    this.wordingDetailsForm = new Wording();
+    this.wordingDetailsForm = new WordingDetail();
 
     this.submit = false;
     this.submit2 = false;
@@ -157,8 +157,8 @@ export class ProductAttachmentsComponent implements OnInit {
 
     this.noSelectedProduct = false;
     this.selectedProduct = product;
-    this.reloadProductDetails(product.ID);
-
+    this.loadProductDetails(product.ID);
+    this.loadAttachments();
 
     switch (this.extraForm) {
       case 'attachments':
@@ -217,9 +217,14 @@ export class ProductAttachmentsComponent implements OnInit {
   }
 
 
-  reloadProductDetails(productsId = null) {
+  loadProductDetails(productsId = null) {
     this.productsDetailService.load(null, productsId, 1).subscribe(data => {
       this.ProductDetails = data;
+    });
+  }
+  loadAttachments() {
+    this.productsDetailService.loadAttachments(null, 1).subscribe(data => {
+      this.Attachments = data;
     });
   }
 
@@ -230,26 +235,26 @@ export class ProductAttachmentsComponent implements OnInit {
   }
 
   reloadAttachmentTable(ProductId) {
-    // this.attachmentsService.load(null, 2, LineOfBusinessCode, ChargeID, 1).subscribe(data => {
-    //   this.renderAttachmentTable(data);
-    // });
+    this.attachmentsService.load(null, ProductId, null, 1).subscribe(data => {
+      this.renderAttachmentTable(data);
+    });
   }
 
   reloadWordingsTable(ProductId) {
-    // this.wordingService.load(null, 3, LineOfBusinessCode, null, 1).subscribe(data => {
-    //   this.renderWordingsTable(data);
-    // });
+    this.wordingService.load(null, ProductId, null, 1).subscribe(data => {
+      this.renderWordingsTable(data);
+    });
   }
   reloadWordingsDetailsTable(wordingId) {
-    // this.wordingService.load(null, 3, LineOfBusinessCode, null, 1).subscribe(data => {
-    //   this.renderWordingsDetailsTable(data);
-    // });
+    this.wordingService.loadDetails(null, wordingId, null, 1).subscribe(data => {
+      this.renderWordingsDetailsTable(data);
+    });
   }
 
-  reloadProductReportTable(LineOfBusinessCode?) {
-    // this.wordingService.load(null, 4, LineOfBusinessCode, null, 1).subscribe(data => {
-    //   this.renderProductReportTable(data);
-    // });
+  reloadProductReportTable(ProductId?) {
+    this.wordingService.load(null, ProductId, null, 1).subscribe(data => {
+      this.renderProductReportTable(data, data);
+    });
   }
 
 
@@ -268,11 +273,11 @@ export class ProductAttachmentsComponent implements OnInit {
   }
 
   renderAttachmentTable(data) {
-    this.Attachments = data;
-    this.attachmentsDataSource = new MatTableDataSource<Attachment>(data);
+    this.productAttachment = data;
+    this.attachmentsDataSource = new MatTableDataSource<ProductAttachment>(data);
     this.attachmentsDataSource.paginator = this.paginator2;
     this.attachmentsDataSource.sort = this.sort2;
-    this.selection = new SelectionModel<Attachment>(true, []);
+    this.selection = new SelectionModel<ProductAttachment>(true, []);
     this.attachmentsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort2.direction === 'asc' ? '3' : '1';
@@ -358,7 +363,7 @@ export class ProductAttachmentsComponent implements OnInit {
     this.http.post(this.AddUpdateUrl, this.attachmentForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadAttachmentTable(this.selectedProduct.ID);
-      this.attachmentForm = new Attachment;
+      this.attachmentForm = new ProductAttachment;
       this.submit = false;
       form.resetForm();
     });
@@ -372,9 +377,9 @@ export class ProductAttachmentsComponent implements OnInit {
     });
   }
 
-  updateAttachment(attachment: Attachment) {
+  updateAttachment(attachment: ProductAttachment) {
     window.scroll(0, 0);
-    this.attachmentForm = new Attachment;
+    this.attachmentForm = new ProductAttachment;
     this.attachmentForm = attachment;
     this.attachmentForm.selected = true;
   }
@@ -446,7 +451,7 @@ export class ProductAttachmentsComponent implements OnInit {
 
   updateWordingDetails(wordingDetails: WordingDetail) {
     window.scroll(0, 0);
-    this.wordingDetailsForm = new Wording;
+    this.wordingDetailsForm = new WordingDetail;
     this.wordingDetailsForm = wordingDetails;
     this.wordingDetailsForm.selected = true;
   }

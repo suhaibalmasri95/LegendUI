@@ -12,6 +12,7 @@ export class ProductsDetailService {
 
 
   ApiUrl: string = environment.azureUrl + 'ProductDetails/';
+  ApiUrl2: string = environment.azureUrl + 'Attachment/';
   commonApiUrl: string = environment.azureUrl + 'ProductDetails/';
   ProductsDetails: ProductsDetail[];
 
@@ -55,6 +56,19 @@ export class ProductsDetailService {
     if (langId != null) {
       queryString += langId;
       return this.http.get<ProductsDetail[]>(this.ApiUrl + 'Load' + queryString);
+    }
+  }
+
+  loadAttachments(ID: number = null, langId: number = null): Observable<ProductsDetail[]> {
+    let queryString = '?ID=';
+
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+      return this.http.get<ProductsDetail[]>(this.ApiUrl2 + 'Load' + queryString);
     }
   }
 
