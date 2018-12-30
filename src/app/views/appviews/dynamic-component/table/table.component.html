@@ -1,8 +1,8 @@
 <mat-form-field>
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
 </mat-form-field>
-<div class="x">
-  <div class="table-container">
+<div class="">
+  <div class="">
     <table mat-table #table [dataSource]="dataSource" matSort>
     
       <ng-container *ngFor="let column of tableColumns; index as i" [cdkColumnDef]="column">
@@ -35,6 +35,5 @@
 
     </table>
   </div>
-  <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
-
+ 
 </div>
