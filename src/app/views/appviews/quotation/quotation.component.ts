@@ -7,7 +7,7 @@ import { Currency } from './../../../entities/organization/Currency';
 import { SearchService } from './../../../_services/search.service';
 import { Customer } from './../../../entities/Financial/Customer';
 import { CompanyBranch } from './../../../entities/organization/CompanyBranch';
-import { Product, ProductsDetail, ProductSubjectType } from './../../../entities/Setup/Products';
+import { Product, ProductsDetail, ProductSubjectType } from './../../../entities/Product/Products';
 import { LockUp } from './../../../entities/organization/LockUp';
 import { HttpClient } from '@angular/common/http';
 import { Documents } from './../../../entities/production/Documents';
