@@ -1,3 +1,4 @@
+import { DocumentService } from './_services/DocumentService.service';
 import { SharedColumn } from './_services/sharedColumn.service';
 import { SharedService } from './_services/sharedService.service';
 import { OpenCoverType } from './_resolvers/open-cover-type';
@@ -60,7 +61,6 @@ import {
 } from './_resolvers/products.resolver';
 
 
-
 @NgModule({
   declarations: [
     AppComponent
@@ -81,6 +81,7 @@ import {
 
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
     AuthService,
+    DocumentService,
     AlertifyService,
     SidenavService,
     AuthGuard,

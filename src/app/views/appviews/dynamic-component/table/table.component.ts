@@ -15,7 +15,9 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class TableComponent implements OnInit , OnChanges {
   // tslint:disable-next-line:no-input-rename
   @Output()
-  parent = new EventEmitter<number>();
+  update = new EventEmitter<number>();
+  @Output()
+  delete = new EventEmitter<number>();
   // tslint:disable-next-line:no-input-rename
   @Input('tableColumns') tableColumns = [];
   selected = false;
@@ -57,7 +59,7 @@ export class TableComponent implements OnInit , OnChanges {
         return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
       };
     }
-    update(col: any , index: number) {
+    updateRow(col: any , index: number) {
       // save the current index
 
       for (let colIndex = 0; colIndex < this.dynamicDataSource.length; colIndex++) {
@@ -69,8 +71,12 @@ export class TableComponent implements OnInit , OnChanges {
           data['selected' + colIndex]  = false;
         }
       }
-      this.parent.emit(index);
+      this.update.emit(index);
       console.log(col);
+    }
+
+    deleteRow(index: number) {
+      this.delete.emit(index);
     }
 
     isAllSelected() {

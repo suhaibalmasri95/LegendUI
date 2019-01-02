@@ -1,21 +1,23 @@
+import { DocumentService } from './../../../_services/DocumentService.service';
+import { CustomerShare } from '../../../entities/production/CustomerShare';
+
+import { Share } from './../../../entities/production/Share';
 import { ProductDynmicCategory } from './../../../entities/Dynamic/ProductDynmicCategory';
 import { DynamicService } from './../../../_services/_dynamic/Dynamic.service';
-import { ProductSubjectTypes } from './../../../_services/_setup/ProductSubjectTypes.service';
-import { Risk } from './../../../entities/production/Risk';
-import { ProductsDetailService } from './../../../_services/_setup/ProductsDetail.service';
 import { Currency } from './../../../entities/organization/Currency';
 import { SearchService } from './../../../_services/search.service';
 import { Customer } from './../../../entities/Financial/Customer';
 import { CompanyBranch } from './../../../entities/organization/CompanyBranch';
-import { Product, ProductsDetail, ProductSubjectType } from './../../../entities/Product/Products';
+import { Product} from './../../../entities/Product/Products';
 import { LockUp } from './../../../entities/organization/LockUp';
 import { HttpClient } from '@angular/common/http';
 import { Documents } from './../../../entities/production/Documents';
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { SidenavService } from './../../../_services/sidenav/sidenav.service';
 import { BsDatepickerDirective } from 'ngx-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
+import { WizardState } from 'angular-archwizard';
 @Component({
   selector: 'app-quotation',
   templateUrl: './quotation.component.html',
@@ -23,8 +25,11 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class QuotationComponent implements OnInit {
   @ViewChild(BsDatepickerDirective) datepicker: BsDatepickerDirective;
+// tslint:disable-next-line: no-input-rename
    text: string;
    value: string;
+   share: Share;
+   customer: CustomerShare;
    icon = false;
    documentForm: Documents;
    businessTypes: LockUp[];
@@ -50,27 +55,17 @@ export class QuotationComponent implements OnInit {
    userCompany: any;
    status: LockUp[];
    productDynamicCategories: ProductDynmicCategory[];
-   productDetails: ProductsDetail[];
-   productDetailsSubjectTypes: ProductSubjectType[];
-   isLessThan: boolean;
-   riskForm: Risk;
    documentShareControl: FormControl = new FormControl('', [Validators.max(100), Validators.min(0)]);
-   //@HostListener('window:scroll')
-  /*onScrollEvent() {
-    this.datepicker.hide();
-  }*/
   constructor(private sidenavService: SidenavService,
     private http: HttpClient, private route: ActivatedRoute,
-    private seracrhService: SearchService, private productDetailService: ProductsDetailService ,
-    private productSubjectTypeService: ProductSubjectTypes , private dynamicService: DynamicService) { }
+    private seracrhService: SearchService,
+     private dynamicService: DynamicService, @Inject(WizardState) private wizard: WizardState,
+     private _documentService: DocumentService ) { }
 
   ngOnInit() {
     this.text = 'test';
     this.value = 'test';
     this.documentForm = new Documents();
-    this.riskForm = new Risk();
-    this.riskForm.productDetails = new ProductsDetail();
-    this.riskForm.productSubjectType = new ProductSubjectType();
     this.route.data.subscribe(res => {
       this.businessTypes = res.busniessTypes;
       this.products = res.products;
@@ -83,27 +78,19 @@ export class QuotationComponent implements OnInit {
       this.paymentType = res.paymentType;
       this.status = res.status;
     });
-    this.isLessThan = false;
+    this.share = new Share();
+    this.customer = new CustomerShare();
+    this.share.customer = [];
     this.user = JSON.parse(localStorage.getItem('user'));
+    this.share.CreatedBy = this.user.Name;
+    this.share.CreationDate = new Date();
     this.documentForm.CreatedBy = this.user.Name;
-   // this.documentForm.ModifiedBy = this.user.Name;
     this.documentForm.CreationDate = new Date();
-    //this.documentForm.ModificationDate = new Date();
-
-    this.riskForm.CreatedBy = this.user.Name;
-    // this.documentForm.ModifiedBy = this.user.Name;
-     this.riskForm.CreationDate = new Date();
-     
     this.documentForm.StatusDate = new Date();
     this.documentForm.IssueDate = new Date();
     this.documentForm.EffectiveDate = new Date();
- 
     this.documentForm.ExpiryDate = new Date(this.documentForm.EffectiveDate.getFullYear() + 1 ,
      this.documentForm.EffectiveDate.getMonth(), this.documentForm.EffectiveDate.getDate() - 1) ;
-     this.riskForm.EffectiveDate = new Date();
- 
-     this.riskForm.ExpiryDate = new Date(this.documentForm.EffectiveDate.getFullYear() + 1 ,
-      this.documentForm.EffectiveDate.getMonth(), this.documentForm.EffectiveDate.getDate() - 1) ; // plus 1 year -  day 
     this.documentForm.FinancialDate = new Date();
     this.documentForm.FyrYear =  new Date(this.documentForm.FinancialDate).getFullYear();
     this.documentForm.Status = 1;
@@ -173,27 +160,9 @@ export class QuotationComponent implements OnInit {
   toggleSidenav() {
     this.sidenavService.toggle();
   }
-  getProductDetails(productID: number) {
-    if (this.documentForm.DocumentType === 1) {
-      this.getDynamicCategoriesForPolicy(productID);
-    } else if (this.documentForm.DocumentType === 1) {
-      this.getDynamicCategoriesForQuotation(productID);
-    }
-this.productDetailService.load( null , productID , 1 ).subscribe(res => {
-this.productDetails = res;
-});
-  }
-  getProductDetailSubjectType(productDetailID: number) {
-    for ( let i = 0; i < this.productDetails.length; i++) {
-      if (this.productDetails[i].ID === productDetailID) {
-        this.riskForm.productDetails = this.productDetails[i];
-      }
-    }
-    this.productSubjectTypeService.load(null, this.riskForm.productDetails.ProductID , 
-      this.riskForm.productDetails.ID , 1).subscribe( res => {
-      this.productDetailsSubjectTypes = res;
-    });
 
+  displayFn(customer?: Customer): string | undefined {
+    return customer ? customer.Name : undefined;
   }
   filterCurrency(currencies: Currency[]) {
     for ( let i = 0; i < currencies.length; i++) {
@@ -211,6 +180,13 @@ this.productDetails = res;
       this.documentShareControl.enable();
     }
   }
+  getDynamicFileds(productID: number) {
+    if (this.documentForm.DocumentType === 1) {
+      this.getDynamicCategoriesForPolicy(productID);
+    } else if (this.documentForm.DocumentType === 1) {
+      this.getDynamicCategoriesForQuotation(productID);
+    }
+  }
 
   changeUwYear($event: Date) {
 
@@ -225,17 +201,6 @@ this.productDetails = res;
    this.documentForm.FinancialDate = $event;
    this.documentForm.FyrYear =  new Date(this.documentForm.FinancialDate).getFullYear();
   }
-  CheckIfLessThan($event: Date) {
-    this.riskForm.EffectiveDate = new Date($event);
-    if (this.riskForm.EffectiveDate < this.documentForm.EffectiveDate) {
-      this.isLessThan = true;
-    } else {
-      this. isLessThan = false;
-    }
-  }
-  calculateSumInsuredLc(sumInusred: number , exrate: number) {
-    this.riskForm.SuminsuredLC = sumInusred * exrate;
-    }
     getDynamicCategoriesForPolicy( id: number) {
       this.dynamicService.load(null, null , id , null , 1, null , null , 1 ).subscribe(res => {
         this.productDynamicCategories = res ;
@@ -246,7 +211,64 @@ this.productDetails = res;
         this.productDynamicCategories = res ;
       });
     }
-    getDynamicCategoriesForRisk( id: number) {
+    submit() {
+
+      if (this.policyholderSearch.value &&  this.policyholderSearch.value.ID) {
+        this.customer = new CustomerShare();
+        this.customer.CustomerID = this.policyholderSearch.value.ID;
+        this.customer.shareType = 1;
+        this.share.customer.push(this.customer);
+      }
+      if (this.beneficiarySearch.value &&  this.beneficiarySearch.value.ID) {
+        this.customer = new CustomerShare();
+        this.customer.CustomerID = this.beneficiarySearch.value.ID;
+        this.customer.shareType = 2;
+        this.share.customer.push(this.customer);
+      }
+      if (this.agentSearch.value &&  this.agentSearch.value.ID) {
+        this.customer = new CustomerShare();
+        this.customer.CustomerID = this.agentSearch.value.ID;
+        this.customer.shareType = 3;
+        this.share.customer.push(this.customer);
+      }
+      if (this.brokerSearch.value && this.brokerSearch.value.ID) {
+        this.customer = new CustomerShare();
+        this.customer.CustomerID = this.brokerSearch.value.ID;
+        this.customer.shareType = 3;
+        this.share.customer.push(this.customer);
+      }
+      if (this.salesPersonSearch.value && this.salesPersonSearch.value.ID) {
+        this.customer = new CustomerShare();
+        this.customer.CustomerID = this.salesPersonSearch.value.ID;
+        this.customer.shareType = 3;
+        this.share.customer.push(this.customer);
+      }
+
+
+      this.productDynamicCategories.forEach(element => {
+        if (element.IsMulitRecords === 0) {
+          element.ResultList = [...element.OriginalList , ...element.Columns];
+        } else {
+          if (element.Result === undefined) {
+            element.Result = [];
+          }
+        }
+      });
+
+    
+      this.documentForm.DynamicCategories = this.productDynamicCategories;
+      this.documentForm.StComId = this.userCompany.ID;
+      this.documentForm.share = this.share;
+      this.http.post('https://localhost:44322/api/Documents/Create' , this.documentForm).subscribe( res => {
+        console.log(res);
+        const status: any = res;
+        if (status.ID) {
+          this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID=' + status.ID).subscribe(doc => {
+         this._documentService.changeColumn(doc[0]);
+          this.wizard.navigationMode.goToStep(1);
+          });
+      }
+      });
 
     }
 }

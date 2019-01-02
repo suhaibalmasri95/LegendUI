@@ -1,0 +1,13 @@
+<div class="form-group col-md-3">
+  <label for="BranchID">User Branches</label>
+  <ng-multiselect-dropdown name="BranchID" [disabled]="!companyBranches ||companyBranches.length===0"
+    [placeholder]="'User Branches'" [data]="companyBranches" [(ngModel)]="selectedItems"
+    [settings]="dropdownSettings">
+  </ng-multiselect-dropdown>
+</div>
+
+
+<input type="file" ng2FileSelect [uploader]="uploader" multiple  *ngIf="selectedItems.length > 0" /><br/>
+
+
+<input type="file" ng2FileSelect [uploader]="uploader" />

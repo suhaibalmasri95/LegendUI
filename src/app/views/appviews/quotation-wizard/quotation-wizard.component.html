@@ -1,0 +1,36 @@
+
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-10">
+    <!-- <h2>{{formControls.Name}}</h2> -->
+    <h2>Production</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a>Production</a>
+      </li>
+      <li class="active">
+        <strong>Quotation</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-sm-2">
+    <div class="title-action">
+      <!-- <a ui-sref="pages.edit-form({id:formControls.id})" class="btn btn-primary">Edit This form</a> -->
+    </div>
+  </div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+<aw-wizard #wizard>
+ 
+  <app-quotation awWizardStep [stepTitle]="'Document'"  ></app-quotation>
+
+  <app-risk awWizardStep [stepTitle]="'Risk'" ></app-risk>
+
+  <aw-wizard-step stepTitle="Attachment">
+    Content of Step 3
+    <button type="button" previousStep>Previous Step</button>
+    <button type="button" (click)="finishFunction()">Finish</button>
+  </aw-wizard-step>
+</aw-wizard></div>

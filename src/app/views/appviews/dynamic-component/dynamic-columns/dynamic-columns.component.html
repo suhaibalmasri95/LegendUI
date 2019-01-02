@@ -5,7 +5,7 @@
   </div>
 <div class="form-group col-md-3" *ngIf="column.ColumnType ===3">
     <label for="{{column.Lable}}">{{column.Lable}} <span class="help-block">*</span></label>
-    <input name="{{column.Lable}}"  required placeholder="{{column.Lable}}" type="date" class="form-control" [ngModel]="column.ValueDate | date:'yyyy-MM-dd'"
+    <input name="{{column.Lable}}"   placeholder="{{column.Lable}}" type="date" class="form-control" [ngModel]="column.ValueDate | date:'yyyy-MM-dd'"
       (ngModelChange)="column.ValueDate = $event">
   </div>
   <div class="form-group col-md-3" *ngIf="column.ColumnType ===2">

@@ -7,7 +7,7 @@ import { SharedService } from './../../../_services/sharedService.service';
 import { ProductDynamicColumn } from './../../../entities/Dynamic/ProductDynamicColumn';
 import { ProductDynmicCategory } from './../../../entities/Dynamic/ProductDynmicCategory';
 import { Component, OnInit, Input, ViewChild, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-
+import * as _ from 'lodash';
 @Component({
   selector: 'app-dynamic-component',
   templateUrl: './dynamic-component.component.html',
@@ -29,6 +29,7 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   controlsOn = false;
   updatedIndex: number;
   isUpdate: boolean = false;
+  isDelete: boolean = false;
   constructor() { }
 
   ngOnInit() {
@@ -37,8 +38,13 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   }
 
   saveColumnsDataToTable(category: ProductDynmicCategory) {
+    if (this.isDelete) {
+      this.isDelete = false;
+    }
     this.childsValue = [];
-    this.dataSource = ['select'];
+    category.test = 'tesfs';
+    this.dataSource = ['select' , 'action'];
+ 
     this.meregedArray = [];
     this.dynamicDataSources = [];
     this.resetData(category.Columns, category.OriginalList);
@@ -51,6 +57,11 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
    this.temp.push(this.dynamicDataSource); }
 
    this.dynamicDataSources = this.temp;
+   category.ResultList = [];
+   category.Result = [];
+   const myClonedList  = _.cloneDeep(category.OriginalList);
+   const myClonedColumns  = _.cloneDeep(category.Columns);
+   this.mapDataToResult(category, myClonedColumns, myClonedList, this.dynamicDataSources);
    this.controlsOn = true;
   }
 
@@ -58,7 +69,7 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   resetData(columns: ProductDynamicColumn[] , dropDownList: ProductDynamicColumn[] ) {
     this.dynamicDataSource = {};
     this.meregedArray = [...columns , ...dropDownList];
-    let i = 1;
+    let i = 2;
     this.meregedArray.forEach(element => {
       this.childValue = new DynamicTable();
       this.childValue = this.mapFeilds(this.childValue, element) ;
@@ -185,17 +196,31 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
 ngAfterViewInit() {
 
     // this returns null
-  
 }
 updateChild(index: number) {
+  if (this.isDelete) {
+    this.isDelete = false;
+  }
   const data = this.dynamicDataSources[index];
-  let x = 1;
+  let x = 2;
   this.isUpdate = true;
   this.updatedIndex = index;
   this.meregedArray.forEach(element => {
    this.mapAnyToProductDynamicColumn(x , data , element);
    x++;
   });
+}
+mapDataToResult(category: ProductDynmicCategory , columns: ProductDynamicColumn[],  ddl: ProductDynamicColumn[] , anyArray: any[]) {
+  const concatArray = [...columns, ...ddl];
+  for (let i = 0 ; i < anyArray.length ; i++) {
+    let x = 2;
+    concatArray.forEach(element => {
+      category.ResultList.push(this.mapAnyToProductDynamicColumn(x , anyArray[i] , element));
+      x++;
+     });
+     category.Result.push(category.ResultList);
+     category.ResultList = [];
+  }
 }
 mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicColumn ) {
   filed.selected = table['selected' + index];
@@ -237,5 +262,15 @@ mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicC
   filed.MajorCode = table['MajorCode' + index];
   filed.ChildCounts = table['ChildCounts' + index];
     return filed;
+  }
+
+  deleteChild(index: number) {
+    if (this.dynamicDataSources.length === 1) {
+      this.isDelete = true;
+      this.dynamicDataSources.splice(index, 1 );
+    } else {
+      this.dynamicDataSources.splice(index, 1 );
+    }
+
   }
 }

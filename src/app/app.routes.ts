@@ -1,3 +1,4 @@
+import { QuotationWizardComponent } from './views/appviews/quotation-wizard/quotation-wizard.component';
 import { ReportsGroupResolver } from './_resolvers/reports.resolver';
 import { ProductAttachmentsComponent } from './views/appviews/productAttachments/productAttachments.component';
 import { PaymentType } from './_resolvers/payment-type.resolver';
@@ -240,7 +241,7 @@ export const ROUTES: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'quotation', component: QuotationComponent,
+        path: 'quotation', component: QuotationWizardComponent,
         resolve: {
           busniessTypes: BusinessTypes,
           products: ProductsResolver,
