@@ -1,12 +1,8 @@
-import { MajorCode } from './../../../../entities/models/majorCode';
-import { SharedService } from './../../../../_services/sharedService.service';
-import { SelectComponentComponent } from './../select-component/SelectComponentComponent';
+
 import { Filter } from './../../../../entities/filter/filter';
 import { DynamicService } from './../../../../_services/_dynamic/Dynamic.service';
-
 import { ProductDynamicColumn } from './../../../../entities/Dynamic/ProductDynamicColumn';
-import { Component, OnInit, Input, ViewChild, TemplateRef, ViewContainerRef, AfterContentInit } from '@angular/core';
-import { a } from '@angular/core/src/render3';
+import { Component, OnInit, Input} from '@angular/core';
 @Component({
   selector: 'app-dynamic-columns',
   templateUrl: './dynamic-columns.component.html',

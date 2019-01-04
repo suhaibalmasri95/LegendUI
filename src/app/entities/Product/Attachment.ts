@@ -16,6 +16,7 @@ export class ProductAttachment implements IEntity {
     ProductDetailId: number;
     LineOfBusiness: number;
     SubLineOfBusiness: number;
+    File: File;
 
 }
 export class Attachment implements IEntity {

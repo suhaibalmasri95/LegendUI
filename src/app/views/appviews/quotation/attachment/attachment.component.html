@@ -1,13 +1,81 @@
+<form [formGroup]="attachmentForm" >
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div
+    formArrayName="formItems"
+    *ngFor="let item of attachmentForm.get('formItems').controls; let i = index;">
+    
+    
+    <div
+    [formGroupName]="i">
+    
+  <fieldset>
+    <legend>
+     Attachments
+    </legend>
+  <div class="row">
 <div class="form-group col-md-3">
-  <label for="BranchID">User Branches</label>
-  <ng-multiselect-dropdown name="BranchID" [disabled]="!companyBranches ||companyBranches.length===0"
-    [placeholder]="'User Branches'" [data]="companyBranches" [(ngModel)]="selectedItems"
-    [settings]="dropdownSettings">
-  </ng-multiselect-dropdown>
+  <label for="attachment">Attachmets</label>
+
+  <mat-form-field>
+    <mat-select  placeholder="" formControlName="attachments" multiple    >
+      	<mat-option #allSelected (click)="toggleAllSelection(i)" [value]="0" [disabled]="attachmentForm.get('formItems').controls[i].get('enableMultiSelect').value">Select All</mat-option>
+      <mat-option (click)="addItem(i)" *ngFor="let attach of attachmentForm.get('formItems').controls[i].get('attachmetValues').value; let index = elementIndex"
+      
+       [value]="attach" [disabled]="disabled">{{attach.Name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
 </div>
 
 
-<input type="file" ng2FileSelect [uploader]="uploader" multiple  *ngIf="selectedItems.length > 0" /><br/>
+<div class="form-group col-md-3" >
+    <a  (click)="fileupload.click()"  ><i class="material-icons">
+        cloud_upload
+        </i></a>
+        <input type="file" 
+        hidden 
+         #fileupload (change)="onFileChanged($event,i)"/>
+</div>
+
+  </div>
 
 
-<input type="file" ng2FileSelect [uploader]="uploader" />
+
+<div *ngIf="attachmentForm.get('formItems').controls[i].get('File').value">
+  <table class="table">
+    <thead>
+    <tr>
+        <th width="50%">Name</th>
+      
+    </tr>
+    </thead>
+    <tbody>
+    <tr >
+  
+        <td><strong>{{ attachmentForm.get('formItems').controls[i].get('File').value.name }}</strong></td>
+       
+        <td nowrap>
+         
+            <button type="button" class="btn btn-danger btn-xs"
+                    (click)="item.remove()">
+                <span class="glyphicon glyphicon-trash"></span> Remove
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
+</div>
+ </fieldset>
+
+
+</div></div>
+<button type="button" class="btn btn-success btn-s"
+(click)="fillAttachmentValues()" [disabled]="!attachmentForm.get('formItems').controls[0].get('File').value">
+<span class="fa fa-upload"></span> Upload
+</button>
+</div>
+
+
+</form>

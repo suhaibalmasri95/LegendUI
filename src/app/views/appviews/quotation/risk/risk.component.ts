@@ -17,9 +17,9 @@ import { WizardState } from 'angular-archwizard';
   templateUrl: './risk.component.html',
   styleUrls: ['./risk.component.css']
 })
-export class RiskComponent implements OnInit , OnChanges {
+export class RiskComponent implements OnChanges {
   // tslint:disable-next-line:no-input-rename
-  document: Documents;
+  @Input('document') document: Documents;
   riskForm: Risk;
   risks: Risk[];
   RiskTableColumns = ['select', 'ProductDetail', 'SubjectType', 'Name', 'EffectiveDate', 'ExpiryDate', 'ParentRisk', 'actions'];
@@ -34,46 +34,30 @@ export class RiskComponent implements OnInit , OnChanges {
   productDetailsSubjectTypes: ProductSubjectType[];
   constructor(private http: HttpClient , private productSubjectTypeService: ProductSubjectTypes
     , private dynamicService: DynamicService ,
-    private productDetailService: ProductsDetailService , private _docService: DocumentService,
+    private productDetailService: ProductsDetailService ,
       @Inject(WizardState) private wizard: WizardState, ) { }
 
-  ngOnInit() {
-    this._docService.currentDocument.subscribe(d =>{
-      this.document = d;
-    });
-    this.isLessThan = false;
-    this.riskForm = new Risk();
-    this.productDetail  = new ProductsDetail();
-    this.user = JSON.parse(localStorage.getItem('user'));
-    this.risks = [];
-    this.riskForm.CreatedBy = this.user.Name;
-    const initialSelection = [];
-    this.selection = new SelectionModel<Risk>(true, initialSelection);
-    this.riskForm.EffectiveDate = new Date();
-    this.riskForm.UwDocumentID = this.document.ID;
-    this.document.EffectiveDate = new Date(this.document.EffectiveDate);
-    this.riskForm.ExpiryDate = new Date(this.document.EffectiveDate.getFullYear() + 1 ,
-     this.document.EffectiveDate.getMonth(), this.document.EffectiveDate.getDate() - 1);
-    this.getProductDetails(this.document.ProductId);
-  }
 
   ngOnChanges() {
-    this._docService.currentDocument.subscribe(d =>{
-      this.document = d;
-    });
+    this.risks = [];
     // create header using child_id
-    this.isLessThan = false;
     this.riskForm = new Risk();
+    this.reInit(this.riskForm);
+  }
+
+  reInit(riskForm: Risk ) {
+    this.isLessThan = false;
+
     this.productDetail = new ProductsDetail();
     this.user = JSON.parse(localStorage.getItem('user'));
-    this.risks = [];
-    this.riskForm.CreatedBy = this.user.Name;
+    
+    riskForm.CreatedBy = this.user.Name;
     const initialSelection = [];
     this.selection = new SelectionModel<Risk>(true, initialSelection);
-    this.riskForm.EffectiveDate = new Date();
-    this.riskForm.UwDocumentID = this.document.ID;
+   riskForm.EffectiveDate = new Date();
+   riskForm.UwDocumentID = this.document.ID;
     this.document.EffectiveDate = new Date(this.document.EffectiveDate);
-    this.riskForm.ExpiryDate = new Date(this.document.EffectiveDate.getFullYear() + 1 ,
+    riskForm.ExpiryDate = new Date(this.document.EffectiveDate.getFullYear() + 1 ,
      this.document.EffectiveDate.getMonth(), this.document.EffectiveDate.getDate() - 1);
     this.getProductDetails(this.document.ProductId);
   }
@@ -99,8 +83,8 @@ export class RiskComponent implements OnInit , OnChanges {
         if (element.IsMulitRecords === 0) {
           element.ResultList = [...element.OriginalList , ...element.Columns];
         } else {
-          if (element.Result === undefined) {
-            element.Result = [];
+          if (element.Result === null) {
+            element.Result = [[...element.OriginalList , ...element.Columns]];
           }
         }
       });
@@ -109,6 +93,7 @@ export class RiskComponent implements OnInit , OnChanges {
       this.renderTable(this.risks);
     }
     this.riskForm = new Risk();
+    this.reInit(this.riskForm);
   }
 
   deleteRisk(index: number) {
@@ -158,7 +143,7 @@ export class RiskComponent implements OnInit , OnChanges {
         console.log(res);
         const status: any = res;
         if (status.ID) {
-          this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID=' + status.ID).subscribe(doc => {
+          this.http.get<Risk[]>('https://localhost:44322/api/Risk/Load?ID=' + status.ID).subscribe(doc => {
           this.wizard.navigationMode.goToStep(2);
           });
       }

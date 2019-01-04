@@ -1,3 +1,4 @@
+import { AttachmentComponent } from './../quotation/attachment/attachment.component';
 import { CountriesComponent } from './../countries/countries.component';
 import { BanksComponent } from './../banks/banks.component';
 import { LockupAndCurrencyComponent } from './../lockupAndCurrency/lockupAndCurrency.component';
@@ -33,7 +34,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MatCardModule, MatExpansionModule, MatCheckboxModule,
   MatDividerModule, MatSidenavModule, MatAutocompleteModule, MatIconModule,
    MatSnackBarModule, MatSelectModule, MatInputModule, MatTabsModule,
-   MatSortModule, MatPaginatorModule, MatTableModule } from '@angular/material';
+   MatSortModule, MatPaginatorModule, MatTableModule, MatListModule } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -68,6 +69,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     MatCheckboxModule,
     MatExpansionModule,
     MatCardModule,
+    MatListModule,
     BrowserAnimationsModule,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
@@ -99,7 +101,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     QuestionnairesComponent,
     DynamicCategoriesComponent,
     ProductsComponent,
-    ProductAttachmentsComponent,],
+    ProductAttachmentsComponent, AttachmentComponent],
 
   exports: [QuotationWizardComponent,  LoginComponent]
 })

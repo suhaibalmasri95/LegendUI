@@ -10,11 +10,13 @@ import { Component, OnInit } from '@angular/core';
 export class QuotationWizardComponent implements OnInit {
   isDocumentInserted: boolean;
   document: Documents;
-  constructor() { }
+  constructor( private _docService: DocumentService) { }
 
   ngOnInit() {
     this.isDocumentInserted  = false;
-    this.document = new Documents();
+    this._docService.currentDocument.subscribe(res => {
+      this.document = res;
+    });
   }
 
 }

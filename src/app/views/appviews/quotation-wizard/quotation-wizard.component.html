@@ -25,12 +25,16 @@
 <aw-wizard #wizard>
  
   <app-quotation awWizardStep [stepTitle]="'Document'"  ></app-quotation>
+  <aw-wizard-step [stepTitle]="'Risk'" >
+  <div class="centered-content" *ngIf="document">
+      <app-risk [document] = "document" ></app-risk>
+  </div>
+      </aw-wizard-step>
+      <aw-wizard-step [stepTitle]="'Attachments'">
+          <div class="centered-content" *ngIf="document">
+              <app-attachment [document] = "document"  ></app-attachment>
 
-  <app-risk awWizardStep [stepTitle]="'Risk'" ></app-risk>
+          </div>
+              </aw-wizard-step>
 
-  <aw-wizard-step stepTitle="Attachment">
-    Content of Step 3
-    <button type="button" previousStep>Previous Step</button>
-    <button type="button" (click)="finishFunction()">Finish</button>
-  </aw-wizard-step>
 </aw-wizard></div>

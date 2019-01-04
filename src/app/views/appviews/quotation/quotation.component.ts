@@ -183,7 +183,7 @@ export class QuotationComponent implements OnInit {
   getDynamicFileds(productID: number) {
     if (this.documentForm.DocumentType === 1) {
       this.getDynamicCategoriesForPolicy(productID);
-    } else if (this.documentForm.DocumentType === 1) {
+    } else if (this.documentForm.DocumentType === 2) {
       this.getDynamicCategoriesForQuotation(productID);
     }
   }
@@ -244,19 +244,18 @@ export class QuotationComponent implements OnInit {
         this.share.customer.push(this.customer);
       }
 
-
+      if(this.productDynamicCategories) {
       this.productDynamicCategories.forEach(element => {
         if (element.IsMulitRecords === 0) {
           element.ResultList = [...element.OriginalList , ...element.Columns];
         } else {
-          if (element.Result === undefined) {
-            element.Result = [];
+          if (element.Result === null) {
+            element.Result = [[...element.OriginalList , ...element.Columns]];
           }
         }
       });
-
-    
       this.documentForm.DynamicCategories = this.productDynamicCategories;
+    }
       this.documentForm.StComId = this.userCompany.ID;
       this.documentForm.share = this.share;
       this.http.post('https://localhost:44322/api/Documents/Create' , this.documentForm).subscribe( res => {

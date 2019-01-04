@@ -1,3 +1,4 @@
+import { AttachmentComponent } from './views/appviews/quotation/attachment/attachment.component';
 import { QuotationWizardComponent } from './views/appviews/quotation-wizard/quotation-wizard.component';
 import { ReportsGroupResolver } from './_resolvers/reports.resolver';
 import { ProductAttachmentsComponent } from './views/appviews/productAttachments/productAttachments.component';
@@ -254,7 +255,8 @@ export const ROUTES: Routes = [
           paymentType: PaymentType,
           status: LockUpResolver,
         }
-      }]
+      }
+    ]
   },
 
 
