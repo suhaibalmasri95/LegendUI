@@ -1,211 +1,227 @@
-
 <div class="centered-content">
   <fieldset>
     <legend>
-      Document
+      Document Entry
     </legend>
-        <div class="row">
-                <div class="form-group col-md-3" *ngIf="documentForm.DocumentSegment">
-                        <label for="DocumentSegment">Document Segment</label>
-                        <input name="DocumentSegment" placeholder="Document Segment" disabled type="text" class="form-control" [(ngModel)]="documentForm.DocumentSegment">
-                      </div>
-                      <div class="form-group col-md-3" *ngIf="documentForm.UwYear">
-                            <label for="UwYear">Under Writing Year</label>
-                            <input name="UwYear" placeholder="Under Writing Year" disabled  type="number" class="form-control" [(ngModel)]="documentForm.UwYear">
-                          </div>
-        </div>
+    <div class="row">
+      <div class="form-group col-md-3" *ngIf="documentForm.DocumentSegment">
+        <label for="DocumentSegment">Document Segment</label>
+        <input name="DocumentSegment" placeholder="Document Segment" disabled type="text" class="form-control"
+          [(ngModel)]="documentForm.DocumentSegment">
+      </div>
+      <div class="form-group col-md-3" *ngIf="documentForm.UwYear">
+        <label for="UwYear">Under Writing Year</label>
+        <input name="UwYear" placeholder="Under Writing Year" disabled type="number" class="form-control" [(ngModel)]="documentForm.UwYear">
+      </div>
+    </div>
 
-  <div class="row">
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        <label for="DocumentType">Document Type</label>
+        <select name="DocumentType" class="form-control" [(ngModel)]="documentForm.DocumentType" (change)="getDynamicFileds(documentForm.ProductId)">
+          <option [ngValue]="undefined">Select</option>
+          <option [ngValue]="1">Policy</option>
+          <option [ngValue]="2">Quotation</option>
+        </select>
+      </div>
+      <!---->
+      <div class="form-group col-md-3">
+        <label for="LocBustId">Business Type</label>
+        <select name="LocBustId" class="form-control" [(ngModel)]="documentForm.LocBustId">
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let business of businessTypes" [ngValue]="business.ID">{{business.Name}}</option>
+        </select>
+      </div>
+
+
+      <div class="form-group col-md-3">
+        <label for="ProductId">Product</label>
+        <select name="ProductId" class="form-control" [(ngModel)]="documentForm.ProductId" (change)="getDynamicFileds(documentForm.ProductId)">
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="StBrnId">Branches</label>
+        <select name="StBrnId" class="form-control" [(ngModel)]="documentForm.StBrnId">
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{branch.Name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+
+      <div class="form-group col-md-3">
+        <label for="IssueDate">Issue Date <span class="help-block">*</span></label>
+        <input name="IssueDate" required placeholder="Issue Date" type="date" class="form-control" [ngModel]="documentForm.IssueDate | date:'yyyy-MM-dd'"
+          (ngModelChange)="changeFinancialDate($event)">
+      </div>
+
+      <div class="form-group col-md-3">
+        <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+        <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control" [ngModel]="documentForm.EffectiveDate | date:'yyyy-MM-dd'"
+          (ngModelChange)="changeUwYear($event)">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+        <input name="ExpiryDate" disabled required placeholder="Expiry Date" type="date" class="form-control" [ngModel]="documentForm.ExpiryDate | date:'yyyy-MM-dd'"
+          (ngModelChange)="documentForm.ExpiryDate = $event">
+      </div>
+
+
+      <div class="form-group col-md-3">
+        <label for="QutValidity">Policy Holder</label>
+
+        <input class="form-control" type="text" placeholder="Policy Holder" matInput [formControl]="policyholderSearch"
+          [matAutocomplete]="policyHoldersauto">
+
+        <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+        <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let Holder of policyHolders" [value]="Holder">
+            {{ Holder.Name }}
+          </mat-option>
+        </mat-autocomplete>
+
+      </div>
+
+
+    </div>
+   <div class="row">
+      <div class="form-group col-md-3">
+        <label for="Beneficiary">Beneficiary</label>
+
+        <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
+          [matAutocomplete]="beneficiariesauto">
+
+        <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+        <mat-autocomplete #beneficiariesauto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let bene of beneficiaries" [value]="bene">
+            {{ bene.Name }}
+          </mat-option>
+        </mat-autocomplete>
+
+      </div>
+      <div class="form-group col-md-3">
+        <label for="LocDistChnales">Distribution Channel</label>
+        <select name="LocDistChnales" class="form-control" [(ngModel)]="documentForm.LocDistChnales" (change)="setDocumentShare(documentForm.LocDistChnales)">
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let dis of distributionChannel" [ngValue]="dis.MinorCode">{{dis.Name}}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="CurrencyCode">Currency</label>
+        <select name="CurrencyCode" class="form-control" [(ngModel)]="documentForm.CurrencyCode">
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="Exrate">Exrate</label>
+        <input name="Exrate" placeholder="Exrate" type="number" class="form-control" [(ngModel)]="documentForm.Exrate"
+          (change)="calculateSumInsuredLc(riskForm.Suminsured,documentForm.Exrate)">
+      </div>
+       </div>
+    <div class="row">
+ 
+    
+   
+      <div class="form-group col-md-3">
+        <label for="PaymentId">Payment Type</label>
+        <select name="PaymentId" class="form-control" [(ngModel)]="documentForm.PaymentId">
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let paym of paymentType" [ngValue]="paym.MinorCode">{{paym.Name}}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="CalcBases">Calculation Base</label>
+        <select name="CalcBases" class="form-control" [(ngModel)]="documentForm.CalcBases">
+          <option [ngValue]="undefined">Select</option>
+          <option *ngFor="let calc of calculateBase" [ngValue]="calc.MinorCode">{{calc.Name}}</option>
+        </select>
+      </div>
+   
+    <div class="form-group col-md-3">
+      <label for="ReferenceNo">Reference No</label>
+      <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="documentForm.ReferenceNo"></textarea>
+    </div>
 
     <div class="form-group col-md-3">
-      <label for="DocumentType">Document Type</label>
-      <select name="DocumentType" class="form-control" [(ngModel)]="documentForm.DocumentType">
+      <label for="Notes">Notes</label>
+      <textarea rows="1" name="Notes" placeholder="Notes" type="text" class="form-control" [(ngModel)]="documentForm.Notes"></textarea>
+    </div>
+    </div><div class="row">
+    <div class="form-group col-md-3">
+      <label for="Notes2">Notes2</label>
+      <textarea rows="1" name="Notes2" placeholder="Notes2" type="text" class="form-control" [(ngModel)]="documentForm.Notes2"></textarea>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="OpenCoverType">Open Cover Type</label>
+      <select name="OpenCoverType" class="form-control" [(ngModel)]="documentForm.OpenCoverType">
         <option [ngValue]="undefined">Select</option>
-        <option [ngValue]="1">Policy</option>
-        <option [ngValue]="2">Quotation</option>
+        <option *ngFor="let cover of openCoverType" [ngValue]="cover.MinorCode">{{cover.Name}}</option>
       </select>
     </div>
-    <!---->
-    <div class="form-group col-md-3">
-      <label for="LocBustId">Business Type</label>
-      <select name="LocBustId" class="form-control" [(ngModel)]="documentForm.LocBustId">
-        <option [ngValue]="undefined">Select</option>
-        <option *ngFor="let business of businessTypes" [ngValue]="business.ID">{{business.Name}}</option>
-      </select>
-    </div>
-
-
-    <div class="form-group col-md-3">
-      <label for="ProductId">Product</label>
-      <select name="ProductId" class="form-control" [(ngModel)]="documentForm.ProductId" (change)="getDynamicFileds(documentForm.ProductId)">
-        <option [ngValue]="undefined">Select</option>
-        <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
-      </select>
-    </div>
-    <div class="form-group col-md-3">
-      <label for="StBrnId">Branches</label>
-      <select name="StBrnId" class="form-control" [(ngModel)]="documentForm.StBrnId">
-        <option [ngValue]="undefined">Select</option>
-        <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{branch.Name}}</option>
-      </select>
-    </div>
-  </div>
-  <div class="row">
-
-    <div class="form-group col-md-3">
-      <label for="IssueDate">Issue Date <span class="help-block">*</span></label>
-      <input name="IssueDate" required placeholder="Issue Date" type="date" class="form-control" [ngModel]="documentForm.IssueDate | date:'yyyy-MM-dd'"
-      (ngModelChange)="changeFinancialDate($event)" 
-      >
-    </div>
-
-    <div class="form-group col-md-3">
-      <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
-      <input  name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control" [ngModel]="documentForm.EffectiveDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="changeUwYear($event)">
-    </div>
-    <div class="form-group col-md-3">
-      <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-      <input name="ExpiryDate" disabled required placeholder="Expiry Date" type="date" class="form-control" [ngModel]="documentForm.ExpiryDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="documentForm.ExpiryDate = $event">
-    </div>
-
-
-    <div class="form-group col-md-3">
-      <label for="QutValidity">Policy Holder</label>
-
-      <input class="form-control" type="text" placeholder="Policy Holder" matInput [formControl]="policyholderSearch"
-        [matAutocomplete]="policyHoldersauto">
-
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #policyHoldersauto="matAutocomplete"  [displayWith]="displayFn">
-        <mat-option *ngFor="let Holder of policyHolders" [value]="Holder">
-          {{ Holder.Name }}
-        </mat-option>
-      </mat-autocomplete>
-
-    </div>
-
-
-  </div>
-  <div class="row">
-    <div class="form-group col-md-3">
-      <label for="Beneficiary">Beneficiary</label>
-
-      <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
-        [matAutocomplete]="beneficiariesauto">
-
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #beneficiariesauto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let bene of beneficiaries" [value]="bene">
-          {{ bene.Name }}
-        </mat-option>
-      </mat-autocomplete>
-
-    </div>
-    <div class="form-group col-md-3">
-      <label for="LocDistChnales">Distribution Channel</label>
-      <select name="LocDistChnales" class="form-control" [(ngModel)]="documentForm.LocDistChnales" (change)="setDocumentShare(documentForm.LocDistChnales)">
-        <option [ngValue]="undefined">Select</option>
-        <option *ngFor="let dis of distributionChannel" [ngValue]="dis.MinorCode">{{dis.Name}}</option>
-      </select>
-    </div>
-
-    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales ==2">
-      <label for="SalesPreson">Sales Preson</label>
-
-      <input class="form-control" type="text" placeholder="SalesPreson" matInput [formControl]="beneficiarySearch"
-        [matAutocomplete]="salesPersonsauto">
-
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #salesPersonsauto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let sale of salesPersons" [value]="sale">
-          {{ sale.Name }}
-        </mat-option>
-      </mat-autocomplete>
-
-    </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales ==3">
-      <label for="Agent">Agent</label>
-
-      <input class="form-control" type="text" placeholder="Agent" matInput [formControl]="beneficiarySearch"
-        [matAutocomplete]="agentsauto">
-
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #agentsauto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let agent of agents" [value]="agent" >
-          {{ agent.Name }}
-        </mat-option>
-      </mat-autocomplete>
-
-    </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales ==4">
-      <label for="Broker">Broker</label>
-
-      <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
-        [matAutocomplete]="brokerssauto">
-
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #brokerssauto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let broker of brokers" [value]="broker" >
-          {{ broker.Name }}
-        </mat-option>
-      </mat-autocomplete>
-
-    </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType ==2">
-      <label for="QutValidity">Quotation Validity</label>
-      <input name="QutValidity" placeholder="Quotation Validity" type="number" class="form-control" [(ngModel)]="documentForm.QutValidity">
-    </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType ==1">
+    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType === 1">
       <label for="AccountedFor">Accounted For Validity</label>
       <select name="AccountedFor" class="form-control" [(ngModel)]="documentForm.AccountedFor">
         <option [ngValue]="undefined">Select</option>
         <option *ngFor="let acc of accountedFor" [ngValue]="acc.MinorCode">{{acc.Name}}</option>
       </select>
     </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType === 2">
+        <label for="QutValidity">Quotation Validity</label>
+        <input name="QutValidity" placeholder="Quotation Validity" type="number" class="form-control" [(ngModel)]="documentForm.QutValidity">
+      </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 2">
+      <label for="SalesPreson">Sales Preson</label>
+      <input class="form-control" type="text" placeholder="SalesPreson" matInput [formControl]="beneficiarySearch"
+        [matAutocomplete]="salesPersonsauto">
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #salesPersonsauto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let sale of salesPersons" [value]="sale">
+          {{ sale.Name }}
+        </mat-option>
+      </mat-autocomplete>
+    </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 3">
+      <label for="Agent">Agent</label>
+      <input class="form-control" type="text" placeholder="Agent" matInput [formControl]="beneficiarySearch"
+        [matAutocomplete]="agentsauto">
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #agentsauto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let agent of agents" [value]="agent">
+          {{ agent.Name }}
+        </mat-option>
+      </mat-autocomplete>
 
+    </div>
+    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 4">
+      <label for="Broker">Broker</label>
+      <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
+        [matAutocomplete]="brokerssauto">
+      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+      <mat-autocomplete #brokerssauto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let broker of brokers" [value]="broker">
+          {{ broker.Name }}
+        </mat-option>
+      </mat-autocomplete>
+
+    </div>
   </div>
+ 
+    
+  
+    <div class="row">
 
-  <div class="row">
-
-    <mat-accordion>
+      <!--   <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
             More Details
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div class="row">
-          <div class="form-group col-md-3">
-            <label for="CurrencyCode">Currency</label>
-            <select name="CurrencyCode" class="form-control" [(ngModel)]="documentForm.CurrencyCode">
-              <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
-            </select>
-          </div>
-          <div class="form-group col-md-3">
-            <label for="Exrate">Exrate</label>
-            <input name="Exrate" placeholder="Exrate" type="number" class="form-control" [(ngModel)]="documentForm.Exrate" (change) ="calculateSumInsuredLc(riskForm.Suminsured,documentForm.Exrate)" >
-          </div>
-
-          <div class="form-group col-md-3">
-            <label for="PaymentId">Payment Type</label>
-            <select name="PaymentId" class="form-control" [(ngModel)]="documentForm.PaymentId">
-              <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let paym of paymentType" [ngValue]="paym.MinorCode">{{paym.Name}}</option>
-            </select>
-          </div>
-
-          <div class="form-group col-md-3">
-            <label for="CalcBases">Calculation Base</label>
-            <select name="CalcBases" class="form-control" [(ngModel)]="documentForm.CalcBases">
-              <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let calc of calculateBase" [ngValue]="calc.MinorCode">{{calc.Name}}</option>
-            </select>
-          </div>
-
-        </div>
+      
         <div class="row">
           <div class="form-group col-md-3">
             <label for="DocumentShare">Document Share</label>
@@ -213,28 +229,10 @@
             type="number" class="form-control" min="1" max="100" [formControl]="documentShareControl" [(ngModel)]="documentForm.DocumentShare" [disabled]="documentForm.LocDistChnales === 251">
           </div>
 
-          <div class="form-group col-md-3">
-            <label for="ReferenceNo">Reference No</label>
-            <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="documentForm.ReferenceNo"></textarea>
-          </div>
-
-          <div class="form-group col-md-3">
-            <label for="Notes">Notes</label>
-            <textarea rows="1" name="Notes" placeholder="Notes" type="text" class="form-control" [(ngModel)]="documentForm.Notes"></textarea>
-          </div>
-          <div class="form-group col-md-3">
-            <label for="Notes2">Notes2</label>
-            <textarea rows="1" name="Notes2" placeholder="Notes2" type="text" class="form-control" [(ngModel)]="documentForm.Notes2"></textarea>
-          </div>
+       
         </div>
         <div class="row">
-          <div class="form-group col-md-3">
-            <label for="OpenCoverType">Open Cover Type</label>
-            <select name="OpenCoverType" class="form-control" [(ngModel)]="documentForm.OpenCoverType">
-              <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let cover of openCoverType" [ngValue]="cover.MinorCode">{{cover.Name}}</option>
-            </select>
-          </div>
+       
 
           <div class="form-group col-md-3">
                 <label for="DocumentNo">Document No</label>
@@ -346,15 +344,24 @@
 
                     </div>
       </mat-expansion-panel>
-    </mat-accordion>
-  </div>
-  <div class="row" *ngFor="let item of productDynamicCategories">
-    <app-dynamic-component [category]="item"  ></app-dynamic-component>
-  </div>
+    </mat-accordion>-->
+    </div>
+    <div  *ngFor="let item of productDynamicCategories">
+      <app-dynamic-component [category]="item"></app-dynamic-component>
+    </div>
+   
+
+
+      <div class="col-md-12 text-right">
+        <div class="btn-group">
+          <br>
+          <input class="btn btn-primary" type="submit" (click)="submit()" /></div>
+  
+    </div>
+
   </fieldset>
 
 
- 
 
 
   <!-- <div class="col-xs-12 col-12 col-md-4 form-group">
@@ -372,7 +379,7 @@
 
             </i> </a>
             <app-sidenav></app-sidenav>
-        </div> -->
+        </div> 
   <div class="pull-right">
     <a (click)="click()">
       <i class="material-icons">
@@ -394,28 +401,28 @@
         </mat-expansion-panel>
       </mat-accordion>
     </div>
-  </div>
-<br/>
-<br/>
-<br/>
+  </div>-->
+  <br />
+  <br />
+  <br />
   <div class="row">
-        <div id="footer">
-                <div class="form-group col-md-2" *ngIf="documentForm.IsClaimed === 1">
+    <div id="footer">
+      <div class="form-group col-md-2" *ngIf="documentForm.IsClaimed === 1">
         <h3><i class="fa fa-check"><span>Clamied</span></i></h3>
-    </div> 
-    <div class="form-group col-md-2" *ngIf="documentForm.IsPrinted === 1">
-            <h3><i class="fa fa-check"><span>Printed</span></i></h3>
-        </div>
-        <div class="form-group col-md-2" *ngIf="documentForm.IsReinsured === 1">
-                <h3><i class="fa fa-check"><span>Reinsured</span></i></h3>
-            </div>
-            <div class="form-group col-md-2" *ngIf="documentForm.IsPosted === 1">
-                    <h3><i class="fa fa-check"><span>Posted</span></i></h3>
-                </div>
-                <div class="form-group col-md-2" *ngIf="documentForm.IsCancelled === 1"> 
-                        <h3><i class="fa fa-check"><span>Canceled</span></i></h3>
-                    </div>
-      </div>    
+      </div>
+      <div class="form-group col-md-2" *ngIf="documentForm.IsPrinted === 1">
+        <h3><i class="fa fa-check"><span>Printed</span></i></h3>
+      </div>
+      <div class="form-group col-md-2" *ngIf="documentForm.IsReinsured === 1">
+        <h3><i class="fa fa-check"><span>Reinsured</span></i></h3>
+      </div>
+      <div class="form-group col-md-2" *ngIf="documentForm.IsPosted === 1">
+        <h3><i class="fa fa-check"><span>Posted</span></i></h3>
+      </div>
+      <div class="form-group col-md-2" *ngIf="documentForm.IsCancelled === 1">
+        <h3><i class="fa fa-check"><span>Canceled</span></i></h3>
+      </div>
     </div>
-    <input class="btn btn-primary" type="submit"  (click)="submit()" />
   </div>
+
+</div>

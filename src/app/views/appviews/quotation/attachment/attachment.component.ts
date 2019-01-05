@@ -13,7 +13,7 @@ import * as _ from 'lodash';
   templateUrl: './attachment.component.html',
   styleUrls: ['./attachment.component.css']
 })
-export class AttachmentComponent implements  OnChanges {
+export class AttachmentComponent implements  OnChanges  {
   // tslint:disable-next-line:no-input-rename
   @Input('document') document: Documents;
   @ViewChild('allSelected') private allSelected: MatOption;
@@ -31,9 +31,11 @@ export class AttachmentComponent implements  OnChanges {
   attachedFile: any;
   attachmetObject: any;
   selectedFile: File;
+  defualSelectValue: boolean = false;
   list: ProductAttachment[] = [];
   ProductAttachments: ProductAttachment[];
   orginalAttachments: ProductAttachment[];
+  filledAttachments: ProductAttachment[];
   constructor(private fb: FormBuilder, private commonService: CommonService,
     private prodAttachmentService: ProductAttachmentService, private http: HttpClient) { }
 
@@ -44,7 +46,7 @@ export class AttachmentComponent implements  OnChanges {
   }
   fillAttachmentValues() {
 
-    if (this.allSelected.selected) {
+    if (this.defualSelectValue) {
       for (let x = 0 ; x < this.formItems.controls[0].get('attachments').value.length - 1 ; x ++) {
         const input = new FormData();
         input.append('DocumentID', this.document.ID.toString());
@@ -109,26 +111,36 @@ export class AttachmentComponent implements  OnChanges {
       this.formItems.controls[0].get('attachmetValues').patchValue(res);
 
     });
-   
-
-
-
+  }
+  removeImage(index: number) {
+    this.formItems.controls[index].get('File').patchValue('');
   }
   remove(index: number) {
     this.formItems = this.attachmentForm.get('formItems') as FormArray;
     this.formItems.removeAt(index);   this.formItems.removeAt(index);
     }
 toggleAllSelection(i: number) {
-  if (this.allSelected.selected) {
-    if ( this.ProductAttachments.length === 0 ) {
-      this.ProductAttachments = _.cloneDeep(this.orginalAttachments);
+ 
+  if (this.formItems.controls[i].get('defaultSelect').value === false && this.formItems.controls[i].get('attachments').value.length > 0) {
+    this.defualSelectValue = true;
+    if (this.formItems.length === 1) {
+      this.formItems.controls[i].get('defaultSelect').patchValue(true);
+      this.filledAttachments = this.formItems.controls[i].get('attachmetValues').value;
+      this.formItems = this.attachmentForm.get('formItems') as FormArray;
+      this.formItems.controls[i].get('attachments').patchValue([... this.filledAttachments.map(item => item),
+        false]);
+    } else {
+      this.formItems.controls[i].get('defaultSelect').patchValue(true);
+      this.filledAttachments = this.formItems.controls[i].get('attachmetValues').value;
+      this.formItems = this.attachmentForm.get('formItems') as FormArray;
+      this.formItems.controls[i].get('attachments').patchValue([...this.filledAttachments.map(item => item),
+        false]);
     }
     this.disabled = true;
-    this.formItems = this.attachmentForm.get('formItems') as FormArray;
-    this.formItems.controls[i].get('attachments').patchValue([]);
-    this.formItems.controls[i].get('attachments').patchValue([...this.ProductAttachments.map(item => item), 0]);
 
   } else {
+    this.defualSelectValue = false;
+    this.formItems.controls[i].get('defaultSelect').patchValue(false);
     this.disabled = false;
     this.formItems = this.attachmentForm.get('formItems') as FormArray;
     this.formItems.controls[i].get('attachments').patchValue([]);
@@ -136,6 +148,7 @@ toggleAllSelection(i: number) {
 }
 addItem( index: number) {
 
+  if (!this.disabled) {
   if ( this.ProductAttachments.length === 0 ) {
     this.ProductAttachments = _.cloneDeep(this.orginalAttachments);
   }
@@ -160,6 +173,7 @@ addItem( index: number) {
     } else {
       this.formItems.controls[index].get('attachmetValues').patchValue(this.formItems.controls[index].get('attachments').value);
       this.formItems.controls[index].get('enableMultiSelect').patchValue(true);
+
       this.group = this.createSubForm();
         this.hideSeleted = true;
         this.list = [];
@@ -180,7 +194,7 @@ addItem( index: number) {
       }
         }
 
-    }
+    }}
       }
 
 
@@ -220,6 +234,7 @@ createSubForm(): FormGroup {
     File: new FormControl(''),
     attachmetValues: new FormControl(''),
     enableMultiSelect: new FormControl(false),
+    defaultSelect: new FormControl(false),
   });
 
 }

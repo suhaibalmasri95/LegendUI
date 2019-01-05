@@ -18,7 +18,7 @@
 
   <mat-form-field>
     <mat-select  placeholder="" formControlName="attachments" multiple    >
-      	<mat-option #allSelected (click)="toggleAllSelection(i)" [value]="0" [disabled]="attachmentForm.get('formItems').controls[i].get('enableMultiSelect').value">Select All</mat-option>
+      	<mat-option  (click)="toggleAllSelection(i)" [value]="attachmentForm.get('formItems').controls[i].get('defaultSelect').value " [disabled]="attachmentForm.get('formItems').controls[i].get('enableMultiSelect').value">Select All</mat-option>
       <mat-option (click)="addItem(i)" *ngFor="let attach of attachmentForm.get('formItems').controls[i].get('attachmetValues').value; let index = elementIndex"
       
        [value]="attach" [disabled]="disabled">{{attach.Name}}</mat-option>
@@ -57,7 +57,7 @@
         <td nowrap>
          
             <button type="button" class="btn btn-danger btn-xs"
-                    (click)="item.remove()">
+                    (click)="removeImage(i)">
                 <span class="glyphicon glyphicon-trash"></span> Remove
             </button>
         </td>

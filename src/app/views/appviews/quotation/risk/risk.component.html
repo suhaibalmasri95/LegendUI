@@ -1,10 +1,14 @@
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="centered-content">
 
   <fieldset>
     <legend>
       Risk
     </legend>
     <div class="row">
+        <div class="form-group col-md-3">
+            <label for="DocumentSegment">Document Segment Code</label>
+            <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control" [(ngModel)]="document.DocumentSegment">
+          </div>
         <div class="form-group col-md-3">
             <label for="ProductDetail">Product Detail</label>
             <select name="ProductDetail" class="form-control" [(ngModel)]="riskForm.ProductDetailID" (change)="getProductDetailSubjectType(riskForm.ProductDetailID)">
@@ -26,12 +30,13 @@
         </div>
       
 
-      <div class="form-group col-md-3">
-          <label for="Name">Name</label>
-          <input name="Name"  placeholder="Name" type="text" class="form-control" [(ngModel)]="riskForm.Name">
-        </div>
+     
       </div>
       <div class="row">
+          <div class="form-group col-md-3">
+              <label for="Name">Name</label>
+              <input name="Name"  placeholder="Name" type="text" class="form-control" [(ngModel)]="riskForm.Name">
+            </div>
       <div class="form-group col-md-3">
           <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
           <input  name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control" [ngModel]="riskForm.EffectiveDate | date:'yyyy-MM-dd'"
@@ -50,12 +55,13 @@
           </div>
         
   
-        <div class="form-group col-md-3">
-            <label for="SuminsuredLC">Sum Insured LC</label>
-            <input name="SuminsuredLC" disabled placeholder="Sum Insured LC" disabled type="number" class="form-control" [(ngModel)]="riskForm.SuminsuredLC">
-          </div>
+    
       </div>
       <div class="row">
+          <div class="form-group col-md-3">
+              <label for="SuminsuredLC">Sum Insured LC</label>
+              <input name="SuminsuredLC" disabled placeholder="Sum Insured LC" disabled type="number" class="form-control" [(ngModel)]="riskForm.SuminsuredLC">
+            </div>
           <div class="form-group col-md-3" >
               <label for="SubjectTypeID">Parent Risk </label>
               <select name="SubjectTypeID" class="form-control" [(ngModel)]="riskForm.SubjectTypeID" >
@@ -63,38 +69,39 @@
                 <option *ngFor="let subject of productDetailsSubjectTypes" [ngValue]="subject.ID" disabled>{{subject.SubjectTypeDesc}}</option>
               </select>
             </div>
+        
+            <div class="form-group col-md-3">
+                <label for="Description">Description</label>
+                <textarea rows="1" name="Description" placeholder="Description" type="text" class="form-control" [(ngModel)]="riskForm.Description"  ></textarea>
+              </div>
+          <div class="form-group col-md-3">
+            <label for="MinExcessAmount">Minmum Excess Amount</label>
+            <input name="MinExcessAmount" placeholder="Minmum Excess Amount" type="number" class="form-control" [(ngModel)]="riskForm.MinExcessAmount"  >
+          </div>
+
+       
+          </div>  <div class="row">
+              <div class="form-group col-md-3">
+                  <label for="MaxExcessAmount">Max Excess Amount</label>
+                  <input name="MaxExcessAmount" placeholder="Max Excess Amount" type="number" class="form-control" [(ngModel)]="riskForm.MaxExcessAmount"  >
+                </div>
+            <div class="form-group col-md-3">
+            <label for="ReferenceNo">Reference NO</label>
+            <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="riskForm.ReferenceNo"  ></textarea>
+          </div>
         </div>
-        <div class="row" *ngFor="let item of productDynamicCategoriesRisk">
+      
+        <div *ngFor="let item of productDynamicCategoriesRisk">
           <app-dynamic-component [category]="item" ></app-dynamic-component>
         </div>
-        <mat-accordion>
+      <!--  <mat-accordion>
             <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   More Details
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <div class="row">
-                  <div class="form-group col-md-3">
-                      <label for="Description">Description</label>
-                      <textarea rows="1" name="Description" placeholder="Description" type="text" class="form-control" [(ngModel)]="riskForm.Description"  ></textarea>
-                    </div>
-                <div class="form-group col-md-3">
-                  <label for="MinExcessAmount">Minmum Excess Amount</label>
-                  <input name="MinExcessAmount" placeholder="Minmum Excess Amount" type="number" class="form-control" [(ngModel)]="riskForm.MinExcessAmount"  >
-                </div>
-      
-                <div class="form-group col-md-3">
-                    <label for="MaxExcessAmount">Max Excess Amount</label>
-                    <input name="MaxExcessAmount" placeholder="Max Excess Amount" type="number" class="form-control" [(ngModel)]="riskForm.MaxExcessAmount"  >
-                  </div>
-      
-                  <div class="form-group col-md-3">
-                  <label for="ReferenceNo">Reference NO</label>
-                  <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="riskForm.ReferenceNo"  ></textarea>
-                </div>
-      
-              </div>
+            
               <div class="row">
                 <div class="form-group col-md-3">
                   <label for="UwDocumentID">Under Writing Document ID</label>
@@ -149,12 +156,23 @@
          
              
             </mat-expansion-panel>
-          </mat-accordion>
-    </fieldset>
+          </mat-accordion>-->
+          <div class="col-md-12 text-right">
+              <div class="btn-group">
+                <br>
+               
+                <input class="btn btn-primary" type="submit" value="Add Risk" (click)="addRisk(riskForm)" />
+
+        </div> </div>
+        
+          
+  
     <br>
     <br>
-    <div class="" *ngIf="risks.length > 0">
-      <div class="">
+    <br>
+    <br>
+    <div class="x" *ngIf="risks.length > 0">
+
         <table mat-table #table [dataSource]="RiskDataSource" matSort>
         
           <ng-container matColumnDef="select">
@@ -191,13 +209,13 @@
           <ng-container matColumnDef="EffectiveDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Effective Date</th>
             <td style="width: 15%" mat-cell *matCellDef="let element">
-              {{element.EffectiveDate}} </td>
+              {{element.EffectiveDate | date}} </td>
           </ng-container>
 
           <ng-container matColumnDef="ExpiryDate">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiry Date </th>
             <td style="width: 10%" mat-cell *matCellDef="let element">
-              {{element.ExpiryDate}} </td>
+              {{element.ExpiryDate | date}} </td>
           </ng-container>
 
           <ng-container matColumnDef="ParentRisk">
@@ -220,11 +238,18 @@
           <tr mat-row *matRowDef="let row; columns: RiskTableColumns;" (click)="updateRisk(row)" class=" mat-row {{riskForm.ProductDetailID===row.ProductDetailID?'active':'not-active'}}"></tr>
 
         </table>
-      </div>
+   
      
     </div>
-    
-    <input class="btn btn-primary" type="submit" value="Add Risk" (click)="addRisk(riskForm)" />
-
-    <input  *ngIf="risks.length> 0" class="btn btn-primary" type="submit" value="submit" (click)="submit()" />
+    <div class="row">
+    <div class="col-md-12 text-right">
+        <div class="btn-group">
+          <br>
+         
+        
+       
+    <input  *ngIf="risks.length> 0" class="btn btn-primary" type="submit" value="submit" (click)="submit()" /></div>
+  </div></div>   <br>  <br> <div class="row"></div>
+  
+</fieldset>
 </div>

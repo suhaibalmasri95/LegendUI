@@ -181,11 +181,12 @@ export class QuotationComponent implements OnInit {
     }
   }
   getDynamicFileds(productID: number) {
+    if (productID) {
     if (this.documentForm.DocumentType === 1) {
       this.getDynamicCategoriesForPolicy(productID);
     } else if (this.documentForm.DocumentType === 2) {
       this.getDynamicCategoriesForQuotation(productID);
-    }
+    }}
   }
 
   changeUwYear($event: Date) {

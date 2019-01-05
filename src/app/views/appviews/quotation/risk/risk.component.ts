@@ -11,7 +11,7 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { HttpClient } from '@angular/common/http';
 import { WizardState } from 'angular-archwizard';
-
+import * as _ from 'lodash';
 @Component({
   selector: 'app-risk',
   templateUrl: './risk.component.html',
@@ -27,6 +27,7 @@ export class RiskComponent implements OnChanges {
   selection: SelectionModel<Risk>;
   user: any;
   isLessThan: boolean;
+  originalDynamicCategories: ProductDynmicCategory[];
   productDynamicCategoriesRisk: ProductDynmicCategory[];
   userCompany: any;
   productDetails: ProductsDetail[];
@@ -37,7 +38,7 @@ export class RiskComponent implements OnChanges {
     private productDetailService: ProductsDetailService ,
       @Inject(WizardState) private wizard: WizardState, ) { }
 
-
+  
   ngOnChanges() {
     this.risks = [];
     // create header using child_id
@@ -88,7 +89,9 @@ export class RiskComponent implements OnChanges {
           }
         }
       });
-      risk.DynamicCategory = this.productDynamicCategoriesRisk;
+      risk.DynamicCategory = _.cloneDeep(this.productDynamicCategoriesRisk);
+      this.productDynamicCategoriesRisk = [];
+      this.productDynamicCategoriesRisk = _.cloneDeep(this.originalDynamicCategories);
       this.risks.push(risk);
       this.renderTable(this.risks);
     }
@@ -130,6 +133,7 @@ export class RiskComponent implements OnChanges {
     getDynamicCategoriesForRisk( productID: number , productDetailID: number) {
       this.dynamicService.load(null, null , productID , productDetailID , 3, null , null , 1 ).subscribe(res => {
         this.productDynamicCategoriesRisk = res ;
+        this.originalDynamicCategories = _.cloneDeep(res);
       });
     }
     getProductDetails(productID: number) {
