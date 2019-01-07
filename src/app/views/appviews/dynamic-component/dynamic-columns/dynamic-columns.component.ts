@@ -2,7 +2,7 @@
 import { Filter } from './../../../../entities/filter/filter';
 import { DynamicService } from './../../../../_services/_dynamic/Dynamic.service';
 import { ProductDynamicColumn } from './../../../../entities/Dynamic/ProductDynamicColumn';
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 @Component({
   selector: 'app-dynamic-columns',
   templateUrl: './dynamic-columns.component.html',
@@ -14,6 +14,9 @@ export class DynamicColumnsComponent implements OnInit   {
   @Input('column') columns: ProductDynamicColumn[];
   // tslint:disable-next-line:no-input-rename
   @Input('list') list: ProductDynamicColumn[];
+   // tslint:disable-next-line:no-input-rename
+
+   @Output() childsData = new EventEmitter<ProductDynamicColumn[]>();
   // tslint:disable-next-line:no-input-rename
   filter: Filter;
   childs: ProductDynamicColumn[];
@@ -40,6 +43,8 @@ export class DynamicColumnsComponent implements OnInit   {
     }
       });
     }
+    this.childsData.emit(this.childs);
+    console.log(this.childs);
   }
 
   arrayUnique(array) {

@@ -1,3 +1,5 @@
+import { ProductDynamicColumn } from './../../../entities/Dynamic/ProductDynamicColumn';
+import { PolicyService } from './../../../_services/_production/Policy.service';
 import { DocumentService } from './../../../_services/DocumentService.service';
 import { CustomerShare } from '../../../entities/production/CustomerShare';
 
@@ -18,6 +20,8 @@ import { BsDatepickerDirective } from 'ngx-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { WizardState } from 'angular-archwizard';
+import { isEmpty } from 'rxjs/operators';
+
 @Component({
   selector: 'app-quotation',
   templateUrl: './quotation.component.html',
@@ -29,7 +33,10 @@ export class QuotationComponent implements OnInit {
    text: string;
    value: string;
    share: Share;
+   updateMode: boolean = false;
+  hasBeenSearched: boolean = false;
    customer: CustomerShare;
+   currentCustomer: Customer;
    icon = false;
    documentForm: Documents;
    businessTypes: LockUp[];
@@ -60,7 +67,7 @@ export class QuotationComponent implements OnInit {
     private http: HttpClient, private route: ActivatedRoute,
     private seracrhService: SearchService,
      private dynamicService: DynamicService, @Inject(WizardState) private wizard: WizardState,
-     private _documentService: DocumentService ) { }
+     private _documentService: DocumentService, private policyService: PolicyService  ) { }
 
   ngOnInit() {
     this.text = 'test';
@@ -78,6 +85,8 @@ export class QuotationComponent implements OnInit {
       this.paymentType = res.paymentType;
       this.status = res.status;
     });
+    this.policyHolders = [];
+    this.currentCustomer = new Customer();
     this.share = new Share();
     this.customer = new CustomerShare();
     this.share.customer = [];
@@ -102,21 +111,31 @@ export class QuotationComponent implements OnInit {
     this.documentShareControl.disable();
     this.documentForm.DocumentShare = 100;
     this.documentForm.Exrate = 1;
+     this.policyService.load(99 , 1).subscribe( res => {
+      this.documentForm = res[0];
+      this.updateMode = true;
+      this.getDynamicFileds(this.documentForm.ProductId);
+    
+    });
+ 
     this.policyholderSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(term , null , 1 , 1).subscribe(
+          this.seracrhService.search(null , term, null, null , null, null, 1 , 1).subscribe(
             data => {
               this.policyHolders = data;
+
               // console.log(data[0].BookName);
           });
+        } else {
+          this.hasBeenSearched = false;
         }
     });
 
     this.beneficiarySearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(term , null , 1 , 2).subscribe(
+          this.seracrhService.search(null , term, null, null , null, null, 1 , 2).subscribe(
             data => {
               this.beneficiaries = data;
               // console.log(data[0].BookName);
@@ -126,7 +145,7 @@ export class QuotationComponent implements OnInit {
     this.salesPersonSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(term , null , 1 , 3).subscribe(
+          this.seracrhService.search(null , term, null, null , null, null, 1 , 3).subscribe(
             data => {
               this.salesPersons = data;
               // console.log(data[0].BookName);
@@ -136,7 +155,7 @@ export class QuotationComponent implements OnInit {
     this.brokerSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(term , null , 1 , 5).subscribe(
+          this.seracrhService.search(null , term, null, null , null, null, 1 , 5).subscribe(
             data => {
               this.brokers = data;
               // console.log(data[0].BookName);
@@ -146,7 +165,7 @@ export class QuotationComponent implements OnInit {
     this.agentSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(term , null , 1 , 4).subscribe(
+          this.seracrhService.search(null , term, null, null , null, null, 1 , 4).subscribe(
             data => {
               this.agents = data;
               // console.log(data[0].BookName);
@@ -162,7 +181,7 @@ export class QuotationComponent implements OnInit {
   }
 
   displayFn(customer?: Customer): string | undefined {
-    return customer ? customer.Name : undefined;
+    return customer ? customer.CustomerNo + ' ' + customer.Name   : undefined;
   }
   filterCurrency(currencies: Currency[]) {
     for ( let i = 0; i < currencies.length; i++) {
@@ -180,6 +199,56 @@ export class QuotationComponent implements OnInit {
       this.documentShareControl.enable();
     }
   }
+  FillCustomerData() {
+    this.hasBeenSearched = true;
+    this.currentCustomer.Email = this.policyholderSearch.value.Email;
+    this.currentCustomer.ReferenceNo = this.policyholderSearch.value.ReferenceNo;
+    this.currentCustomer.Mobile = this.policyholderSearch.value.Mobile;
+    this.currentCustomer.CustomerNo = this.policyholderSearch.value.CustomerNo;
+  }
+  SearchCustomerByEmail(email: string) {
+    if (!this.hasBeenSearched && (email !== undefined && email !== '')) {
+      this.seracrhService.search(null , null , null, email , null, null, 1 , 1).subscribe(
+        data => {
+          if (data.length > 0) {
+          this.currentCustomer = data[0];
+          this.policyholderSearch.patchValue( this.currentCustomer );
+          this.hasBeenSearched = true;
+        } else {
+          this.hasBeenSearched = false;
+        }
+          // console.log(data[0].BookName);
+      });
+    }
+  }
+  SearchCustomerByPhoneNumber(mobile: string) {
+    if (!this.hasBeenSearched  && (mobile !== undefined &&  mobile !== '')) {
+      this.seracrhService.search(null , null , null, null , mobile, null, 1 , 1).subscribe(
+        data => {
+          if (data.length > 0) {
+          this.currentCustomer = data[0];
+          this.policyholderSearch.patchValue( this.currentCustomer );
+          this.hasBeenSearched = true;
+        } else {
+          this.hasBeenSearched = false;
+        }
+      });
+    }
+  }
+  SearchCustomerReferenceNumber(nationalID: string) {
+    if (!this.hasBeenSearched  && (nationalID !== undefined &&  nationalID !== '' )) {
+      this.seracrhService.search(null , null , null, null , null, nationalID, 1 , 1).subscribe(
+        data => {
+          if (data.length > 0) {
+          this.currentCustomer = data[0];
+          this.policyholderSearch.patchValue( this.currentCustomer );
+          this.hasBeenSearched = true;
+            }  else {
+            this.hasBeenSearched = false;
+          }
+      });
+    }
+  }
   getDynamicFileds(productID: number) {
     if (productID) {
     if (this.documentForm.DocumentType === 1) {
@@ -188,11 +257,19 @@ export class QuotationComponent implements OnInit {
       this.getDynamicCategoriesForQuotation(productID);
     }}
   }
+  checkCurrentCustomer() {
+    if (this.policyHolders.length === 0 && this.policyholderSearch.value === null) {
+      this.hasBeenSearched = false;
+    }
+  }
 
   changeUwYear($event: Date) {
 
    this.documentForm.EffectiveDate = $event;
-   this.documentForm.ExpiryDate = new Date(this.documentForm.EffectiveDate.getFullYear() + 1 ,
+   this.documentForm.ExpiryDate = new Date(this.documentForm.ExpiryDate);
+   this.documentForm.EffectiveDate = new Date(this.documentForm.EffectiveDate);
+
+   this.documentForm.ExpiryDate = new Date(this.documentForm.ExpiryDate.getFullYear() + 1 ,
      this.documentForm.EffectiveDate.getMonth(), this.documentForm.EffectiveDate.getDate() - 1) ;
    this.documentForm.UwYear =  new Date(this.documentForm.EffectiveDate).getFullYear();
   }
@@ -204,13 +281,57 @@ export class QuotationComponent implements OnInit {
   }
     getDynamicCategoriesForPolicy( id: number) {
       this.dynamicService.load(null, null , id , null , 1, null , null , 1 ).subscribe(res => {
-        this.productDynamicCategories = res ;
+        if (this.updateMode) {
+          // mearge array and filter the columns
+         // this.FilterAndMeargeArray(res);
+         this.productDynamicCategories = res ;
+        } else {
+          this.productDynamicCategories = res ;
+        }
       });
     }
     getDynamicCategoriesForQuotation( id: number) {
       this.dynamicService.load(null, null , id , null , 2, null , null , 1 ).subscribe(res => {
-        this.productDynamicCategories = res ;
+      
+        if (this.updateMode) {
+          // mearge array and filter the columns
+        } else {
+          this.productDynamicCategories = res ;
+        }
       });
+    }
+    FilterAndMeargeArray(firstArray: ProductDynmicCategory[]) {
+      this.dynamicService.UpdateMode(this.documentForm.ID, null , this.documentForm.ProductId , 1 ).subscribe(res => {
+        firstArray.forEach(element => {
+          if (element.IsMulitRecords > 0 ) {
+
+          } else {
+            element.Columns = this.filterColumnOnCategory(element.ID, res);
+          }
+        });
+        this.productDynamicCategories = firstArray;
+      });
+
+    }
+
+    filterColumnOnCategory (categoryID: number , array: ProductDynamicColumn[]) {
+      const returnArray = [];
+      array.forEach(element => {
+        if (element.ProductCategoryID === categoryID) {
+          returnArray.push(element);
+        }
+      });
+      return returnArray;
+    }
+
+    filterColumns (array: ProductDynamicColumn[]) {
+      const returnArray = [];
+      array.forEach(element => {
+        if (element.ColumnType !== 4) {
+          returnArray.push(element);
+        }
+      });
+      return returnArray;
     }
     submit() {
 
@@ -248,10 +369,10 @@ export class QuotationComponent implements OnInit {
       if(this.productDynamicCategories) {
       this.productDynamicCategories.forEach(element => {
         if (element.IsMulitRecords === 0) {
-          element.ResultList = [...element.OriginalList , ...element.Columns];
+          element.ResultList = [ ...element.Columns, ...element.childsData];
         } else {
           if (element.Result === null) {
-            element.Result = [[...element.OriginalList , ...element.Columns]];
+            element.Result = [[ ...element.Columns, ...element.childsData]];
           }
         }
       });

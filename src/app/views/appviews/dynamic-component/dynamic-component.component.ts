@@ -17,6 +17,9 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
 
   // tslint:disable-next-line:no-input-rename
   @Input('category') category: ProductDynmicCategory;
+  // tslint:disable-next-line:no-input-rename
+  @Input('updateMode') updateMode: boolean;
+  
   @ViewChildren('tableSelector')  tableSelector: QueryList<TableComponent>;
   meregedArray: ProductDynamicColumn[] = [];
   childsValue: DynamicTable[] = [];
@@ -30,10 +33,14 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   updatedIndex: number;
   isUpdate: boolean = false;
   isDelete: boolean = false;
+
   constructor() { }
 
   ngOnInit() {
    // this.table = new TableComponent();
+   if (this.updateMode) {
+     // create update mode
+   }
    console.log('on init', this.tableSelector);
   }
 
@@ -47,7 +54,7 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
  
     this.meregedArray = [];
     this.dynamicDataSources = [];
-    this.resetData(category.Columns, category.OriginalList);
+    this.resetData(category.Columns);
     console.log(category);
    //
     if (this.isUpdate) {
@@ -66,9 +73,8 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   }
 
 
-  resetData(columns: ProductDynamicColumn[] , dropDownList: ProductDynamicColumn[] ) {
+  resetData(columns: ProductDynamicColumn[] ) {
     this.dynamicDataSource = {};
-    this.meregedArray = [...columns , ...dropDownList];
     let i = 2;
     this.meregedArray.forEach(element => {
       this.childValue = new DynamicTable();
@@ -272,5 +278,9 @@ mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicC
       this.dynamicDataSources.splice(index, 1 );
     }
 
+  }
+  setCategoryChildData(childs: ProductDynamicColumn[]) {
+    this.category.childsData = [];
+    this.category.childsData = childs;
   }
 }

@@ -12,15 +12,32 @@ export class SearchService {
   ApiUrl: string = environment.azureUrl + 'Customers/';
   constructor (private httpService: HttpClient) { }
 
-  search(Name: string , CusNo: string , langId: number , CustomerType: number) {
+  search(Name: string , custOrName: string ,
+     CusNo: string , email: string, mobile: string, nationID: string, langId: number , CustomerType: number) {
     let queryString = '?Name=';
 
     if (Name != null) {
       queryString += Name;
     }
+    queryString += '&custOrName=';
+    if (custOrName != null) {
+      queryString += custOrName;
+    }
     queryString += '&CusNo=';
     if (CusNo != null) {
       queryString += CusNo;
+    }
+    queryString += '&email=';
+    if (email != null) {
+      queryString += email;
+    }
+    queryString += '&mobile=';
+    if (mobile != null) {
+      queryString += mobile;
+    }
+    queryString += '&nationID=';
+    if (nationID != null) {
+      queryString += nationID;
     }
     queryString += '&languageID=';
     if (langId != null) {

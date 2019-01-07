@@ -82,10 +82,10 @@ export class RiskComponent implements OnChanges {
     } else {
       this.productDynamicCategoriesRisk.forEach(element => {
         if (element.IsMulitRecords === 0) {
-          element.ResultList = [...element.OriginalList , ...element.Columns];
+          element.ResultList = [ ...element.Columns, ...element.childsData];
         } else {
           if (element.Result === null) {
-            element.Result = [[...element.OriginalList , ...element.Columns]];
+            element.Result =  [[ ...element.Columns, ...element.childsData]];
           }
         }
       });

@@ -79,4 +79,25 @@ export class DynamicService {
 
     return this.http.get<ProductDynamicColumn[]>(this.dynamicApiUrl + 'LoadChild' + queryString);
   }
+  UpdateMode(DocumentID: number = null, RiskID: number = null
+    , ProductID: number = null,  langId: number = null): Observable<ProductDynamicColumn[]> {
+    let queryString = '?DocumentID=';
+  
+    if (DocumentID != null) {
+      queryString += DocumentID;
+    }
+    queryString += '&RiskID=';
+    if (RiskID != null) {
+      queryString += RiskID;
+    } queryString += '&ProductID=';
+    if (ProductID != null) {
+      queryString += ProductID;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+    }
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<ProductDynamicColumn[]>(this.dynamicApiUrl + 'LoadUpdate' + queryString);
+  }
 }
