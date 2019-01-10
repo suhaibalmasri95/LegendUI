@@ -1,8 +1,10 @@
+import { DocumentAttachment } from './../../../entities/production/DocumentAttachment';
+import { PolicyAttachmentService } from './../../../_services/_production/policyAttachment.service';
+import { SharesService } from './../../../_services/_products/shares.service';
 import { ProductDynamicColumn } from './../../../entities/Dynamic/ProductDynamicColumn';
 import { PolicyService } from './../../../_services/_production/Policy.service';
 import { DocumentService } from './../../../_services/DocumentService.service';
 import { CustomerShare } from '../../../entities/production/CustomerShare';
-
 import { Share } from './../../../entities/production/Share';
 import { ProductDynmicCategory } from './../../../entities/Dynamic/ProductDynmicCategory';
 import { DynamicService } from './../../../_services/_dynamic/Dynamic.service';
@@ -20,7 +22,8 @@ import { BsDatepickerDirective } from 'ngx-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { WizardState } from 'angular-archwizard';
-import { isEmpty } from 'rxjs/operators';
+
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-quotation',
@@ -30,14 +33,21 @@ import { isEmpty } from 'rxjs/operators';
 export class QuotationComponent implements OnInit {
   @ViewChild(BsDatepickerDirective) datepicker: BsDatepickerDirective;
 // tslint:disable-next-line: no-input-rename
+   sharesTableColumn = ['select' , 'ID' , 'Customer Id' , 'Share Type' , 'Document ID' , 'action'];
+   attachmentTableColumn = ['select' , 'ID' , 'Document ID' , 'Product Attachment ID' ,
+    'Name' , 'Is Received' , 'Received Date' , 'Attached Path', 'action'];
    text: string;
    value: string;
    share: Share;
+   customerUpdateForm: Customer;
+   policyHolderUpdate: FormControl = new FormControl();
+   shares: Share[];
    updateMode: boolean = false;
   hasBeenSearched: boolean = false;
    customer: CustomerShare;
    currentCustomer: Customer;
    icon = false;
+   documentAttachments: DocumentAttachment[];
    documentForm: Documents;
    businessTypes: LockUp[];
    accountedFor: LockUp[];
@@ -59,17 +69,21 @@ export class QuotationComponent implements OnInit {
    calculateBase: LockUp[];
    paymentType: LockUp[];
    user: any;
+   selected = new FormControl(0);
    userCompany: any;
    status: LockUp[];
    productDynamicCategories: ProductDynmicCategory[];
+   productDynamicCategoriesMultiRecord: ProductDynmicCategory[];
    documentShareControl: FormControl = new FormControl('', [Validators.max(100), Validators.min(0)]);
   constructor(private sidenavService: SidenavService,
     private http: HttpClient, private route: ActivatedRoute,
     private seracrhService: SearchService,
      private dynamicService: DynamicService, @Inject(WizardState) private wizard: WizardState,
-     private _documentService: DocumentService, private policyService: PolicyService  ) { }
+     private _documentService: DocumentService, private policyService: PolicyService,
+     private shareService: SharesService  , private attachmentService: PolicyAttachmentService ) { }
 
   ngOnInit() {
+    this.customerUpdateForm = new Customer();
     this.text = 'test';
     this.value = 'test';
     this.documentForm = new Documents();
@@ -86,6 +100,7 @@ export class QuotationComponent implements OnInit {
       this.status = res.status;
     });
     this.policyHolders = [];
+    this.shares = [];
     this.currentCustomer = new Customer();
     this.share = new Share();
     this.customer = new CustomerShare();
@@ -105,23 +120,31 @@ export class QuotationComponent implements OnInit {
     this.documentForm.Status = 1;
     this.documentForm.CalcBases = 1;
     this.documentForm.PaymentId = 1;
+    this.documentAttachments = [];
     this.userCompany = JSON.parse(localStorage.getItem('company'));
     this.filterCurrency(this.currencies);
     this.documentForm.LocDistChnales = 1;
     this.documentShareControl.disable();
     this.documentForm.DocumentShare = 100;
     this.documentForm.Exrate = 1;
-     this.policyService.load(99 , 1).subscribe( res => {
+    this.policyService.load(107 , 1).subscribe( res => {
       this.documentForm = res[0];
       this.updateMode = true;
       this.getDynamicFileds(this.documentForm.ProductId);
-    
+    this.shareService.load(null, null , 107 , null , null , null , 1).subscribe( shares => {
+      this.shares = shares;
     });
- 
+    this.attachmentService.load(null , 70 , null , 3 , null , 1 , 1 ). subscribe( attachments => {
+      this.documentAttachments = attachments;
+    });
+  
+    });
+    this.productDynamicCategoriesMultiRecord = [];
+    this.productDynamicCategories = [];
     this.policyholderSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null , term, null, null , null, null, 1 , 1).subscribe(
+          this.seracrhService.search(null , null , term, null, null , null, null, 1 , 1).subscribe(
             data => {
               this.policyHolders = data;
 
@@ -135,7 +158,7 @@ export class QuotationComponent implements OnInit {
     this.beneficiarySearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null , term, null, null , null, null, 1 , 2).subscribe(
+          this.seracrhService.search(null, null , term, null, null , null, null, 1 , 2).subscribe(
             data => {
               this.beneficiaries = data;
               // console.log(data[0].BookName);
@@ -145,7 +168,7 @@ export class QuotationComponent implements OnInit {
     this.salesPersonSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null , term, null, null , null, null, 1 , 3).subscribe(
+          this.seracrhService.search(null , null , term, null, null , null, null, 1 , 3).subscribe(
             data => {
               this.salesPersons = data;
               // console.log(data[0].BookName);
@@ -155,7 +178,7 @@ export class QuotationComponent implements OnInit {
     this.brokerSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null , term, null, null , null, null, 1 , 5).subscribe(
+          this.seracrhService.search(null, null , term, null, null , null, null, 1 , 5).subscribe(
             data => {
               this.brokers = data;
               // console.log(data[0].BookName);
@@ -165,7 +188,7 @@ export class QuotationComponent implements OnInit {
     this.agentSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null , term, null, null , null, null, 1 , 4).subscribe(
+          this.seracrhService.search(null, null , term, null, null , null, null, 1 , 4).subscribe(
             data => {
               this.agents = data;
               // console.log(data[0].BookName);
@@ -208,7 +231,7 @@ export class QuotationComponent implements OnInit {
   }
   SearchCustomerByEmail(email: string) {
     if (!this.hasBeenSearched && (email !== undefined && email !== '')) {
-      this.seracrhService.search(null , null , null, email , null, null, 1 , 1).subscribe(
+      this.seracrhService.search(null , null , null , null, email , null, null, 1 , 1).subscribe(
         data => {
           if (data.length > 0) {
           this.currentCustomer = data[0];
@@ -223,7 +246,7 @@ export class QuotationComponent implements OnInit {
   }
   SearchCustomerByPhoneNumber(mobile: string) {
     if (!this.hasBeenSearched  && (mobile !== undefined &&  mobile !== '')) {
-      this.seracrhService.search(null , null , null, null , mobile, null, 1 , 1).subscribe(
+      this.seracrhService.search(null, null , null , null, null , mobile, null, 1 , 1).subscribe(
         data => {
           if (data.length > 0) {
           this.currentCustomer = data[0];
@@ -237,7 +260,7 @@ export class QuotationComponent implements OnInit {
   }
   SearchCustomerReferenceNumber(nationalID: string) {
     if (!this.hasBeenSearched  && (nationalID !== undefined &&  nationalID !== '' )) {
-      this.seracrhService.search(null , null , null, null , null, nationalID, 1 , 1).subscribe(
+      this.seracrhService.search(null , null , null , null, null , null, nationalID, 1 , 1).subscribe(
         data => {
           if (data.length > 0) {
           this.currentCustomer = data[0];
@@ -283,10 +306,19 @@ export class QuotationComponent implements OnInit {
       this.dynamicService.load(null, null , id , null , 1, null , null , 1 ).subscribe(res => {
         if (this.updateMode) {
           // mearge array and filter the columns
-         // this.FilterAndMeargeArray(res);
-         this.productDynamicCategories = res ;
+          this.FilterAndMeargeArray(res);
+         //this.productDynamicCategories = res ;
         } else {
-          this.productDynamicCategories = res ;
+          res.forEach(element => {
+            if (element.IsMulitRecords > 0 ) {
+              element.InsertedData = [];
+              this.productDynamicCategoriesMultiRecord.push(element);
+            } else {
+              element.InsertedData = [];
+              this.productDynamicCategories.push(element);
+
+            }
+          });
         }
       });
     }
@@ -305,11 +337,14 @@ export class QuotationComponent implements OnInit {
         firstArray.forEach(element => {
           if (element.IsMulitRecords > 0 ) {
 
+            element.InsertedData = this.filterColumnOnCategory(element.ID , res);
+      this.productDynamicCategoriesMultiRecord.push(element);
           } else {
+            element.InsertedData = [];
             element.Columns = this.filterColumnOnCategory(element.ID, res);
+            this.productDynamicCategories.push(element);
           }
         });
-        this.productDynamicCategories = firstArray;
       });
 
     }
@@ -323,7 +358,16 @@ export class QuotationComponent implements OnInit {
       });
       return returnArray;
     }
-
+    updateShare(share: Share) {
+      this.seracrhService.search(share.CustomerId , null , null , null , null , null , null , 1 , null).subscribe(res => {
+        this.customerUpdateForm = res[0];
+        this.policyHolderUpdate.patchValue(res[0]);
+      });
+      console.log(share);
+    }
+    deleteShare(index: number) {
+      console.log(index);
+    }
     filterColumns (array: ProductDynamicColumn[]) {
       const returnArray = [];
       array.forEach(element => {
@@ -339,6 +383,10 @@ export class QuotationComponent implements OnInit {
         this.customer = new CustomerShare();
         this.customer.CustomerID = this.policyholderSearch.value.ID;
         this.customer.shareType = 1;
+        this.share.customer.push(this.customer);
+        this.customer = new CustomerShare();
+        this.customer.CustomerID = this.policyholderSearch.value.ID;
+        this.customer.shareType = 2;
         this.share.customer.push(this.customer);
       }
       if (this.beneficiarySearch.value &&  this.beneficiarySearch.value.ID) {
@@ -376,7 +424,12 @@ export class QuotationComponent implements OnInit {
           }
         }
       });
-      this.documentForm.DynamicCategories = this.productDynamicCategories;
+      if(this.productDynamicCategoriesMultiRecord.length > 0) {
+        this.documentForm.DynamicCategories = [...this.productDynamicCategories , ...this.productDynamicCategoriesMultiRecord];
+      } else {
+        this.documentForm.DynamicCategories = this.productDynamicCategories;
+      }
+
     }
       this.documentForm.StComId = this.userCompany.ID;
       this.documentForm.share = this.share;

@@ -16,11 +16,10 @@ export class Share implements IEntity {
     CreationDate: Date;
     ModifiedBy: string;
     ModificationDate: Date;
-    UwDocumentID: number;
+    DocumentID: number;
     CustomerId: number;
     StLOB: number;
     StSubLOB: number;
     DrCr: number;
     customer: CustomerShare[];
-    
 }

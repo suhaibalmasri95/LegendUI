@@ -13,7 +13,7 @@ export class DynamicColumnsComponent implements OnInit   {
   // tslint:disable-next-line:no-input-rename
   @Input('column') columns: ProductDynamicColumn[];
   // tslint:disable-next-line:no-input-rename
-  @Input('list') list: ProductDynamicColumn[];
+ 
    // tslint:disable-next-line:no-input-rename
 
    @Output() childsData = new EventEmitter<ProductDynamicColumn[]>();
@@ -28,7 +28,7 @@ export class DynamicColumnsComponent implements OnInit   {
   }
 
   getChildren(item: ProductDynamicColumn) {
-    if ( item.ChildCounts > 0) {
+    /*if ( item.ChildCounts > 0) {
       this.filter.MajorCode = item.MajorCode;
       this.filter.parentID = item.ID;
       this.filter.LangID = 1;
@@ -44,7 +44,7 @@ export class DynamicColumnsComponent implements OnInit   {
       });
     }
     this.childsData.emit(this.childs);
-    console.log(this.childs);
+    console.log(this.childs);*/
   }
 
   arrayUnique(array) {

@@ -21,11 +21,9 @@
     </div>
   </div>
 </div> 
-<div class="wrapper wrapper-content animated fadeInRight">
-<aw-wizard #wizard>    <div class="col-md-12">
-  <div class="tabs-container">
-     
-    <div class="panel-body">
+
+<aw-wizard #wizard> 
+
   <app-quotation awWizardStep [stepTitle]="'Document'"  ></app-quotation>
   <aw-wizard-step [stepTitle]="'Risk'" >
   <div class="centered-content" *ngIf="document">
@@ -36,7 +34,7 @@
           <div class="centered-content" *ngIf="document">
               <app-attachment [document] = "document"  ></app-attachment>
 
-          </div>
-              </aw-wizard-step> </div></div></div>
+            </div>
+              </aw-wizard-step>
 
-</aw-wizard></div>
+</aw-wizard>

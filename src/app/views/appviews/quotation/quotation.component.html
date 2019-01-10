@@ -1,4 +1,11 @@
-<div class="centered-content ">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-md-12">
+<div class="tabs-container">
+     
+    <div class="panel-body">
+
  
    
    
@@ -141,7 +148,7 @@
       </div>
     <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 2">
       <label for="SalesPreson">Sales Preson</label>
-      <input class="form-control" type="text" placeholder="SalesPreson" matInput [formControl]="beneficiarySearch"
+      <input class="form-control" type="text" placeholder="Sales Preson" matInput [formControl]="beneficiarySearch"
         [matAutocomplete]="salesPersonsauto">
       <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
       <mat-autocomplete #salesPersonsauto="matAutocomplete" [displayWith]="displayFn">
@@ -361,7 +368,9 @@
     </mat-accordion>-->
     </div>
     <div  *ngFor="let item of productDynamicCategories  ">
+        <div *ngIf="item.IsMulitRecords === 0">
       <app-dynamic-component [category]="item"></app-dynamic-component>
+      </div>
     </div>
    
 
@@ -415,6 +424,57 @@
       </mat-accordion>
     </div>
   </div>-->
+  <br>
+  <br>
+  <br>
+  <br>
+  <mat-tab-group [selectedIndex]="0"   (selectedIndexChange)="selected.setValue($event)"  >
+  <mat-tab label="Document Share">
+      <app-generictable *ngIf="shares.length > 0"   #tableSelector [tableColumns]='sharesTableColumn' [DataSource]='shares' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+     
+    <div class="row">
+      <div class="form-group col-md-3">
+          <label for="QutValidity">Policy Holder</label>
+        
+          <input class="form-control" type="text" placeholder="Policy Holder" matInput [formControl]="policyHolderUpdate"
+            [matAutocomplete]="policyHoldersUpdateauto" >
+        
+          <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+          <mat-autocomplete #policyHoldersUpdateauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData()">
+            <mat-option *ngFor="let Holder of policyHolders" [value]="Holder">
+                {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+            </mat-option>
+          </mat-autocomplete>
+        
+        </div>
+     
+        <div class="form-group col-md-3">
+            <label for="Email">Email</label>
+            <input class="form-control" [(ngModel)]="customerUpdateForm.Email" type="Email" placeholder="Email" name="Email" (blur)="SearchCustomerByEmail(currentCustomer.Email)">
+        </div>
+        <div class="form-group col-md-3">
+            <label for="Mobile">Mobile</label>
+            <input class="form-control" type="tel"  [(ngModel)]="customerUpdateForm.Mobile" placeholder="Mobile" name="Mobile" (blur)="SearchCustomerByPhoneNumber(currentCustomer.Mobile)">
+  
+        </div>
+        <div class="form-group col-md-3">
+  
+            <label for="ReferenceNo">National ID</label>
+            <input class="form-control" type="text" [(ngModel)]="customerUpdateForm.ReferenceNo" placeholder="National ID" name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(currentCustomer.ReferenceNo)" >
+        </div>
+  </div>
+
+  </mat-tab>
+  <mat-tab label="Document Attachments">
+    <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+   
+  </mat-tab>
+  <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord; let index = index" label="{{item.Lable}}" >
+      <div class="col-md-12">
+    <app-dynamic-component [category]="item"></app-dynamic-component></div>
+  </mat-tab> 
+</mat-tab-group>
+
   <br />
   <br />
   <br />
@@ -439,7 +499,12 @@
   </div>
 
 </div>
+</div>
 
+</div>
+</div>
+
+</div>
 
 <!-- <div class="form-group col-md-3">
     <label for="Beneficiary">Beneficiary</label>

@@ -1,3 +1,4 @@
+import { SharesService } from './_services/_products/shares.service';
 import { DocumentService } from './_services/DocumentService.service';
 import { SharedColumn } from './_services/sharedColumn.service';
 import { SharedService } from './_services/sharedService.service';
@@ -84,6 +85,7 @@ import {
     DocumentService,
     AlertifyService,
     SidenavService,
+    SharesService,
     AuthGuard,
     SharedService,
     SharedColumn,

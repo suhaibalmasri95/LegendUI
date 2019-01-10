@@ -29,5 +29,6 @@ export class ProductDynmicCategory implements IEntity {
     ResultList: ProductDynamicColumn[];
     Result: Array<ProductDynamicColumn[]>;
     childsData: ProductDynamicColumn[];
+    InsertedData: ProductDynamicColumn[];
     test: string;
 }

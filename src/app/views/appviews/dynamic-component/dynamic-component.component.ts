@@ -18,7 +18,6 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   // tslint:disable-next-line:no-input-rename
   @Input('category') category: ProductDynmicCategory;
   // tslint:disable-next-line:no-input-rename
-  @Input('updateMode') updateMode: boolean;
   
   @ViewChildren('tableSelector')  tableSelector: QueryList<TableComponent>;
   meregedArray: ProductDynamicColumn[] = [];
@@ -38,9 +37,9 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
 
   ngOnInit() {
    // this.table = new TableComponent();
-   if (this.updateMode) {
-     // create update mode
-   }
+   if (this.category.InsertedData.length > 0) {
+    this.updateMode(this.category.InsertedData, this.category.Columns.length);
+  }
    console.log('on init', this.tableSelector);
   }
 
@@ -49,7 +48,7 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
       this.isDelete = false;
     }
     this.childsValue = [];
-    category.test = 'tesfs';
+
     this.dataSource = ['select' , 'action'];
  
     this.meregedArray = [];
@@ -66,17 +65,92 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
    this.dynamicDataSources = this.temp;
    category.ResultList = [];
    category.Result = [];
-   const myClonedList  = _.cloneDeep(category.OriginalList);
+  
    const myClonedColumns  = _.cloneDeep(category.Columns);
-   this.mapDataToResult(category, myClonedColumns, myClonedList, this.dynamicDataSources);
+   this.mapDataToResult(category, myClonedColumns, this.dynamicDataSources);
    this.controlsOn = true;
   }
 
+  updateMode(columns: ProductDynamicColumn[] , orginalColumnCount: number) {
+    let i = 0;
+    this.dynamicDataSource = {};
+    this.dataSource = ['select' , 'action'];
+     if (columns.length === orginalColumnCount) {
+       i =  2;
+       columns.forEach(element => {
+  
+        this.childValue = new DynamicTable();
+        this.childValue = this.mapFeilds(this.childValue, element) ;
+        if (!this.dataSource.includes(element.Lable)) {
+          this.dataSource.push(element.Lable);
+        }
+          if (element.ColumnType === 1) {
+            this.dynamicDataSource['value' + i] = element.ValueDesc;
+            this.childValue.Value = element.ValueDesc;
+          }
+          if (element.ColumnType === 2) {
+            this.dynamicDataSource['value' + i] = element.ValueAmount;
+            this.childValue.Value = element.ValueAmount;
+          }
+          if ( element.ColumnType === 3) {
+            this.dynamicDataSource['value' + i] = element.ValueDate;
+            this.childValue.Value = element.ValueDate;
+          }
+          if (element.ColumnType === 4) {
+            this.dynamicDataSource['value' + i] = element.ValueLockUpID;
+            this.childValue.Value = element.ValueLockUpID;
+          }
+          this.dynamicDataSource = this.mapToAny(i , this.dynamicDataSource , this.childValue);
+          i++;
+          this.childsValue.push(this.childValue);
+      });
+      this.dynamicDataSources.push(this.dynamicDataSource);
+      this.temp = this.dynamicDataSources;
+     } else {
+      i =  2;
+      // get how many records already inserted
+      let columnCount = columns.length / orginalColumnCount;
+      columnCount = Math.ceil(columnCount);
+      for (let index = 0; index < columnCount; index++) {
+        columns.forEach(element => {
+  
+          this.childValue = new DynamicTable();
+          this.childValue = this.mapFeilds(this.childValue, element) ;
+          if (!this.dataSource.includes(element.Lable)) {
+            this.dataSource.push(element.Lable);
+          }
+            if (element.ColumnType === 1) {
+              this.dynamicDataSource['value' + i] = element.ValueDesc;
+              this.childValue.Value = element.ValueDesc;
+            }
+            if (element.ColumnType === 2) {
+              this.dynamicDataSource['value' + i] = element.ValueAmount;
+              this.childValue.Value = element.ValueAmount;
+            }
+            if ( element.ColumnType === 3) {
+              this.dynamicDataSource['value' + i] = element.ValueDate;
+              this.childValue.Value = element.ValueDate;
+            }
+            if (element.ColumnType === 4) {
+              this.dynamicDataSource['value' + i] = element.ValueLockUpID;
+              this.childValue.Value = element.ValueLockUpID;
+            }
+            this.dynamicDataSource = this.mapToAny(i , this.dynamicDataSource , this.childValue);
+            i++;
+            this.childsValue.push(this.childValue);
+        });
+        this.dynamicDataSources.push(this.dynamicDataSource);
+        this.temp = this.dynamicDataSources;
+     }
+    }
+   
+  
+  }
 
   resetData(columns: ProductDynamicColumn[] ) {
     this.dynamicDataSource = {};
     let i = 2;
-    this.meregedArray.forEach(element => {
+    columns.forEach(element => {
       this.childValue = new DynamicTable();
       this.childValue = this.mapFeilds(this.childValue, element) ;
       if (!this.dataSource.includes(element.Lable)) {
@@ -211,13 +285,13 @@ updateChild(index: number) {
   let x = 2;
   this.isUpdate = true;
   this.updatedIndex = index;
-  this.meregedArray.forEach(element => {
+  this.category.Columns.forEach(element => {
    this.mapAnyToProductDynamicColumn(x , data , element);
    x++;
   });
 }
-mapDataToResult(category: ProductDynmicCategory , columns: ProductDynamicColumn[],  ddl: ProductDynamicColumn[] , anyArray: any[]) {
-  const concatArray = [...columns, ...ddl];
+mapDataToResult(category: ProductDynmicCategory , columns: ProductDynamicColumn[] , anyArray: any[]) {
+  const concatArray = columns;
   for (let i = 0 ; i < anyArray.length ; i++) {
     let x = 2;
     concatArray.forEach(element => {

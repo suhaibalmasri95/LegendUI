@@ -1,3 +1,4 @@
+import { GenericTableComponent } from './../genericTable/genericTable.component';
 import { AttachmentComponent } from './../quotation/attachment/attachment.component';
 import { CountriesComponent } from './../countries/countries.component';
 import { BanksComponent } from './../banks/banks.component';
@@ -101,6 +102,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     QuestionnairesComponent,
     DynamicCategoriesComponent,
     ProductsComponent,
+    GenericTableComponent,
     ProductAttachmentsComponent, AttachmentComponent],
 
   exports: [QuotationWizardComponent,  LoginComponent]
