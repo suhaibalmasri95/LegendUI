@@ -1,3 +1,4 @@
+import { Customer } from './../Financial/Customer';
 import { ProductDynmicCategory } from './../Dynamic/ProductDynmicCategory';
 import { Risk } from './Risk';
 import { IEntity } from '../interfaces/IEntity';
@@ -63,4 +64,5 @@ export class Documents implements IEntity {
     Risks: Risk[];
     DynamicCategories: ProductDynmicCategory[];
     share: Share;
+    NewCustomer: Customer;
 }

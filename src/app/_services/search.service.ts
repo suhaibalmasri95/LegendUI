@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { debounceTime, map } from 'rxjs/operators';
 import { Customer } from '../entities/Financial/Customer';
-import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,6 +17,10 @@ export class SearchService {
 
     if (Name != null) {
       queryString += Name;
+    }
+    queryString += '&ID=';
+    if (ID != null) {
+      queryString += ID;
     }
     queryString += '&custOrName=';
     if (custOrName != null) {

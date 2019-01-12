@@ -6,7 +6,6 @@ export class Share implements IEntity {
     Name2: string;
     LangID: number;
     ID: number;
-    ShareType: number;
     Percent: number;
     SharePercent: number;
     Amount: number;
@@ -22,4 +21,7 @@ export class Share implements IEntity {
     StSubLOB: number;
     DrCr: number;
     customer: CustomerShare[];
+    LocShareType: number;
+    ShareType: string;
+    CommissionPercent: number;
 }

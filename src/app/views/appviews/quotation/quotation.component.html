@@ -203,7 +203,7 @@
           [matAutocomplete]="policyHoldersauto" (blur)="checkCurrentCustomer()">
       
         <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-        <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData()">
+        <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData(false)">
           <mat-option *ngFor="let Holder of policyHolders" [value]="Holder">
               {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
           </mat-option>
@@ -213,17 +213,17 @@
    
       <div class="form-group col-md-3">
           <label for="Email">Email</label>
-          <input class="form-control" [(ngModel)]="currentCustomer.Email" type="Email" placeholder="Email" name="Email" (blur)="SearchCustomerByEmail(currentCustomer.Email)">
+          <input class="form-control" [(ngModel)]="currentCustomer.Email" type="Email" placeholder="Email" name="Email" (blur)="SearchCustomerByEmail(currentCustomer.Email, false)">
       </div>
       <div class="form-group col-md-3">
           <label for="Mobile">Mobile</label>
-          <input class="form-control" type="tel"  [(ngModel)]="currentCustomer.Mobile" placeholder="Mobile" name="Mobile" (blur)="SearchCustomerByPhoneNumber(currentCustomer.Mobile)">
+          <input class="form-control" type="tel"  [(ngModel)]="currentCustomer.Mobile" placeholder="Mobile" name="Mobile" (blur)="SearchCustomerByPhoneNumber(currentCustomer.Mobile, false)">
 
       </div>
       <div class="form-group col-md-3">
 
           <label for="ReferenceNo">National ID</label>
-          <input class="form-control" type="text" [(ngModel)]="currentCustomer.ReferenceNo" placeholder="National ID" name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(currentCustomer.ReferenceNo)" >
+          <input class="form-control" type="text" [(ngModel)]="currentCustomer.ReferenceNo" placeholder="National ID" name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(currentCustomer.ReferenceNo, false)" >
       </div>
 </div>
 </fieldset>
@@ -375,12 +375,7 @@
    
 
 
-      <div class="col-md-12 text-right">
-        <div class="btn-group">
-          <br>
-          <input class="btn btn-primary" type="submit" (click)="submit()" /></div>
-  
-    </div>
+    
 
 
 
@@ -430,44 +425,108 @@
   <br>
   <mat-tab-group [selectedIndex]="0"   (selectedIndexChange)="selected.setValue($event)"  >
   <mat-tab label="Document Share">
+      <div class="col-md-12"> 
+          <div class="row">
+              <div class="form-group col-md-3">
+                  <label for="Type">Type </label>
+                  <select name="Type" class="form-control" [(ngModel)]="customerUpdateForm.ShareType" >
+                    <option [ngValue]="undefined">Select</option>
+                    <option [ngValue]="1">Policy Holder</option>
+                    <option [ngValue]="2">Beneficiary</option>
+                    <option [ngValue]="3">Agent</option>
+                    <option [ngValue]="4">Broker</option>
+                    <option [ngValue]="5">Sales Person</option>
+                  </select>
+                </div>
+            <div class="form-group col-md-3" *ngIf="customerUpdateForm.ShareType">
+                <label for="Name">Name </label>
+              
+                <input class="form-control" type="text" placeholder="Name" matInput [formControl]="policyHolderUpdate"
+                  [matAutocomplete]="policyHoldersUpdateauto" >
+              
+                <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                <mat-autocomplete #policyHoldersUpdateauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData(true)">
+                  <mat-option *ngFor="let Holder of customers" [value]="Holder">
+                      {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              
+              </div>
+           
+              <div class="form-group col-md-3">
+                  <label for="Email">Email</label>
+                  <input class="form-control" [(ngModel)]="customerUpdateForm.Email" type="Email" placeholder="Email" name="Email" (blur)="SearchCustomerByEmail(customerUpdateForm.Email , true)">
+              </div>
+              <div class="form-group col-md-3">
+                  <label for="Mobile">Mobile</label>
+                  <input class="form-control" type="tel"  [(ngModel)]="customerUpdateForm.Mobile" placeholder="Mobile" name="Mobile" (blur)="SearchCustomerByPhoneNumber(customerUpdateForm.Mobile , true)">
+        
+              </div>
+              <div class="form-group col-md-3">
+        
+                  <label for="ReferenceNo">National ID</label>
+                  <input class="form-control" type="text" [(ngModel)]="customerUpdateForm.ReferenceNo" placeholder="National ID" name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(customerUpdateForm.ReferenceNo , ture)" >
+              </div>
+          <div class="form-group col-md-3" *ngIf="customerUpdateForm.ShareType === 3 || customerUpdateForm.ShareType === 4 || customerUpdateForm.ShareType === 5">
+              <label for="commission Percent">Commission Percent</label>
+              <input class="form-control" type="number" placeholder="Commission Percent" name="CommissionPercent">
+    
+          </div>
+  
+          <div class="form-group col-md-3" *ngIf="customerUpdateForm.ShareType === 3 || customerUpdateForm.ShareType === 4 || customerUpdateForm.ShareType === 5">
+              <label for="Share Percent">Share Percent</label>
+              <input class="form-control" type="number" placeholder="Share Percent" value="100" name="SharePercent">
+    
+          </div>
+            </div>
+              <div class="row">
+            
+            
+        </div>
+        <div class="col-md-12 text-right">
+            <div class="btn-group">
+              <button class="btn btn-primary" (click)="AddUpdateShare()">Save</button>
+              
+            </div>
+        </div>
+        <br />
+        <br />
+     
       <app-generictable *ngIf="shares.length > 0"   #tableSelector [tableColumns]='sharesTableColumn' [DataSource]='shares' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
-     
-    <div class="row">
-      <div class="form-group col-md-3">
-          <label for="QutValidity">Policy Holder</label>
-        
-          <input class="form-control" type="text" placeholder="Policy Holder" matInput [formControl]="policyHolderUpdate"
-            [matAutocomplete]="policyHoldersUpdateauto" >
-        
-          <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-          <mat-autocomplete #policyHoldersUpdateauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData()">
-            <mat-option *ngFor="let Holder of policyHolders" [value]="Holder">
-                {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
-            </mat-option>
-          </mat-autocomplete>
-        
-        </div>
-     
-        <div class="form-group col-md-3">
-            <label for="Email">Email</label>
-            <input class="form-control" [(ngModel)]="customerUpdateForm.Email" type="Email" placeholder="Email" name="Email" (blur)="SearchCustomerByEmail(currentCustomer.Email)">
-        </div>
-        <div class="form-group col-md-3">
-            <label for="Mobile">Mobile</label>
-            <input class="form-control" type="tel"  [(ngModel)]="customerUpdateForm.Mobile" placeholder="Mobile" name="Mobile" (blur)="SearchCustomerByPhoneNumber(currentCustomer.Mobile)">
-  
-        </div>
-        <div class="form-group col-md-3">
-  
-            <label for="ReferenceNo">National ID</label>
-            <input class="form-control" type="text" [(ngModel)]="customerUpdateForm.ReferenceNo" placeholder="National ID" name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(currentCustomer.ReferenceNo)" >
-        </div>
-  </div>
-
+ 
+   
+</div>
   </mat-tab>
   <mat-tab label="Document Attachments">
+      <div class="col-md-12">
+      <form [formGroup]="attachmentForm">
+          <div class="row">
+          <div class="form-group col-md-3">
+            <label for="ReferenceNo">Remarks</label>
+            <textarea rows="1" name="ReferenceNo" placeholder="Remarks" type="text" class="form-control" ></textarea>
+          </div>
+      <div class="form-group col-md-3" >
+      
+      </div>
+          <div class="form-group col-md-3" >
+            <a  (click)="fileupload.click()"  ><i class="material-icons">
+                cloud_upload
+                </i></a>
+                <input type="file" 
+                hidden 
+                 #fileupload (change)="onFileChanged($event,i)"/>
+        </div>
+      
+           <mat-form-field>
+            <mat-select  placeholder="" formControlName="attachments" multiple    >
+                <mat-option  (click)="toggleAllSelection(i)" [value]="f.defaultSelect.value " [disabled]="f.enableMultiSelect.value">Select All</mat-option>
+              <mat-option (click)="addItem(i)" *ngFor="let attach of f.attachmetValues.value; let index = elementIndex"
+              
+               [value]="attach" [disabled]="disabled">{{attach.Name}}</mat-option>
+            </mat-select>
+          </mat-form-field> </div></form>
     <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
-   
+  </div>
   </mat-tab>
   <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord; let index = index" label="{{item.Lable}}" >
       <div class="col-md-12">
@@ -475,9 +534,24 @@
   </mat-tab> 
 </mat-tab-group>
 
-  <br />
-  <br />
-  <br />
+  <br>
+  <br>
+  <div class="col-md-12 text-right">
+      <div class="btn-group">
+       
+        
+        <button class="btn btn-primary" (click)="submit()">Submit </button>
+      
+      </div>
+  </div>
+
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
   <div class="row">
     <div id="footer">
       <div class="form-group col-md-2" *ngIf="documentForm.IsClaimed === 1">

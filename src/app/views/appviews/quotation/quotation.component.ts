@@ -1,3 +1,5 @@
+import { ProductAttachment } from './../../../entities/Product/Attachment';
+import { ProductAttachmentService } from './../../../_services/_products/productAttachment.service';
 import { DocumentAttachment } from './../../../entities/production/DocumentAttachment';
 import { PolicyAttachmentService } from './../../../_services/_production/policyAttachment.service';
 import { SharesService } from './../../../_services/_products/shares.service';
@@ -20,7 +22,7 @@ import { Component, OnInit, ViewChild, Inject, Input, Output, EventEmitter } fro
 import { SidenavService } from './../../../_services/sidenav/sidenav.service';
 import { BsDatepickerDirective } from 'ngx-bootstrap';
 import { ActivatedRoute } from '@angular/router';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { WizardState } from 'angular-archwizard';
 
 import * as _ from 'lodash';
@@ -33,12 +35,14 @@ import * as _ from 'lodash';
 export class QuotationComponent implements OnInit {
   @ViewChild(BsDatepickerDirective) datepicker: BsDatepickerDirective;
 // tslint:disable-next-line: no-input-rename
-   sharesTableColumn = ['select' , 'ID' , 'Customer Id' , 'Share Type' , 'Document ID' , 'action'];
-   attachmentTableColumn = ['select' , 'ID' , 'Document ID' , 'Product Attachment ID' ,
-    'Name' , 'Is Received' , 'Received Date' , 'Attached Path', 'action'];
+
+   sharesTableColumn = ['select' , 'ID' , 'Name', 'Customer Id' , 'Share Type' , 'Share Percent' , 'Commission Percent', 'action'];
+   attachmentTableColumn = ['select' , 'ID' ,
+    'Name' , 'Is Received' , 'Received Date' , 'Attached Path', 'Remarks', 'action'];
    text: string;
    value: string;
    share: Share;
+   attachmentForm: FormGroup;
    customerUpdateForm: Customer;
    policyHolderUpdate: FormControl = new FormControl();
    shares: Share[];
@@ -55,14 +59,17 @@ export class QuotationComponent implements OnInit {
    products: Product[];
    branches: CompanyBranch[];
    policyHolders: Customer[];
+   customers: Customer[];
    agents: Customer[];
    brokers: Customer[];
+   selectedFile: File;
    salesPersons: Customer[];
    policyholderSearch: FormControl = new FormControl();
    beneficiarySearch: FormControl = new FormControl();
    agentSearch: FormControl = new FormControl();
    brokerSearch: FormControl = new FormControl();
    salesPersonSearch: FormControl = new FormControl();
+   newCustomer: Customer;
    beneficiaries: Customer[];
    currencies: Currency[];
    openCoverType: LockUp[];
@@ -70,6 +77,8 @@ export class QuotationComponent implements OnInit {
    paymentType: LockUp[];
    user: any;
    selected = new FormControl(0);
+   ProductAttachments: ProductAttachment[];
+   orginalAttachments: ProductAttachment[];
    userCompany: any;
    status: LockUp[];
    productDynamicCategories: ProductDynmicCategory[];
@@ -80,7 +89,9 @@ export class QuotationComponent implements OnInit {
     private seracrhService: SearchService,
      private dynamicService: DynamicService, @Inject(WizardState) private wizard: WizardState,
      private _documentService: DocumentService, private policyService: PolicyService,
-     private shareService: SharesService  , private attachmentService: PolicyAttachmentService ) { }
+     private shareService: SharesService  , private attachmentService: PolicyAttachmentService ,
+     private fb: FormBuilder,
+     private prodAttachmentService: ProductAttachmentService) { }
 
   ngOnInit() {
     this.customerUpdateForm = new Customer();
@@ -127,28 +138,40 @@ export class QuotationComponent implements OnInit {
     this.documentShareControl.disable();
     this.documentForm.DocumentShare = 100;
     this.documentForm.Exrate = 1;
-    this.policyService.load(107 , 1).subscribe( res => {
-      this.documentForm = res[0];
-      this.updateMode = true;
-      this.getDynamicFileds(this.documentForm.ProductId);
-    this.shareService.load(null, null , 107 , null , null , null , 1).subscribe( shares => {
-      this.shares = shares;
-    });
-    this.attachmentService.load(null , 70 , null , 3 , null , 1 , 1 ). subscribe( attachments => {
-      this.documentAttachments = attachments;
-    });
-  
-    });
+    this.createSubForm();
+ 
     this.productDynamicCategoriesMultiRecord = [];
     this.productDynamicCategories = [];
+    this.policyHolderUpdate.valueChanges.subscribe(
+      term => {
+        if (term !== '') {
+          this.seracrhService.search(null , null , term, null, null , null, null,
+          1 ,    this.customerUpdateForm.ShareType ).subscribe(
+            data => {
+              if (data.length > 0 ) {
+              this.customers = data;
+              this.hasBeenSearched = true;
+            } else {
+              this.hasBeenSearched = false;
+            }
+
+          });
+        } else {
+          this.hasBeenSearched = false;
+        }
+    });
+
     this.policyholderSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
           this.seracrhService.search(null , null , term, null, null , null, null, 1 , 1).subscribe(
             data => {
+              if (data.length > 0 ) {
               this.policyHolders = data;
-
-              // console.log(data[0].BookName);
+              this.hasBeenSearched = true;
+            } else {
+              this.hasBeenSearched = false;
+            }
           });
         } else {
           this.hasBeenSearched = false;
@@ -161,37 +184,33 @@ export class QuotationComponent implements OnInit {
           this.seracrhService.search(null, null , term, null, null , null, null, 1 , 2).subscribe(
             data => {
               this.beneficiaries = data;
-              // console.log(data[0].BookName);
           });
         }
     });
     this.salesPersonSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null , null , term, null, null , null, null, 1 , 3).subscribe(
+          this.seracrhService.search(null , null , term, null, null , null, null, 1 , 5).subscribe(
             data => {
               this.salesPersons = data;
-              // console.log(data[0].BookName);
           });
         }
     });
     this.brokerSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null, null , term, null, null , null, null, 1 , 5).subscribe(
+          this.seracrhService.search(null, null , term, null, null , null, null, 1 , 4).subscribe(
             data => {
               this.brokers = data;
-              // console.log(data[0].BookName);
           });
         }
     });
     this.agentSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.seracrhService.search(null, null , term, null, null , null, null, 1 , 4).subscribe(
+          this.seracrhService.search(null, null , term, null, null , null, null, 1 , 3).subscribe(
             data => {
               this.agents = data;
-              // console.log(data[0].BookName);
           });
         }
     });
@@ -203,8 +222,82 @@ export class QuotationComponent implements OnInit {
     this.sidenavService.toggle();
   }
 
+updateDocumentMode(documentID: number , productID: number) {
+  this.policyService.load(documentID , 1).subscribe( res => {
+    this.documentForm = res[0];
+    this.updateMode = true;
+    this.getDynamicFileds(productID);
+  this.shareService.load(null, null , documentID , null , null , null , 1).subscribe( shares => {
+    this.shares = shares;
+    this.getCustomerDependsOnShareType();
+  });
+  this.attachmentService.load(null , documentID , null , null, null , 1 , 1 ). subscribe( attachments => {
+    this.documentAttachments = attachments;
+  });
+  this.prodAttachmentService.load(null, productID , null, documentID).subscribe(prodAttachment => {
+    this.ProductAttachments = prodAttachment;
+    this.orginalAttachments = _.cloneDeep(prodAttachment);
+    this.attachmentForm.controls.attachmetValues.patchValue(prodAttachment);
+    this.attachmentForm.controls.defaultSelect.patchValue(true);
+  });
+  });
+}
+  getCustomerDependsOnShareType() {
+    this.shares.forEach(element => {
+      this.seracrhService.search(element.CustomerId , null , null , null , null ,
+         null , null , 1 , element.LocShareType).subscribe(res => {
+          if (element.LocShareType === 1  || element.LocShareType === 2) {
+            this.policyholderSearch.patchValue(res[0]);
+            this.beneficiarySearch.patchValue(res[0]);
+            this.FillCustomerData(false);
+          }
+          if (element.LocShareType === 3 ) {
+            this.agentSearch.patchValue (res[0]);
+          }
+          if (element.LocShareType === 4 ) {
+            this.brokerSearch.patchValue (res[0]);
+          }
+          if (element.LocShareType === 5 ) {
+            this.salesPersonSearch.patchValue (res[0]);
+          }
+         });
+    });
+  
+  }
+
+  createSubForm() {
+
+   this.attachmentForm = this.fb.group({
+      attachments: new FormControl(''),
+      DocumentID: new FormControl(''),
+      CreatedBy: new FormControl(''),
+      CreationDate: new FormControl(new Date()),
+      RiskID: new FormControl(''),
+      IsReceived: new FormControl(''),
+      ReceivedDate: new FormControl(''),
+      Remarks: new FormControl(''),
+      ProductAttachmentID: new FormControl(''),
+      ClaimID: new FormControl(''),
+      Level: new FormControl(''),
+      Type: new FormControl(''),
+      File: new FormControl(''),
+      attachmetValues: new FormControl(''),
+      enableMultiSelect: new FormControl(false),
+      defaultSelect: new FormControl(false),
+    });
+  }
+
+  get f() {
+    return this.attachmentForm.controls;
+  }
   displayFn(customer?: Customer): string | undefined {
     return customer ? customer.CustomerNo + ' ' + customer.Name   : undefined;
+  }
+
+  onFileChanged(event, index: number) {
+    console.log(event);
+    this.selectedFile = event.target.files[0];
+    this.attachmentForm.controls.File.patchValue(this.selectedFile);
   }
   filterCurrency(currencies: Currency[]) {
     for ( let i = 0; i < currencies.length; i++) {
@@ -222,20 +315,34 @@ export class QuotationComponent implements OnInit {
       this.documentShareControl.enable();
     }
   }
-  FillCustomerData() {
+  FillCustomerData(updateMode: boolean) {
+    if (!updateMode) {
     this.hasBeenSearched = true;
     this.currentCustomer.Email = this.policyholderSearch.value.Email;
     this.currentCustomer.ReferenceNo = this.policyholderSearch.value.ReferenceNo;
     this.currentCustomer.Mobile = this.policyholderSearch.value.Mobile;
-    this.currentCustomer.CustomerNo = this.policyholderSearch.value.CustomerNo;
+    this.currentCustomer.CustomerNo = this.policyholderSearch.value.CustomerNo; } else {
+      this.hasBeenSearched = true;
+      this.customerUpdateForm.Email = this.policyHolderUpdate.value.Email;
+      this.customerUpdateForm.ReferenceNo = this.policyHolderUpdate.value.ReferenceNo;
+      this.customerUpdateForm.Mobile = this.policyHolderUpdate.value.Mobile;
+      this.customerUpdateForm.CustomerNo = this.policyHolderUpdate.value.CustomerNo;
+    }
   }
-  SearchCustomerByEmail(email: string) {
+  SearchCustomerByEmail(email: string , updateMode: boolean) {
     if (!this.hasBeenSearched && (email !== undefined && email !== '')) {
       this.seracrhService.search(null , null , null , null, email , null, null, 1 , 1).subscribe(
         data => {
           if (data.length > 0) {
+            if (!updateMode) {
           this.currentCustomer = data[0];
           this.policyholderSearch.patchValue( this.currentCustomer );
+         } else {
+          const shareType =  this.customerUpdateForm.ShareType;
+              this.customerUpdateForm = data[0];
+              this.customerUpdateForm.ShareType = shareType;
+          this.policyHolderUpdate.patchValue( this.customerUpdateForm );
+         }
           this.hasBeenSearched = true;
         } else {
           this.hasBeenSearched = false;
@@ -244,13 +351,20 @@ export class QuotationComponent implements OnInit {
       });
     }
   }
-  SearchCustomerByPhoneNumber(mobile: string) {
+  SearchCustomerByPhoneNumber(mobile: string , updateMode: boolean) {
     if (!this.hasBeenSearched  && (mobile !== undefined &&  mobile !== '')) {
       this.seracrhService.search(null, null , null , null, null , mobile, null, 1 , 1).subscribe(
         data => {
           if (data.length > 0) {
-          this.currentCustomer = data[0];
-          this.policyholderSearch.patchValue( this.currentCustomer );
+            if (!updateMode) {
+              this.currentCustomer = data[0];
+              this.policyholderSearch.patchValue( this.currentCustomer );
+             } else {
+               const shareType =  this.customerUpdateForm.ShareType;
+              this.customerUpdateForm = data[0];
+              this.customerUpdateForm.ShareType = shareType;
+              this.policyHolderUpdate.patchValue( this.customerUpdateForm );
+             }
           this.hasBeenSearched = true;
         } else {
           this.hasBeenSearched = false;
@@ -258,13 +372,20 @@ export class QuotationComponent implements OnInit {
       });
     }
   }
-  SearchCustomerReferenceNumber(nationalID: string) {
+  SearchCustomerReferenceNumber(nationalID: string , updateMode: boolean) {
     if (!this.hasBeenSearched  && (nationalID !== undefined &&  nationalID !== '' )) {
       this.seracrhService.search(null , null , null , null, null , null, nationalID, 1 , 1).subscribe(
         data => {
           if (data.length > 0) {
-          this.currentCustomer = data[0];
-          this.policyholderSearch.patchValue( this.currentCustomer );
+            if (!updateMode) {
+              this.currentCustomer = data[0];
+              this.policyholderSearch.patchValue( this.currentCustomer );
+             } else {
+              const shareType =  this.customerUpdateForm.ShareType;
+              this.customerUpdateForm = data[0];
+              this.customerUpdateForm.ShareType = shareType;
+              this.policyHolderUpdate.patchValue( this.customerUpdateForm );
+             }
           this.hasBeenSearched = true;
             }  else {
             this.hasBeenSearched = false;
@@ -305,9 +426,7 @@ export class QuotationComponent implements OnInit {
     getDynamicCategoriesForPolicy( id: number) {
       this.dynamicService.load(null, null , id , null , 1, null , null , 1 ).subscribe(res => {
         if (this.updateMode) {
-          // mearge array and filter the columns
           this.FilterAndMeargeArray(res);
-         //this.productDynamicCategories = res ;
         } else {
           res.forEach(element => {
             if (element.IsMulitRecords > 0 ) {
@@ -348,7 +467,12 @@ export class QuotationComponent implements OnInit {
       });
 
     }
+    AddUpdateShare() {
+        this.http.post(this.seracrhService.ApiUrl + 'Create' , this.customerUpdateForm ) .subscribe(res => {
 
+        });
+
+    }
     filterColumnOnCategory (categoryID: number , array: ProductDynamicColumn[]) {
       const returnArray = [];
       array.forEach(element => {
@@ -359,9 +483,10 @@ export class QuotationComponent implements OnInit {
       return returnArray;
     }
     updateShare(share: Share) {
-      this.seracrhService.search(share.CustomerId , null , null , null , null , null , null , 1 , null).subscribe(res => {
+      this.seracrhService.search(share.CustomerId , null , null , null , null , null , null , 1 , share.LocShareType).subscribe(res => {
         this.customerUpdateForm = res[0];
         this.policyHolderUpdate.patchValue(res[0]);
+        this.customerUpdateForm.ShareType = share.LocShareType;
       });
       console.log(share);
     }
@@ -378,8 +503,14 @@ export class QuotationComponent implements OnInit {
       return returnArray;
     }
     submit() {
+      if (this.policyholderSearch.value.ID === undefined) {
+        this.newCustomer = new Customer();
+        this.newCustomer = this.currentCustomer;
+        this.newCustomer.Name = this.policyholderSearch.value;
+        this.newCustomer.AddUpdate = true;
 
-      if (this.policyholderSearch.value &&  this.policyholderSearch.value.ID) {
+      }
+      if (this.policyholderSearch.value.ID !== undefined ) {
         this.customer = new CustomerShare();
         this.customer.CustomerID = this.policyholderSearch.value.ID;
         this.customer.shareType = 1;
@@ -389,12 +520,7 @@ export class QuotationComponent implements OnInit {
         this.customer.shareType = 2;
         this.share.customer.push(this.customer);
       }
-      if (this.beneficiarySearch.value &&  this.beneficiarySearch.value.ID) {
-        this.customer = new CustomerShare();
-        this.customer.CustomerID = this.beneficiarySearch.value.ID;
-        this.customer.shareType = 2;
-        this.share.customer.push(this.customer);
-      }
+
       if (this.agentSearch.value &&  this.agentSearch.value.ID) {
         this.customer = new CustomerShare();
         this.customer.CustomerID = this.agentSearch.value.ID;
@@ -404,13 +530,13 @@ export class QuotationComponent implements OnInit {
       if (this.brokerSearch.value && this.brokerSearch.value.ID) {
         this.customer = new CustomerShare();
         this.customer.CustomerID = this.brokerSearch.value.ID;
-        this.customer.shareType = 3;
+        this.customer.shareType = 4;
         this.share.customer.push(this.customer);
       }
       if (this.salesPersonSearch.value && this.salesPersonSearch.value.ID) {
         this.customer = new CustomerShare();
         this.customer.CustomerID = this.salesPersonSearch.value.ID;
-        this.customer.shareType = 3;
+        this.customer.shareType = 5;
         this.share.customer.push(this.customer);
       }
 
@@ -433,13 +559,25 @@ export class QuotationComponent implements OnInit {
     }
       this.documentForm.StComId = this.userCompany.ID;
       this.documentForm.share = this.share;
+      if ( this.newCustomer.AddUpdate === true) {
+        this.documentForm.NewCustomer =  this.newCustomer;
+        this.documentForm.NewCustomer.CustomerNo = '121651';
+        this.documentForm.NewCustomer.CompanyID = this.userCompany.ID;
+      } else {
+        this.documentForm.NewCustomer = this.currentCustomer;
+        
+      }
+     
       this.http.post('https://localhost:44322/api/Documents/Create' , this.documentForm).subscribe( res => {
         console.log(res);
         const status: any = res;
         if (status.ID) {
           this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID=' + status.ID).subscribe(doc => {
-         this._documentService.changeColumn(doc[0]);
-          this.wizard.navigationMode.goToStep(1);
+          this.documentForm = doc[0];
+          this.updateDocumentMode(this.documentForm.ID , this.documentForm.ProductId);
+        
+          /*  this._documentService.changeColumn(doc[0]);
+          this.wizard.navigationMode.goToStep(1); */
           });
       }
       });

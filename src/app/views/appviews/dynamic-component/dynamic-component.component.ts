@@ -32,11 +32,14 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   updatedIndex: number;
   isUpdate: boolean = false;
   isDelete: boolean = false;
-
+  TableDataResult: Array<ProductDynamicColumn[]>;
+  TableDataRow: ProductDynamicColumn[];
   constructor() { }
 
   ngOnInit() {
    // this.table = new TableComponent();
+ 
+   this.TableDataRow = [];
    if (this.category.InsertedData.length > 0) {
     this.updateMode(this.category.InsertedData, this.category.Columns.length);
   }
@@ -78,7 +81,6 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
      if (columns.length === orginalColumnCount) {
        i =  2;
        columns.forEach(element => {
-  
         this.childValue = new DynamicTable();
         this.childValue = this.mapFeilds(this.childValue, element) ;
         if (!this.dataSource.includes(element.Lable)) {
@@ -107,11 +109,12 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
       this.dynamicDataSources.push(this.dynamicDataSource);
       this.temp = this.dynamicDataSources;
      } else {
-      i =  2;
+      
       // get how many records already inserted
       let columnCount = columns.length / orginalColumnCount;
       columnCount = Math.ceil(columnCount);
       for (let index = 0; index < columnCount; index++) {
+        i =  2;
         columns.forEach(element => {
   
           this.childValue = new DynamicTable();
@@ -143,8 +146,6 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
         this.temp = this.dynamicDataSources;
      }
     }
-   
-  
   }
 
   resetData(columns: ProductDynamicColumn[] ) {
@@ -291,16 +292,19 @@ updateChild(index: number) {
   });
 }
 mapDataToResult(category: ProductDynmicCategory , columns: ProductDynamicColumn[] , anyArray: any[]) {
+  this.TableDataResult = new Array<ProductDynamicColumn[]>();
   const concatArray = columns;
   for (let i = 0 ; i < anyArray.length ; i++) {
     let x = 2;
     concatArray.forEach(element => {
-      category.ResultList.push(this.mapAnyToProductDynamicColumn(x , anyArray[i] , element));
+      this.TableDataRow.push(_.cloneDeep(this.mapAnyToProductDynamicColumn(x , anyArray[i] , element)));
       x++;
      });
-     category.Result.push(category.ResultList);
-     category.ResultList = [];
+    
+     this.TableDataResult .push(_.cloneDeep( this.TableDataRow ));
+     this.TableDataRow  = [];
   }
+  category.Result =  this.TableDataResult ;
 }
 mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicColumn ) {
   filed.selected = table['selected' + index];
