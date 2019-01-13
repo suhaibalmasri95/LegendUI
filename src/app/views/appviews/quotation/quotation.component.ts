@@ -81,6 +81,7 @@ export class QuotationComponent implements OnInit {
    orginalAttachments: ProductAttachment[];
    userCompany: any;
    status: LockUp[];
+   newShare: Share;
    productDynamicCategories: ProductDynmicCategory[];
    productDynamicCategoriesMultiRecord: ProductDynmicCategory[];
    documentShareControl: FormControl = new FormControl('', [Validators.max(100), Validators.min(0)]);
@@ -139,7 +140,7 @@ export class QuotationComponent implements OnInit {
     this.documentForm.DocumentShare = 100;
     this.documentForm.Exrate = 1;
     this.createSubForm();
- 
+   
     this.productDynamicCategoriesMultiRecord = [];
     this.productDynamicCategories = [];
     this.policyHolderUpdate.valueChanges.subscribe(
@@ -214,6 +215,7 @@ export class QuotationComponent implements OnInit {
           });
         }
     });
+    this.updateDocumentMode(120 , 3);
   }
   click() {
     this.icon = !this.icon;
@@ -223,6 +225,7 @@ export class QuotationComponent implements OnInit {
   }
 
 updateDocumentMode(documentID: number , productID: number) {
+  this.newShare = new Share(); 
   this.policyService.load(documentID , 1).subscribe( res => {
     this.documentForm = res[0];
     this.updateMode = true;
@@ -452,6 +455,8 @@ updateDocumentMode(documentID: number , productID: number) {
       });
     }
     FilterAndMeargeArray(firstArray: ProductDynmicCategory[]) {
+      this.productDynamicCategories = [];
+      this.productDynamicCategoriesMultiRecord = [];
       this.dynamicService.UpdateMode(this.documentForm.ID, null , this.documentForm.ProductId , 1 ).subscribe(res => {
         firstArray.forEach(element => {
           if (element.IsMulitRecords > 0 ) {
@@ -468,8 +473,28 @@ updateDocumentMode(documentID: number , productID: number) {
 
     }
     AddUpdateShare() {
+      if (this.policyHolderUpdate.value.ID === undefined) {
+        this.customerUpdateForm.Name = this.policyHolderUpdate.value;
+        this.customerUpdateForm.CreatedBy = this.user.Name;
+        this.currentCustomer.CreationDate = new Date();
+      }
+      this.customerUpdateForm.CompanyID = this.userCompany.ID;
         this.http.post(this.seracrhService.ApiUrl + 'Create' , this.customerUpdateForm ) .subscribe(res => {
-
+          const result: any = res;
+          if ( result.ID ) {
+            this.newShare.LocShareType  = this.customerUpdateForm.ShareType;
+            this.newShare.CustomerId = result.ID ;
+            this.newShare.DocumentID = this.documentForm.ID;
+            this.newShare.CreatedBy = this.user.Name;
+            this.newShare.CreationDate = new Date();
+            this.http.post( this.shareService.ApiUrl + 'Create' , this.newShare).subscribe(shareResult => {
+            console.log(shareResult);
+            this.shareService.load(null, null ,  this.documentForm.ID , null , null , null , 1).subscribe( shares => {
+              this.shares = shares;
+              this.getCustomerDependsOnShareType();
+            });
+            });
+          }
         });
 
     }
@@ -483,6 +508,7 @@ updateDocumentMode(documentID: number , productID: number) {
       return returnArray;
     }
     updateShare(share: Share) {
+      this.newShare.ID = share.ID;
       this.seracrhService.search(share.CustomerId , null , null , null , null , null , null , 1 , share.LocShareType).subscribe(res => {
         this.customerUpdateForm = res[0];
         this.policyHolderUpdate.patchValue(res[0]);
@@ -561,9 +587,12 @@ updateDocumentMode(documentID: number , productID: number) {
       this.documentForm.share = this.share;
       if ( this.newCustomer.AddUpdate === true) {
         this.documentForm.NewCustomer =  this.newCustomer;
-        this.documentForm.NewCustomer.CustomerNo = '121651';
+        this.documentForm.NewCustomer.CreatedBy =  this.user.Name;
+        this.documentForm.NewCustomer.CreationDate = new Date();
         this.documentForm.NewCustomer.CompanyID = this.userCompany.ID;
       } else {
+        this.documentForm.NewCustomer.ModifiedBy =  this.user.Name;
+        this.documentForm.NewCustomer.ModificationDate = new Date();
         this.documentForm.NewCustomer = this.currentCustomer;
         
       }
