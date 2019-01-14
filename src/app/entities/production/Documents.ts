@@ -65,4 +65,5 @@ export class Documents implements IEntity {
     DynamicCategories: ProductDynmicCategory[];
     share: Share;
     NewCustomer: Customer;
+    UpdateMode: boolean;
 }

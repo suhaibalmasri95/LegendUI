@@ -152,9 +152,7 @@ sortArrayOnColumnType(columns: ProductDynamicColumn[] ) {
 
   mapFeilds(table: DynamicTable , filed: ProductDynamicColumn ) {
 
-    table.Name = filed.Name;
-    table.Name2 = filed.Name2;
-    table.LangID = filed.LangID;
+
     table.ID = filed.ID;
     table.Lable = filed.Lable;
     table.Lable2 = filed.Lable2;

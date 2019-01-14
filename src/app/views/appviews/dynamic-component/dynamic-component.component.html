@@ -1,11 +1,24 @@
 
-<fieldset>
+<fieldset *ngIf="!category.IsMulitRecords">
   <legend>
     {{category.Lable}}
   </legend>
 
  
 <app-dynamic-columns [column]="category.Columns"  (childsData)="setCategoryChildData($event)" ></app-dynamic-columns>
+
+
+
+
+
+
+</fieldset>
+
+ 
+<div *ngIf="category.IsMulitRecords">
+<app-dynamic-columns [column]="category.Columns"  (childsData)="setCategoryChildData($event)" ></app-dynamic-columns>
+
+
 
 <br>
 <br>
@@ -24,7 +37,4 @@
   <app-table  *ngIf="childsValue.length > 0 && !isDelete " #tableSelector [tableColumns]='dataSource' [list]='category.Columns' [dynamicDataSource]='dynamicDataSources' (update)='updateChild($event)' (delete)='deleteChild($event)'></app-table>
 </div>
 
-
-
-
-</fieldset>
+</div>

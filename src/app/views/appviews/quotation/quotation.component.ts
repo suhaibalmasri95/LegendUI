@@ -36,7 +36,7 @@ export class QuotationComponent implements OnInit {
   @ViewChild(BsDatepickerDirective) datepicker: BsDatepickerDirective;
 // tslint:disable-next-line: no-input-rename
 
-   sharesTableColumn = ['select' , 'ID' , 'Name', 'Customer Id' , 'Share Type' , 'Share Percent' , 'Commission Percent', 'action'];
+   sharesTableColumn = ['select' , 'Share Type' , 'Name', 'Customer No' ,  'Share Percent' , 'Commission Percent', 'action'];
    attachmentTableColumn = ['select' , 'ID' ,
     'Name' , 'Is Received' , 'Received Date' , 'Attached Path', 'Remarks', 'action'];
    text: string;
@@ -215,7 +215,7 @@ export class QuotationComponent implements OnInit {
           });
         }
     });
-    this.updateDocumentMode(120 , 3);
+  //  this.updateDocumentMode(120 , 3);
   }
   click() {
     this.icon = !this.icon;
@@ -226,9 +226,12 @@ export class QuotationComponent implements OnInit {
 
 updateDocumentMode(documentID: number , productID: number) {
   this.newShare = new Share(); 
+ 
   this.policyService.load(documentID , 1).subscribe( res => {
     this.documentForm = res[0];
     this.updateMode = true;
+  this.documentForm.UpdateMode = true;
+
     this.getDynamicFileds(productID);
   this.shareService.load(null, null , documentID , null , null , null , 1).subscribe( shares => {
     this.shares = shares;
@@ -324,12 +327,23 @@ updateDocumentMode(documentID: number , productID: number) {
     this.currentCustomer.Email = this.policyholderSearch.value.Email;
     this.currentCustomer.ReferenceNo = this.policyholderSearch.value.ReferenceNo;
     this.currentCustomer.Mobile = this.policyholderSearch.value.Mobile;
-    this.currentCustomer.CustomerNo = this.policyholderSearch.value.CustomerNo; } else {
+    this.currentCustomer.CustomerNo = this.policyholderSearch.value.CustomerNo;
+    this.currentCustomer.ID  = this.policyholderSearch.value.ID;
+    this.currentCustomer.Name = this.policyholderSearch.value.Name;
+    this.currentCustomer.CreatedBy = this.policyholderSearch.value.CreatedBy;
+    this.currentCustomer.CompanyID = this.policyholderSearch.value.CompanyID;
+    this.currentCustomer.CreationDate = this.policyholderSearch.value.CreationDate;
+    
+  } else {
       this.hasBeenSearched = true;
       this.customerUpdateForm.Email = this.policyHolderUpdate.value.Email;
       this.customerUpdateForm.ReferenceNo = this.policyHolderUpdate.value.ReferenceNo;
       this.customerUpdateForm.Mobile = this.policyHolderUpdate.value.Mobile;
       this.customerUpdateForm.CustomerNo = this.policyHolderUpdate.value.CustomerNo;
+      this.customerUpdateForm.Name = this.policyholderSearch.value.Name;
+      this.customerUpdateForm.CreatedBy = this.policyholderSearch.value.CreatedBy;
+      this.customerUpdateForm.CompanyID = this.policyholderSearch.value.CompanyID;
+      this.customerUpdateForm.CreationDate = this.policyholderSearch.value.CreationDate;
     }
   }
   SearchCustomerByEmail(email: string , updateMode: boolean) {
@@ -584,25 +598,45 @@ updateDocumentMode(documentID: number , productID: number) {
 
     }
       this.documentForm.StComId = this.userCompany.ID;
-      this.documentForm.share = this.share;
-      if ( this.newCustomer.AddUpdate === true) {
+      if (!this.updateMode) {
+        this.documentForm.share = this.share;
+      } else {
+        this.share.customer = [];
+        this.shares.forEach(element => {
+          this.customer = new CustomerShare();
+          this.customer.CustomerID = element.CustomerId;
+          this.customer.shareType = element.LocShareType;
+          this.customer.Commision = element.Percent;
+          this.customer.ShareID  = element.ID;
+          this.share.customer.push(this.customer);
+        });
+        this.share.CreatedBy = this.user.Name;
+        this.documentForm.share = this.share;
+        this.documentForm.UpdateMode = true;
+      }
+
+      if ( this.newCustomer !== undefined && this.newCustomer.AddUpdate === true) {
         this.documentForm.NewCustomer =  this.newCustomer;
         this.documentForm.NewCustomer.CreatedBy =  this.user.Name;
         this.documentForm.NewCustomer.CreationDate = new Date();
         this.documentForm.NewCustomer.CompanyID = this.userCompany.ID;
       } else {
+        this.documentForm.NewCustomer =  new Customer();
         this.documentForm.NewCustomer.ModifiedBy =  this.user.Name;
         this.documentForm.NewCustomer.ModificationDate = new Date();
         this.documentForm.NewCustomer = this.currentCustomer;
-        
+
       }
-     
+     if(this.updateMode) {
+       this.documentForm.UpdateMode = true;
+     }
       this.http.post('https://localhost:44322/api/Documents/Create' , this.documentForm).subscribe( res => {
         console.log(res);
         const status: any = res;
         if (status.ID) {
           this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID=' + status.ID).subscribe(doc => {
           this.documentForm = doc[0];
+          this.updateMode = true;
           this.updateDocumentMode(this.documentForm.ID , this.documentForm.ProductId);
         
           /*  this._documentService.changeColumn(doc[0]);
