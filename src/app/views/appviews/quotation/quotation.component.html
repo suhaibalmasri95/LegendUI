@@ -496,35 +496,65 @@
  
    
 </div>
-  </mat-tab>
-  <mat-tab label="Document Attachments" *ngIf="documentAttachments.length > 0">
+  </mat-tab> <!-- *ngIf="documentAttachments.length > 0"-->
+  <mat-tab label="Document Attachments">
       <div class="col-md-12">
       <form [formGroup]="attachmentForm">
           <div class="row">
+              <div class="form-group col-md-3" >
+                  <label for="Attachments">Attachments</label>
+                  <mat-select  placeholder="" class="form-control" formControlName="attachments" multiple    >
+                      <mat-option #allSelected (onSelectionChange)="toggleAllSelection()" [value]="f.defaultSelect.value " [disabled]="f.enableMultiSelect.value">Select All</mat-option>
+                    <mat-option  *ngFor="let attach of f.attachmetValues.value; let index = elementIndex"
+                    
+                     [value]="attach" [disabled]="disabled">{{attach.Name}}</mat-option>
+                  </mat-select>
+                 </div>
           <div class="form-group col-md-3">
-            <label for="ReferenceNo">Remarks</label>
-            <textarea rows="1" name="ReferenceNo" placeholder="Remarks" type="text" class="form-control" ></textarea>
+            <label for="Remarks">Remarks</label>
+            <textarea rows="1" formControlName="Remarks" placeholder="Remarks" type="text" class="form-control" ></textarea>
           </div>
-      <div class="form-group col-md-3" >
-<!--check box for is received -->
-      </div>
-          <div class="form-group col-md-3" >
-            <a  (click)="fileupload.click()"  ><i class="material-icons">
-                cloud_upload
-                </i></a>
-                <input type="file" 
-                hidden 
-                 #fileupload (change)="onFileChanged($event,i)"/>
-        </div>
-      
-           <mat-form-field>
-            <mat-select  placeholder="" formControlName="attachments" multiple    >
-                <mat-option  (click)="toggleAllSelection(i)" [value]="f.defaultSelect.value " [disabled]="f.enableMultiSelect.value">Select All</mat-option>
-              <mat-option (click)="addItem(i)" *ngFor="let attach of f.attachmetValues.value; let index = elementIndex"
-              
-               [value]="attach" [disabled]="disabled">{{attach.Name}}</mat-option>
-            </mat-select>
-          </mat-form-field> </div></form>
+          <div class="form-group col-md-3">
+              <label for="IsReceived">Attachment Received</label>
+              <mat-checkbox formControlName="IsReceived" class="form-control">Is Received</mat-checkbox>
+          </div>
+       </div>
+       
+         
+             <div class="row">
+       
+           <div class="form-group col-md-4">
+               <label for="countryFlag">File</label>
+
+               <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                   <div class="form-control" data-trigger="fileinput">
+
+                       <span class="fileinput-filename" *ngIf="false">
+                           <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                           
+                       </span>
+                   </div>
+
+                   <span class="input-group-addon btn btn-default btn-file"  >
+                       <label for="FLAG" class="custom-file-upload">
+                           <i class="fa fa-cloud-upload"></i> Upload
+                       </label>
+
+                   </span>
+                   <input id="FLAG" name="Flag" type="file" 
+                   (change)="onFileChanged($event)">
+                   <a class="input-group-addon btn btn-default fileinput-exists"
+                       data-dismiss="fileinput" *ngIf="f.File.value" (click)="removeFile()">Remove</a>
+               </div>
+             </div>
+           </div>
+           <div class="col-md-12 text-right">
+              <div class="btn-group">
+                <button class="btn btn-primary" (click)="AddAttachment()">Save</button>
+                
+              </div>
+          </div>
+      </form>
     <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
   </div>
   </mat-tab>

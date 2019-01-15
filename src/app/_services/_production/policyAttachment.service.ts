@@ -44,4 +44,29 @@ export class PolicyAttachmentService {
     // tslint:disable-next-line:max-line-length
     return this.http.get<DocumentAttachment[]>(this.ApiUrl + 'Load' + queryString);
   }
+  loadFull(DocumentID: number = null , RiskID: number = null ,
+     ClaimID: number = null , Level: number , langId: number ): Observable<DocumentAttachment[]> {
+    let queryString = '?DocumentID=';
+    if (DocumentID != null) {
+      queryString += DocumentID;
+    }
+    queryString += '&RiskID=';
+    if (RiskID != null) {
+      queryString += RiskID;
+    } 
+    queryString += '&ClaimID=';
+    if (ClaimID != null) {
+      queryString += ClaimID;
+    }
+    queryString += '&Level=';
+    if (Level != null) {
+      queryString += Level;
+    }
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+    }
+    // tslint:disable-next-line:max-line-length
+    return this.http.get<DocumentAttachment[]>(this.ApiUrl + 'LoadAttachment' + queryString);
+  }
 }

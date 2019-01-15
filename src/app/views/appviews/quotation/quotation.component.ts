@@ -26,6 +26,7 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 import { WizardState } from 'angular-archwizard';
 
 import * as _ from 'lodash';
+import { MatOption } from '@angular/material';
 
 @Component({
   selector: 'app-quotation',
@@ -46,10 +47,11 @@ export class QuotationComponent implements OnInit {
    customerUpdateForm: Customer;
    policyHolderUpdate: FormControl = new FormControl();
    shares: Share[];
-   updateMode: boolean = false;
-  hasBeenSearched: boolean = false;
+   updateMode = false;
+  hasBeenSearched = false;
    customer: CustomerShare;
    currentCustomer: Customer;
+   @ViewChild('allSelected') private allSelected: MatOption;
    icon = false;
    documentAttachments: DocumentAttachment[];
    documentForm: Documents;
@@ -140,7 +142,7 @@ export class QuotationComponent implements OnInit {
     this.documentForm.DocumentShare = 100;
     this.documentForm.Exrate = 1;
     this.createSubForm();
-   
+
     this.productDynamicCategoriesMultiRecord = [];
     this.productDynamicCategories = [];
     this.policyHolderUpdate.valueChanges.subscribe(
@@ -216,6 +218,12 @@ export class QuotationComponent implements OnInit {
         }
     });
   //  this.updateDocumentMode(120 , 3);
+/*   this.prodAttachmentService.load(null, 3 , null, 120).subscribe(prodAttachment => {
+    this.ProductAttachments = prodAttachment;
+    this.orginalAttachments = _.cloneDeep(prodAttachment);
+
+  }); */
+
   }
   click() {
     this.icon = !this.icon;
@@ -225,8 +233,8 @@ export class QuotationComponent implements OnInit {
   }
 
 updateDocumentMode(documentID: number , productID: number) {
-  this.newShare = new Share(); 
- 
+  this.newShare = new Share();
+
   this.policyService.load(documentID , 1).subscribe( res => {
     this.documentForm = res[0];
     this.updateMode = true;
@@ -237,15 +245,14 @@ updateDocumentMode(documentID: number , productID: number) {
     this.shares = shares;
     this.getCustomerDependsOnShareType();
   });
-  this.attachmentService.load(null , documentID , null , null, null , 1 , 1 ). subscribe( attachments => {
+  this.attachmentService.load(null , documentID , null , null, null , this.documentForm.DocumentType , 1 ). subscribe( attachments => {
     this.documentAttachments = attachments;
   });
-  this.prodAttachmentService.load(null, productID , null, documentID).subscribe(prodAttachment => {
-    this.ProductAttachments = prodAttachment;
-    this.orginalAttachments = _.cloneDeep(prodAttachment);
-    this.attachmentForm.controls.attachmetValues.patchValue(prodAttachment);
+  this.attachmentService.loadFull( documentID , null , null, this.documentForm.DocumentType , 1 ). subscribe( attachments => {
+    this.attachmentForm.controls.attachmetValues.patchValue(attachments);
     this.attachmentForm.controls.defaultSelect.patchValue(true);
   });
+
   });
 }
   getCustomerDependsOnShareType() {
@@ -268,7 +275,7 @@ updateDocumentMode(documentID: number , productID: number) {
           }
          });
     });
-  
+
   }
 
   createSubForm() {
@@ -296,11 +303,18 @@ updateDocumentMode(documentID: number , productID: number) {
   get f() {
     return this.attachmentForm.controls;
   }
+
   displayFn(customer?: Customer): string | undefined {
     return customer ? customer.CustomerNo + ' ' + customer.Name   : undefined;
   }
-
-  onFileChanged(event, index: number) {
+  toggleAllSelection() {
+    if (this.allSelected.selected) {
+        this.attachmentForm.controls.attachments.patchValue(this.attachmentForm.controls.attachmetValues.value);
+    } else {
+      this.attachmentForm.controls.attachments.patchValue([]);
+    }
+  }
+  onFileChanged(event) {
     console.log(event);
     this.selectedFile = event.target.files[0];
     this.attachmentForm.controls.File.patchValue(this.selectedFile);
@@ -312,7 +326,43 @@ updateDocumentMode(documentID: number , productID: number) {
       }
     }
   }
-  setDocumentShare(busType: number){
+  removeFile() {
+    this.attachmentForm.controls.File.patchValue({});
+  }
+  AddAttachment() {
+    for (let x = 0 ; x < this.attachmentForm.controls.attachments.value.length; x ++) {
+      const input = new FormData();
+      if (this.documentForm.ID) {
+      input.append('DocumentID', this.documentForm.ID.toString());
+    } else {
+      input.append('DocumentID', '');
+     }
+      if (this.documentForm.DocumentType === 1 ) {
+      input.append('Type', 'Policy');
+      input.append('Level', '1');
+    }
+    if (this.documentForm.DocumentType === 2 ) {
+      input.append('Type', 'Quotation');
+      input.append('Level', '2');
+    }
+    if (this.attachmentForm.controls.attachments.value[x].ID) {
+      input.append('ID', this.attachmentForm.controls.attachments.value[x].ID.toString());
+    }
+      input.append('CreatedBy', this.documentForm.CreatedBy);
+      input.append('ProductAttachmentID', this.attachmentForm.controls.attachments.value[x].ProductAttachmentID.toString());
+      input.append('File', this.attachmentForm.controls.File.value);
+      input.append('Serial', '1');
+      input.append('RiskID', '');
+      input.append('IsReceived', this.attachmentForm.controls.IsReceived.value.toString());
+      input.append('Remarks', this.attachmentForm.controls.Remarks.value);
+     
+      // etc, etc
+       this.http.post('https://localhost:44322/api/Attachment/Create', input).subscribe(res => {
+         console.log(res);
+       });
+  }
+}
+  setDocumentShare(busType: number) {
     if (busType === 251) {
       this.documentForm.DocumentShare = 100;
       this.documentShareControl.disable();
@@ -333,7 +383,7 @@ updateDocumentMode(documentID: number , productID: number) {
     this.currentCustomer.CreatedBy = this.policyholderSearch.value.CreatedBy;
     this.currentCustomer.CompanyID = this.policyholderSearch.value.CompanyID;
     this.currentCustomer.CreationDate = this.policyholderSearch.value.CreationDate;
-    
+
   } else {
       this.hasBeenSearched = true;
       this.customerUpdateForm.Email = this.policyHolderUpdate.value.Email;
@@ -460,7 +510,7 @@ updateDocumentMode(documentID: number , productID: number) {
     }
     getDynamicCategoriesForQuotation( id: number) {
       this.dynamicService.load(null, null , id , null , 2, null , null , 1 ).subscribe(res => {
-      
+
         if (this.updateMode) {
           // mearge array and filter the columns
         } else {
@@ -580,7 +630,7 @@ updateDocumentMode(documentID: number , productID: number) {
         this.share.customer.push(this.customer);
       }
 
-      if(this.productDynamicCategories) {
+      if (this.productDynamicCategories) {
       this.productDynamicCategories.forEach(element => {
         if (element.IsMulitRecords === 0) {
           element.ResultList = [ ...element.Columns, ...element.childsData];
@@ -590,7 +640,7 @@ updateDocumentMode(documentID: number , productID: number) {
           }
         }
       });
-      if(this.productDynamicCategoriesMultiRecord.length > 0) {
+      if (this.productDynamicCategoriesMultiRecord.length > 0) {
         this.documentForm.DynamicCategories = [...this.productDynamicCategories , ...this.productDynamicCategoriesMultiRecord];
       } else {
         this.documentForm.DynamicCategories = this.productDynamicCategories;
@@ -627,7 +677,7 @@ updateDocumentMode(documentID: number , productID: number) {
         this.documentForm.NewCustomer = this.currentCustomer;
 
       }
-     if(this.updateMode) {
+     if (this.updateMode) {
        this.documentForm.UpdateMode = true;
      }
       this.http.post('https://localhost:44322/api/Documents/Create' , this.documentForm).subscribe( res => {
@@ -638,7 +688,7 @@ updateDocumentMode(documentID: number , productID: number) {
           this.documentForm = doc[0];
           this.updateMode = true;
           this.updateDocumentMode(this.documentForm.ID , this.documentForm.ProductId);
-        
+
           /*  this._documentService.changeColumn(doc[0]);
           this.wizard.navigationMode.goToStep(1); */
           });
