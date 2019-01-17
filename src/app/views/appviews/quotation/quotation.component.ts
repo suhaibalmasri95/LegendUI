@@ -221,19 +221,7 @@ export class QuotationComponent implements OnInit {
           });
         }
     });
-  this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID=' + 162 ).subscribe(doc => {
-     this.documentForm = doc[0];
-     this.updateMode = true;
-      this.updateDocumentMode(this.documentForm.ID , this.documentForm.ProductId);
-
-      /*  this._documentService.changeColumn(doc[0]);
-      this.wizard.navigationMode.goToStep(1); */
-     });
-/*   this.prodAttachmentService.load(null, 3 , null, 120).subscribe(prodAttachment => {
-    this.ProductAttachments = prodAttachment;
-    this.orginalAttachments = _.cloneDeep(prodAttachment);
-
-  }); */
+ 
 
   }
   click() {
