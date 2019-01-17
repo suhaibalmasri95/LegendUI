@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment.prod';
 import { ProductAttachment } from './../../../entities/Product/Attachment';
 import { ProductAttachmentService } from './../../../_services/_products/productAttachment.service';
 import { DocumentAttachment } from './../../../entities/production/DocumentAttachment';
@@ -42,6 +43,8 @@ export class QuotationComponent implements OnInit {
     'Name' , 'Is Received' , 'Received Date' , 'Attached Path', 'Remarks', 'action'];
    text: string;
    value: string;
+   previewLink = '';
+   hostUrl: string = environment.hostUrl;
    share: Share;
    attachmentForm: FormGroup;
    customerUpdateForm: Customer;
@@ -54,6 +57,7 @@ export class QuotationComponent implements OnInit {
    @ViewChild('allSelected') private allSelected: MatOption;
    icon = false;
    documentAttachments: DocumentAttachment[];
+   hasValue = false;
    documentForm: Documents;
    businessTypes: LockUp[];
    accountedFor: LockUp[];
@@ -217,7 +221,14 @@ export class QuotationComponent implements OnInit {
           });
         }
     });
-  //  this.updateDocumentMode(120 , 3);
+  this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID=' + 162 ).subscribe(doc => {
+     this.documentForm = doc[0];
+     this.updateMode = true;
+      this.updateDocumentMode(this.documentForm.ID , this.documentForm.ProductId);
+
+      /*  this._documentService.changeColumn(doc[0]);
+      this.wizard.navigationMode.goToStep(1); */
+     });
 /*   this.prodAttachmentService.load(null, 3 , null, 120).subscribe(prodAttachment => {
     this.ProductAttachments = prodAttachment;
     this.orginalAttachments = _.cloneDeep(prodAttachment);
@@ -235,8 +246,8 @@ export class QuotationComponent implements OnInit {
 updateDocumentMode(documentID: number , productID: number) {
   this.newShare = new Share();
 
-  this.policyService.load(documentID , 1).subscribe( res => {
-    this.documentForm = res[0];
+ this.hasValue = true;
+  
     this.updateMode = true;
   this.documentForm.UpdateMode = true;
 
@@ -253,7 +264,7 @@ updateDocumentMode(documentID: number , productID: number) {
     this.attachmentForm.controls.defaultSelect.patchValue(true);
   });
 
-  });
+  
 }
   getCustomerDependsOnShareType() {
     this.shares.forEach(element => {
@@ -330,6 +341,7 @@ updateDocumentMode(documentID: number , productID: number) {
     this.attachmentForm.controls.File.patchValue({});
   }
   AddAttachment() {
+ 
     for (let x = 0 ; x < this.attachmentForm.controls.attachments.value.length; x ++) {
       const input = new FormData();
       if (this.documentForm.ID) {
@@ -358,9 +370,16 @@ updateDocumentMode(documentID: number , productID: number) {
      
       // etc, etc
        this.http.post('https://localhost:44322/api/Attachment/Create', input).subscribe(res => {
-         console.log(res);
+       });
+      
+       if ( x === this.attachmentForm.controls.attachments.value.length - 1 ) {
+        this.attachmentService.load(null , this.documentForm.ID , null , null, null , this.documentForm.DocumentType , 1 )
+        .subscribe( attachments => {
+         this.documentAttachments = attachments;
        });
   }
+
+}
 }
   setDocumentShare(busType: number) {
     if (busType === 251) {
@@ -462,6 +481,7 @@ updateDocumentMode(documentID: number , productID: number) {
   }
   getDynamicFileds(productID: number) {
     if (productID) {
+      this.hasValue = true;
     if (this.documentForm.DocumentType === 1) {
       this.getDynamicCategoriesForPolicy(productID);
     } else if (this.documentForm.DocumentType === 2) {
@@ -579,6 +599,19 @@ updateDocumentMode(documentID: number , productID: number) {
         this.customerUpdateForm.ShareType = share.LocShareType;
       });
       console.log(share);
+    }
+    updateAttachment(attachment: DocumentAttachment) {
+     this.attachmentForm.controls.Remarks.patchValue(attachment.Remarks);
+     this.attachmentForm.controls.IsReceived.patchValue(attachment.IsReceived);
+     this.attachmentForm.controls.attachmetValues.value.forEach(element => {
+        if (element.ProductAttachmentID === attachment.ProductAttachmentID) {
+          this.attachmentForm.controls.attachments.patchValue([element]);
+        }
+      });
+      this.previewLink = this.hostUrl + attachment.AttachedPath;
+    }
+    deleteAttachment(index: number) {
+      console.log(index);
     }
     deleteShare(index: number) {
       console.log(index);

@@ -39,4 +39,5 @@ export class DynamicTable implements IEntity {
     MajorCode: number;
     ChildCounts: number;
     Value: any;
+    UwColID: number;
 }

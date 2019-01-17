@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment.prod';
 import { Component, OnInit, Output, EventEmitter, Input, ViewChild, OnChanges } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -21,8 +22,10 @@ export class GenericTableComponent implements OnInit , OnChanges {
   selection: SelectionModel<any>;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('table', { read: MatSort }) sort: MatSort;
+  hostUrl: string = environment.hostUrl;
   columns: any[];
   column: any;
+  hasLink: boolean = false;
   constructor() { }
 
   ngOnChanges() {
@@ -69,5 +72,13 @@ export class GenericTableComponent implements OnInit , OnChanges {
     }
     getValue(element: any , column: any) {
       return element[column.replace(/\s+/g, '')];
+    }
+    getLink(element: any , column: any) {
+      if (element[column.replace(/\s+/g, '')] !== null) {
+        return this.hostUrl + element[column.replace(/\s+/g, '')];
+      } else {
+        return '';
+      }
+     
     }
 }

@@ -89,18 +89,19 @@ this.columnsOnCategory = [];
      // take every group of columns  depeneds on groups of category
      // take every catgory array as one object
      let count = 0;
-     const length = columnCount - 1;
+     const length = columnCount;
      count = length;
      let j = 0 ;
-     for (let index = 0; index < columnCount; index++) {
-        for ( j ; j <= count; j++) {
+     let rounds = orginalColumnCount;
+     for (let index = 0; index < count; index++) {
+        for ( j ; j < rounds; j++) {
           this.columnsOnCategory.push(columns[j]);
         }
         this.sortArrayOnColumnType(this.columnsOnCategory);
         this.resetData(this.columnsOnCategory);
         this.dynamicDataSources.push(this.dynamicDataSource);
         this.columnsOnCategory = [];
-        count = count + columnCount;
+        rounds += orginalColumnCount;
      }
 }
 sortArrayUpdateMode(columns: ProductDynamicColumn[] ) {
@@ -122,6 +123,7 @@ sortArrayOnColumnType(columns: ProductDynamicColumn[] ) {
     columns.forEach(element => {
       this.childValue = new DynamicTable();
       this.childValue = this.mapFeilds(this.childValue, element) ;
+      this.childValue.UwColID = element.UwColID;
       if (!this.dataSource.includes(element.Lable)) {
       this.dataSource.push(element.Lable);
     }
@@ -229,6 +231,7 @@ sortArrayOnColumnType(columns: ProductDynamicColumn[] ) {
     table['ExecludedColumn' + index] = filed.ExecludedColumn;
     table['MajorCode' + index] = filed.MajorCode;
     table['ChildCounts' + index] = filed.ChildCounts;
+   table['UwColID' + index] =  filed.UwColID ;
     return table;
   }
   clearFileds(filed: ProductDynamicColumn) {
@@ -312,6 +315,8 @@ mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicC
   filed.ExecludedColumn = table['ExecludedColumn' + index];
   filed.MajorCode = table['MajorCode' + index];
   filed.ChildCounts = table['ChildCounts' + index];
+  filed.UwColID = table['UwColID' + index];
+  
     return filed;
   }
 

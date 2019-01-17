@@ -423,7 +423,7 @@
   <br>
   <br>
   <br>
-  <mat-tab-group [selectedIndex]="0"   (selectedIndexChange)="selected.setValue($event)"  >
+  <mat-tab-group [selectedIndex]="0"   (selectedIndexChange)="selected.setValue($event)" *ngIf="hasValue" >
   <mat-tab label="Document Share"  *ngIf="shares.length > 0" >
       <div class="col-md-12"> 
           <div class="row">
@@ -496,8 +496,8 @@
  
    
 </div>
-  </mat-tab> <!-- *ngIf="documentAttachments.length > 0"-->
-  <mat-tab label="Document Attachments">
+  </mat-tab> <!-- "-->
+  <mat-tab label="Document Attachments" *ngIf="documentAttachments.length > 0">
       <div class="col-md-12">
       <form [formGroup]="attachmentForm">
           <div class="row">
@@ -547,6 +547,9 @@
                        data-dismiss="fileinput" *ngIf="f.File.value" (click)="removeFile()">Remove</a>
                </div>
              </div>
+             <div class="form-group col-md-4" *ngIf="previewLink !== ''">
+               <a target="_blank" href="{{previewLink}}">preview</a>
+             </div>
            </div>
            <div class="col-md-12 text-right">
               <div class="btn-group">
@@ -555,7 +558,7 @@
               </div>
           </div>
       </form>
-    <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+    <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateAttachment($event)' (delete)='deleteAttachment($event)'></app-generictable>
   </div>
   </mat-tab>
   <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord; let index = index" label="{{item.Lable}}" >
