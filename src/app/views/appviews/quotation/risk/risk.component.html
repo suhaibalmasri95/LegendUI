@@ -1,4 +1,10 @@
-<div class="centered-content">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+  <div class="row">
+      <div class="col-md-12">
+<div class="tabs-container">
+   
+  <div class="panel-body">
 
   <fieldset>
     <legend>
@@ -91,165 +97,181 @@
           </div>
         </div>
       
-        <div *ngFor="let item of productDynamicCategoriesRisk">
-          <app-dynamic-component [category]="item" ></app-dynamic-component>
-        </div>
-      <!--  <mat-accordion>
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  More Details
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-            
-              <div class="row">
-                <div class="form-group col-md-3">
-                  <label for="UwDocumentID">Under Writing Document ID</label>
-                  <input name="UwDocumentID" placeholder="Under Writing Document ID" 
-                  type="number" class="form-control" disabled [(ngModel)]="riskForm.UwDocumentID" >
-                </div>
-      
-                <div class="form-group col-md-3">
-                    <label for="NetPremium">Net Premium</label>
-                    <input name="NetPremium" disabled placeholder="Net Premium" type="number" class="form-control" [(ngModel)]="riskForm.NetPremium"  >
-                  </div>
-        
-                  <div class="form-group col-md-3">
-                      <label for="NetPremiumLc">Net Premium LC</label>
-                      <input name="NetPremiumLc"disabled placeholder="Net Premium LC" type="number" class="form-control" [(ngModel)]="riskForm.NetPremiumLc"  >
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="GrossPremium">Gross Premium</label>
-                        <input name="GrossPremium" disabled placeholder="Gross Premium" type="number" class="form-control" [(ngModel)]="riskForm.GrossPremium"  >
-                      </div>
-              </div>
-              <div class="row">
-                  <div class="form-group col-md-3">
-                      <label for="GrossPremiumLc">Gross Premium LC</label>
-                      <input name="GrossPremiumLc" disabled placeholder="Gross Premium LC" type="number" class="form-control" [(ngModel)]="riskForm.GrossPremiumLc"  >
-                    </div>
-      
-                    <div class="form-group col-md-3">
-                        <label for="CreatedBy">Created By</label>
-                        <input name="CreatedBy" disabled placeholder="Created By" type="text" class="form-control" [(ngModel)]="riskForm.CreatedBy">
-                      </div>
+    
 
-                      <div class="form-group col-md-3">
-                            <label for="CreationDate">Creation Date <span class="help-block">*</span></label>
-                            <input name="CreationDate" disabled required placeholder="Creation Date" type="date" class="form-control" [ngModel]="riskForm.CreationDate | date:'yyyy-MM-dd'"
-                              (ngModelChange)="riskForm.CreationDate = $event">
-                          </div>
-                      <div class="form-group col-md-3">
-                            <label for="ModifiedBy">Modified By</label>
-                            <input name="ModifiedBy" disabled placeholder="Modified By" type="text" class="form-control" [(ngModel)]="riskForm.ModifiedBy">
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="form-group col-md-3">
-                                <label for="ModificationDate">Modification Date <span class="help-block">*</span></label>
-                                <input name="ModificationDate" disabled required placeholder="Modification Date" type="date" class="form-control" [ngModel]="riskForm.ModificationDate | date:'yyyy-MM-dd'"
-                                  (ngModelChange)="riskForm.ModificationDate = $event">
-                              </div>
-                
-                      
-              </div>
-         
-             
-            </mat-expansion-panel>
-          </mat-accordion>-->
           <div class="col-md-12 text-right">
               <div class="btn-group">
                 <br>
                
-                <input class="btn btn-primary" type="submit" value="Add Risk" (click)="addRisk(riskForm)" />
-
+                <input class="btn btn-primary" type="submit" value="Add Risk" *ngIf="!riskForm.selected" (click)="addRisk(riskForm)" />
+                <input class="btn btn-primary" type="submit" value="update Risk" *ngIf="riskForm.selected" (click)="updateSelectedRisk(riskForm)" />
         </div> </div>
-        
-          
-  
-    <br>
-    <br>
-    <br>
-    <br>
+      </fieldset>
+    <fieldset>
+        <div  *ngFor="let item of productDynamicCategories | orderBy: order ">
+          <div *ngIf="item.IsMulitRecords === 0">
+        <app-dynamic-component [category]="item" [updateModeForNotMultiRecord]="updateMode"></app-dynamic-component>
+        </div>
+      </div>
+    </fieldset>
+
+  <br>
+  <br>
+  <br>
+  <mat-tab-group [selectedIndex]="0"   (selectedIndexChange)="selected.setValue($event)" *ngIf="hasValue" >
+  <mat-tab label="Risks"  *ngIf="risks.length > 0" >
     <div class="x" *ngIf="risks.length > 0">
 
-        <table mat-table #table [dataSource]="RiskDataSource" matSort>
-        
-          <ng-container matColumnDef="select">
-            <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()">
-              </mat-checkbox>
-            </th>
-            <td style="width: 5%" mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)">
-              </mat-checkbox>
-            </td>
-          </ng-container>
+      <table mat-table #table [dataSource]="RiskDataSource" matSort>
+      
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td style="width: 5%" mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="ProductDetail">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail ID</th>
-            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ProductDetailID}}
-            </td>
-          </ng-container>
+        <ng-container matColumnDef="ProductDetail">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail ID</th>
+          <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ProductDetailID}}
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="SubjectType">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Subject Type</th>
-            <td style="width: 10%" mat-cell *matCellDef="let element">
-              {{element.ProductSubjectTypeID}} </td>
-          </ng-container>
+        <ng-container matColumnDef="SubjectType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Subject Type</th>
+          <td style="width: 10%" mat-cell *matCellDef="let element">
+            {{element.ProductSubjectTypeID}} </td>
+        </ng-container>
 
-          <ng-container matColumnDef="Name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
-            </td>
-          </ng-container>
+        <ng-container matColumnDef="Name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+          <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="EffectiveDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Effective Date</th>
-            <td style="width: 15%" mat-cell *matCellDef="let element">
-              {{element.EffectiveDate | date}} </td>
-          </ng-container>
+        <ng-container matColumnDef="EffectiveDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Effective Date</th>
+          <td style="width: 15%" mat-cell *matCellDef="let element">
+            {{element.EffectiveDate | date}} </td>
+        </ng-container>
 
-          <ng-container matColumnDef="ExpiryDate">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiry Date </th>
-            <td style="width: 10%" mat-cell *matCellDef="let element">
-              {{element.ExpiryDate | date}} </td>
-          </ng-container>
+        <ng-container matColumnDef="ExpiryDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiry Date </th>
+          <td style="width: 10%" mat-cell *matCellDef="let element">
+            {{element.ExpiryDate | date}} </td>
+        </ng-container>
 
-          <ng-container matColumnDef="ParentRisk">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Risk </th>
-            <td style="width: 10%" mat-cell *matCellDef="let element">
-              {{element.SubjectTypeID}} </td>
-          </ng-container>
+        <ng-container matColumnDef="ParentRisk">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Risk </th>
+          <td style="width: 10%" mat-cell *matCellDef="let element">
+            {{element.SubjectTypeID}} </td>
+        </ng-container>
 
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>Actions</th>
-            <td style="width: 10%" mat-cell  *matCellDef="let element;  let i = index">
-              <i (click)="updateRisk(element,i)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
-              <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
-                [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                (confirm)="deleteRisk(i)" ngbTooltip="Delete"></i>
-            </td>
-          </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td style="width: 10%" mat-cell  *matCellDef="let element;  let i = index">
+            <i (click)="updateRisk(element,i)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+            <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+              [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+              (confirm)="deleteRisk(i)" ngbTooltip="Delete"></i>
+          </td>
+        </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="RiskTableColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: RiskTableColumns;" (click)="updateRisk(row)" class=" mat-row {{riskForm.ProductDetailID===row.ProductDetailID?'active':'not-active'}}"></tr>
+        <tr mat-header-row *matHeaderRowDef="RiskTableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: RiskTableColumns;" (click)="updateRisk(row)" class=" mat-row {{riskForm.ProductDetailID===row.ProductDetailID?'active':'not-active'}}"></tr>
 
-        </table>
+      </table>
+ 
    
-     
-    </div>
-    <div class="row">
-    <div class="col-md-12 text-right">
-        <div class="btn-group">
-          <br>
-         
-        
+  </div>
+  <div class="row">
+  <div class="col-md-12 text-right">
+      <div class="btn-group">
+        <br>
        
-    <input  *ngIf="risks.length> 0" class="btn btn-primary" type="submit" value="submit" (click)="submit()" /></div>
-  </div></div>   <br>  <br> <div class="row"></div>
+      
+     
+  <input  *ngIf="risks.length> 0" class="btn btn-primary" type="submit" value="submit" (click)="submit()" /></div>
+</div></div>   <br>  <br> <div class="row"></div>
+   
+
+  </mat-tab> <!-- "-->
+  <mat-tab label="Document Attachments" *ngIf="documentAttachments.length > 0">
+      <div class="col-md-12">
+      <form [formGroup]="attachmentForm">
+          <div class="row">
+              <div class="form-group col-md-3" >
+                  <label for="Attachments">Attachments</label>
+                  <mat-select  placeholder="" class="form-control" formControlName="attachments" multiple    >
+                      <mat-option #allSelected (onSelectionChange)="toggleAllSelection()" [value]="f.defaultSelect.value " [disabled]="f.enableMultiSelect.value">Select All</mat-option>
+                    <mat-option  *ngFor="let attach of f.attachmetValues.value; let index = elementIndex"
+                    
+                     [value]="attach" [disabled]="disabled">{{attach.Name}}</mat-option>
+                  </mat-select>
+                 </div>
+          <div class="form-group col-md-3">
+            <label for="Remarks">Remarks</label>
+            <textarea rows="1" formControlName="Remarks" placeholder="Remarks" type="text" class="form-control" ></textarea>
+          </div>
+          <div class="form-group col-md-3">
+              <label for="IsReceived">Attachment Received</label>
+              <mat-checkbox formControlName="IsReceived" class="form-control">Is Received</mat-checkbox>
+          </div>
+       </div>
+       
+         
+             <div class="row">
+       
+           <div class="form-group col-md-4">
+               <label for="countryFlag">File</label>
+
+               <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                   <div class="form-control" data-trigger="fileinput">
+
+                       <span class="fileinput-filename" *ngIf="false">
+                           <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                           
+                       </span>
+                   </div>
+
+                   <span class="input-group-addon btn btn-default btn-file"  >
+                       <label for="FLAG" class="custom-file-upload">
+                           <i class="fa fa-cloud-upload"></i> Upload
+                       </label>
+
+                   </span>
+                   <input id="FLAG" name="Flag" type="file" 
+                   (change)="onFileChanged($event)">
+                   <a class="input-group-addon btn btn-default fileinput-exists" onclick="this.value = null"
+                       data-dismiss="fileinput" *ngIf="f.File.value" (click)="removeFile()">Remove</a>
+               </div>
+             </div>
+             <div class="form-group col-md-4" *ngIf="previewLink !== ''">
+               <a target="_blank" href="{{previewLink}}">preview</a>
+             </div>
+           </div>
+           <div class="col-md-12 text-right">
+              <div class="btn-group">
+                <button class="btn btn-primary" (click)="AddAttachment()">Save</button>
+                
+              </div>
+          </div>
+      </form>
+    <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateAttachment($event)' (delete)='deleteAttachment($event)'></app-generictable>
+  </div>
+  </mat-tab>
+  <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord | orderBy: order; let index = index" label="{{item.Lable}}" >
+      <div class="col-md-12">
+    <app-dynamic-component [category]="item"></app-dynamic-component></div>
+  </mat-tab> 
+</mat-tab-group>
+   
   
-</fieldset>
-</div>
+
+</div></div></div></div></div>

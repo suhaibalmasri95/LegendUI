@@ -25,11 +25,11 @@
 <aw-wizard #wizard> 
 
   <app-quotation awWizardStep [stepTitle]="'Document'"  ></app-quotation>
-  <aw-wizard-step [stepTitle]="'Risk'" >
+   <aw-wizard-step [stepTitle]="'Risk'" >
   <div class="centered-content" *ngIf="document">
       <app-risk [document] = "document" ></app-risk>
   </div>
-      </aw-wizard-step>
+      </aw-wizard-step> 
       <aw-wizard-step [stepTitle]="'Attachments'">
           <div class="centered-content" *ngIf="document">
               <app-attachment [document] = "document"  ></app-attachment>

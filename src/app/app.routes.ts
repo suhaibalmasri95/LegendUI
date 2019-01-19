@@ -1,4 +1,4 @@
-import { AttachmentComponent } from './views/appviews/quotation/attachment/attachment.component';
+import { RiskComponent } from './views/appviews/quotation/risk/risk.component';
 import { QuotationWizardComponent } from './views/appviews/quotation-wizard/quotation-wizard.component';
 import { ReportsGroupResolver } from './_resolvers/reports.resolver';
 import { ProductAttachmentsComponent } from './views/appviews/productAttachments/productAttachments.component';
@@ -7,12 +7,10 @@ import { CalculationBase } from './_resolvers/calculation-base.resolver';
 import { DistributionChannel } from './_resolvers/distribution-Channel.resolver';
 import { UserCompany } from './_resolvers/usercompany.resolver';
 import { BusinessTypes } from './_resolvers/business-types.resolver';
-import { QuotationComponent } from './views/appviews/quotation/quotation.component';
 import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
 import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
 import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
 import { CoverResolver } from './_resolvers/cover-resolver.resolver';
-
 import { BankResolver } from './_resolvers/bank.resolver';
 import { CountryResolver } from './_resolvers/country-reolver.resolver';
 import { Routes } from '@angular/router';

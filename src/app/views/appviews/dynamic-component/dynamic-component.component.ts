@@ -14,8 +14,9 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   // tslint:disable-next-line:no-input-rename
   @Input('category') category: ProductDynmicCategory;
   // tslint:disable-next-line:no-input-rename
-
+@Input('updateModeForNotMultiRecord')updateModeForNotMultiRecord : boolean;
   @ViewChildren('tableSelector')  tableSelector: QueryList<TableComponent>;
+
   meregedArray: ProductDynamicColumn[] = [];
   childsValue: DynamicTable[] = [];
   childValue: DynamicTable;

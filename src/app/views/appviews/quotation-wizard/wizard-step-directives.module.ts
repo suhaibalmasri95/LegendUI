@@ -44,7 +44,7 @@ import { TreeviewModule } from 'ngx-treeview';
 import { BsDatepickerModule } from 'ngx-bootstrap';
 import { DataTablesModule } from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { OrderModule } from 'ngx-order-pipe';
 
 @NgModule({
   imports: [
@@ -56,6 +56,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     BrowserModule,
     MatTableModule,
+    OrderModule,
     MatPaginatorModule,
     MatSortModule,
     MatTabsModule,
