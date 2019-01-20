@@ -1,6 +1,6 @@
 <div mat-dialog-title>
   <div>Search Customers
-      <button class="btn btn-primary pull-right" mat-button (click)="save()">Ok</button>
+    <button class="btn btn-primary pull-right" mat-button (click)="save()">Ok</button>
   </div>
 
 </div>
@@ -21,18 +21,18 @@
           <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="customerSearchForm.Name">
         </div>
         <div class="form-group col-md-3">
-          <label for="IndividualCompany">Individual/Company</label>
+          <label for="IndOrComp">Individual/Company</label>
           <div>
-            <mat-radio-group name="IndividualCompany" [(ngModel)]="customerSearchForm.IndividualCompany">
+            <mat-radio-group name="IndOrComp" [(ngModel)]="customerSearchForm.IndOrComp">
               <mat-radio-button value="1">Individual</mat-radio-button>
               <mat-radio-button value="2">Company</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>
         <div class="form-group col-md-3">
-          <label for="CommercialName">Commercial Name</label>
-          <input name="CommercialName" placeholder="Commercial Name" [disabled]="customerSearchForm.IndividualCompany==2"
-            type="CommercialName" class="form-control" [(ngModel)]="customerSearchForm.CommercialName">
+          <label for="CommName">Commercial Name</label>
+          <input name="CommName" placeholder="Commercial Name" [disabled]="customerSearchForm.IndOrComp==2" type="text"
+            class="form-control" [(ngModel)]="customerSearchForm.CommName">
         </div>
 
       </div>
@@ -97,20 +97,20 @@
         <ng-container matColumnDef="CustomerName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
           <td style="width: 15%" mat-cell *matCellDef="let element">
-            {{element.CustomerName}}
+            {{element.Name}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="CustomerType">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Type</th>
           <td style="width: 15%" mat-cell *matCellDef="let element">
-            {{element.Customer}} </td>
+            {{element.CustomerType}} </td>
         </ng-container>
 
         <ng-container matColumnDef="GlId">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Gl Id </th>
           <td mat-cell *matCellDef="let element">
-            {{getCountryName(element.GlId)}}
+            {{element.GlId}}
           </td>
         </ng-container>
         <!-- 
@@ -125,8 +125,7 @@
       </ng-container> -->
 
         <tr mat-header-row *matHeaderRowDef="customersTableColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: customersTableColumns;" 
-        (click)="selectCustomer(row)" class=" mat-row {{selectedCustomer.ID===row.ID?'active':'not-active'}}"></tr>
+        <tr mat-row *matRowDef="let row; columns: customersTableColumns;" (click)="selectCustomer(row)" class=" mat-row {{selectedCustomer.ID===row.ID?'active':'not-active'}}"></tr>
 
       </table>
     </div>

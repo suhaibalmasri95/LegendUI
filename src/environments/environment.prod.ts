@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
 
-  localUrl: 'http://dbtest.legendsolutions.co/api/',
-  azureUrl: 'http://dbtest.legendsolutions.co/api/',
+  localUrl: 'https://localhost:44322/api/',
+  azureUrl: 'https://localhost:44322/api/',
   hostUrl: 'https://localhost:44322/'
 };

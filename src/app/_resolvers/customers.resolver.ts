@@ -11,7 +11,7 @@ import { LockUpService } from '../_services/_organization/LockUp.service';
 export class CustomerTypesDDLResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(33).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(33).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
@@ -24,7 +24,7 @@ export class CustomerTypesDDLResolver implements Resolve<LockUp[]> {
 export class DepartmentsResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(35).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(35).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
@@ -38,7 +38,57 @@ export class DepartmentsResolver implements Resolve<LockUp[]> {
 export class TitlesResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(28).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(28).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
+
+@Injectable()
+export class CustomerSourcesResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(34).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
+@Injectable()
+export class BusinessSectorsResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(30).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
+@Injectable()
+export class TaxTypesResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(31).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
+
+@Injectable()
+export class CustomerStatusResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(32).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);

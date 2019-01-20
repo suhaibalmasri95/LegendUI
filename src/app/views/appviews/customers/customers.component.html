@@ -38,7 +38,7 @@
                 <div class="form-group col-md-3">
                   <label for="CustomerNo">Customer No </label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
                   <input type="text" name="CustomerNo" placeholder="Customer No" readonly class="form-control"
-                    [(ngModel)]="customerForm.CustomerNo"/>
+                    [(ngModel)]="customerForm.CustomerNo" />
                 </div>
                 <div class="form-group col-md-3">
                   <label for="IndOrComp">Individual/Company</label>
@@ -51,8 +51,8 @@
                 </div>
                 <div class="form-group col-md-3">
                   <label for="CommName">Commercial Name</label>
-                  <input name="CommName" placeholder="Commercial Name" [disabled]="customerForm.IndOrComp==2"
-                    type="text" class="form-control" [(ngModel)]="customerForm.CommName">
+                  <input name="CommName" placeholder="Commercial Name" [disabled]="customerForm.IndOrComp==1" type="text"
+                    class="form-control" [(ngModel)]="customerForm.CommName">
                 </div>
                 <div class="form-group col-md-3">
                   <label for="LockUpTitle">Title</label>
@@ -87,9 +87,9 @@
               </div>
               <div class="row">
                 <div class="form-group col-md-3">
-                  <label for="Phone">Phone <span class="help-block">*</span></label>
+                  <label for="Phone">Phone</label>
                   <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerForm.Phone"
-                    required>
+                    >
                 </div>
                 <div class="form-group col-md-3">
                   <label for="Email">Email<span class="help-block">*</span></label>
@@ -97,9 +97,9 @@
                     required>
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="CustomerType">Customer Type</label>
-                  <ng-multiselect-dropdown name="CustomerType" [placeholder]="'Customer Type'" [data]="CustomerTypesDDL"
-                    [(ngModel)]="customerForm.CustomerType" [settings]="dropdownSettings">
+                  <label for="selectedCustomerTypes">Customer Type<span class="help-block">*</span></label>
+                  <ng-multiselect-dropdown name="selectedCustomerTypes" [placeholder]="'Customer Type'" [data]="CustomerTypesDDL"
+                    [(ngModel)]="selectedCustomerTypes" [settings]="dropdownSettings">
                   </ng-multiselect-dropdown>
                 </div>
 
@@ -118,63 +118,261 @@
                     <div class="row">
 
                       <div class="form-group col-md-3">
-                        <label for="Fax">Fax<span class="help-block">*</span></label>
-                        <input name="Fax" placeholder="Fax" type="text" class="form-control" [(ngModel)]="customerForm.Fax"
-                          required>
+                        <label for="CustomerSource">Customer Source</label>
+                        <select name="CustomerSource" class="form-control" (change)="fillSalesAgentBrokerList()"
+                          [(ngModel)]="customerForm.CustomerSource">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of CustomerSources" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
                       </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="SalesAgentBroker">Sales/Agent/Broker</label>
+                        <select name="SalesAgentBroker" class="form-control" [(ngModel)]="customerForm.SalesAgentBroker">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of SalesAgentBrokerList" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+                      <!-- <div class="form-group col-md-3">
+                        <label for="CustomerGroup">Customer Group</label>
+                        <select name="CustomerGroup" class="form-control" [(ngModel)]="customerForm.CustomerGroup">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of CustomerGroups" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div> -->
+
+
+                      <div class="form-group col-md-3">
+                        <label for="CustomerGroup">Customer Group</label>
+                        <input class="form-control" type="text" placeholder="Customer Group" matInput [(ngModel)]="customerForm.CustomerGroup"
+                        [matAutocomplete]="CustomerGroup" name="CustomerGroup">
+                        <mat-autocomplete #CustomerGroup="matAutocomplete" [displayWith]="displayFn">
+                          <mat-option *ngFor="let obj of CustomerGroups" [value]="obj.ID">
+                            {{ obj.Name }}
+                          </mat-option>
+                        </mat-autocomplete>
+                      </div>
+
+
+
+                      <div class="form-group col-md-3">
+                        <label for="Fax">Fax</label>
+                        <input name="Fax" placeholder="Fax" type="text" class="form-control" [(ngModel)]="customerForm.Fax">
+                      </div>
+
+                    </div>
+                    <div class="row">
 
                       <div class="form-group col-md-3">
                         <label for="Website">Website </label>
                         <input name="Website" placeholder="Website" type="text" class="form-control" [(ngModel)]="customerForm.Website">
                       </div>
+
                       <div class="form-group col-md-3">
                         <label for="Address">Address</label>
                         <input name="Address" placeholder="Address" type="text" class="form-control" [(ngModel)]="customerForm.Address">
                       </div>
-    
+
                       <div class="form-group col-md-3">
                         <label for="LockUpLanguage">Language</label>
                         <select name="LockUpLanguage" placeholder="Language" class="form-control" [(ngModel)]="customerForm.LockUpLanguage">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let lang of Languages" [ngValue]="lang.ID">{{lang.Name}}</option>
                         </select>
-   
                       </div>
-                    </div>
 
-                    <div class="row">
-
-                    
                       <div class="form-group col-md-3">
                         <label for="LockUpSecotor">Business Sector</label>
                         <select name="LockUpSecotor" placeholder="Business Sector" class="form-control" [(ngModel)]="customerForm.LockUpSecotor">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let business of BusinessSectors" [ngValue]="business.ID">{{business.Name}}</option>
                         </select>
-   
                       </div>
+
+                    </div>
+
+                    <div class="row">
+
                       <div class="form-group col-md-3">
-                        <label for="CODE">Code</label>
-                        <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="customerForm.Code">
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label for="CurrencyCode">Currency Code </label>
-                        <select name="CurrencyCode" placeholder="Currency Code" class="form-control" [(ngModel)]="customerForm.CurrencyCode">
+                        <label for="LockUpGender">Gender</label>
+                        <select name="LockUpGender" class="form-control" [(ngModel)]="customerForm.LockUpGender">
                           <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+                          <option *ngFor="let Gender of Genders" [ngValue]="Gender.ID">{{Gender.Name}}</option>
                         </select>
                       </div>
+
                       <div class="form-group col-md-3">
-                        <label for="CountryID">Country</label>
-                        <select name="CountryID" class="form-control" [(ngModel)]="customerForm.CountryID">
-                          <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
-                        </select>
+                        <label for="BirthDate">Birth Date</label>
+                        <input name="BirthDate" placeholder="Birth Date" type="date" class="form-control" [ngModel]="customerForm.BirthDate | date:'yyyy-MM-dd'"
+                          (ngModelChange)="userForm.BirthDate = $event">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="ReferenceNo">Reference No</label>
+                        <input name="ReferenceNo" placeholder="Reference No" type="text" class="form-control"
+                          [(ngModel)]="customerForm.ReferenceNo">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="RefEffectiveDate">Reference Eff. Date</label>
+                        <input name="RefEffectiveDate" placeholder="Reference Eff. Date" type="date" class="form-control"
+                          [ngModel]="customerForm.RefEffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="customerForm.RefEffectiveDate = $event">
                       </div>
                     </div>
 
                     <div class="row">
-                   
+
+                      <div class="form-group col-md-3">
+                        <label for="RefExpiryDate">Reference Exp. Date</label>
+                        <input name="RefExpiryDate" placeholder="Reference Exp. Date" type="date" class="form-control"
+                          [ngModel]="customerForm.RefExpiryDate | date:'yyyy-MM-dd'" (ngModelChange)="customerForm.RefExpiryDate = $event">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="LockUpTaxType"> Tax Type</label>
+                        <select name="LockUpTaxType" class="form-control" [(ngModel)]="customerForm.LockUpTaxType">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of TaxTypes" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="TaxNo">Tax No</label>
+                        <input name="TaxNo" placeholder="Tax No" type="text" class="form-control" [(ngModel)]="customerForm.TaxNo">
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="StartDate">Start Date</label>
+                        <input name="StartDate" placeholder="Start Date" type="date" class="form-control" [ngModel]="customerForm.StartDate | date:'yyyy-MM-dd'"
+                          (ngModelChange)="customerForm.StartDate = $event">
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="Iban">IBAN</label>
+                        <input name="Iban" placeholder="IBAN" type="text" class="form-control" [(ngModel)]="customerForm.Iban">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="BankID">Bank Name</label>
+                        <select name="BankID" placeholder="Bank Name" class="form-control" [(ngModel)]="customerForm.BankID"
+                          (change)="loadBankBranches()">
+                          <option [ngValue]=" undefined">Select</option>
+                          <option *ngFor="let BankName of BankNames" [ngValue]="BankName.Code">{{BankName.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="BankBranchID">Bank Branch</label>
+                        <select name="BankBranchID" placeholder="Bank Branch" [disabled]="!BankBranches ||BankBranches.length===0"
+                          class="form-control" [(ngModel)]="customerForm.BankBranchID">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let BankBranch of BankBranches" [ngValue]="BankBranch.Code">{{BankBranch.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Status">Customer Status</label>
+                        <select name="Status" placeholder="Customer Status" class="form-control" [(ngModel)]="customerForm.Status">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let CustomerState of CustomerStatus" [ngValue]="CustomerState.Code">{{CustomerState.Name}}</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+
+                      <div class="form-group col-md-3">
+                        <label for="StatusNotes"> Customer Status Notes</label>
+                        <input name="StatusNotes" placeholder=" Customer Status Notes" type="text" class="form-control"
+                          [(ngModel)]="customerForm.StatusNotes">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="CurrencyCode">Currency</label>
+                        <select name="CurrencyCode" placeholder="Currency" class="form-control" [(ngModel)]="customerForm.CurrencyCode">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="CountryCode">Country</label>
+                        <select name="CountryCode" class="form-control" [(ngModel)]="customerForm.CountryCode" (change)="loadCities()">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="CityID">City</label>
+                        <select name="CityID" placeholder="City" class="form-control" [(ngModel)]="customerForm.CityID"
+                          [disabled]="!cities ||cities.length===0" required>
+                          <option ngValue="">Select</option>
+                          <option *ngFor="let city of cities" [ngValue]="city.ID">{{city.Name}}</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="AreaID">Area</label>
+                        <select name="AreaID" placeholder="Area" class="form-control" [(ngModel)]="customerForm.AreaID"
+                          [disabled]="!Areas ||Areas.length===0" required>
+                          <option ngValue="">Select</option>
+                          <option *ngFor="let Area of Areas" [ngValue]="Area.ID">{{Area.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="PoBox">P.O Box</label>
+                        <input name="PoBox" placeholder="P.O Box" type="text" class="form-control" [(ngModel)]="customerForm.PoBox">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="PostalCode">Postal Code</label>
+                        <input name="PostalCode" placeholder="Postal Code" type="text" class="form-control" [(ngModel)]="customerForm.PostalCode">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Nationality">Nationality</label>
+                        <select name="Nationality" placeholder="Nationality" class="form-control" [(ngModel)]="customerForm.Nationality"
+                          [disabled]="!Nationality ||Nationality.length===0" required>
+                          <option ngValue="">Select</option>
+                          <option *ngFor="let Nationality of countries" [ngValue]="Nationality.ID">{{Nationality.Name}}</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <br>
+                        <mat-checkbox name="IsVip" [(ngModel)]="customerForm.IsVip">Is Chronic</mat-checkbox>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="XCoordinates">X Coordinates</label>
+                        <input name="XCoordinates" placeholder="X Coordinates" type="text" class="form-control"
+                          [(ngModel)]="customerForm.XCoordinates">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="YCoordinates">Y Coordinates</label>
+                        <input name="YCoordinates" placeholder="Y Coordinates" type="text" class="form-control"
+                          [(ngModel)]="customerForm.YCoordinates">
+                      </div>
+
                       <div class="form-group col-md-9">
                         <label for="Logo">Logo</label>
                         <div class="fileinput fileinput-new input-group" data-provides="fileinput">
@@ -379,7 +577,7 @@
                     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
                   </mat-form-field>
                 </div>
-              
+
                 <div class="x">
                   <div class="table-container">
                     <table mat-table #table2 [dataSource]="customerContactsDataSource" matSort>
