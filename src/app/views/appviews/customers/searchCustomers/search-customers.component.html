@@ -1,0 +1,136 @@
+<div mat-dialog-title>
+  <div>Search Customers
+      <button class="btn btn-primary pull-right" mat-button (click)="save()">Ok</button>
+  </div>
+
+</div>
+<div mat-dialog-content>
+
+  <fieldset>
+    <!-- <legend>
+    Search Customers
+  </legend> -->
+    <form #form="ngForm" (ngSubmit)="searchCustomer(form)" class="{{submit?'submited':''}}">
+      <div class="row">
+        <div class="form-group col-md-3">
+          <label for="customerNo">Customer No</label>
+          <input type="text" name="customerNo" placeholder="Customer No" class="form-control" [(ngModel)]="customerSearchForm.customerNo" />
+        </div>
+        <div class="form-group col-md-3">
+          <label for="Name">Name </label>
+          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="customerSearchForm.Name">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="IndividualCompany">Individual/Company</label>
+          <div>
+            <mat-radio-group name="IndividualCompany" [(ngModel)]="customerSearchForm.IndividualCompany">
+              <mat-radio-button value="1">Individual</mat-radio-button>
+              <mat-radio-button value="2">Company</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+        <div class="form-group col-md-3">
+          <label for="CommercialName">Commercial Name</label>
+          <input name="CommercialName" placeholder="Commercial Name" [disabled]="customerSearchForm.IndividualCompany==2"
+            type="CommercialName" class="form-control" [(ngModel)]="customerSearchForm.CommercialName">
+        </div>
+
+      </div>
+      <div class="row">
+
+
+        <div class="form-group col-md-3">
+          <label for="Mobile">Mobile</label>
+          <input name="Mobile" placeholder="Mobile" type="text" class="form-control" [(ngModel)]="customerSearchForm.Mobile"
+            requred>
+        </div>
+
+        <div class="form-group col-md-3">
+          <label for="Phone">Phone </label>
+          <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerSearchForm.Phone">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="Email">Email</label>
+          <input name="Email" placeholder="Email" type="email" class="form-control" [(ngModel)]="customerSearchForm.Email">
+        </div>
+
+        <div class="col-md-3 text-right">
+          <br>
+          <br>
+          <div class="btn-group">
+            <input class="btn btn-default" type="reset" (click)="resetForm(form)" value="Reset" />
+            <input class="btn btn-primary" type="submit" value="Search" (click)="submit=true" />
+          </div>
+        </div>
+      </div>
+
+
+    </form>
+  </fieldset>
+
+
+  <div class="x">
+    <div class="hr-line-dashed"></div>
+
+    <div class="table-container">
+      <table mat-table #table [dataSource]="customersDataSource" matSort>
+
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+              [indeterminate]="selection.hasValue() && !isAllSelected()">
+            </mat-checkbox>
+          </th>
+          <td style="width: 5%" mat-cell *matCellDef="let row">
+            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <td style="width: 5%" mat-cell *matCellDef="let element">
+            {{element.ID}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="CustomerName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+          <td style="width: 15%" mat-cell *matCellDef="let element">
+            {{element.CustomerName}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="CustomerType">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Type</th>
+          <td style="width: 15%" mat-cell *matCellDef="let element">
+            {{element.Customer}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="GlId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Gl Id </th>
+          <td mat-cell *matCellDef="let element">
+            {{getCountryName(element.GlId)}}
+          </td>
+        </ng-container>
+        <!-- 
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td style="width: 20%" mat-cell *matCellDef="let element">
+          <i (click)="updateCustomer(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+            (confirm)="deleteCustomer(element.ID)" ngbTooltip="Delete"></i>
+        </td>
+      </ng-container> -->
+
+        <tr mat-header-row *matHeaderRowDef="customersTableColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: customersTableColumns;" 
+        (click)="selectCustomer(row)" class=" mat-row {{selectedCustomer.ID===row.ID?'active':'not-active'}}"></tr>
+
+      </table>
+    </div>
+    <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+  </div>
+</div>

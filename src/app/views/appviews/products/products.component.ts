@@ -1,3 +1,4 @@
+import { Category, Column, Validation } from './../../../entities/Setup/Categories';
 import { ProductSubjectTypes } from './../../../_services/_setup/ProductSubjectTypes.service';
 import { SubjectTypesService } from './../../../_services/_setup/SubjectTypes.service';
 import { ProductQuestionnaireService } from './../../../_services/_setup/productQuestionnaires.service';
@@ -33,6 +34,11 @@ export class ProductsComponent implements OnInit {
   subjectTypeForm: ProductSubjectType;
   subjectTypes: ProductSubjectType[];
 
+  columnValidationForm: Validation;
+  columnValidations: Validation[];
+
+  categoryColumns: Column[];
+
   LockUps: LockUp[];
   ProductsDetailLockUp: LockUp[];
 
@@ -41,6 +47,7 @@ export class ProductsComponent implements OnInit {
 
   excessFroms: LockUp[];
   GroupIndividualLockups: LockUp[];
+  ValidationTypes: LockUp[];
 
 
   showSubTypes = false;
@@ -70,6 +77,23 @@ export class ProductsComponent implements OnInit {
   relatedQuestionnairesTableColumns = ['select', 'ID', 'lob', 'subLob', 'Product', 'ProductDetail'];
   relatedQuestionnairesDataSource: MatTableDataSource<ProductQuestionnaire>;
 
+  notRelatedCategoriesColumns = ['select', 'ID', 'Name', 'lob', 'subLob', 'Level', 'IsMultiRecord'];
+  notRelatedCategoriesDataSource: MatTableDataSource<Category>;
+
+  relatedCategoriesTableColumns = ['select', 'ID', 'Name', 'lob', 'subLob', 'Level', 'IsMultiRecord',
+    'Product', 'ProductDetail', 'Status', 'Order'];
+  relatedCategoriesDataSource: MatTableDataSource<Category>;
+
+
+  categoryColumnsTableColumns = ['select', 'ID', 'Label', 'ColumnType', 'Category', 'Product', 'ProductDetail', 'Status', 'ListReference'];
+  categoryColumnsDataSource: MatTableDataSource<Column>;
+  columnValidationsTableColumns = ['select', 'ID', 'Label', 'DataType', 'ValidationType', 'IsMandatory', 'CheckDuplication', 'MinValue',
+    'MaxValue'];
+  columnValidationsDataSource: MatTableDataSource<Validation>;
+
+
+
+
   selection: SelectionModel<Product>;
   selection2: SelectionModel<ProductsDetail>;
   selection3: SelectionModel<ProductsDetail>;
@@ -77,6 +101,10 @@ export class ProductsComponent implements OnInit {
   selection5: SelectionModel<ProductSubjectType>;
   selection6: SelectionModel<ProductQuestionnaire>;
   selection7: SelectionModel<ProductQuestionnaire>;
+  selection8: SelectionModel<Category>;
+  selection9: SelectionModel<Category>;
+  selection10: SelectionModel<Column>;
+  selection11: SelectionModel<Validation>;
   extraForm: string;
 
   snackPosition: MatSnackBarHorizontalPosition;
@@ -88,6 +116,10 @@ export class ProductsComponent implements OnInit {
   @ViewChild('paginator5') paginator5: MatPaginator;
   @ViewChild('paginator6') paginator6: MatPaginator;
   @ViewChild('paginator7') paginator7: MatPaginator;
+  @ViewChild('paginator8') paginator8: MatPaginator;
+  @ViewChild('paginator9') paginator9: MatPaginator;
+  @ViewChild('paginator10') paginator10: MatPaginator;
+  @ViewChild('paginator11') paginator11: MatPaginator;
 
   @ViewChild('table', { read: MatSort }) sort: MatSort;
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
@@ -96,12 +128,16 @@ export class ProductsComponent implements OnInit {
   @ViewChild('table5', { read: MatSort }) sort5: MatSort;
   @ViewChild('table6', { read: MatSort }) sort6: MatSort;
   @ViewChild('table7', { read: MatSort }) sort7: MatSort;
+  @ViewChild('table8', { read: MatSort }) sort8: MatSort;
+  @ViewChild('table9', { read: MatSort }) sort9: MatSort;
+  @ViewChild('table10', { read: MatSort }) sort10: MatSort;
+  @ViewChild('table11', { read: MatSort }) sort11: MatSort;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private productService: ProductsService, private productsDetailService: ProductsDetailService,
     private productQuestionnaireService: ProductQuestionnaireService,
     private subLineService: SubBusinessService, private commonService: CommonService,
-    private subjectTypesService: SubjectTypesService ,
+    private subjectTypesService: SubjectTypesService,
     private productSubjectTypeService: ProductSubjectTypes) { }
 
   ngOnInit() {
@@ -115,12 +151,17 @@ export class ProductsComponent implements OnInit {
     this.selection5 = new SelectionModel<ProductSubjectType>(true, initialSelection);
     this.selection6 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
     this.selection7 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
+    this.selection8 = new SelectionModel<Category>(true, initialSelection);
+    this.selection9 = new SelectionModel<Category>(true, initialSelection);
+    this.selection10 = new SelectionModel<Column>(true, initialSelection);
+    this.selection11 = new SelectionModel<Validation>(true, initialSelection);
 
     this.snackPosition = 'right';
 
     this.productForm = new Product();
     this.productsDetailForm = new ProductsDetail();
     this.subjectTypeForm = new ProductSubjectType();
+    this.columnValidationForm = new Validation();
 
     this.submit = false;
     this.submit2 = false;
@@ -130,6 +171,7 @@ export class ProductsComponent implements OnInit {
       this.LockUps = data.Status;
       this.excessFroms = data.excessFrom;
       this.GroupIndividualLockups = data.GroupIndividualLockups;
+      this.ValidationTypes = data.ValidationTypes;
 
       this.renderProductTable(data.products);
     });
@@ -534,11 +576,41 @@ export class ProductsComponent implements OnInit {
     this.isAllSelected7() ? this.selection7.clear() : this.relatedQuestionnairesDataSource.data.forEach(row => this.selection7.select(row));
   }
 
+  isAllSelected8() {
+    return this.selection8.selected.length === this.notRelatedCategoriesDataSource.data.length;
+  }
+  masterToggle8() {
+    this.isAllSelected8() ? this.selection8.clear() :
+      this.notRelatedCategoriesDataSource.data.forEach(row => this.selection8.select(row));
+  }
+
+  isAllSelected9() {
+    return this.selection9.selected.length === this.relatedCategoriesDataSource.data.length;
+  }
+  masterToggle9() {
+    this.isAllSelected9() ? this.selection9.clear() : this.relatedCategoriesDataSource.data.forEach(row => this.selection9.select(row));
+  }
+
+  isAllSelected10() {
+    return this.selection10.selected.length === this.categoryColumnsDataSource.data.length;
+  }
+  masterToggle10() {
+    this.isAllSelected10() ? this.selection10.clear() :
+      this.categoryColumnsDataSource.data.forEach(row => this.selection10.select(row));
+  }
+
+  isAllSelected11() {
+    return this.selection11.selected.length === this.columnValidationsDataSource.data.length;
+  }
+  masterToggle11() {
+    this.isAllSelected11() ? this.selection11.clear() : this.columnValidationsDataSource.data.forEach(row => this.selection11.select(row));
+  }
+
 
   resetForm(form) {
     this.productForm = new Product();
     this.submit = false;
-   this.subjectTypeForm = new ProductSubjectType();
+    this.subjectTypeForm = new ProductSubjectType();
     this.submit3 = false;
     form.reset();
   }

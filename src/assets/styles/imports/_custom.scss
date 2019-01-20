@@ -4,6 +4,18 @@
     display: none;
   }
 }
+.mat-radio-label-content {
+   padding-right: 8px !important;
+}
+.cdk-overlay-container{
+  z-index: 2002;
+}
+
+.full-width-dialog .mat-dialog-container {
+  max-width: none;
+  width: 100vw;
+  height: 90vh;
+}
 
 .submited .form-control.ng-invalid{
   box-shadow: 0 0 5px 0.2px #F44336;

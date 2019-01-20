@@ -76,6 +76,18 @@ export class WordingTypesResolver implements Resolve<LockUp[]> {
         );
     }
 }
+@Injectable()
+export class ValidationTypesResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.LoadLockUpsByMajorCode(27).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
 
 @Injectable()
 export class ServicesResolver implements Resolve<Service[]> {

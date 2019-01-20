@@ -1,4 +1,4 @@
-import { ProductsDetail, ProductSubjectType } from './../Setup/Products';
+import { ProductsDetail, ProductSubjectType } from './../Product/Products';
 import { IEntity } from '../interfaces/IEntity';
 
 export class Risk implements IEntity {

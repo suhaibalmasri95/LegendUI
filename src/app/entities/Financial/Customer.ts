@@ -47,4 +47,5 @@ export class Customer {
     YCoordinates: string;
     Logo: string;
     CustomerType: number;
+    selected: boolean;
 }

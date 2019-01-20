@@ -1,0 +1,935 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+  <div class="col-sm-10">
+    <!-- <h2>{{formControls.Name}}</h2> -->
+    <h2>Customers</h2>
+    <ol class="breadcrumb">
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a>Customers Setup</a>
+      </li>
+      <li class="active">
+        <strong>Customers</strong>
+      </li>
+    </ol>
+  </div>
+  <div class="col-sm-2">
+    <div class="title-action">
+      <!-- <a ui-sref="pages.edit-form({id:formControls.id})" class="btn btn-primary">Edit This form</a> -->
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <div class="tabs-container">
+        <div class="panel-body">
+
+          <fieldset>
+            <legend>
+              Customer
+            </legend>
+            <form #form="ngForm" (ngSubmit)="saveCustomer(form)" class="{{submit?'submited':''}}">
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="customerNo">Customer No </label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
+                  <input type="text" name="customerNo" placeholder="Customer No" readonly class="form-control"
+                    [(ngModel)]="customerForm.customerNo"/>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="IndividualCompany">Individual/Company</label>
+                  <div>
+                    <mat-radio-group name="IndividualCompany" [(ngModel)]="customerForm.IndividualCompany">
+                      <mat-radio-button value="1">Individual</mat-radio-button>
+                      <mat-radio-button value="2">Company</mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="CommercialName">Commercial Name</label>
+                  <input name="CommercialName" placeholder="Commercial Name" [disabled]="customerForm.IndividualCompany==2"
+                    type="CommercialName" class="form-control" [(ngModel)]="customerForm.CommercialName">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Title">Title</label>
+                  <select name="Title" placeholder="Title" class="form-control" [(ngModel)]="customerForm.Title">
+                    <option [ngValue]="undefined">Select</option>
+                    <option *ngFor="let Title of Titles" [ngValue]="Title.Code">{{Title.Name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="Name">Name <span class="help-block">*</span></label>
+                  <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="customerForm.Name"
+                    required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Name2">Name 2</label>
+                  <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="customerForm.Name2">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Mobile">Mobile<span class="help-block">*</span></label>
+                  <input name="Mobile" placeholder="Mobile" type="text" class="form-control" [(ngModel)]="customerForm.Mobile"
+                    required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="CountryCode">Phone Code<span class="help-block">*</span></label>
+                  <input name="CountryCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="customerForm.CountryCode"
+                    required>
+                </div>
+
+
+              </div>
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="Phone">Phone <span class="help-block">*</span></label>
+                  <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerForm.Phone"
+                    required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Email">Email<span class="help-block">*</span></label>
+                  <input name="Email" placeholder="Email" type="email" class="form-control" [(ngModel)]="customerForm.Email"
+                    required>
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="CustomerType">Customer Type</label>
+                  <ng-multiselect-dropdown name="CustomerType" [placeholder]="'Customer Type'" [data]="CustomerTypesDDL"
+                    [(ngModel)]="selectedCustomerTypes" [settings]="dropdownSettings">
+                  </ng-multiselect-dropdown>
+                </div>
+
+              </div>
+
+
+              <div class="row">
+
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        Additional Details
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="Fax">Fax<span class="help-block">*</span></label>
+                        <input name="Fax" placeholder="Fax" type="text" class="form-control" [(ngModel)]="customerForm.Fax"
+                          required>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Website">Website </label>
+                        <input name="Website" placeholder="Website" type="text" class="form-control" [(ngModel)]="customerForm.Website">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="Address">Address</label>
+                        <input name="Address" placeholder="Address" type="text" class="form-control" [(ngModel)]="customerForm.Address">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="PasswordMinNumbers">Password Min Numbers</label>
+                        <input name="PasswordMinNumbers" placeholder="Password Min Numbers" type="number" class="form-control"
+                          [(ngModel)]="customerForm.PasswordMinNumbers">
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="Address2">Address2</label>
+                        <input name="Address2" placeholder="Address2" type="text" class="form-control" [(ngModel)]="customerForm.Address2">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="CODE">Code</label>
+                        <input name="CODE" placeholder="Code" type="text" class="form-control" [(ngModel)]="customerForm.Code">
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="CurrencyCode">Currency Code </label>
+                        <select name="CurrencyCode" placeholder="Currency Code" class="form-control" [(ngModel)]="customerForm.CurrencyCode">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="CountryID">Country</label>
+                        <select name="CountryID" class="form-control" [(ngModel)]="customerForm.CountryID">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let country of countries" [ngValue]="country.ID">{{country.Name}}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                   
+                      <div class="form-group col-md-9">
+                        <label for="Logo">Logo</label>
+                        <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                          <div class="form-control" data-trigger="fileinput">
+
+                            <span class="fileinput-filename">
+                              <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                              {{replaceFileName(customerForm.Logo)}}
+                            </span>
+                          </div>
+
+                          <span class="input-group-addon btn btn-default btn-file" *ngIf="!customerForm.Logo">
+                            <label for="Logo" class="custom-file-upload">
+                              <i class="fa fa-cloud-upload"></i> Upload
+                            </label>
+
+                          </span>
+                          <input id="Logo" name="Logo" type="file" [(ngModel)]="customerForm.Logo" ng2FileSelect
+                            [uploader]="uploader">
+                          <a *ngIf="customerForm.Logo" (click)="customerForm.Logo=null" class="input-group-addon btn btn-default fileinput-exists"
+                            data-dismiss="fileinput">Remove</a>
+                        </div>
+
+                      </div>
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+
+              <div class="row">
+
+                <div class="col-md-11 text-right">
+                  <br>
+                  <br>
+                  <div class="btn-group">
+                    <input class="btn btn-default" type="reset" (click)="resetForm(form)" value="Reset" />
+                    <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </fieldset>
+
+          <br>
+
+          <mat-tab-group (selectedTabChange)="showBranchAndDepartmentForm($event)">
+            <mat-tab label="Customer Types">
+
+              <div class="col-md-12">
+                <div class="html5buttons">
+                  <br>
+                  <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection.hasValue()" mwlConfirmationPopover
+                      [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                      <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','customer')" placement="bottom"
+                      ngbTooltip="Export to CSV"><span>
+                        <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','customer')"
+                      placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','customer')" placement="bottom"
+                      ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                  </div>
+                </div>
+                <br>
+                <mat-form-field>
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                </mat-form-field>
+                <div class="x">
+                  <div class="table-container">
+                    <table mat-table #table [dataSource]="customersTypesDataSource" matSort>
+
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()">
+                          </mat-checkbox>
+                        </th>
+                        <td style="width: 5%" mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td style="width: 5%" mat-cell *matCellDef="let element">
+                          {{element.ID}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="CustomerName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.CustomerName}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="CustomerType">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Type</th>
+                        <td style="width: 15%" mat-cell *matCellDef="let element">
+                          {{element.CustomerType}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="GlId">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Gl Id </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{getCountryName(element.GlId)}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td style="width: 20%" mat-cell *matCellDef="let element">
+                          <i (click)="updateCustomerType(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteCustomerType(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="customersTypesTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: customersTypesTableColumns;" (click)="updateCustomerType(row)"
+                        class=" mat-row {{customerTypeForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                    </table>
+                  </div>
+                  <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+                </div>
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="col-md-12 extra-form" *ngIf="extraForm==='CustomerType'">
+
+                  <fieldset class="animated fadeInDown">
+                    <legend>
+                      Customer Type
+                    </legend>
+                    <form #form1="ngForm" (ngSubmit)="saveCustomerType(form1)" class="{{submit2?'submited':''}}">
+                      <div class="row">
+
+                        <div class="form-group col-md-3">
+                          <label for="CustomerType">Customer type <span class="help-block">*</span></label>
+                          <select name="CustomerType" class="form-control" [(ngModel)]="customerTypeForm.CustomerType"
+                            required>
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let obj of CustomerTypesDDL" [ngValue]="obj.ID">{{obj.Name}}</option>
+                          </select>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="GLId">GL Id</label>
+                          <input name="GLId" placeholder="GL Id" type="text" class="form-control" [(ngModel)]="customerTypeForm.GLId">
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                          <br>
+                          <br>
+                          <input class="btn btn-default" type="reset" (click)="customerTypeForm={};submit2=false;resetForm(form1)"
+                            value="Reset" />
+                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                        </div>
+
+                      </div>
+
+                    </form>
+                  </fieldset>
+                </div>
+              </div>
+
+            </mat-tab>
+
+
+            <mat-tab label="Customer Contacts">
+              <div class="col-md-12">
+                <div class="html5buttons">
+                  <br>
+                  <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection2.hasValue()" mwlConfirmationPopover
+                      [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                      (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                      <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','customerbranch')"
+                      placement="bottom" ngbTooltip="Export to CSV"><span>
+                        <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','customerbranch')"
+                      placement="bottom" ngbTooltip="Export to Excel"><span><img src="
+                                        assets/images/ExcelLogoSmall.scale-80.png">
+                      </span> </a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','customerbranch')"
+                      placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                  </mat-form-field>
+                </div>
+              
+                <div class="x">
+                  <div class="table-container">
+                    <table mat-table #table2 [dataSource]="customerContactsDataSource" matSort>
+
+                      <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                          <mat-checkbox (change)="$event ? masterToggle2() : null" [checked]="selection2.hasValue() && isAllSelected2()"
+                            [indeterminate]="selection2.hasValue() && !isAllSelected2()">
+                          </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection2.toggle(row) : null"
+                            [checked]="selection2.isSelected(row)">
+                          </mat-checkbox>
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="ID">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                        <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="NAME">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="NAME2">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                        <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Phone">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+                        <td mat-cell *matCellDef="let element">{{(element.Phone)}}
+                        </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="Mobile">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
+                        <td mat-cell *matCellDef="let element">{{(element.Mobile)}}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="Email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{(element.Email)}}
+                        </td>
+                      </ng-container>
+                      <ng-container matColumnDef="LOB">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>LOB</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.LOB}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="Department">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+                        <td style="width: 10%" mat-cell *matCellDef="let element">
+                          {{element.Department}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                          <i (click)="updateCustomerContact(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                          <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                            [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                            (confirm)="deleteCustomerContact(element.ID)" ngbTooltip="Delete"></i>
+                        </td>
+                      </ng-container>
+
+                      <tr mat-header-row *matHeaderRowDef="customerContactsTableColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: customerContactsTableColumns;" (click)="updateCustomerContact(row)"
+                        class=" mat-row {{customerContactForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                    </table>
+                  </div>
+                  <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+
+
+                <div class="col-md-12 extra-form" *ngIf="extraForm==='CustomerContacts'">
+
+                  <fieldset class="animated fadeInDown">
+                    <legend>
+                      Customer Contacts
+                    </legend>
+                    <form #form2="ngForm" (ngSubmit)="saveCustomerContact(form2)" class="{{submit2?'submited':''}}">
+                      <div class="row">
+
+                        <div class="form-group col-md-3">
+                          <label for="Name">Name <span class="help-block">*</span></label>
+                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="customerContactForm.Name"
+                            required>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Name2">Name 2</label>
+                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="customerContactForm.Name2">
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="Mobile">Mobile <span class="help-block">*</span></label>
+                          <input name="Mobile" placeholder="Mobile" type="text" class="form-control" [(ngModel)]="customerContactForm.Mobile"
+                            required>
+                        </div>
+
+                        <div class="form-group col-md-3">
+                          <label for="PhoneCode">Phone Code</label>
+                          <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="customerContactForm.PhoneCode">
+                        </div>
+                      </div>
+
+
+                      <div class="row">
+
+                        <div class="form-group col-md-3">
+                          <label for="Phone">Phone </label>
+                          <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerContactForm.Phone">
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                          <label for="Email">Email <span class="help-block">*</span></label>
+                          <input name="Email" placeholder="Email" type="email" class="form-control" [(ngModel)]="customerContactForm.Email"
+                            required>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                          <label for="LineOfBusniess">Line Of Business</label>
+                          <select name="LineOfBusniess" class="form-control" [(ngModel)]="categoryForm.LineOfBusniess">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
+                          </select>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                          <label for="Department">Department </label>
+                          <select name="Department" class="form-control" [(ngModel)]="customerContactForm.Department">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let obj of Departments" [ngValue]="obj.ID">{{obj.Name}}</option>
+                          </select>
+                        </div>
+
+                      </div>
+
+
+                      <div class="row">
+
+                        <div class="col-md-11 text-right">
+                          <br>
+                          <br>
+                          <input class="btn btn-default" type="reset" (click)="customerContactForm={};submit2=false;resetForm(form2)"
+                            value="Reset" />
+                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                        </div>
+                      </div>
+                    </form>
+                  </fieldset>
+                </div>
+
+              </div>
+            </mat-tab>
+            <mat-tab label="Commissions">
+
+              <div class="html5buttons">
+                <br>
+                <div class="dt-buttons btn-group">
+                  <button class="btn btn-default" [disabled]="!selection3.hasValue()" mwlConfirmationPopover
+                    [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                    (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                    <img src="assets/images/Trash-can.png"></button>
+                  <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','commission')" placement="bottom"
+                    ngbTooltip="Export to CSV"><span>
+                      <img src="assets/images/csv.jpg"></span></a>
+                  <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','commission')"
+                    placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
+                  </a>
+                  <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','commission')" placement="bottom"
+                    ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                  <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                  </mat-form-field>
+                </div>
+
+                <!-- <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-select placeholder="Basic Lob" (selectionChange)="reloadCommissionTable(commissionFilter)"
+                      [(ngModel)]="commissionFilter">
+                      <mat-option [value]=""> All </mat-option>
+                      <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
+                        {{BasicLobCode.Name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div> -->
+
+              </div>
+              <div class="x">
+                <div class="table-container">
+                  <table mat-table #table3 [dataSource]="commissionDataSource" matSort>
+
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle3() : null" [checked]="selection3.hasValue() && isAllSelected3()"
+                          [indeterminate]="selection3.hasValue() && !isAllSelected3()">
+                        </mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection3.toggle(row) : null"
+                          [checked]="selection3.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ID">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="NAME">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="NAME2">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
+                      <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                    </ng-container>
+
+
+                    <ng-container matColumnDef="Product">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{(element.Product)}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="SubLob">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub Lob</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{(element.SubLob)}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="CommissionType">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission Type</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{(element.CommissionType)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="CommissionPercent">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission %</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{(element.CommissionPercent)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="CommissionAmount">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission Amount</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{(element.CommissionAmount)}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>Actions</th>
+                      <td mat-cell *matCellDef="let element">
+                        <i (click)="updateCommission(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                        <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                          [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                          (confirm)="deleteCommission(element.ID)" ngbTooltip="Delete"></i>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="commissionTableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: commissionTableColumns;" (click)="updateCommission(row)"
+                      class=" mat-row {{commissionForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                  </table>
+                </div>
+                <mat-paginator #paginator3 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+              </div>
+
+              <div class="hr-line-dashed"></div>
+
+              <div class="col-md-12 extra-form" *ngIf="extraForm==='commission'">
+
+                <fieldset class="animated fadeInDown">
+                  <legend>
+                    Commission
+                  </legend>
+                  <form #form3="ngForm" (ngSubmit)="saveCommission(form3)" class="{{submit4?'submited':''}}">
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="CustomerType">Customer type <span class="help-block">*</span></label>
+                        <select name="CustomerType" class="form-control" [(ngModel)]="commissionForm.CustomerType"
+                          required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of CustomerTypesDDL" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="CommissionType">Commission type <span class="help-block">*</span></label>
+                        <select name="Commissionype" class="form-control" [(ngModel)]="commissionForm.CommissionType"
+                          required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of CommissionTypes" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="ProductDetail">Product Detail</label>
+                        <select name="ProductDetail" class="form-control" [(ngModel)]="commissionForm.ProductDetail">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of productsDetails" [ngValue]="obj.ID">{{obj.ID}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="CommissionPercent">Commission % </label>
+                        <input name="CommissionPercent" placeholder="Commission Percent" type="number" class="form-control"
+                          [(ngModel)]="commissionForm.CommissionPercent">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="CommissionAmount">Commission Amount </label>
+                        <input name="CommissionAmount" placeholder="Commission Percent" type="number" class="form-control"
+                          [(ngModel)]="commissionForm.CommissionAmount">
+                      </div>
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="DebitCredit"> Debit/Credit</label>
+                      <mat-radio-group [(ngModel)]="commissionForm.DebitCredit">
+                        <mat-radio-button value="1">Debit</mat-radio-button>
+                        <mat-radio-button class="example-margin" value="2">Credit</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                    <div class="row">
+
+                      <div class="col-md-12 text-right">
+                        <br>
+                        <br>
+                        <input class="btn btn-default" type="reset" (click)="commissionForm={};submit4=false;resetForm(form3)"
+                          value="Reset" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit4=true" />
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+
+              </div>
+            </mat-tab>
+
+
+            <mat-tab label="Provider Licenses">
+
+              <div class="html5buttons">
+                <br>
+                <div class="dt-buttons btn-group">
+                  <button class="btn btn-default" [disabled]="!selection4.hasValue()" mwlConfirmationPopover
+                    [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="bottom"
+                    (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+                    <img src="assets/images/Trash-can.png"></button>
+                  <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','providerLicense')"
+                    placement="bottom" ngbTooltip="Export to CSV"><span>
+                      <img src="assets/images/csv.jpg"></span></a>
+                  <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','providerLicense')"
+                    placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
+                  </a>
+                  <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','providerLicense')"
+                    placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                  <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="col-md-3">
+                  <mat-form-field>
+                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                  </mat-form-field>
+                </div>
+
+                <!-- <div class="col-md-3">
+                  <mat-form-field>
+                    <mat-select placeholder="Basic Lob" (selectionChange)="reloadProviderLicenseTable(commissionFilter)"
+                      [(ngModel)]="commissionFilter">
+                      <mat-option [value]=""> All </mat-option>
+                      <mat-option *ngFor="let BasicLobCode of BasicLobCodes" [value]="BasicLobCode.ID">
+                        {{BasicLobCode.Name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div> -->
+
+              </div>
+              <div class="x">
+                <div class="table-container">
+                  <table mat-table #table4 [dataSource]="providerLicenseDataSource" matSort>
+
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle4() : null" [checked]="selection4.hasValue() && isAllSelected4()"
+                          [indeterminate]="selection4.hasValue() && !isAllSelected4()">
+                        </mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection4.toggle(row) : null"
+                          [checked]="selection4.isSelected(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ID">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+                      <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="LICNESNO">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>License NO</th>
+                      <td mat-cell *matCellDef="let element"> {{element.LICNESNO}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="EffectiveDate">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Effective Date</th>
+                      <td mat-cell *matCellDef="let element"> {{element.EffectiveDate}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="EXP_DATE">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiry Date</th>
+                      <td mat-cell *matCellDef="let element"> {{element.EXP_DATE}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="Specialty">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Specialty</th>
+                      <td mat-cell *matCellDef="let element"> {{element.Specialty}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ProviderType">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Provider Type</th>
+                      <td style="width: 15%" mat-cell *matCellDef="let element">
+                        {{(element.ProviderType)}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>Actions</th>
+                      <td mat-cell *matCellDef="let element">
+                        <i (click)="updateProviderLicense(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                        <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                          [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                          (confirm)="deleteProviderLicense(element.ID)" ngbTooltip="Delete"></i>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="providerLicenseTableColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: providerLicenseTableColumns;" (click)="updateProviderLicense(row)"
+                      class=" mat-row {{providerLicenseForm.ID===row.ID?'active':'not-active'}}"></tr>
+
+                  </table>
+                </div>
+                <mat-paginator #paginator4 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+              </div>
+
+              <div class="hr-line-dashed"></div>
+
+              <div class="col-md-12 extra-form" *ngIf="extraForm==='providerLicense'">
+
+                <fieldset class="animated fadeInDown">
+                  <legend>
+                    Provider License
+                  </legend>
+                  <form #form4="ngForm" (ngSubmit)="saveProviderLicense(form4)" class="{{submit4?'submited':''}}">
+                    <div class="row">
+
+
+                      <div class="form-group col-md-3">
+                        <label for="LicenseNo">License No <span class="help-block">*</span></label>
+                        <input name="LicenseNo" placeholder="License No" type="text" class="form-control" [(ngModel)]="providerLicenseForm.LicenseNo"
+                          required>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+                        <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control"
+                          [ngModel]="providerLicenseForm.EffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="providerLicenseForm.EffectiveDate = $event">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+                        <input name="ExpiryDate" required placeholder="Expiry Date" type="date" class="form-control"
+                          [ngModel]="providerLicenseForm.ExpiryDate  | date:'yyyy-MM-dd'" (ngModelChange)="providerLicenseForm.ExpiryDate = $event">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Specialty">Specialty</label>
+                        <select name="Specialty" class="form-control" [(ngModel)]="providerLicenseForm.Specialty"
+                          required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of Specialties" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="ProviderType">Provider type</label>
+                        <select name="ProviderType" class="form-control" [(ngModel)]="providerLicenseForm.ProviderType"
+                          required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of ProviderLicenseTypes" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="ProviderCodingSystem">Provider Coding System</label>
+                        <select name="ProviderCodingSystem" class="form-control" [(ngModel)]="providerLicenseForm.ProviderCodingSystem"
+                          required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of ProviderCodingSystems" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="Status">Status</label>
+                        <select name="Status" class="form-control" [(ngModel)]="providerLicenseForm.Status" required>
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of Status" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="col-md-12 text-right">
+                        <br>
+                        <br>
+                        <input class="btn btn-default" type="reset" (click)="providerLicenseForm={};submit4=false;resetForm(form4)"
+                          value="Reset" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit4=true" />
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+
+              </div>
+            </mat-tab>
+
+          </mat-tab-group>
+
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>

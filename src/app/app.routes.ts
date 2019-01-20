@@ -1,3 +1,4 @@
+import { CustomersComponent } from './views/appviews/customers/customers.component';
 import { ReportsGroupResolver } from './_resolvers/reports.resolver';
 import { ProductAttachmentsComponent } from './views/appviews/productAttachments/productAttachments.component';
 import { PaymentType } from './_resolvers/payment-type.resolver';
@@ -56,10 +57,12 @@ import {
   ProductsResolver, GroupIndividualLockupsResolver, WordingTypesResolver,
   ReportLevelResolver,
   ServicesResolver,
-  AttachmentLevelResolver
+  AttachmentLevelResolver,
+  ValidationTypesResolver
 } from './_resolvers/products.resolver';
 import { AccountedFor } from './_resolvers/accounted-for.resolver';
 import { OpenCoverType } from './_resolvers/open-cover-type';
+import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver } from './_resolvers/customers.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -217,6 +220,7 @@ export const ROUTES: Routes = [
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
           Status: LockUpResolver,
+          ValidationTypes: ValidationTypesResolver,
         }
       },
       {
@@ -235,6 +239,7 @@ export const ROUTES: Routes = [
       }
     ]
   },
+
   {
     path: 'production', component: BasicLayoutComponent, runGuardsAndResolvers: 'always',
     canActivate: [AuthGuard],
@@ -251,9 +256,31 @@ export const ROUTES: Routes = [
           openCoverType: OpenCoverType,
           calculateBase: CalculationBase,
           paymentType: PaymentType,
-          status: LockUpResolver,
+          status: LockUpResolver
         }
       }]
+  },
+  {
+    path: 'customers-setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'customers', component: CustomersComponent,
+        resolve: {
+          CustomerTypesDDL: CustomerTypesDDLResolver,   
+          LineOfBusinesses: LineOfBusinessResolver,
+          Departments: DepartmentsResolver,
+          Titles: TitlesResolver,
+          currencies: CurrencyResolver,
+          countries: CountryResolver
+
+          // lineOfBusiness: LineOfBusinessResolver,
+          // subLineOfBusiness: SubLineOfBusinessResolver,
+          // Status: LockUpResolver,
+          // ValidationTypes: ValidationTypesResolver,
+        }
+      }
+    ]
   },
 
 

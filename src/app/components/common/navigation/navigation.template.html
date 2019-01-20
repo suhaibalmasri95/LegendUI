@@ -70,7 +70,16 @@
         </a>
         <ul class="nav nav-second-level collapse" [ngClass]="{in: activeRoute('products-setup')}">
           <li [ngClass]="{active: activeRoute('products')}"><a [routerLink]="['/products-setup/products']">Products</a></li>
-          <li [ngClass]="{active: activeRoute('productAttachments')}"><a [routerLink]="['/products-setup/productAttachments']">Attachments & Wordings </a></li>
+          <li [ngClass]="{active: activeRoute('productAttachments')}"><a [routerLink]="['/products-setup/productAttachments']">Attachments
+              & Wordings </a></li>
+
+        </ul>
+      </li>
+      <li [ngClass]="{active: activeRoute('customers-setup')}">
+        <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Customers Setup</span> <span class="fa arrow"></span>
+        </a>
+        <ul class="nav nav-second-level collapse" [ngClass]="{in: activeRoute('customers-setup')}">
+          <li [ngClass]="{active: activeRoute('customers')}"><a [routerLink]="['/customers-setup/customers']">Customers</a></li>
 
         </ul>
       </li>

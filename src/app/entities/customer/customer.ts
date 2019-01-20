@@ -1,6 +1,6 @@
 import { IEntity } from '../interfaces/IEntity';
 
-export class Category implements IEntity {
+export class Customer implements IEntity {
     ID: number;
     Name: string;
     Name2: string;
@@ -23,7 +23,7 @@ export class Category implements IEntity {
 
 }
 
-export class Column implements IEntity {
+export class CustomerType implements IEntity {
     ID: number;
     Name: string;
     Name2: string;
@@ -45,7 +45,29 @@ export class Column implements IEntity {
     RefColDetailsID: string;
     selected: boolean;
 }
-export class Validation implements IEntity {
+export class CustomerContact implements IEntity {
+    ID: number;
+    Name: string;
+    Name2: string;
+    Label: string;
+    Label2: string;
+    LangID: number;
+    ModifiedBy: string;
+    CreateBy: string;
+    LineOfBusniess: number;
+    SubLineOfBusniess: number;
+    Status: number;
+    StatusDate: Date;
+    CreationDate: Date;
+    ModificationDate: Date;
+    ColumnType: number;
+    CategoryID: number;
+    RefTableName: string;
+    RefMajorCode: string;
+    RefColDetailsID: string;
+    selected: boolean;
+}
+export class ProviderLicense implements IEntity {
     ID: number;
     Name: string;
     Name2: string;

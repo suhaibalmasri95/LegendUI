@@ -56,8 +56,9 @@ import { SidenavService } from './_services/sidenav/sidenav.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import {
   ProductsResolver, GroupIndividualLockupsResolver, ReportLevelResolver,
-  ServicesResolver, AttachmentLevelResolver, WordingTypesResolver
+  ServicesResolver, AttachmentLevelResolver, WordingTypesResolver, ValidationTypesResolver
 } from './_resolvers/products.resolver';
+import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver } from './_resolvers/customers.resolver';
 
 
 
@@ -131,7 +132,11 @@ import {
     UserCompany,
     CalculationBase,
     PaymentType,
-    OpenCoverType
+    OpenCoverType,
+    ValidationTypesResolver,
+    CustomerTypesDDLResolver,
+    DepartmentsResolver,
+    TitlesResolver
   ],
   bootstrap: [AppComponent]
 })

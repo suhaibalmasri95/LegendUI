@@ -18,7 +18,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { DataTablesModule } from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule, MatExpansionModule, MatSidenavModule } from '@angular/material';
+import { MatTableModule, MatPaginatorModule, MatTabsModule, MatInputModule, MatExpansionModule, MatSidenavModule, MatRadioModule, MatDialog } from '@angular/material';
 import { MatSortModule, MatSelectModule, MatSnackBarModule } from '@angular/material';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { MatDividerModule } from '@angular/material/divider';
@@ -45,6 +45,10 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { CdkTableModule} from '@angular/cdk/table';
+import { CustomersComponent } from './customers/customers.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { SearchCustomersComponent } from './customers/searchCustomers/search-customers.component';
+import { DepartmentsResolver } from 'src/app/_resolvers/customers.resolver';
 
 @NgModule({
   declarations: [
@@ -70,8 +74,11 @@ import { CdkTableModule} from '@angular/cdk/table';
     DynamicComponentComponent,
     DynamicColumnsComponent,
     SelectComponentComponent,
-    TableComponent
+    TableComponent,
+    CustomersComponent ,
+    SearchCustomersComponent
   ],
+  entryComponents: [SearchCustomersComponent],
   imports: [
     RouterModule,
     PeityModule,
@@ -100,11 +107,13 @@ import { CdkTableModule} from '@angular/cdk/table';
     }),
     MatDividerModule,
     MatCheckboxModule,
+    MatRadioModule,
     NgMultiSelectDropDownModule.forRoot(),
     MatExpansionModule,
     TreeviewModule.forRoot(),
     MatCardModule,
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    MatDialogModule
 
   ],
   exports: [
