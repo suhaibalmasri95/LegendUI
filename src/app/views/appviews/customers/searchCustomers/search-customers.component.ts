@@ -5,7 +5,7 @@ import { Customer } from '../../../../entities/customer/customer';
 import { CustomerService } from '../../../../_services/_customer/customer.service';
 
 export interface DialogData {
-  selectedCustomer: any
+  selectedCustomer: any;
 }
 
 @Component({
@@ -29,10 +29,10 @@ export class SearchCustomersComponent implements OnInit {
   submit: boolean;
 
   ngOnInit() {
-    this.customerSearchForm = new Customer()
+    this.customerSearchForm = new Customer();
     this.selection = new SelectionModel<any>(true, []);
     this.submit = false;
-    this.selectedCustomer = new Customer()
+    this.selectedCustomer = new Customer();
 
     this.loadCustomers();
 
@@ -42,7 +42,7 @@ export class SearchCustomersComponent implements OnInit {
 
   loadCustomers() {
     this.customerService.load(null, null, null, null, null, null, null, null, 1).subscribe(data => {
-      this.renderCustomerTypesTable(data)
+      this.renderCustomerTypesTable(data);
     });
   }
   renderCustomerTypesTable(data) {
@@ -76,13 +76,13 @@ export class SearchCustomersComponent implements OnInit {
     this.customerService.load(this.customerSearchForm.ID, this.customerSearchForm.Name,
       this.customerSearchForm.CustomerNo, this.customerSearchForm.Email, this.customerSearchForm.Mobile,
       this.customerSearchForm.ReferenceNo, this.customerSearchForm.Name, this.customerSearchForm.IndOrComp, 1).subscribe(data => {
-        this.renderCustomerTypesTable(data)
+        this.renderCustomerTypesTable(data);
       });
   }
 
 
-  selectCustomer(Customer: any) {
-    this.selectedCustomer = Customer;
+  selectCustomer(customer: any) {
+    this.selectedCustomer = customer;
   }
 
   save() {

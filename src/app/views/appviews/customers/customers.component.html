@@ -710,7 +710,7 @@
 
                         <div class="form-group col-md-3">
                           <label for="LineOfBusniess">Line Of Business</label>
-                          <select name="LineOfBusniess" class="form-control" [(ngModel)]="categoryForm.LineOfBusniess">
+                          <select name="LineOfBusniess" class="form-control" [(ngModel)]="customerContactForm.LineOfBusniess">
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
                           </select>
