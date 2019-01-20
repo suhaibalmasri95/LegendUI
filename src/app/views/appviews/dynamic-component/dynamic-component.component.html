@@ -5,7 +5,7 @@
   </legend>
 
  
-<app-dynamic-columns [column]="category.Columns"  (childsData)="setCategoryChildData($event)" ></app-dynamic-columns>
+<app-dynamic-columns [column]="category.Columns" [updateMode]= "updateModeForNotMultiRecord" (childsData)="setCategoryChildData($event)" ></app-dynamic-columns>
 
 
 
@@ -16,7 +16,7 @@
 
  
 <div *ngIf="category.IsMulitRecords">
-<app-dynamic-columns [column]="category.Columns"  (childsData)="setCategoryChildData($event)" ></app-dynamic-columns>
+<app-dynamic-columns [column]="category.Columns"   (childsData)="setCategoryChildData($event)" ></app-dynamic-columns>
 
 
 

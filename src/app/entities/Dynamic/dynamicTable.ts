@@ -1,3 +1,4 @@
+import { LockUp } from './../organization/LockUp';
 import { IEntity } from './../interfaces/IEntity';
 export class DynamicTable implements IEntity {
     selected: boolean;
@@ -40,4 +41,6 @@ export class DynamicTable implements IEntity {
     ChildCounts: number;
     Value: any;
     UwColID: number;
+    ParentID: number;
+    OrginalLockUp: LockUp[];
 }

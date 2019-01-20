@@ -38,4 +38,5 @@ export class Risk implements IEntity {
     UwRiskID: number;
     index: number;
     DynamicCategory: ProductDynmicCategory[];
+    UpdateMode: boolean;
 }

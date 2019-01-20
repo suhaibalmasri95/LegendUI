@@ -9,7 +9,6 @@ import { CalculationBase } from './_resolvers/calculation-base.resolver';
 import { DistributionChannel } from './_resolvers/distribution-Channel.resolver';
 import { UserCompany } from './_resolvers/usercompany.resolver';
 import { BusinessTypes } from './_resolvers/business-types.resolver';
-import { QuotationComponent } from './views/appviews/quotation/quotation.component';
 import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolver';
 import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
 import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';

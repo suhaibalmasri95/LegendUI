@@ -35,7 +35,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MatCardModule, MatExpansionModule, MatCheckboxModule,
   MatDividerModule, MatSidenavModule, MatAutocompleteModule, MatIconModule,
    MatSnackBarModule, MatSelectModule, MatInputModule, MatTabsModule,
-   MatSortModule, MatPaginatorModule, MatTableModule, MatListModule } from '@angular/material';
+   MatSortModule, MatPaginatorModule, MatTableModule, MatListModule, MatRadioModule, MatDialogModule } from '@angular/material';
 import { CdkTableModule } from '@angular/cdk/table';
 import { ConfirmationPopoverModule } from 'angular-confirmation-popover';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,7 +46,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomersComponent } from '../customers/customers.component';
 import { SearchCustomersComponent } from '../customers/searchCustomers/search-customers.component';
-
+import { OrderModule } from 'ngx-order-pipe';
 
 @NgModule({
   imports: [
@@ -58,6 +58,7 @@ import { SearchCustomersComponent } from '../customers/searchCustomers/search-cu
     HttpClientModule,
     BrowserModule,
     MatTableModule,
+    OrderModule,
     MatPaginatorModule,
     MatSortModule,
     MatTabsModule,
@@ -67,6 +68,8 @@ import { SearchCustomersComponent } from '../customers/searchCustomers/search-cu
     MatIconModule,
     MatAutocompleteModule,
     MatSidenavModule,
+    MatDialogModule,
+    MatRadioModule,
     CdkTableModule,
     MatDividerModule,
     MatCheckboxModule,
