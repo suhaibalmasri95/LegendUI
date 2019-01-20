@@ -1,3 +1,34 @@
-<p>
-  covers works!
-</p>
+<mat-tab-group>
+  <!-- if document has sales person or broker or agent -->
+  <mat-tab label="Agent Commisons">
+    <div class="col-md-12">
+      <app-generictable *ngIf="shares.length > 0" #tableSelector [tableColumns]='sharesTableColumn' [DataSource]='shares'
+        (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+
+    </div>
+
+  </mat-tab>
+  <mat-tab label="Document Covers">
+      <div class="col-md-12">
+
+          <div class="form-group col-md-3">
+              <label for="QutValidity">Risks</label>
+            
+              <input class="form-control" type="text" placeholder="Risks" matInput [formControl]="RiskSearch"
+                [matAutocomplete]="risksauto" >
+            
+              <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+              <mat-autocomplete #risksauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillForm(false)">
+                <mat-option *ngFor="let risk of risks" [value]="risk">
+                    {{ risk.Name }}
+                </mat-option>
+              </mat-autocomplete>
+            
+            </div>
+        <app-generictable *ngIf="shares.length > 0" #tableSelector [tableColumns]='sharesTableColumn' [DataSource]='shares'
+          (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+  
+      </div>
+  
+    </mat-tab>
+</mat-tab-group>

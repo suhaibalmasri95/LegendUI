@@ -367,9 +367,9 @@
       </mat-expansion-panel>
     </mat-accordion>-->
     </div>
-    <div  *ngFor="let item of productDynamicCategories  ">
+    <div  *ngFor="let item of productDynamicCategories | orderBy: order ">
         <div *ngIf="item.IsMulitRecords === 0">
-      <app-dynamic-component [category]="item"></app-dynamic-component>
+      <app-dynamic-component [category]="item" [updateModeForNotMultiRecord]="updateMode"></app-dynamic-component>
       </div>
     </div>
    
@@ -496,7 +496,7 @@
  
    
 </div>
-  </mat-tab> <!-- "-->
+  </mat-tab>
   <mat-tab label="Document Attachments" *ngIf="documentAttachments.length > 0">
       <div class="col-md-12">
       <form [formGroup]="attachmentForm">
@@ -541,8 +541,8 @@
                        </label>
 
                    </span>
-                   <input id="FLAG" name="Flag" type="file" 
-                   (change)="onFileChanged($event)">
+                   <input id="FLAG" name="Flag" type="file" onclick="this.value = null"
+                   (change)="onFileChanged($event)" >
                    <a class="input-group-addon btn btn-default fileinput-exists"
                        data-dismiss="fileinput" *ngIf="f.File.value" (click)="removeFile()">Remove</a>
                </div>
@@ -561,7 +561,7 @@
     <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateAttachment($event)' (delete)='deleteAttachment($event)'></app-generictable>
   </div>
   </mat-tab>
-  <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord; let index = index" label="{{item.Lable}}" >
+  <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord | orderBy: order; let index = index" label="{{item.Lable}}" >
       <div class="col-md-12">
     <app-dynamic-component [category]="item"></app-dynamic-component></div>
   </mat-tab> 
@@ -573,8 +573,8 @@
       <div class="btn-group">
        
         
-        <button class="btn btn-primary" (click)="submit()">Submit </button>
-      
+        <button class="btn btn-primary" (click)="submit()" >Submit </button>
+        <button class="btn btn-primary" (click)="nextClick()" *ngIf="updateMode">Next </button>
       </div>
   </div>
 
