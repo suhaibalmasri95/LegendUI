@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSnackBarHorizontalPosition, MatPaginator, MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
+import { MatTableDataSource, MatSnackBarHorizontalPosition, MatPaginator, 
+  MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';

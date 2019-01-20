@@ -36,27 +36,27 @@
             <form #form="ngForm" (ngSubmit)="saveCustomer(form)" class="{{submit?'submited':''}}">
               <div class="row">
                 <div class="form-group col-md-3">
-                  <label for="customerNo">Customer No </label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
-                  <input type="text" name="customerNo" placeholder="Customer No" readonly class="form-control"
-                    [(ngModel)]="customerForm.customerNo"/>
+                  <label for="CustomerNo">Customer No </label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
+                  <input type="text" name="CustomerNo" placeholder="Customer No" readonly class="form-control"
+                    [(ngModel)]="customerForm.CustomerNo"/>
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="IndividualCompany">Individual/Company</label>
+                  <label for="IndOrComp">Individual/Company</label>
                   <div>
-                    <mat-radio-group name="IndividualCompany" [(ngModel)]="customerForm.IndividualCompany">
+                    <mat-radio-group name="IndOrComp" [(ngModel)]="customerForm.IndOrComp">
                       <mat-radio-button value="1">Individual</mat-radio-button>
                       <mat-radio-button value="2">Company</mat-radio-button>
                     </mat-radio-group>
                   </div>
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="CommercialName">Commercial Name</label>
-                  <input name="CommercialName" placeholder="Commercial Name" [disabled]="customerForm.IndividualCompany==2"
-                    type="CommercialName" class="form-control" [(ngModel)]="customerForm.CommercialName">
+                  <label for="CommName">Commercial Name</label>
+                  <input name="CommName" placeholder="Commercial Name" [disabled]="customerForm.IndOrComp==2"
+                    type="text" class="form-control" [(ngModel)]="customerForm.CommName">
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="Title">Title</label>
-                  <select name="Title" placeholder="Title" class="form-control" [(ngModel)]="customerForm.Title">
+                  <label for="LockUpTitle">Title</label>
+                  <select name="LockUpTitle" placeholder="Title" class="form-control" [(ngModel)]="customerForm.LockUpTitle">
                     <option [ngValue]="undefined">Select</option>
                     <option *ngFor="let Title of Titles" [ngValue]="Title.Code">{{Title.Name}}</option>
                   </select>
@@ -78,8 +78,8 @@
                     required>
                 </div>
                 <div class="form-group col-md-3">
-                  <label for="CountryCode">Phone Code<span class="help-block">*</span></label>
-                  <input name="CountryCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="customerForm.CountryCode"
+                  <label for="PhoneCode">Phone Code<span class="help-block">*</span></label>
+                  <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="customerForm.PhoneCode"
                     required>
                 </div>
 
@@ -99,7 +99,7 @@
                 <div class="form-group col-md-3">
                   <label for="CustomerType">Customer Type</label>
                   <ng-multiselect-dropdown name="CustomerType" [placeholder]="'Customer Type'" [data]="CustomerTypesDDL"
-                    [(ngModel)]="selectedCustomerTypes" [settings]="dropdownSettings">
+                    [(ngModel)]="customerForm.CustomerType" [settings]="dropdownSettings">
                   </ng-multiselect-dropdown>
                 </div>
 
@@ -131,19 +131,27 @@
                         <label for="Address">Address</label>
                         <input name="Address" placeholder="Address" type="text" class="form-control" [(ngModel)]="customerForm.Address">
                       </div>
+    
                       <div class="form-group col-md-3">
-                        <label for="PasswordMinNumbers">Password Min Numbers</label>
-                        <input name="PasswordMinNumbers" placeholder="Password Min Numbers" type="number" class="form-control"
-                          [(ngModel)]="customerForm.PasswordMinNumbers">
+                        <label for="LockUpLanguage">Language</label>
+                        <select name="LockUpLanguage" placeholder="Language" class="form-control" [(ngModel)]="customerForm.LockUpLanguage">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let lang of Languages" [ngValue]="lang.ID">{{lang.Name}}</option>
+                        </select>
+   
                       </div>
-
                     </div>
 
                     <div class="row">
 
+                    
                       <div class="form-group col-md-3">
-                        <label for="Address2">Address2</label>
-                        <input name="Address2" placeholder="Address2" type="text" class="form-control" [(ngModel)]="customerForm.Address2">
+                        <label for="LockUpSecotor">Business Sector</label>
+                        <select name="LockUpSecotor" placeholder="Business Sector" class="form-control" [(ngModel)]="customerForm.LockUpSecotor">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let business of BusinessSectors" [ngValue]="business.ID">{{business.Name}}</option>
+                        </select>
+   
                       </div>
                       <div class="form-group col-md-3">
                         <label for="CODE">Code</label>
