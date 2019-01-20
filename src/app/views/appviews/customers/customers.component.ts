@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSnackBarHorizontalPosition, MatPaginator, 
-  MatSort, MatSnackBar, MatDialog, MatDialogConfig } from '@angular/material';
+import {
+  MatTableDataSource, MatSnackBarHorizontalPosition, MatPaginator,
+  MatSort, MatSnackBar, MatDialog, MatDialogConfig
+} from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
@@ -17,6 +19,7 @@ import { ProviderLicenseService } from './../../../_services/_customers/provider
 import { SearchCustomersComponent } from './searchCustomers/search-customers.component';
 import { LockUp } from '../../../entities/organization/LockUp';
 import { LineOfBusiness } from '../../../entities/Setup/lineOfBusiness';
+import { CustomerService } from '../../../_services/_customer/customer.service';
 
 @Component({
   selector: 'app-customers',
@@ -72,8 +75,17 @@ export class CustomersComponent implements OnInit {
   uploader: FileUploader;
   extraForm: string = 'CustomerType';
 
-  snackPosition: MatSnackBarHorizontalPosition = 'right';;
-
+  snackPosition: MatSnackBarHorizontalPosition = 'right'; CustomerSources: any;
+  SalesAgentBrokerList: any[];
+  BusinessSectors: any;
+  TaxTypes: any;
+  BankNames: any;
+  BankBranches: any[];
+  cities: any[];
+  CustomerStatus: any;
+  Nationalities: any;
+  userCompany: any;
+  user: any;
   dropdownSettings = {};
 
   @ViewChild('paginator') paginator: MatPaginator;
@@ -87,9 +99,11 @@ export class CustomersComponent implements OnInit {
   @ViewChild('table3', { read: MatSort }) sort4: MatSort;
   currencies: any;
   countries: any;
+  selectedCustomerTypes: any;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
-    private customerTypeService: CustomerTypeService, private customerContactService: CustomerContactService,
+    private customerTypeService: CustomerTypeService, private customerService: CustomerService,
+    private customerContactService: CustomerContactService,
     private commissionService: CommissionService, private providerLicenseService: ProviderLicenseService,
     private commonService: CommonService, public dialog: MatDialog
   ) { }
@@ -100,7 +114,8 @@ export class CustomersComponent implements OnInit {
     this.selection2 = new SelectionModel<CustomerContact>(true, []);
     this.selection3 = new SelectionModel<Commission>(true, []);
     this.selection4 = new SelectionModel<ProviderLicense>(true, []);
-
+    this.userCompany = JSON.parse(localStorage.getItem('company'));
+    this.user = JSON.parse(localStorage.getItem('user'));
     this.customerForm = new Customer();
     this.customerTypeForm = new CustomerType();
     this.customerContactForm = new CustomerContact();
@@ -119,6 +134,12 @@ export class CustomersComponent implements OnInit {
       this.Departments = data.Departments;
       this.currencies = data.currencies;
       this.countries = data.countries;
+      this.CustomerSources = data.CustomerSources;
+      this.BusinessSectors = data.BusinessSectors;
+      this.TaxTypes = data.TaxTypes;
+      this.BankNames = data.BankNames;
+      this.CustomerStatus = data.CustomerStatus;
+      this.Nationalities = data.Nationalities;
     });
 
     this.dropdownSettings = {
@@ -312,18 +333,30 @@ export class CustomersComponent implements OnInit {
     if (this.uploader.queue.length > 0) {
       this.UploadFlag(form);
     } else {
-      if (this.customerForm.selected) {
-        // this.AddUpdateUrl = this.customerService.customerApiUrl + 'Update';
-      } else {
-        //  this.AddUpdateUrl = this.customerService.customerApiUrl + 'Create';
-      }
 
+      this.AddUpdateUrl = this.customerService.ApiUrl + 'Create';
+      this.customerForm.CustomerType = null;
+      this.customerForm.CompanyID = this.userCompany.ID;
       this.http.post(this.AddUpdateUrl, this.customerForm).subscribe(res => {
+        debugger
+        const result: any = res;
+
+        for (let index = 0; index < this.selectedCustomerTypes.length; index++) {
+          const element: any =  this.selectedCustomerTypes[index];
+          const customer: any = {
+            CustomerID: result.ID,
+            LocCustomerType: element.ID,
+            CreatedBy: this.user.Name,
+            CreationDate: new Date()
+          };
+
+          this.http.post(this.customerService.ApiUrl + 'CreateCustomerType', customer).subscribe(res => {
+          });
+        }
         this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-        //  this.reloadCustomerTable();
-        this.customerForm = new Customer;
-        this.submit = false;
-        form.resetForm();
+
+        // this.submit = false;
+        // form.resetForm();
       });
     }
   }
@@ -569,7 +602,7 @@ export class CustomersComponent implements OnInit {
   searchCustomers() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
-    
+
     const dialogRef = this.dialog.open(SearchCustomersComponent, {
       panelClass: 'full-width-dialog',
       data: {}
@@ -582,4 +615,21 @@ export class CustomersComponent implements OnInit {
     });
   }
 
+
+  fillSalesAgentBrokerList() {
+    this.SalesAgentBrokerList = []
+  }
+
+
+  displayFn(customer?: Customer): string | undefined {
+    return customer ? customer.CustomerNo + ' ' + customer.Name : undefined;
+  }
+
+  loadBankBranches() {
+    this.BankBranches = []
+  }
+
+  loadCities() {
+    this.cities = []
+  }
 }

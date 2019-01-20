@@ -76,7 +76,7 @@
                                         required>
                                         <option [ngValue]="undefined">Select</option>
 
-                                    <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
                                     </select>
                                     <!-- <span class="help-block" *ngIf="form.controls.Loc_Status&&form.controls.Loc_Status.invalid &&( form.controls.Loc_Status.touched|| form.controls.Loc_Status.dirty||form.submitted)">required</span> -->
                                 </div>
@@ -116,8 +116,7 @@
                                     <br>
                                     <br>
                                     <div class="btn-group">
-                                        <input class="btn btn-default" type="reset" (click)="resetForm(form)"
-                                            value="Reset" />
+                                        <input class="btn btn-default" type="reset" (click)="resetForm(form)" value="Reset" />
                                         <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                                     </div>
                                 </div>
@@ -226,7 +225,8 @@
                                                 <td style="width: 20%" mat-cell *matCellDef="let element">
                                                     <i (click)="updateCountry(element)" class="fa fa-edit" placement="left"
                                                         ngbTooltip="Edit"></i>
-                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove"
+                                                        mwlConfirmationPopover [popoverTitle]="'Confirm'"
                                                         [popoverMessage]="'are you sure to delete?'" placement="left"
                                                         (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete"></i>
                                                 </td>
@@ -326,7 +326,8 @@
                                                 <td mat-cell *matCellDef="let element">
                                                     <i (click)="updateCity(element)" class="fa fa-edit" placement="left"
                                                         ngbTooltip="Edit"></i>
-                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove"
+                                                        mwlConfirmationPopover [popoverTitle]="'Confirm'"
                                                         [popoverMessage]="'are you sure to delete?'" placement="left"
                                                         (confirm)="deleteCity(element.ID)" ngbTooltip="Delete"></i>
                                                 </td>
@@ -387,7 +388,7 @@
                                                     <select name="Status" placeholder="Status" class="form-control"
                                                         [(ngModel)]="cityForm.Status" required>
                                                         <option [ngValue]="undefined">Select</option>
-                                                    <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                                                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
 
                                                     </select>
                                                     <!-- <span class="help-block" *ngIf="form.controls.Loc_Status&&form.controls.Loc_Status.invalid &&( form.controls.Loc_Status.touched|| form.controls.Loc_Status.dirty||form.submitted)">required</span> -->
@@ -499,7 +500,8 @@
                                                 <td mat-cell *matCellDef="let element">
                                                     <i (click)="updateArea(element)" class="fa fa-edit" placement="left"
                                                         ngbTooltip="Edit"></i>
-                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+                                                    <i (click)="$event.stopPropagation()" class="fa fa-remove"
+                                                        mwlConfirmationPopover [popoverTitle]="'Confirm'"
                                                         [popoverMessage]="'are you sure to delete?'" placement="left"
                                                         (confirm)="deleteArea(element.ID)" ngbTooltip="Delete"></i>
                                                 </td>
@@ -574,7 +576,7 @@
                                                         [(ngModel)]="areaForm.Status" required>
                                                         <option [ngValue]="undefined">Select</option>
 
-                                                    <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                                                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
                                                     </select>
                                                     <!-- <span class="help-block" *ngIf="form.controls.Loc_Status&&form.controls.Loc_Status.invalid &&( form.controls.Loc_Status.touched|| form.controls.Loc_Status.dirty||form.submitted)">required</span> -->
                                                 </div>

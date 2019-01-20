@@ -60,7 +60,7 @@ import {
   ProductsResolver, GroupIndividualLockupsResolver, ReportLevelResolver,
   ServicesResolver, AttachmentLevelResolver, WordingTypesResolver, ValidationTypesResolver
 } from './_resolvers/products.resolver';
-import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver } from './_resolvers/customers.resolver';
+import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver, CustomerSourcesResolver, BusinessSectorsResolver, TaxTypesResolver, CustomerStatusResolver } from './_resolvers/customers.resolver';
 
 
 @NgModule({
@@ -139,7 +139,11 @@ import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver } from '.
     ValidationTypesResolver,
     CustomerTypesDDLResolver,
     DepartmentsResolver,
-    TitlesResolver
+    TitlesResolver,
+    CustomerSourcesResolver,
+    BusinessSectorsResolver,
+    TaxTypesResolver,
+    CustomerStatusResolver,
   ],
   bootstrap: [AppComponent]
 })

@@ -63,7 +63,7 @@ import {
 } from './_resolvers/products.resolver';
 import { AccountedFor } from './_resolvers/accounted-for.resolver';
 import { OpenCoverType } from './_resolvers/open-cover-type';
-import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver } from './_resolvers/customers.resolver';
+import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver, CustomerSourcesResolver, BusinessSectorsResolver, TaxTypesResolver, CustomerStatusResolver } from './_resolvers/customers.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -269,17 +269,18 @@ export const ROUTES: Routes = [
       {
         path: 'customers', component: CustomersComponent,
         resolve: {
-          CustomerTypesDDL: CustomerTypesDDLResolver,   
+          CustomerTypesDDL: CustomerTypesDDLResolver,
           LineOfBusinesses: LineOfBusinessResolver,
           Departments: DepartmentsResolver,
           Titles: TitlesResolver,
           currencies: CurrencyResolver,
-          countries: CountryResolver
+          countries: CountryResolver,
+          CustomerSources: CustomerSourcesResolver,
+          BusinessSectors: BusinessSectorsResolver,
+          TaxTypes: TaxTypesResolver,
+          BankNames: BankResolver,
+          CustomerStatus: CustomerStatusResolver,
 
-          // lineOfBusiness: LineOfBusinessResolver,
-          // subLineOfBusiness: SubLineOfBusinessResolver,
-          // Status: LockUpResolver,
-          // ValidationTypes: ValidationTypesResolver,
         }
       }
     ]
