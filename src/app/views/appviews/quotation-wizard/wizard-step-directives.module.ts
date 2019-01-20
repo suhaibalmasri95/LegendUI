@@ -44,6 +44,8 @@ import { TreeviewModule } from 'ngx-treeview';
 import { BsDatepickerModule } from 'ngx-bootstrap';
 import { DataTablesModule } from 'angular-datatables';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CustomersComponent } from '../customers/customers.component';
+import { SearchCustomersComponent } from '../customers/searchCustomers/search-customers.component';
 
 
 @NgModule({
@@ -103,6 +105,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     DynamicCategoriesComponent,
     ProductsComponent,
     GenericTableComponent,
+    CustomersComponent ,
+    SearchCustomersComponent,
     ProductAttachmentsComponent, AttachmentComponent],
 
   exports: [QuotationWizardComponent,  LoginComponent]

@@ -47,10 +47,7 @@ export class Customer {
     YCoordinates: string;
     Logo: string;
     CustomerType: number;
-<<<<<<< HEAD
     selected: boolean;
-=======
     ShareType: number;
     AddUpdate: boolean;
->>>>>>> 66e265d62718c32628b39c593c4e0a2c24023f8b
 }
