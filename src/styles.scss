@@ -5,5 +5,8 @@ html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
 
 .form-group .fa{
-    cursor: pointer;
+    cursor: pointer;} 
+.mat-input-element {
+    border: 1px solid #e5e6e7 !important;
+ 
 }

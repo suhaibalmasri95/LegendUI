@@ -1,44 +1,41 @@
-import { SharedColumn } from './../../../../_services/sharedColumn.service';
-import { DynamicDatasource } from './../../../../entities/Dynamic/dynamicDatasource';
-import { DynamicTable } from './../../../../entities/Dynamic/dynamicTable';
-import { SharedService } from './../../../../_services/sharedService.service';
-import { ProductDynamicColumn } from './../../../../entities/Dynamic/ProductDynamicColumn';
-import { Component, OnInit, ViewChild, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+import { environment } from './../../../../environments/environment.prod';
+import { Component, OnInit, Output, EventEmitter, Input, ViewChild, OnChanges } from '@angular/core';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 
+
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css']
+  selector: 'app-generictable',
+  templateUrl: './genericTable.component.html',
+  styleUrls: ['./genericTable.component.css']
 })
-export class TableComponent implements OnInit , OnChanges {
-  // tslint:disable-next-line:no-input-rename
+export class GenericTableComponent implements OnInit , OnChanges {
   @Output()
   update = new EventEmitter<number>();
   @Output()
   delete = new EventEmitter<number>();
   // tslint:disable-next-line:no-input-rename
   @Input('tableColumns') tableColumns = [];
-  selected = false;
   // tslint:disable-next-line:no-input-rename
-  @Input('list') list: DynamicTable[] = [];
-  // tslint:disable-next-line:no-input-rename
-  @Input('dynamicDataSource') dynamicDataSource: any[] = [];
+  @Input('DataSource') DataSource: any[] = [];
   dataSource: MatTableDataSource<any>;
   selection: SelectionModel<any>;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('table', { read: MatSort }) sort: MatSort;
+  hostUrl: string = environment.hostUrl;
   columns: any[];
   column: any;
+  hasLink: boolean = false;
   constructor() { }
 
   ngOnChanges() {
     // create header using child_id
-    this.renderTable(this.dynamicDataSource);
+    this.column = {};
+    this.column.ID = null;
+    this.renderTable(this.DataSource);
   }
   ngOnInit() {
-      this.renderTable(this.dynamicDataSource);
+      this.renderTable(this.DataSource);
   }
 
   applyFilter(filterValue: string) {
@@ -59,22 +56,6 @@ export class TableComponent implements OnInit , OnChanges {
         return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
       };
     }
-    updateRow(col: any , index: number) {
-      // save the current index
-
-      for (let colIndex = 0; colIndex < this.dynamicDataSource.length; colIndex++) {
-        if (colIndex === index) {
-         const data =  this.dynamicDataSource[colIndex];
-         data['selected' + colIndex]  = true;
-        } else {
-          const data =  this.dynamicDataSource[colIndex];
-          data['selected' + colIndex]  = false;
-        }
-      }
-      this.update.emit(index);
-      console.log(col);
-    }
-
     deleteRow(index: number) {
       this.delete.emit(index);
     }
@@ -85,7 +66,19 @@ export class TableComponent implements OnInit , OnChanges {
     masterToggle() {
       this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach(row => this.selection.select(row));
     }
-  }
-
-
-
+    updateRow(row: any) {
+      this.column = row;
+      this.update.emit(row);
+    }
+    getValue(element: any , column: any) {
+      return element[column.replace(/\s+/g, '')];
+    }
+    getLink(element: any , column: any) {
+      if (element[column.replace(/\s+/g, '')] !== null) {
+        return this.hostUrl + element[column.replace(/\s+/g, '')];
+      } else {
+        return '';
+      }
+     
+    }
+}

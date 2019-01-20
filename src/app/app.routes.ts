@@ -1,4 +1,7 @@
+
 import { CustomersComponent } from './views/appviews/customers/customers.component';
+import { AttachmentComponent } from './views/appviews/quotation/attachment/attachment.component';
+import { QuotationWizardComponent } from './views/appviews/quotation-wizard/quotation-wizard.component';
 import { ReportsGroupResolver } from './_resolvers/reports.resolver';
 import { ProductAttachmentsComponent } from './views/appviews/productAttachments/productAttachments.component';
 import { PaymentType } from './_resolvers/payment-type.resolver';
@@ -11,7 +14,6 @@ import { SubLineOfBusinessResolver } from './_resolvers/sub-line-business.resolv
 import { AppliedOnResolver } from './_resolvers/applied-on.resolver';
 import { QuestionnaireResolver } from './_resolvers/questionnaires.resolver';
 import { CoverResolver } from './_resolvers/cover-resolver.resolver';
-
 import { BankResolver } from './_resolvers/bank.resolver';
 import { CountryResolver } from './_resolvers/country-reolver.resolver';
 import { Routes } from '@angular/router';
@@ -245,7 +247,7 @@ export const ROUTES: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'quotation', component: QuotationComponent,
+        path: 'quotation', component: QuotationWizardComponent,
         resolve: {
           busniessTypes: BusinessTypes,
           products: ProductsResolver,
@@ -258,7 +260,8 @@ export const ROUTES: Routes = [
           paymentType: PaymentType,
           status: LockUpResolver
         }
-      }]
+      }
+    ]
   },
   {
     path: 'customers-setup', component: BasicLayoutComponent, runGuardsAndResolvers: 'always',

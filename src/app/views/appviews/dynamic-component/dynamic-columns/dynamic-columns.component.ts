@@ -1,12 +1,8 @@
-import { MajorCode } from './../../../../entities/models/majorCode';
-import { SharedService } from './../../../../_services/sharedService.service';
-import { SelectComponentComponent } from './../select-component/SelectComponentComponent';
+
 import { Filter } from './../../../../entities/filter/filter';
 import { DynamicService } from './../../../../_services/_dynamic/Dynamic.service';
-
 import { ProductDynamicColumn } from './../../../../entities/Dynamic/ProductDynamicColumn';
-import { Component, OnInit, Input, ViewChild, TemplateRef, ViewContainerRef, AfterContentInit } from '@angular/core';
-import { a } from '@angular/core/src/render3';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 @Component({
   selector: 'app-dynamic-columns',
   templateUrl: './dynamic-columns.component.html',
@@ -17,7 +13,10 @@ export class DynamicColumnsComponent implements OnInit   {
   // tslint:disable-next-line:no-input-rename
   @Input('column') columns: ProductDynamicColumn[];
   // tslint:disable-next-line:no-input-rename
-  @Input('list') list: ProductDynamicColumn[];
+ 
+   // tslint:disable-next-line:no-input-rename
+
+   @Output() childsData = new EventEmitter<ProductDynamicColumn[]>();
   // tslint:disable-next-line:no-input-rename
   filter: Filter;
   childs: ProductDynamicColumn[];
@@ -29,7 +28,7 @@ export class DynamicColumnsComponent implements OnInit   {
   }
 
   getChildren(item: ProductDynamicColumn) {
-    if ( item.ChildCounts > 0) {
+    /*if ( item.ChildCounts > 0) {
       this.filter.MajorCode = item.MajorCode;
       this.filter.parentID = item.ID;
       this.filter.LangID = 1;
@@ -44,6 +43,8 @@ export class DynamicColumnsComponent implements OnInit   {
     }
       });
     }
+    this.childsData.emit(this.childs);
+    console.log(this.childs);*/
   }
 
   arrayUnique(array) {

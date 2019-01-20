@@ -1,3 +1,5 @@
+
+import { ProductDynmicCategory } from './../Dynamic/ProductDynmicCategory';
 import { ProductsDetail, ProductSubjectType } from './../Product/Products';
 import { IEntity } from '../interfaces/IEntity';
 
@@ -34,6 +36,6 @@ export class Risk implements IEntity {
     ModifiedBy: string;
     ModificationDate: Date;
     UwRiskID: number;
-    productDetails: ProductsDetail;
-    productSubjectType: ProductSubjectType;
+    index: number;
+    DynamicCategory: ProductDynmicCategory[];
 }

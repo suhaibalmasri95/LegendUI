@@ -1,5 +1,8 @@
+import { Customer } from './../Financial/Customer';
+import { ProductDynmicCategory } from './../Dynamic/ProductDynmicCategory';
 import { Risk } from './Risk';
 import { IEntity } from '../interfaces/IEntity';
+import { Share } from './Share';
 
 export class Documents implements IEntity {
     selected: boolean;
@@ -59,4 +62,8 @@ export class Documents implements IEntity {
     GrossAmmount: number;
     GrossAmountLc: number;
     Risks: Risk[];
+    DynamicCategories: ProductDynmicCategory[];
+    share: Share;
+    NewCustomer: Customer;
+    UpdateMode: boolean;
 }

@@ -41,4 +41,6 @@ export class ProductDynamicColumn implements IEntity {
     LockUps: LockUp[];
     ChildCounts: number;
     milesecond: number;
+    UwColID: number;
+    childsData: ProductDynamicColumn[];
 }

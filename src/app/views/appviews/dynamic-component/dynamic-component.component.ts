@@ -1,13 +1,9 @@
 import { TableComponent } from './table/table.component';
-import { SharedColumn } from './../../../_services/sharedColumn.service';
-import { DynamicDatasource } from './../../../entities/Dynamic/dynamicDatasource';
-import { MajorCode } from './../../../entities/models/majorCode';
 import { DynamicTable } from './../../../entities/Dynamic/dynamicTable';
-import { SharedService } from './../../../_services/sharedService.service';
 import { ProductDynamicColumn } from './../../../entities/Dynamic/ProductDynamicColumn';
 import { ProductDynmicCategory } from './../../../entities/Dynamic/ProductDynmicCategory';
 import { Component, OnInit, Input, ViewChild, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-
+import * as _ from 'lodash';
 @Component({
   selector: 'app-dynamic-component',
   templateUrl: './dynamic-component.component.html',
@@ -17,6 +13,8 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
 
   // tslint:disable-next-line:no-input-rename
   @Input('category') category: ProductDynmicCategory;
+  // tslint:disable-next-line:no-input-rename
+
   @ViewChildren('tableSelector')  tableSelector: QueryList<TableComponent>;
   meregedArray: ProductDynamicColumn[] = [];
   childsValue: DynamicTable[] = [];
@@ -28,22 +26,43 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   dynamicDataSource: any;
   controlsOn = false;
   updatedIndex: number;
-  isUpdate: boolean = false;
+  columnsOnCategory: ProductDynamicColumn[];
+  isUpdate = false;
+  isDelete = false;
+  updateModeForDocument = false;
+  TableDataResult: Array<ProductDynamicColumn[]>;
+  TableDataRow: ProductDynamicColumn[];
   constructor() { }
 
   ngOnInit() {
    // this.table = new TableComponent();
+
+   this.TableDataRow = [];
+   if (this.category.InsertedData.length > 0) {
+     this.updateModeForDocument = true;
+    this.updateMode(this.category.InsertedData, this.category.Columns.length);
+  }
    console.log('on init', this.tableSelector);
   }
 
   saveColumnsDataToTable(category: ProductDynmicCategory) {
+    if (this.isDelete) {
+      this.isDelete = false;
+    }
     this.childsValue = [];
-    this.dataSource = ['select'];
+
+    this.dataSource = ['select' , 'action'];
+
     this.meregedArray = [];
-    this.dynamicDataSources = [];
-    this.resetData(category.Columns, category.OriginalList);
+    
+    this.resetData(category.Columns);
     console.log(category);
    //
+   if (this.updateModeForDocument) {
+        this.temp = this.dynamicDataSources;
+  } else {
+    this.dynamicDataSources = [];
+  }
     if (this.isUpdate) {
       this.temp[this.updatedIndex] = this.dynamicDataSource;
       this.isUpdate = false;
@@ -51,17 +70,60 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
    this.temp.push(this.dynamicDataSource); }
 
    this.dynamicDataSources = this.temp;
+   category.ResultList = [];
+   category.Result = [];
+
+   const myClonedColumns  = _.cloneDeep(category.Columns);
+   this.mapDataToResult(category, myClonedColumns, this.dynamicDataSources);
    this.controlsOn = true;
   }
 
+  updateMode(columns: ProductDynamicColumn[] , orginalColumnCount: number) {
 
-  resetData(columns: ProductDynamicColumn[] , dropDownList: ProductDynamicColumn[] ) {
     this.dynamicDataSource = {};
-    this.meregedArray = [...columns , ...dropDownList];
-    let i = 1;
-    this.meregedArray.forEach(element => {
+    this.dataSource = ['select' , 'action'];
+     this.sortArrayUpdateMode(columns);
+     let columnCount = columns.length / orginalColumnCount;
+     columnCount = Math.ceil(columnCount);
+this.columnsOnCategory = [];
+     // take every group of columns  depeneds on groups of category
+     // take every catgory array as one object
+     let count = 0;
+     const length = columnCount;
+     count = length;
+     let j = 0 ;
+     let rounds = orginalColumnCount;
+     for (let index = 0; index < count; index++) {
+        for ( j ; j < rounds; j++) {
+          this.columnsOnCategory.push(columns[j]);
+        }
+        this.sortArrayOnColumnType(this.columnsOnCategory);
+        this.resetData(this.columnsOnCategory);
+        this.dynamicDataSources.push(this.dynamicDataSource);
+        this.columnsOnCategory = [];
+        rounds += orginalColumnCount;
+     }
+}
+sortArrayUpdateMode(columns: ProductDynamicColumn[] ) {
+  columns.sort(function(a, b) {
+    return a.UnderWritingColCatID - b.UnderWritingColCatID;
+  });
+
+}
+
+sortArrayOnColumnType(columns: ProductDynamicColumn[] ) {
+  columns.sort(function(a, b) {
+    return a.ColumnType - b.ColumnType;
+  });
+
+}
+  resetData(columns: ProductDynamicColumn[] ) {
+    this.dynamicDataSource = {};
+    let i = 2;
+    columns.forEach(element => {
       this.childValue = new DynamicTable();
       this.childValue = this.mapFeilds(this.childValue, element) ;
+      this.childValue.UwColID = element.UwColID;
       if (!this.dataSource.includes(element.Lable)) {
       this.dataSource.push(element.Lable);
     }
@@ -75,7 +137,8 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
       }
       if ( element.ColumnType === 3) {
         this.dynamicDataSource['value' + i] = element.ValueDate;
-        this.childValue.Value = element.ValueDate;
+        const dateFormat = new Date(element.ValueDate);
+        this.childValue.Value = new Date(dateFormat.getFullYear() , dateFormat.getMonth() , dateFormat.getDate());
       }
       if (element.ColumnType === 4) {
         this.dynamicDataSource['value' + i] = element.ValueLockUpID;
@@ -90,10 +153,8 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
   }
 
   mapFeilds(table: DynamicTable , filed: ProductDynamicColumn ) {
-    table.selected = filed.selected ;
-    table.Name = filed.Name;
-    table.Name2 = filed.Name2;
-    table.LangID = filed.LangID;
+
+
     table.ID = filed.ID;
     table.Lable = filed.Lable;
     table.Lable2 = filed.Lable2;
@@ -170,6 +231,7 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
     table['ExecludedColumn' + index] = filed.ExecludedColumn;
     table['MajorCode' + index] = filed.MajorCode;
     table['ChildCounts' + index] = filed.ChildCounts;
+   table['UwColID' + index] =  filed.UwColID ;
     return table;
   }
   clearFileds(filed: ProductDynamicColumn) {
@@ -185,17 +247,34 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
 ngAfterViewInit() {
 
     // this returns null
-  
 }
 updateChild(index: number) {
+  if (this.isDelete) {
+    this.isDelete = false;
+  }
   const data = this.dynamicDataSources[index];
-  let x = 1;
+  let x = 2;
   this.isUpdate = true;
   this.updatedIndex = index;
-  this.meregedArray.forEach(element => {
+  this.category.Columns.forEach(element => {
    this.mapAnyToProductDynamicColumn(x , data , element);
    x++;
   });
+}
+mapDataToResult(category: ProductDynmicCategory , columns: ProductDynamicColumn[] , anyArray: any[]) {
+  this.TableDataResult = new Array<ProductDynamicColumn[]>();
+  const concatArray = columns;
+  for (let i = 0 ; i < anyArray.length ; i++) {
+    let x = 2;
+    concatArray.forEach(element => {
+      this.TableDataRow.push(_.cloneDeep(this.mapAnyToProductDynamicColumn(x , anyArray[i] , element)));
+      x++;
+     });
+
+     this.TableDataResult .push(_.cloneDeep( this.TableDataRow ));
+     this.TableDataRow  = [];
+  }
+  category.Result =  this.TableDataResult ;
 }
 mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicColumn ) {
   filed.selected = table['selected' + index];
@@ -236,6 +315,22 @@ mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicC
   filed.ExecludedColumn = table['ExecludedColumn' + index];
   filed.MajorCode = table['MajorCode' + index];
   filed.ChildCounts = table['ChildCounts' + index];
+  filed.UwColID = table['UwColID' + index];
+  
     return filed;
+  }
+
+  deleteChild(index: number) {
+    if (this.dynamicDataSources.length === 1) {
+      this.isDelete = true;
+      this.dynamicDataSources.splice(index, 1 );
+    } else {
+      this.dynamicDataSources.splice(index, 1 );
+    }
+
+  }
+  setCategoryChildData(childs: ProductDynamicColumn[]) {
+    this.category.childsData = [];
+    this.category.childsData = childs;
   }
 }
