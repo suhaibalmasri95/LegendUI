@@ -14,8 +14,8 @@ import { CustomerContactService } from './../../../_services/_customers/customer
 import { CommissionService } from './../../../_services/_setup/Commission.service';
 import { ProviderLicenseService } from './../../../_services/_customers/providerLicense.service';
 import { SearchCustomersComponent } from './searchCustomers/search-customers.component';
-import { LockUp } from 'src/app/entities/organization/LockUp';
-import { LineOfBusiness } from 'src/app/entities/Setup/lineOfBusiness';
+import { LockUp } from '../../../entities/organization/LockUp';
+import { LineOfBusiness } from '../../../entities/Setup/lineOfBusiness';
 
 @Component({
   selector: 'app-customers',

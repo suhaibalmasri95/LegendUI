@@ -111,7 +111,7 @@ import { OrderModule } from 'ngx-order-pipe';
     CustomersComponent ,
     SearchCustomersComponent,
     ProductAttachmentsComponent, AttachmentComponent],
-
+entryComponents: [SearchCustomersComponent],
   exports: [QuotationWizardComponent,  LoginComponent]
 })
 export class WizardStepDirectivesModule { }

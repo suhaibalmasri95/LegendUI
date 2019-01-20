@@ -32,7 +32,7 @@ export class DepartmentsResolver implements Resolve<LockUp[]> {
         );
     }
 }
-}
+
 
 @Injectable()
 export class TitlesResolver implements Resolve<LockUp[]> {
