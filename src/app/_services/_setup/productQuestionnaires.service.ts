@@ -76,7 +76,8 @@ export class ProductQuestionnaireService {
 
   }
 
-  LoadQuestionnaire(productID: number = null, productDetailedID: number = null, langId: number = null): Observable<any> {
+  LoadQuestionnaire(productID: number = null, productDetailedID: number = null, langId: number = null):
+   Observable<any> {
     let queryString = '?productID=';
     if (productID != null) {
       queryString += productID;

@@ -63,12 +63,25 @@ export class ProductQuestionnaire implements IEntity {
 }
 export class ProductSubjectType implements IEntity {
     selected: boolean;
+    ID: number;
     Name: string;
     Name2: string;
     LangID: number;
-    ID: number;
-    AnswerOrder: number;
+    CreateBy: string;
+    CreationDate: Date;
+    ModifiedBy: string;
+    ModificationDate: Date;
+    LineOfBusniess: number;
+    SubLineOfBusniess: number;
+    ProductID: number;
+    ProductDetailsID: number;
+    SubjectTypeID: number;
+    SubjectTypeParentID: number;
+    ExcessPerc: number;
+    MinExcess: number;
+    MaxExcess: number;
+    ExcessFrom: number;
+    SubjectTypeDesc: string;
     QuestionnaireID: number;
-  SubjectTypeDesc: string;
 
 }

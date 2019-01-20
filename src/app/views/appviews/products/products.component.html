@@ -281,7 +281,7 @@
 
               <div class="col-md-2 text-center groups-arrows">
                 <div>
-                  <i class="fa fa-arrow-right" (click)="addSubLineOfBusiness()"></i>
+                  <i class="fa fa-arrow-right" (click)="AddProductDetails()"></i>
                 </div>
 
                 <div>
@@ -438,7 +438,7 @@
 
                   <br>
                   <div class="table-container">
-                    <table mat-table #table4 [dataSource]="subjectTypesLobDataSource" matSort>
+                    <table mat-table #table4 [dataSource]="subjectTypesPDDataSource" matSort>
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
@@ -493,7 +493,7 @@
 
                 <div class="col-md-2 text-center groups-arrows">
                   <div>
-                    <i class="fa fa-arrow-right" (click)="addSubLineOfBusiness()"></i>
+                    <i class="fa fa-arrow-right" (click)="addProductSubjectTypes()"></i>
                   </div>
 
                   <div>
@@ -505,8 +505,8 @@
                 <div class="col-md-5">
 
                   <br>
-                  <div class="table-container">
-                    <table mat-table #table5 [dataSource]="subjectTypesPDDataSource" matSort>
+                  <div class="table-container"> 
+                    <table mat-table #table5 [dataSource]="subjectTypesLobDataSource" matSort>
 
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>

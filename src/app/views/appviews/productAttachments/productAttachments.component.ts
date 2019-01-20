@@ -154,7 +154,7 @@ export class ProductAttachmentsComponent implements OnInit {
   }
 
   selectProduct(product) {
-
+    
     this.noSelectedProduct = false;
     this.selectedProduct = product;
     this.loadProductDetails(product.ID);
@@ -355,6 +355,7 @@ export class ProductAttachmentsComponent implements OnInit {
     // this.attachmentForm.CreatedBy = 'Admin';
     // this.attachmentForm.LockUpType = 2;
     // this.attachmentForm.LockUpChargeType = 2;
+    this.attachmentForm.ProductId = this.selectedProduct.ID;
     if (this.attachmentForm.selected) {
       this.AddUpdateUrl = this.attachmentsService.ApiUrl + 'Update';
     } else {

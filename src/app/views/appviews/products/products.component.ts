@@ -1,3 +1,4 @@
+import { SubjectType } from './../../../entities/Setup/SubjectType';
 import { Category, Column, Validation } from './../../../entities/Setup/Categories';
 import { ProductSubjectTypes } from './../../../_services/_setup/ProductSubjectTypes.service';
 import { SubjectTypesService } from './../../../_services/_setup/SubjectTypes.service';
@@ -15,6 +16,7 @@ import { ProductsService } from '../../../_services/_setup/Products.service';
 import { ProductsDetailService } from './../../../_services/_setup/ProductsDetail.service';
 import { SubLineOfBusiness } from './../../../entities/Setup/SubLineOfBusiness';
 import { SubBusinessService } from './../../../_services/_setup/SubBusiness.service';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -66,7 +68,7 @@ export class ProductsComponent implements OnInit {
   subLOBDataSource: MatTableDataSource<ProductsDetail>;
 
   subjectTypesLobTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob'];
-  subjectTypesLobDataSource: MatTableDataSource<ProductSubjectType>;
+  subjectTypesLobDataSource: MatTableDataSource<SubjectType>;
 
   subjectTypesPDTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob', 'Product', 'ProductDetail'];
   subjectTypesPDDataSource: MatTableDataSource<ProductSubjectType>;
@@ -93,11 +95,11 @@ export class ProductsComponent implements OnInit {
 
 
 
-
+  user: any;
   selection: SelectionModel<Product>;
   selection2: SelectionModel<ProductsDetail>;
   selection3: SelectionModel<ProductsDetail>;
-  selection4: SelectionModel<ProductSubjectType>;
+  selection4: SelectionModel<SubjectType>;
   selection5: SelectionModel<ProductSubjectType>;
   selection6: SelectionModel<ProductQuestionnaire>;
   selection7: SelectionModel<ProductQuestionnaire>;
@@ -106,9 +108,9 @@ export class ProductsComponent implements OnInit {
   selection10: SelectionModel<Column>;
   selection11: SelectionModel<Validation>;
   extraForm: string;
-
+  productDetail: ProductsDetail;
   snackPosition: MatSnackBarHorizontalPosition;
-
+  productSubjectType: ProductSubjectType;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
   @ViewChild('paginator3') paginator3: MatPaginator;
@@ -143,11 +145,11 @@ export class ProductsComponent implements OnInit {
   ngOnInit() {
     this.extraForm = '';
     const initialSelection = [];
-
+    this.user = JSON.parse(localStorage.getItem('user'));
     this.selection = new SelectionModel<Product>(true, initialSelection);
     this.selection2 = new SelectionModel<ProductsDetail>(true, initialSelection);
     this.selection3 = new SelectionModel<ProductsDetail>(true, initialSelection);
-    this.selection4 = new SelectionModel<ProductSubjectType>(true, initialSelection);
+    this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
     this.selection5 = new SelectionModel<ProductSubjectType>(true, initialSelection);
     this.selection6 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
     this.selection7 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
@@ -262,10 +264,10 @@ export class ProductsComponent implements OnInit {
 
   renderSubjectTypeTable(RelatedSubject, UnRelatedSubject) {
     this.subjectTypes = RelatedSubject;
-    this.subjectTypesLobDataSource = new MatTableDataSource<ProductSubjectType>(RelatedSubject);
+    this.subjectTypesLobDataSource = new MatTableDataSource<SubjectType>(RelatedSubject);
     this.subjectTypesLobDataSource.paginator = this.paginator3;
     this.subjectTypesLobDataSource.sort = this.sort3;
-    this.selection4 = new SelectionModel<ProductSubjectType>(true, []);
+    this.selection4 = new SelectionModel<SubjectType>(true, []);
     this.subjectTypesLobDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort3.direction === 'asc' ? '3' : '1';
@@ -316,7 +318,7 @@ export class ProductsComponent implements OnInit {
 
   // RelatedQuestionnaires
   reloadQuestionnairesTable(productsDetailId = null) {
-    this.productQuestionnaireService.LoadQuestionnaire(null, productsDetailId, 1).subscribe(data => {
+    this.productQuestionnaireService.loadRelated(null, productsDetailId, 1).subscribe(data => {
       this.rendernNotRelatedQuestionnairesTable(data.UnRelatedQuestionnaires);
     });
 
@@ -389,6 +391,8 @@ export class ProductsComponent implements OnInit {
     } else {
       this.AddUpdateUrl = this.productsDetailService.ApiUrl + 'Create';
     }
+    this.productsDetailForm.CreateBy = this.user.Name;
+    this.productsDetailForm.CreationDate = new Date();
     this.http.post(this.AddUpdateUrl, this.productsDetailForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadProductsDetailTable(this.productForm.ID ? this.productForm.ID : null);
@@ -403,12 +407,15 @@ export class ProductsComponent implements OnInit {
     if (form.invalid) {
       return;
     }
+   
     this.subjectTypeForm = this.subjectTypeForm.selected ? this.subjectTypeForm : Object.assign({}, form.value);
     if (this.subjectTypeForm.selected) {
       this.AddUpdateUrl = this.productSubjectTypeService.sebjectTypeApiUrl + 'Update';
     } else {
       this.AddUpdateUrl = this.productSubjectTypeService.sebjectTypeApiUrl + 'Create';
     }
+    this.subjectTypeForm.CreateBy = this.user.Name;
+    this.subjectTypeForm.CreationDate = new Date();
     this.subjectTypeForm.QuestionnaireID = this.productsDetailForm.ID;
     this.http.post(this.AddUpdateUrl, this.subjectTypeForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
@@ -450,14 +457,13 @@ export class ProductsComponent implements OnInit {
 
 
   updateProductsDetail(productsDetail: ProductsDetail) {
+    this.productsDetailForm = productsDetail;
 
     this.productsDetailService.loadSubjectTypes(this.productsDetailForm.ID, 1).subscribe(data => {
       this.renderSubjectTypeTable(data.RelatedSubject, data.UnRelatedSubject);
       this.showSubTypes = true;
       window.scroll(0, 1000);
-      this.productsDetailForm = new ProductsDetail;
-      this.productsDetailForm = productsDetail;
-      this.productsDetailForm.selected = true;
+    
 
     });
 
@@ -663,9 +669,42 @@ export class ProductsComponent implements OnInit {
   removeSubLineOfBusiness() {
   }
 
-  addSubLineOfBusiness() {
-  }
+  AddProductDetails() {
+    this.selection2.selected.forEach(element => {
+      this.productDetail = new ProductsDetail();
+      this.productDetail.EffectiveDate = this.productForm.EffectiveDate;
+      this.productDetail.ExpiryDate = this.productForm.ExpiryDate;
+      this.productDetail.SubLineOfBusniess = element.ID;
+      this.productDetail.LineOfBusniess = element.LineOfBusniess;
+      this.productDetail.ProductID = this.productForm.ID;
+      this.productDetail.CreateBy = this.user.Name;
+      this.productDetail.Status = 1 ;
+      this.productDetail.CreationDate = new Date();
+    this.http.post(this.productsDetailService.ApiUrl + 'Create' , this.productDetail).subscribe(res => {
+      console.log(res);
+    });
 
+    });
+    console.log();
+  }
+addProductSubjectTypes() {
+  this.selection4.selected.forEach(element => {
+ this.productSubjectType = new ProductSubjectType();
+   this.productSubjectType.SubjectTypeID = element.ID;
+   this.productSubjectType.SubjectTypeParentID = element.Parent;
+    this.productSubjectType.SubLineOfBusniess = element.SubLineOfBusniessID;
+    this.productSubjectType.LineOfBusniess = element.LineOfBusniessID;
+    this.productSubjectType.ProductID = this.productForm.ID;
+    this.productSubjectType.ProductDetailsID = this.productsDetailForm.ID;
+    this.productSubjectType.CreateBy = this.user.Name;
+ 
+    this.productSubjectType.CreationDate = new Date();
+  this.http.post(this.productSubjectTypeService.sebjectTypeApiUrl + 'Create' , this.productSubjectType).subscribe(res => {
+    console.log(res);
+  });
+
+  });
+}
   loadSubLinesOfBusiness(lob) {
     this.subLineService.load(null, lob ? lob : null, null, 1).subscribe(data => {
       this.SubLobs = data;

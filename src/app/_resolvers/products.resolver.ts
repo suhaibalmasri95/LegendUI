@@ -30,7 +30,7 @@ export class ProductsResolver implements Resolve<Product[]> {
 export class GroupIndividualLockupsResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(21).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(21).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
@@ -43,7 +43,7 @@ export class GroupIndividualLockupsResolver implements Resolve<LockUp[]> {
 export class ReportLevelResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(26).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(26).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
@@ -56,7 +56,7 @@ export class ReportLevelResolver implements Resolve<LockUp[]> {
 export class AttachmentLevelResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(24).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(24).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
@@ -68,7 +68,7 @@ export class AttachmentLevelResolver implements Resolve<LockUp[]> {
 export class WordingTypesResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(25).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(25).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
@@ -80,7 +80,7 @@ export class WordingTypesResolver implements Resolve<LockUp[]> {
 export class ValidationTypesResolver implements Resolve<LockUp[]> {
     constructor(private lockUpService: LockUpService, private router: Router) { }
     resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
-        return this.lockUpService.LoadLockUpsByMajorCode(27).pipe(
+        return this.lockUpService.GetLockUpsByMajorCode(27).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);
