@@ -223,11 +223,11 @@ export class QuotationComponent implements OnInit {
             });
         }
       });
-      this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID='  + 201 ).subscribe(doc => {
+    /*   this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID='  + 201 ).subscribe(doc => {
         this.documentForm = doc[0];
         this.updateMode = true;
       this.updateDocumentMode(this.documentForm .ID , this.documentForm.ProductId);
-      });
+      }); */
 
   }
   click() {
