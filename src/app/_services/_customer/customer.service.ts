@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/catch';
-import { Customer } from 'src/app/entities/Financial/Customer';
+import { Customer } from '../../entities/Financial/Customer';
 import { debounceTime } from 'rxjs/operators';
 
 @Injectable({
