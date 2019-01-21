@@ -57,24 +57,28 @@ export class ProductQuestionnaireService {
 
   }
 
-  loadRelated(productID: number = null, productDetailedID: number = null, langId: number = null): Observable<any> {
-    let queryString = '?productID=';
-    if (productID != null) {
-      queryString += productID;
-    }
-    queryString += '&productDetailedID=';
-    if (productDetailedID != null) {
-      queryString += productDetailedID;
-
-      queryString += '&langId=';
-      if (langId != null) {
-        queryString += langId;
+  loadRelated(productDetailID: number = null, LineOfBusiness: number = null ,
+    SubLine: number = null, langId: number = null): Observable<any> {
+   let queryString = '?productDetailedID=';
+   if (productDetailID != null) {
+     queryString += productDetailID;
+   }
+   queryString += '&LineOfBusiness=';
+   if (LineOfBusiness != null) {
+     queryString += LineOfBusiness;
+   }
+     queryString += '&SubLine=';
+     if (SubLine != null) {
+       queryString += SubLine;
+     }
+   queryString += '&langId=';
+   if (langId != null) {
+     queryString += langId;
+   }
 
         return this.http.get<any>(this.ApiUrl + 'LoadRelatedQuestionnaire' + queryString);
       }
-    }
 
-  }
 
   LoadQuestionnaire(productID: number = null, productDetailedID: number = null, langId: number = null):
    Observable<any> {

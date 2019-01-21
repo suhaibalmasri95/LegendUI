@@ -58,6 +58,7 @@ export class ProductQuestionnaire implements IEntity {
     ProductDetailedID: number;
     SubLineOfBusniess: number;
     LineOfBusniess: number;
+    QuestionnaireID: number;
 
 
 }

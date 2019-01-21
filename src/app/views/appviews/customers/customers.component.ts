@@ -1,3 +1,4 @@
+import { MinorCode } from './../../../entities/models/minorCode';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   MatTableDataSource, MatSnackBarHorizontalPosition, MatPaginator,
@@ -344,7 +345,7 @@ export class CustomersComponent implements OnInit {
           const element: any =  this.selectedCustomerTypes[index];
           const customer: any = {
             CustomerID: result.ID,
-            LocCustomerType: element.ID,
+            LocCustomerType: element.MinorCode,
             CreatedBy: this.user.Name,
             CreationDate: new Date()
           };

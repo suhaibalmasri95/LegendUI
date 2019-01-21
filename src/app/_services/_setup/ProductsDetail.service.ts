@@ -85,16 +85,25 @@ export class ProductsDetailService {
     }
   }
 
-  loadSubjectTypes(productDetailID: number = null, langId: number = null): Observable<any> {
+  loadSubjectTypes(productDetailID: number = null, LineOfBusiness: number = null ,
+     SubLine: number = null, langId: number = null): Observable<any> {
     let queryString = '?productDetailID=';
     if (productDetailID != null) {
       queryString += productDetailID;
     }
+    queryString += '&LineOfBusiness=';
+    if (LineOfBusiness != null) {
+      queryString += LineOfBusiness;
+    }
+      queryString += '&SubLine=';
+      if (SubLine != null) {
+        queryString += SubLine;
+      }
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-
+    }
       return this.http.get<any>(this.ApiUrl + 'LoadSubjectType' + queryString);
     }
-  }
+  
 }

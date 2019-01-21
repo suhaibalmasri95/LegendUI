@@ -50,7 +50,7 @@ export class ProductsComponent implements OnInit {
   excessFroms: LockUp[];
   GroupIndividualLockups: LockUp[];
   ValidationTypes: LockUp[];
-
+  productQuestionnaires: ProductQuestionnaire;
 
   showSubTypes = false;
 
@@ -318,13 +318,12 @@ export class ProductsComponent implements OnInit {
 
   // RelatedQuestionnaires
   reloadQuestionnairesTable(productsDetailId = null) {
-    this.productQuestionnaireService.loadRelated(null, productsDetailId, 1).subscribe(data => {
+    this.productQuestionnaireService.loadRelated(this.productsDetailForm.ID,
+       this.productsDetailForm.LineOfBusniess, this.productsDetailForm.SubLineOfBusniess , 1).subscribe(data => {
       this.rendernNotRelatedQuestionnairesTable(data.UnRelatedQuestionnaires);
+      this.renderRelatedQuestionnairesTable(data.RelatedQuestionnaires);
     });
 
-    this.productQuestionnaireService.load(null, null, productsDetailId, 1).subscribe(data => {
-      this.renderRelatedQuestionnairesTable(data);
-    });
 
   }
 
@@ -343,7 +342,25 @@ export class ProductsComponent implements OnInit {
 
   }
 
-
+  addQuestionaire() {
+    this.selection6.selected.forEach(element => {
+      this.productQuestionnaires = new ProductQuestionnaire();
+      this.productQuestionnaires.ProductID = this.productForm.ID;
+      this.productQuestionnaires.ProductDetailedID = this.productsDetailForm.ID;
+      this.productQuestionnaires.LineOfBusniess  = this.productsDetailForm.LineOfBusniess;
+      this.productQuestionnaires.SubLineOfBusniess = this.productsDetailForm.SubLineOfBusniess;
+      this.productQuestionnaires.QuestionnaireID = element.ID;
+      this.productQuestionnaires.Status = 1;
+      this.productQuestionnaires.CreateBy = this.user.Name;
+      this.productQuestionnaires.CreationDate = new Date();
+      this.productQuestionnaires.StatusDate = new Date();
+      this.http.post(this.productQuestionnaireService.ApiUrl + 'Create' , this.productQuestionnaires).subscribe(res => {
+        console.log(res);
+      });
+    });
+    
+    
+  }
   renderRelatedQuestionnairesTable(data) {
     this.relatedQuestionnairesDataSource = new MatTableDataSource<ProductQuestionnaire>(data);
     this.relatedQuestionnairesDataSource.paginator = this.paginator7;
@@ -459,7 +476,8 @@ export class ProductsComponent implements OnInit {
   updateProductsDetail(productsDetail: ProductsDetail) {
     this.productsDetailForm = productsDetail;
 
-    this.productsDetailService.loadSubjectTypes(this.productsDetailForm.ID, 1).subscribe(data => {
+    this.productsDetailService.loadSubjectTypes(this.productsDetailForm.ID,
+       this.productsDetailForm.LineOfBusniess , this.productsDetailForm.SubLineOfBusniess, 1).subscribe(data => {
       this.renderSubjectTypeTable(data.RelatedSubject, data.UnRelatedSubject);
       this.showSubTypes = true;
       window.scroll(0, 1000);
