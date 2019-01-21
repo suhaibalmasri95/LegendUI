@@ -46,7 +46,7 @@ export class Customer {
     XCoordinates: string;
     YCoordinates: string;
     Logo: string;
-    CustomerType: [];
+    CustomerType: any[] = [];
     selected: boolean;
     ShareType: number;
     AddUpdate: boolean;

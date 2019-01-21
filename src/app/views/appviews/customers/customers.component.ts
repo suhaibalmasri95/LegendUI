@@ -61,7 +61,8 @@ export class CustomersComponent implements OnInit {
   customerContactsTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Phone', 'Mobile', 'Email', 'LOB', 'Department', 'actions'];
   customerContactsDataSource: MatTableDataSource<CustomerContact>;
 
-  commissionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Product', 'SubLob', 'CommissionType', 'CommissionPercent', 'CommissionAmount', 'actions'];
+  commissionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Product',
+   'SubLob', 'CommissionType', 'CommissionPercent', 'CommissionAmount', 'actions'];
   commissionDataSource: MatTableDataSource<Commission>;
 
   providerLicenseTableColumns = ['select', 'ID', 'LICNESNO', 'EffectiveDate', 'EXP_DATE', 'Specialty', 'ProviderType', 'actions'];
@@ -338,7 +339,6 @@ export class CustomersComponent implements OnInit {
       this.customerForm.CustomerType = null;
       this.customerForm.CompanyID = this.userCompany.ID;
       this.http.post(this.AddUpdateUrl, this.customerForm).subscribe(res => {
-        debugger
         const result: any = res;
 
         for (let index = 0; index < this.selectedCustomerTypes.length; index++) {
@@ -350,7 +350,7 @@ export class CustomersComponent implements OnInit {
             CreationDate: new Date()
           };
 
-          this.http.post(this.customerService.ApiUrl + 'CreateCustomerType', customer).subscribe(res => {
+          this.http.post(this.customerService.ApiUrl + 'CreateCustomerType', customer).subscribe( types => {
           });
         }
         this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
@@ -487,7 +487,7 @@ export class CustomersComponent implements OnInit {
         'items': this.commissionDataSource.data,
         'FieldName': 'Organization.Department',
         'Type': type,
-      }
+      };
       this.commonService.Export(body).subscribe(res => {
         window.open(res.FilePath);
       });
@@ -617,7 +617,7 @@ export class CustomersComponent implements OnInit {
 
 
   fillSalesAgentBrokerList() {
-    this.SalesAgentBrokerList = []
+    this.SalesAgentBrokerList = [];
   }
 
 
@@ -626,10 +626,10 @@ export class CustomersComponent implements OnInit {
   }
 
   loadBankBranches() {
-    this.BankBranches = []
+    this.BankBranches = [];
   }
 
   loadCities() {
-    this.cities = []
+    this.cities = [];
   }
 }
