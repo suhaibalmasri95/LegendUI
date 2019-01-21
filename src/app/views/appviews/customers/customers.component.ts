@@ -336,7 +336,6 @@ export class CustomersComponent implements OnInit {
     } else {
 
       this.AddUpdateUrl = this.customerService.ApiUrl + 'Create';
-      this.customerForm.CustomerType = null;
       this.customerForm.CompanyID = this.userCompany.ID;
       this.http.post(this.AddUpdateUrl, this.customerForm).subscribe(res => {
         const result: any = res;
