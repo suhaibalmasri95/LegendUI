@@ -16,7 +16,6 @@ export class ProviderLicenseService {
 
   constructor(private http: HttpClient) { }
 
-  a
   add(d) {
     this.http.post(this.ApiUrl + 'Create', d).map(
       (response) => {
