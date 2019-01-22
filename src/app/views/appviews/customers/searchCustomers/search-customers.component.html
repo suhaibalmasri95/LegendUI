@@ -68,8 +68,14 @@
     </form>
   </fieldset>
 
-
-  <div class="x">
+  <mat-card *ngIf="noData">
+    <div class="row">
+      <div class="text-center col-md-12">
+        <h2>No data, please use the filter <i class="fa fa-arrow-up"></i></h2>
+      </div>
+    </div>
+  </mat-card>
+  <div class="x" *ngIf="!noData">
     <div class="hr-line-dashed"></div>
 
     <div class="table-container">
@@ -93,24 +99,40 @@
             {{element.ID}}
           </td>
         </ng-container>
-
-        <ng-container matColumnDef="CustomerName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+        <ng-container matColumnDef="Name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
           <td style="width: 15%" mat-cell *matCellDef="let element">
             {{element.Name}}
           </td>
         </ng-container>
-
-        <ng-container matColumnDef="CustomerType">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Type</th>
+        <ng-container matColumnDef="Name2">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
           <td style="width: 15%" mat-cell *matCellDef="let element">
-            {{element.CustomerType}} </td>
+            {{element.Name2}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="CommercialName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Commercial Name</th>
+          <td style="width: 15%" mat-cell *matCellDef="let element">
+            {{element.CommercialName}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="GlId">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Gl Id </th>
+        <ng-container matColumnDef="Mobile">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</th>
           <td mat-cell *matCellDef="let element">
-            {{element.GlId}}
+            {{element.Mobile}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Phone">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
+          <td mat-cell *matCellDef="let element">
+            {{element.Phone}}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="Email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+          <td mat-cell *matCellDef="let element">
+            {{element.Email}}
           </td>
         </ng-container>
         <!-- 

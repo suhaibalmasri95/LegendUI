@@ -15,12 +15,13 @@ export interface DialogData {
 })
 export class SearchCustomersComponent implements OnInit {
   selectedCustomer: any;
+  noData: boolean=true;
 
   constructor(private dialogRef: MatDialogRef<SearchCustomersComponent>,
     @Inject(MAT_DIALOG_DATA) data, private customerService: CustomerService) { }
 
   customerSearchForm: Customer;
-  customersTableColumns = ['ID', 'CustomerName', 'CustomerType', 'GlId'];
+  customersTableColumns = ['ID', 'Name', 'Name2', 'CommercialName', 'Mobile', 'Phone', 'Email'];
   customersDataSource: MatTableDataSource<any>;
 
   selection: SelectionModel<any>;
@@ -46,18 +47,22 @@ export class SearchCustomersComponent implements OnInit {
     });
   }
   renderCustomerTypesTable(data) {
-    this.customersDataSource = new MatTableDataSource<Customer>(data);
-    this.customersDataSource.paginator = this.paginator;
-    this.customersDataSource.sort = this.sort;
-    this.selection = new SelectionModel<Customer>(true, []);
-    this.customersDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
-      if (!sortData[sortHeaderId]) {
-        return this.sort.direction === 'asc' ? '3' : '1';
-      }
-      // tslint:disable-next-line:max-line-length
-      return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
+    if (data.length) {
+      this.noData = false;
+      this.customersDataSource = new MatTableDataSource<Customer>(data);
+      this.customersDataSource.paginator = this.paginator;
+      this.customersDataSource.sort = this.sort;
+      this.selection = new SelectionModel<Customer>(true, []);
+      this.customersDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+        if (!sortData[sortHeaderId]) {
+          return this.sort.direction === 'asc' ? '3' : '1';
+        }
+        // tslint:disable-next-line:max-line-length
+        return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
 
-    };
+      };
+    } else
+      this.noData = true;
   }
 
   isAllSelected() {
@@ -88,4 +93,12 @@ export class SearchCustomersComponent implements OnInit {
   save() {
     this.dialogRef.close(this.selectedCustomer);
   }
+
+  resetForm(form) {
+    this.customerSearchForm = new Customer();
+    this.submit = false;
+    form.reset();
+    this.noData = true;
+  }
+
 }

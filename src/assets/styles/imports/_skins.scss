@@ -226,7 +226,8 @@ body.skin-2 {
 }
 
 .skin-2 .nav > li.active > a {
-  color: $skin-2-nav-top-bg;
+  color: #000;
+  background: #ddd0c2
 }
 
 .skin-2.mini-navbar .nav-header {
@@ -247,7 +248,7 @@ body.skin-2 {
 }
 
 body.skin-2 #wrapper {
-  background-color: $skin-2-nav-bg;
+  background-color: #fdead5;
 }
 
 .skin-2 .navbar-static-top {
@@ -330,7 +331,7 @@ body.skin-2 #wrapper {
 }
 
 .skin-2 .navbar-default .nav > li > a:hover, .skin-2 .navbar-default .nav > li > a:focus {
-  background: #e0e0e0;
+  background: none;
   color: #213a53;
 }
 
@@ -476,8 +477,8 @@ body.skin-3 {
 }
 
 .skin-3 .navbar-default .nav > li > a:hover, .skin-3 .navbar-default .nav > li > a:focus {
-  background: darken($skin-3-nav-bg, 2%);
-  color: #fff;
+  background: none;
+  outline: none;
 }
 
 .skin-3 .nav.nav-tabs > li.active > a {
