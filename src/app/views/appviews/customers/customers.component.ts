@@ -107,6 +107,7 @@ export class CustomersComponent implements OnInit {
   customerSearch: FormControl = new FormControl();
   searchOnCustomerName: FormControl = new FormControl();
   CustomerSearchResult: Customer[] = [];
+  
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private customerTypeService: CustomerTypeService, private customerService: CustomerService,
     private customerContactService: CustomerContactService,
@@ -344,7 +345,7 @@ export class CustomersComponent implements OnInit {
 
 
   reloadCustomerTypesTable(customerID = null) {
-    this.customerTypeService.load(null, customerID, 1).subscribe(data => {
+    this.customerTypeService.load(customerID, 1).subscribe(data => {
       this.renderCustomerTypesTable(data);
     });
   }
@@ -387,7 +388,7 @@ export class CustomersComponent implements OnInit {
     this.customersTypesDataSource = new MatTableDataSource<CustomerType>(data);
     this.customersTypesDataSource.paginator = this.paginator;
     this.customersTypesDataSource.sort = this.sort;
-    this.selection = new SelectionModel<CustomerContact>(true, []);
+    this.selection = new SelectionModel<CustomerType>(true, []);
     this.customersTypesDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort.direction === 'asc' ? '3' : '1';
@@ -403,7 +404,7 @@ export class CustomersComponent implements OnInit {
     this.customerContactsDataSource = new MatTableDataSource<CustomerContact>(data);
     this.customerContactsDataSource.paginator = this.paginator2;
     this.customerContactsDataSource.sort = this.sort2;
-    this.selection = new SelectionModel<CustomerContact>(true, []);
+    this.selection2 = new SelectionModel<CustomerContact>(true, []);
     this.customerContactsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort2.direction === 'asc' ? '3' : '1';
@@ -597,12 +598,13 @@ export class CustomersComponent implements OnInit {
 
 
 
-  loadCustomerContacts($event) {
-    this.customerTypeService.load(this.customerForm.ID ? this.customerForm.ID : null, null, 1).subscribe(data => {
-      this.customerContacts = data;
-      this.customerContactsDataSource = new MatTableDataSource<CustomerContact>(this.customerContacts);
-    });
-  }
+   loadCustomerContacts($event) {
+    this.customerContactService.load(this.customerForm.ID
+, 1).subscribe(data => {
+        this.customerContacts = data;
+        this.customerContactsDataSource = new MatTableDataSource<CustomerContact>(this.customerContacts);
+      });
+  } 
 
 
   replaceFileName(fileName) {
@@ -762,6 +764,9 @@ export class CustomersComponent implements OnInit {
       this.customerForm = result;
       this.searchOnCustomerName.patchValue(this.customerForm);
       this.customerSearch.patchValue(this.customerForm);
+      this.customerTypeService.load(this.customerForm.ID, 1).subscribe(res => {
+        this.renderCustomerTypesTable(res);
+      });
     });
   }
 

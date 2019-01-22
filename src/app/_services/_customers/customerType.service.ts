@@ -10,8 +10,8 @@ import { CustomerType } from '../../entities/customer/customer';
 })
 export class CustomerTypeService {
 
-  ApiUrl: string = environment.azureUrl + 'CustomerType/';
-  commonApiUrl: string = environment.azureUrl + 'CustomerType/';
+  ApiUrl: string = environment.azureUrl + 'Customers/';
+  commonApiUrl: string = environment.azureUrl + 'Customers/';
 
   constructor(private http: HttpClient) { }
 
@@ -40,21 +40,18 @@ export class CustomerTypeService {
   }
 
 
-  load(ID: number = null, productID: number = null, langId: number = null): Observable<CustomerType[]> {
-    let queryString = '?ID=';
+  load(customerID: number = null,  langId: number = null): Observable<CustomerType[]> {
+    let queryString = '?customerID=';
 
-    if (ID != null) {
-      queryString += ID;
+    if (customerID != null) {
+      queryString += customerID;
     }
-    queryString += '&productID=';
-    if (productID != null) {
-      queryString += productID;
-    }
+
 
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<CustomerType[]>(this.ApiUrl + 'Load' + queryString);
+      return this.http.get<CustomerType[]>(this.ApiUrl + 'LoadCustomerType' + queryString);
     }
   }
 
