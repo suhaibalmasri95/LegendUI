@@ -217,8 +217,8 @@
 
                       <div class="form-group col-md-3">
                         <label for="BirthDate">Birth Date</label>
-                        <input name="BirthDate" placeholder="Birth Date" type="date" class="form-control" [ngModel]="customerForm.BirthDate | date:'yyyy-MM-dd'"
-                          (ngModelChange)="userForm.BirthDate = $event">
+                        <input name="BirthDate" placeholder="Birth Date" bsDatepicker class="form-control" [ngModel]="customerForm.BirthDate"
+                          >
                       </div>
 
                       <div class="form-group col-md-3">
@@ -229,8 +229,8 @@
 
                       <div class="form-group col-md-3">
                         <label for="RefEffectiveDate">Reference Eff. Date</label>
-                        <input name="RefEffectiveDate" placeholder="Reference Eff. Date" type="date" class="form-control"
-                          [ngModel]="customerForm.RefEffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="customerForm.RefEffectiveDate = $event">
+                        <input name="RefEffectiveDate" placeholder="Reference Eff. Date" bsDatepicker class="form-control"
+                          [ngModel]="customerForm.RefEffectiveDate"  >
                       </div>
                     </div>
 
@@ -238,8 +238,8 @@
 
                       <div class="form-group col-md-3">
                         <label for="RefExpiryDate">Reference Exp. Date</label>
-                        <input name="RefExpiryDate" placeholder="Reference Exp. Date" type="date" class="form-control"
-                          [ngModel]="customerForm.RefExpiryDate | date:'yyyy-MM-dd'" (ngModelChange)="customerForm.RefExpiryDate = $event">
+                        <input name="RefExpiryDate" placeholder="Reference Exp. Date" bsDatepicker class="form-control"
+                          [ngModel]="customerForm.RefExpiryDate" >
                       </div>
 
                       <div class="form-group col-md-3">
@@ -259,8 +259,8 @@
 
                       <div class="form-group col-md-3">
                         <label for="StartDate">Start Date</label>
-                        <input name="StartDate" placeholder="Start Date" type="date" class="form-control" [ngModel]="customerForm.StartDate | date:'yyyy-MM-dd'"
-                          (ngModelChange)="customerForm.StartDate = $event">
+                        <input name="StartDate" placeholder="Start Date" bsDatepicker class="form-control" [ngModel]="customerForm.StartDate"
+                 >
                       </div>
 
                     </div>
@@ -1090,14 +1090,14 @@
 
                       <div class="form-group col-md-3">
                         <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
-                        <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control"
-                          [ngModel]="providerLicenseForm.EffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="providerLicenseForm.EffectiveDate = $event">
+                        <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
+                          [ngModel]="providerLicenseForm.EffectiveDate"  >
                       </div>
 
                       <div class="form-group col-md-3">
                         <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                        <input name="ExpiryDate" required placeholder="Expiry Date" type="date" class="form-control"
-                          [ngModel]="providerLicenseForm.ExpiryDate  | date:'yyyy-MM-dd'" (ngModelChange)="providerLicenseForm.ExpiryDate = $event">
+                        <input name="ExpiryDate" required placeholder="Expiry Date" bsDatepicker class="form-control"
+                          [ngModel]="providerLicenseForm.ExpiryDate "  >
                       </div>
 
                       <div class="form-group col-md-3">

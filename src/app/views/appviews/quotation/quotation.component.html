@@ -1,241 +1,247 @@
 <div class="wrapper wrapper-content animated fadeInRight">
 
-    <div class="row">
-        <div class="col-md-12">
-<div class="tabs-container">
-     
-    <div class="panel-body">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tabs-container">
 
- 
-   
-   
-
-    <fieldset>
-        <legend>
-            Product Details
-          </legend>
-    <div class="row">
-
-      <div class="form-group col-md-3">
-        <label for="DocumentType">Document Type</label>
-        <select name="DocumentType" class="form-control" [(ngModel)]="documentForm.DocumentType" (change)="getDynamicFileds(documentForm.ProductId)">
-          <option [ngValue]="undefined">Select</option>
-          <option [ngValue]="1">Policy</option>
-          <option [ngValue]="2">Quotation</option>
-        </select>
-      </div>
-      <!---->
-      <div class="form-group col-md-3">
-        <label for="LocBustId">Business Type</label>
-        <select name="LocBustId" class="form-control" [(ngModel)]="documentForm.LocBustId">
-          <option [ngValue]="undefined">Select</option>
-          <option *ngFor="let business of businessTypes" [ngValue]="business.ID">{{business.Name}}</option>
-        </select>
-      </div>
+        <div class="panel-body">
 
 
-      <div class="form-group col-md-3">
-        <label for="ProductId">Product</label>
-        <select name="ProductId" class="form-control" [(ngModel)]="documentForm.ProductId" (change)="getDynamicFileds(documentForm.ProductId)">
-          <option [ngValue]="undefined">Select</option>
-          <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
-        </select>
-      </div>
-      <div class="form-group col-md-3">
-        <label for="StBrnId">Branches</label>
-        <select name="StBrnId" class="form-control" [(ngModel)]="documentForm.StBrnId">
-          <option [ngValue]="undefined">Select</option>
-          <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{branch.Name}}</option>
-        </select>
-      </div>
-    </div>
-    <div class="row">
-
-      <div class="form-group col-md-3">
-        <label for="IssueDate">Issue Date <span class="help-block">*</span></label>
-        <input name="IssueDate" required placeholder="Issue Date" type="date" class="form-control" [ngModel]="documentForm.IssueDate | date:'yyyy-MM-dd'"
-          (ngModelChange)="changeFinancialDate($event)">
-      </div>
-
-      <div class="form-group col-md-3">
-        <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
-        <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control" [ngModel]="documentForm.EffectiveDate | date:'yyyy-MM-dd'"
-          (ngModelChange)="changeUwYear($event)">
-      </div>
-      <div class="form-group col-md-3">
-        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-        <input name="ExpiryDate" disabled required placeholder="Expiry Date" type="date" class="form-control" [ngModel]="documentForm.ExpiryDate | date:'yyyy-MM-dd'"
-          (ngModelChange)="documentForm.ExpiryDate = $event">
-      </div>
 
 
-      <div class="form-group col-md-3">
-          <label for="CurrencyCode">Currency</label>
-          <select name="CurrencyCode" class="form-control" [(ngModel)]="documentForm.CurrencyCode">
-            <option [ngValue]="undefined">Select</option>
-            <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
-          </select>
-        </div>
-    </div>
-   <div class="row">
-      <div class="form-group col-md-3">
-          <label for="Exrate">Exrate</label>
-          <input name="Exrate" placeholder="Exrate" type="number" class="form-control" [(ngModel)]="documentForm.Exrate"
-            (change)="calculateSumInsuredLc(riskForm.Suminsured,documentForm.Exrate)">
-        </div>  <div class="form-group col-md-3">
-            <label for="PaymentId">Payment Type</label>
-            <select name="PaymentId" class="form-control" [(ngModel)]="documentForm.PaymentId">
-              <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let paym of paymentType" [ngValue]="paym.MinorCode">{{paym.Name}}</option>
-            </select>
-          </div>
-          <div class="form-group col-md-3">
-            <label for="CalcBases">Calculation Base</label>
-            <select name="CalcBases" class="form-control" [(ngModel)]="documentForm.CalcBases">
-              <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let calc of calculateBase" [ngValue]="calc.MinorCode">{{calc.Name}}</option>
-            </select>
-          </div>
-       
-        <div class="form-group col-md-3">
-          <label for="ReferenceNo">Reference No</label>
-          <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control" [(ngModel)]="documentForm.ReferenceNo"></textarea>
-        </div>
-    
-    
-     
-       </div>
-    <div class="row">
-        <div class="form-group col-md-3">
-            <label for="Notes">Notes</label>
-            <textarea rows="1" name="Notes" placeholder="Notes" type="text" class="form-control" [(ngModel)]="documentForm.Notes"></textarea>
-          </div>
-         
-          <div class="form-group col-md-3">
-            <label for="Notes2">Notes2</label>
-            <textarea rows="1" name="Notes2" placeholder="Notes2" type="text" class="form-control" [(ngModel)]="documentForm.Notes2"></textarea>
-          </div>
-          <div class="form-group col-md-3">
-            <label for="OpenCoverType">Open Cover Type</label>
-            <select name="OpenCoverType" class="form-control" [(ngModel)]="documentForm.OpenCoverType">
-              <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let cover of openCoverType" [ngValue]="cover.MinorCode">{{cover.Name}}</option>
-            </select>
-          </div>
-     
-   
-    
+
+          <fieldset>
+            <legend>
+              Product Details
+            </legend>
+            <div class="row">
+
+              <div class="form-group col-md-3">
+                <label for="DocumentType">Document Type</label>
+                <select name="DocumentType" class="form-control" [(ngModel)]="documentForm.DocumentType" (change)="getDynamicFileds(documentForm.ProductId)">
+                  <option [ngValue]="undefined">Select</option>
+                  <option [ngValue]="1">Policy</option>
+                  <option [ngValue]="2">Quotation</option>
+                </select>
+              </div>
+              <!---->
+              <div class="form-group col-md-3">
+                <label for="LocBustId">Business Type</label>
+                <select name="LocBustId" class="form-control" [(ngModel)]="documentForm.LocBustId">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let business of businessTypes" [ngValue]="business.ID">{{business.Name}}</option>
+                </select>
+              </div>
 
 
-    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType === 1">
-      <label for="AccountedFor">Accounted For</label>
-      <select name="AccountedFor" class="form-control" [(ngModel)]="documentForm.AccountedFor">
-        <option [ngValue]="undefined">Select</option>
-        <option *ngFor="let acc of accountedFor" [ngValue]="acc.MinorCode">{{acc.Name}}</option>
-      </select>
-    </div>
-    <div class="form-group col-md-3">
-        <label for="LocDistChnales">Distribution Channel</label>
-        <select name="LocDistChnales" class="form-control" [(ngModel)]="documentForm.LocDistChnales" (change)="setDocumentShare(documentForm.LocDistChnales)">
-          <option [ngValue]="undefined">Select</option>
-          <option *ngFor="let dis of distributionChannel" [ngValue]="dis.MinorCode">{{dis.Name}}</option>
-        </select>
-      </div>
-    
-    <div class="form-group col-md-3" *ngIf="documentForm.DocumentType === 2">
-        <label for="QutValidity">Quotation Validity</label>
-        <input name="QutValidity" placeholder="Quotation Validity" type="number" class="form-control" [(ngModel)]="documentForm.QutValidity">
-      </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 2">
-      <label for="SalesPreson">Sales Preson</label>
-      <input class="form-control" type="text" placeholder="Sales Preson" matInput [formControl]="beneficiarySearch"
-        [matAutocomplete]="salesPersonsauto">
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #salesPersonsauto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let sale of salesPersons" [value]="sale">
-          {{ sale.Name }}
-        </mat-option>
-      </mat-autocomplete>
-    </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 3">
-      <label for="Agent">Agent</label>
-      <input class="form-control" type="text" placeholder="Agent" matInput [formControl]="beneficiarySearch"
-        [matAutocomplete]="agentsauto">
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #agentsauto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let agent of agents" [value]="agent">
-          {{ agent.Name }}
-        </mat-option>
-      </mat-autocomplete>
+              <div class="form-group col-md-3">
+                <label for="ProductId">Product</label>
+                <select name="ProductId" class="form-control" [(ngModel)]="documentForm.ProductId" (change)="getDynamicFileds(documentForm.ProductId)">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="StBrnId">Branches</label>
+                <select name="StBrnId" class="form-control" [(ngModel)]="documentForm.StBrnId">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let branch of branches" [ngValue]="branch.ID">{{branch.Name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
 
-    </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 4">
-      <label for="Broker">Broker</label>
-      <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
-        [matAutocomplete]="brokerssauto">
-      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-      <mat-autocomplete #brokerssauto="matAutocomplete" [displayWith]="displayFn">
-        <mat-option *ngFor="let broker of brokers" [value]="broker">
-          {{ broker.Name }}
-        </mat-option>
-      </mat-autocomplete>
+              <div class="form-group col-md-3">
+                <label for="IssueDate">Issue Date <span class="help-block">*</span></label>
+                <input name="IssueDate" required placeholder="Issue Date" bsDatepicker class="form-control" [ngModel]="documentForm.IssueDate">
+              </div>
 
-    </div>
-    <div class="form-group col-md-3" *ngIf="documentForm.DocumentSegment">
-        <label for="DocumentSegment">Document Segment</label>
-        <input name="DocumentSegment" placeholder="Document Segment" disabled type="text" class="form-control"
-          [(ngModel)]="documentForm.DocumentSegment">
-      </div>
-      <div class="form-group col-md-3" *ngIf="documentForm.UwYear">
-        <label for="UwYear">Under Writing Year</label>
-        <input name="UwYear" placeholder="Under Writing Year" disabled type="number" class="form-control" [(ngModel)]="documentForm.UwYear">
-      </div>
-  </div>
-<fieldset>
-    <legend>
-       Customer  Details
-      </legend>
-<div class="row">
-    <div class="form-group col-md-3">
-        <label for="QutValidity">Policy Holder</label>
-      
-        <input class="form-control" type="text" placeholder="Policy Holder" matInput [formControl]="policyholderSearch"
-          [matAutocomplete]="policyHoldersauto" (blur)="checkCurrentCustomer()">
-      
-        <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-        <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData(false)">
-          <mat-option *ngFor="let Holder of policyHolders" [value]="Holder">
-              {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
-          </mat-option>
-        </mat-autocomplete>
-      
-      </div>
-   
-      <div class="form-group col-md-3">
-          <label for="Email">Email</label>
-          <input class="form-control" [(ngModel)]="currentCustomer.Email" type="Email" placeholder="Email" name="Email" (blur)="SearchCustomerByEmail(currentCustomer.Email, false)">
-      </div>
-      <div class="form-group col-md-3">
-          <label for="Mobile">Mobile</label>
-          <input class="form-control" type="tel"  [(ngModel)]="currentCustomer.Mobile" placeholder="Mobile" name="Mobile" (blur)="SearchCustomerByPhoneNumber(currentCustomer.Mobile, false)">
-
-      </div>
-      <div class="form-group col-md-3">
-
-          <label for="ReferenceNo">National ID</label>
-          <input class="form-control" type="text" [(ngModel)]="currentCustomer.ReferenceNo" placeholder="National ID" name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(currentCustomer.ReferenceNo, false)" >
-      </div>
-</div>
-</fieldset>
+              <div class="form-group col-md-3">
+                <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+                <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
+                  [ngModel]="documentForm.EffectiveDate"  >
+              </div>
+              <div class="form-group col-md-3">
+                <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+                <input name="ExpiryDate" disabled required placeholder="Expiry Date" bsDatepicker class="form-control"
+                  [ngModel]="documentForm.ExpiryDate"  >
+              </div>
 
 
-</fieldset>
+              <div class="form-group col-md-3">
+                <label for="CurrencyCode">Currency</label>
+                <select name="CurrencyCode" class="form-control" [(ngModel)]="documentForm.CurrencyCode">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let currency of currencies" [ngValue]="currency.Code">{{currency.Name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-3">
+                <label for="Exrate">Exrate</label>
+                <input name="Exrate" placeholder="Exrate" type="number" class="form-control" [(ngModel)]="documentForm.Exrate"
+                  (change)="calculateSumInsuredLc(riskForm.Suminsured,documentForm.Exrate)">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="PaymentId">Payment Type</label>
+                <select name="PaymentId" class="form-control" [(ngModel)]="documentForm.PaymentId">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let paym of paymentType" [ngValue]="paym.MinorCode">{{paym.Name}}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="CalcBases">Calculation Base</label>
+                <select name="CalcBases" class="form-control" [(ngModel)]="documentForm.CalcBases">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let calc of calculateBase" [ngValue]="calc.MinorCode">{{calc.Name}}</option>
+                </select>
+              </div>
 
-    
-  
-    <div class="row">
+              <div class="form-group col-md-3">
+                <label for="ReferenceNo">Reference No</label>
+                <textarea rows="1" name="ReferenceNo" placeholder="Reference No" type="text" class="form-control"
+                  [(ngModel)]="documentForm.ReferenceNo"></textarea>
+              </div>
 
-      <!--   <mat-accordion>
+
+
+            </div>
+            <div class="row">
+              <div class="form-group col-md-3">
+                <label for="Notes">Notes</label>
+                <textarea rows="1" name="Notes" placeholder="Notes" type="text" class="form-control" [(ngModel)]="documentForm.Notes"></textarea>
+              </div>
+
+              <div class="form-group col-md-3">
+                <label for="Notes2">Notes2</label>
+                <textarea rows="1" name="Notes2" placeholder="Notes2" type="text" class="form-control" [(ngModel)]="documentForm.Notes2"></textarea>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="OpenCoverType">Open Cover Type</label>
+                <select name="OpenCoverType" class="form-control" [(ngModel)]="documentForm.OpenCoverType">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let cover of openCoverType" [ngValue]="cover.MinorCode">{{cover.Name}}</option>
+                </select>
+              </div>
+
+
+
+
+
+              <div class="form-group col-md-3" *ngIf="documentForm.DocumentType === 1">
+                <label for="AccountedFor">Accounted For</label>
+                <select name="AccountedFor" class="form-control" [(ngModel)]="documentForm.AccountedFor">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let acc of accountedFor" [ngValue]="acc.MinorCode">{{acc.Name}}</option>
+                </select>
+              </div>
+              <div class="form-group col-md-3">
+                <label for="LocDistChnales">Distribution Channel</label>
+                <select name="LocDistChnales" class="form-control" [(ngModel)]="documentForm.LocDistChnales" (change)="setDocumentShare(documentForm.LocDistChnales)">
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let dis of distributionChannel" [ngValue]="dis.MinorCode">{{dis.Name}}</option>
+                </select>
+              </div>
+
+              <div class="form-group col-md-3" *ngIf="documentForm.DocumentType === 2">
+                <label for="QutValidity">Quotation Validity</label>
+                <input name="QutValidity" placeholder="Quotation Validity" type="number" class="form-control"
+                  [(ngModel)]="documentForm.QutValidity">
+              </div>
+              <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 2">
+                <label for="SalesPreson">Sales Preson</label>
+                <input class="form-control" type="text" placeholder="Sales Preson" matInput [formControl]="beneficiarySearch"
+                  [matAutocomplete]="salesPersonsauto">
+                <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                <mat-autocomplete #salesPersonsauto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let sale of salesPersons" [value]="sale">
+                    {{ sale.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+              <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 3">
+                <label for="Agent">Agent</label>
+                <input class="form-control" type="text" placeholder="Agent" matInput [formControl]="beneficiarySearch"
+                  [matAutocomplete]="agentsauto">
+                <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                <mat-autocomplete #agentsauto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let agent of agents" [value]="agent">
+                    {{ agent.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+
+              </div>
+              <div class="form-group col-md-3" *ngIf="documentForm.LocDistChnales === 4">
+                <label for="Broker">Broker</label>
+                <input class="form-control" type="text" placeholder="Beneficiary" matInput [formControl]="beneficiarySearch"
+                  [matAutocomplete]="brokerssauto">
+                <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                <mat-autocomplete #brokerssauto="matAutocomplete" [displayWith]="displayFn">
+                  <mat-option *ngFor="let broker of brokers" [value]="broker">
+                    {{ broker.Name }}
+                  </mat-option>
+                </mat-autocomplete>
+
+              </div>
+              <div class="form-group col-md-3" *ngIf="documentForm.DocumentSegment">
+                <label for="DocumentSegment">Document Segment</label>
+                <input name="DocumentSegment" placeholder="Document Segment" disabled type="text" class="form-control"
+                  [(ngModel)]="documentForm.DocumentSegment">
+              </div>
+              <div class="form-group col-md-3" *ngIf="documentForm.UwYear">
+                <label for="UwYear">Under Writing Year</label>
+                <input name="UwYear" placeholder="Under Writing Year" disabled type="number" class="form-control"
+                  [(ngModel)]="documentForm.UwYear">
+              </div>
+            </div>
+            <fieldset>
+              <legend>
+                Customer Details
+              </legend>
+              <div class="row">
+                <div class="form-group col-md-3">
+                  <label for="QutValidity">Policy Holder</label>
+
+                  <input class="form-control" type="text" placeholder="Policy Holder" matInput [formControl]="policyholderSearch"
+                    [matAutocomplete]="policyHoldersauto" (blur)="checkCurrentCustomer()">
+
+                  <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                  <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData(false)">
+                    <mat-option *ngFor="let Holder of policyHolders" [value]="Holder">
+                      {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
+
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label for="Email">Email</label>
+                  <input class="form-control" [(ngModel)]="currentCustomer.Email" type="Email" placeholder="Email" name="Email"
+                    (blur)="SearchCustomerByEmail(currentCustomer.Email, false)">
+                </div>
+                <div class="form-group col-md-3">
+                  <label for="Mobile">Mobile</label>
+                  <input class="form-control" type="tel" [(ngModel)]="currentCustomer.Mobile" placeholder="Mobile" name="Mobile"
+                    (blur)="SearchCustomerByPhoneNumber(currentCustomer.Mobile, false)">
+
+                </div>
+                <div class="form-group col-md-3">
+
+                  <label for="ReferenceNo">National ID</label>
+                  <input class="form-control" type="text" [(ngModel)]="currentCustomer.ReferenceNo" placeholder="National ID"
+                    name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(currentCustomer.ReferenceNo, false)">
+                </div>
+              </div>
+            </fieldset>
+
+
+          </fieldset>
+
+
+
+          <div class="row">
+
+            <!--   <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -265,7 +271,7 @@
                   </div>
                   <div class="form-group col-md-3">
                         <label for="FinancialDate">Financial Date <span class="help-block">*</span></label>
-                        <input name="FinancialDate" required placeholder="Finanvial Date" type="date" class="form-control" [ngModel]="documentForm.FinancialDate | date:'yyyy-MM-dd'"
+                        <input name="FinancialDate" required placeholder="Finanvial Date" bsDatepicker class="form-control" [ngModel]="documentForm.FinancialDate"
                           (ngModelChange)="documentForm.FinancialDate = $event">
                       </div>
         </div>
@@ -336,7 +342,7 @@
 
                                   <div class="form-group col-md-3">
                                         <label for="CreationDate">Creation Date <span class="help-block">*</span></label>
-                                        <input name="CreationDate" disabled required placeholder="Creation Date" type="date" class="form-control" [ngModel]="documentForm.CreationDate | date:'yyyy-MM-dd'"
+                                        <input name="CreationDate" disabled required placeholder="Creation Date" bsDatepicker class="form-control" [ngModel]="documentForm.CreationDate"
                                           (ngModelChange)="documentForm.CreationDate = $event">
                                       </div>
                                   <div class="form-group col-md-3">
@@ -347,7 +353,7 @@
                                     <div class="row">
                                       <div class="form-group col-md-3">
                                             <label for="ModificationDate">Modification Date <span class="help-block">*</span></label>
-                                            <input name="ModificationDate" disabled required placeholder="Modification Date" type="date" class="form-control" [ngModel]="documentForm.ModificationDate | date:'yyyy-MM-dd'"
+                                            <input name="ModificationDate" disabled required placeholder="Modification Date" bsDatepicker class="form-control" [ngModel]="documentForm.ModificationDate"
                                               (ngModelChange)="documentForm.ModificationDate = $event">
                                           </div>
                                           <div class="form-group col-md-3">
@@ -359,29 +365,29 @@
                                               </div>
                                           <div class="form-group col-md-3">
                                                 <label for="StatusDate">Status Date <span class="help-block">*</span></label>
-                                                <input name="StatusDate" required placeholder="Status Date" type="date" class="form-control" [ngModel]="documentForm.StatusDate | date:'yyyy-MM-dd'"
+                                                <input name="StatusDate" required placeholder="Status Date" bsDatepicker class="form-control" [ngModel]="documentForm.StatusDate"
                                                   (ngModelChange)="documentForm.StatusDate = $event" disabled>
                                               </div>
 
                     </div>
       </mat-expansion-panel>
     </mat-accordion>-->
-    </div>
-    <div  *ngFor="let item of productDynamicCategories | orderBy: order ">
-        <div *ngIf="item.IsMulitRecords === 0">
-      <app-dynamic-component [category]="item" [updateModeForNotMultiRecord]="updateMode"></app-dynamic-component>
-      </div>
-    </div>
-   
-
-
-    
+          </div>
+          <div *ngFor="let item of productDynamicCategories | orderBy: order ">
+            <div *ngIf="item.IsMulitRecords === 0">
+              <app-dynamic-component [category]="item" [updateModeForNotMultiRecord]="updateMode"></app-dynamic-component>
+            </div>
+          </div>
 
 
 
 
 
-  <!-- <div class="col-xs-12 col-12 col-md-4 form-group">
+
+
+
+
+          <!-- <div class="col-xs-12 col-12 col-md-4 form-group">
     <input
       placeholder="Datepicker"
       class="form-control"
@@ -389,7 +395,7 @@
       bsDatepicker="{ dateInputFormat: 'DD-MM-YYYY' }">
   </div>-->
 
-  <!--<div class="pull-right">
+          <!--<div class="pull-right">
         <a (click)="sidenav.toggle()">
         <i class="material-icons">
             keyboard_arrow_left
@@ -419,197 +425,205 @@
       </mat-accordion>
     </div>
   </div>-->
-  <br>
-  <br>
-  <br>
-  <br>
-  <mat-tab-group [selectedIndex]="0"   (selectedIndexChange)="selected.setValue($event)" *ngIf="hasValue" >
-  <mat-tab label="Document Share"  *ngIf="shares.length > 0" >
-      <div class="col-md-12"> 
-          <div class="row">
-              <div class="form-group col-md-3">
-                  <label for="Type">Type </label>
-                  <select name="Type" class="form-control" [(ngModel)]="customerUpdateForm.ShareType" >
-                    <option [ngValue]="undefined">Select</option>
-                    <option [ngValue]="1">Policy Holder</option>
-                    <option [ngValue]="2">Beneficiary</option>
-                    <option [ngValue]="3">Agent</option>
-                    <option [ngValue]="4">Broker</option>
-                    <option [ngValue]="5">Sales Person</option>
-                  </select>
+          <br>
+          <br>
+          <br>
+          <br>
+          <mat-tab-group [selectedIndex]="0" (selectedIndexChange)="selected.setValue($event)" *ngIf="hasValue">
+            <mat-tab label="Document Share" *ngIf="shares.length > 0">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="form-group col-md-3">
+                    <label for="Type">Type </label>
+                    <select name="Type" class="form-control" [(ngModel)]="customerUpdateForm.ShareType">
+                      <option [ngValue]="undefined">Select</option>
+                      <option [ngValue]="1">Policy Holder</option>
+                      <option [ngValue]="2">Beneficiary</option>
+                      <option [ngValue]="3">Agent</option>
+                      <option [ngValue]="4">Broker</option>
+                      <option [ngValue]="5">Sales Person</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-md-3" *ngIf="customerUpdateForm.ShareType">
+                    <label for="Name">Name </label>
+
+                    <input class="form-control" type="text" placeholder="Name" matInput [formControl]="policyHolderUpdate"
+                      [matAutocomplete]="policyHoldersUpdateauto">
+
+                    <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                    <mat-autocomplete #policyHoldersUpdateauto="matAutocomplete" [displayWith]="displayFn"
+                      (optionSelected)="FillCustomerData(true)">
+                      <mat-option *ngFor="let Holder of customers" [value]="Holder">
+                        {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+                      </mat-option>
+                    </mat-autocomplete>
+
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="Email">Email</label>
+                    <input class="form-control" [(ngModel)]="customerUpdateForm.Email" type="Email" placeholder="Email"
+                      name="Email" (blur)="SearchCustomerByEmail(customerUpdateForm.Email , true)">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="Mobile">Mobile</label>
+                    <input class="form-control" type="tel" [(ngModel)]="customerUpdateForm.Mobile" placeholder="Mobile"
+                      name="Mobile" (blur)="SearchCustomerByPhoneNumber(customerUpdateForm.Mobile , true)">
+
+                  </div>
+                  <div class="form-group col-md-3">
+
+                    <label for="ReferenceNo">National ID</label>
+                    <input class="form-control" type="text" [(ngModel)]="customerUpdateForm.ReferenceNo" placeholder="National ID"
+                      name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(customerUpdateForm.ReferenceNo , ture)">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="commission Percent">Commission Percent</label>
+                    <input class="form-control" type="number" [(ngModel)]="newShare.Percent" placeholder="Commission Percent"
+                      name="CommissionPercent">
+
+                  </div>
+
+                  <div class="form-group col-md-3">
+                    <label for="Share Percent">Share Percent</label>
+                    <input class="form-control" type="number" [(ngModel)]="newShare.SharePercent" placeholder="Share Percent"
+                      value="100" name="SharePercent">
+
+                  </div>
                 </div>
-            <div class="form-group col-md-3" *ngIf="customerUpdateForm.ShareType">
-                <label for="Name">Name </label>
-              
-                <input class="form-control" type="text" placeholder="Name" matInput [formControl]="policyHolderUpdate"
-                  [matAutocomplete]="policyHoldersUpdateauto" >
-              
-                <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-                <mat-autocomplete #policyHoldersUpdateauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillCustomerData(true)">
-                  <mat-option *ngFor="let Holder of customers" [value]="Holder">
-                      {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
-                  </mat-option>
-                </mat-autocomplete>
-              
+                <div class="row">
+
+
+                </div>
+                <div class="col-md-12 text-right">
+                  <div class="btn-group">
+                    <button class="btn btn-primary" (click)="AddUpdateShare()">Save</button>
+
+                  </div>
+                </div>
+                <br />
+                <br />
+
+                <app-generictable *ngIf="shares.length > 0" #tableSelector [tableColumns]='sharesTableColumn'
+                  [DataSource]='shares' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+
+
               </div>
-           
-              <div class="form-group col-md-3">
-                  <label for="Email">Email</label>
-                  <input class="form-control" [(ngModel)]="customerUpdateForm.Email" type="Email" placeholder="Email" name="Email" (blur)="SearchCustomerByEmail(customerUpdateForm.Email , true)">
+            </mat-tab>
+            <mat-tab label="Document Attachments" *ngIf="documentAttachments.length > 0">
+              <div class="col-md-12">
+                <form [formGroup]="attachmentForm">
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="Attachments">Attachments</label>
+                      <mat-select placeholder="" class="form-control" formControlName="attachments" multiple>
+                        <mat-option #allSelected (onSelectionChange)="toggleAllSelection()" [value]="f.defaultSelect.value "
+                          [disabled]="f.enableMultiSelect.value">Select All</mat-option>
+                        <mat-option *ngFor="let attach of f.attachmetValues.value; let index = elementIndex" [value]="attach"
+                          [disabled]="disabled">{{attach.Name}}</mat-option>
+                      </mat-select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="Remarks">Remarks</label>
+                      <textarea rows="1" formControlName="Remarks" placeholder="Remarks" type="text" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="IsReceived">Attachment Received</label>
+                      <mat-checkbox formControlName="IsReceived" class="form-control">Is Received</mat-checkbox>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+
+                    <div class="form-group col-md-4">
+                      <label for="countryFlag">File</label>
+
+                      <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                        <div class="form-control" data-trigger="fileinput">
+
+                          <span class="fileinput-filename" *ngIf="false">
+                            <i class="glyphicon glyphicon-file fileinput-exists"></i>
+
+                          </span>
+                        </div>
+
+                        <span class="input-group-addon btn btn-default btn-file">
+                          <label for="FLAG" class="custom-file-upload">
+                            <i class="fa fa-cloud-upload"></i> Upload
+                          </label>
+
+                        </span>
+                        <input id="FLAG" name="Flag" type="file" onclick="this.value = null" (change)="onFileChanged($event)">
+                        <a class="input-group-addon btn btn-default fileinput-exists" data-dismiss="fileinput" *ngIf="f.File.value"
+                          (click)="removeFile()">Remove</a>
+                      </div>
+                    </div>
+                    <div class="form-group col-md-4" *ngIf="previewLink !== ''">
+                      <a target="_blank" href="{{previewLink}}">preview</a>
+                    </div>
+                  </div>
+                  <div class="col-md-12 text-right">
+                    <div class="btn-group">
+                      <button class="btn btn-primary" (click)="AddAttachment()">Save</button>
+
+                    </div>
+                  </div>
+                </form>
+                <app-generictable *ngIf="documentAttachments.length > 0" #tableSelector [tableColumns]='attachmentTableColumn'
+                  [DataSource]='documentAttachments' (update)='updateAttachment($event)' (delete)='deleteAttachment($event)'></app-generictable>
               </div>
-              <div class="form-group col-md-3">
-                  <label for="Mobile">Mobile</label>
-                  <input class="form-control" type="tel"  [(ngModel)]="customerUpdateForm.Mobile" placeholder="Mobile" name="Mobile" (blur)="SearchCustomerByPhoneNumber(customerUpdateForm.Mobile , true)">
-        
+            </mat-tab>
+            <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord | orderBy: order; let index = index" label="{{item.Lable}}">
+              <div class="col-md-12">
+                <app-dynamic-component [category]="item"></app-dynamic-component>
               </div>
-              <div class="form-group col-md-3">
-        
-                  <label for="ReferenceNo">National ID</label>
-                  <input class="form-control" type="text" [(ngModel)]="customerUpdateForm.ReferenceNo" placeholder="National ID" name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(customerUpdateForm.ReferenceNo , ture)" >
-              </div>
-          <div class="form-group col-md-3">
-              <label for="commission Percent">Commission Percent</label>
-              <input class="form-control" type="number" [(ngModel)]="newShare.Percent" placeholder="Commission Percent" name="CommissionPercent">
-    
-          </div>
-  
-          <div class="form-group col-md-3" >
-              <label for="Share Percent">Share Percent</label>
-              <input class="form-control" type="number" [(ngModel)]="newShare.SharePercent" placeholder="Share Percent" value="100" name="SharePercent">
-    
-          </div>
-            </div>
-              <div class="row">
-            
-            
-        </div>
-        <div class="col-md-12 text-right">
+            </mat-tab>
+          </mat-tab-group>
+
+          <br>
+          <br>
+          <div class="col-md-12 text-right">
             <div class="btn-group">
-              <button class="btn btn-primary" (click)="AddUpdateShare()">Save</button>
-              
+
+
+              <button class="btn btn-primary" (click)="submit()">Submit </button>
+              <button class="btn btn-primary" (click)="nextClick()" *ngIf="updateMode">Next </button>
             </div>
-        </div>
-        <br />
-        <br />
-     
-      <app-generictable *ngIf="shares.length > 0"   #tableSelector [tableColumns]='sharesTableColumn' [DataSource]='shares' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
- 
-   
-</div>
-  </mat-tab>
-  <mat-tab label="Document Attachments" *ngIf="documentAttachments.length > 0">
-      <div class="col-md-12">
-      <form [formGroup]="attachmentForm">
+          </div>
+
+
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
           <div class="row">
-              <div class="form-group col-md-3" >
-                  <label for="Attachments">Attachments</label>
-                  <mat-select  placeholder="" class="form-control" formControlName="attachments" multiple    >
-                      <mat-option #allSelected (onSelectionChange)="toggleAllSelection()" [value]="f.defaultSelect.value " [disabled]="f.enableMultiSelect.value">Select All</mat-option>
-                    <mat-option  *ngFor="let attach of f.attachmetValues.value; let index = elementIndex"
-                    
-                     [value]="attach" [disabled]="disabled">{{attach.Name}}</mat-option>
-                  </mat-select>
-                 </div>
-          <div class="form-group col-md-3">
-            <label for="Remarks">Remarks</label>
-            <textarea rows="1" formControlName="Remarks" placeholder="Remarks" type="text" class="form-control" ></textarea>
-          </div>
-          <div class="form-group col-md-3">
-              <label for="IsReceived">Attachment Received</label>
-              <mat-checkbox formControlName="IsReceived" class="form-control">Is Received</mat-checkbox>
-          </div>
-       </div>
-       
-         
-             <div class="row">
-       
-           <div class="form-group col-md-4">
-               <label for="countryFlag">File</label>
-
-               <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                   <div class="form-control" data-trigger="fileinput">
-
-                       <span class="fileinput-filename" *ngIf="false">
-                           <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                           
-                       </span>
-                   </div>
-
-                   <span class="input-group-addon btn btn-default btn-file"  >
-                       <label for="FLAG" class="custom-file-upload">
-                           <i class="fa fa-cloud-upload"></i> Upload
-                       </label>
-
-                   </span>
-                   <input id="FLAG" name="Flag" type="file" onclick="this.value = null"
-                   (change)="onFileChanged($event)" >
-                   <a class="input-group-addon btn btn-default fileinput-exists"
-                       data-dismiss="fileinput" *ngIf="f.File.value" (click)="removeFile()">Remove</a>
-               </div>
-             </div>
-             <div class="form-group col-md-4" *ngIf="previewLink !== ''">
-               <a target="_blank" href="{{previewLink}}">preview</a>
-             </div>
-           </div>
-           <div class="col-md-12 text-right">
-              <div class="btn-group">
-                <button class="btn btn-primary" (click)="AddAttachment()">Save</button>
-                
+            <div id="footer">
+              <div class="form-group col-md-2" *ngIf="documentForm.IsClaimed === 1">
+                <h3><i class="fa fa-check"><span>Clamied</span></i></h3>
               </div>
+              <div class="form-group col-md-2" *ngIf="documentForm.IsPrinted === 1">
+                <h3><i class="fa fa-check"><span>Printed</span></i></h3>
+              </div>
+              <div class="form-group col-md-2" *ngIf="documentForm.IsReinsured === 1">
+                <h3><i class="fa fa-check"><span>Reinsured</span></i></h3>
+              </div>
+              <div class="form-group col-md-2" *ngIf="documentForm.IsPosted === 1">
+                <h3><i class="fa fa-check"><span>Posted</span></i></h3>
+              </div>
+              <div class="form-group col-md-2" *ngIf="documentForm.IsCancelled === 1">
+                <h3><i class="fa fa-check"><span>Canceled</span></i></h3>
+              </div>
+            </div>
           </div>
-      </form>
-    <app-generictable *ngIf="documentAttachments.length > 0"   #tableSelector [tableColumns]='attachmentTableColumn' [DataSource]='documentAttachments' (update)='updateAttachment($event)' (delete)='deleteAttachment($event)'></app-generictable>
-  </div>
-  </mat-tab>
-  <mat-tab *ngFor="let item of productDynamicCategoriesMultiRecord | orderBy: order; let index = index" label="{{item.Lable}}" >
-      <div class="col-md-12">
-    <app-dynamic-component [category]="item"></app-dynamic-component></div>
-  </mat-tab> 
-</mat-tab-group>
 
-  <br>
-  <br>
-  <div class="col-md-12 text-right">
-      <div class="btn-group">
-       
-        
-        <button class="btn btn-primary" (click)="submit()" >Submit </button>
-        <button class="btn btn-primary" (click)="nextClick()" *ngIf="updateMode">Next </button>
+        </div>
       </div>
-  </div>
 
-
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <div class="row">
-    <div id="footer">
-      <div class="form-group col-md-2" *ngIf="documentForm.IsClaimed === 1">
-        <h3><i class="fa fa-check"><span>Clamied</span></i></h3>
-      </div>
-      <div class="form-group col-md-2" *ngIf="documentForm.IsPrinted === 1">
-        <h3><i class="fa fa-check"><span>Printed</span></i></h3>
-      </div>
-      <div class="form-group col-md-2" *ngIf="documentForm.IsReinsured === 1">
-        <h3><i class="fa fa-check"><span>Reinsured</span></i></h3>
-      </div>
-      <div class="form-group col-md-2" *ngIf="documentForm.IsPosted === 1">
-        <h3><i class="fa fa-check"><span>Posted</span></i></h3>
-      </div>
-      <div class="form-group col-md-2" *ngIf="documentForm.IsCancelled === 1">
-        <h3><i class="fa fa-check"><span>Canceled</span></i></h3>
-      </div>
     </div>
   </div>
-
-</div>
-</div>
-
-</div>
-</div>
 
 </div>
 

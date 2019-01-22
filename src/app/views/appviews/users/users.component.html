@@ -55,15 +55,15 @@
                       </div>
                       <div class="form-group col-md-3">
                         <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
-                        <input name="EffectiveDate" required placeholder="Effective Date" type="date" class="form-control"
-                          [ngModel]="userForm.EffectiveDate | date:'yyyy-MM-dd'" (ngModelChange)="userForm.EffectiveDate = $event">
+                        <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
+                          [ngModel]="userForm.EffectiveDate">
                       </div>
                     </div>
                     <div class="row">
                       <div class="form-group col-md-3">
                         <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                        <input name="ExpiryDate" required placeholder="Expiry Date" type="date" class="form-control"
-                          [ngModel]="userForm.ExpiryDate  | date:'yyyy-MM-dd'" (ngModelChange)="userForm.ExpiryDate = $event">
+                        <input name="ExpiryDate" required placeholder="Expiry Date" bsDatepicker class="form-control"
+                          [ngModel]="userForm.ExpiryDate ">
                       </div>
 
                       <div class="form-group col-md-3">
@@ -104,8 +104,7 @@
                       </div>
                       <div class="form-group col-md-3">
                         <label for="BirthDate">Birth Date</label>
-                        <input name="BirthDate" placeholder="Birth Date" type="date" class="form-control" [ngModel]="userForm.BirthDate | date:'yyyy-MM-dd'"
-                          (ngModelChange)="userForm.BirthDate = $event">
+                        <input name="BirthDate" placeholder="Birth Date" bsDatepicker class="form-control" [ngModel]="userForm.BirthDate">
                       </div>
                       <div class="form-group col-md-3">
                         <label for="CountryID">Country</label>
@@ -158,8 +157,7 @@
                         <br>
                         <br>
                         <div class="btn-group">
-                          <input class="btn btn-default" type="reset" (click)="resetForm(form)"
-                            value="Reset" />
+                          <input class="btn btn-default" type="reset" (click)="resetForm(form)" value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                         </div>
                       </div>

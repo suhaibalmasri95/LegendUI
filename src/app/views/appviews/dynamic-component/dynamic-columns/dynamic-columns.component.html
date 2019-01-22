@@ -1,33 +1,27 @@
 <div *ngFor="let column of columns | orderBy: order">
-<div class="form-group col-md-3" *ngIf="column.ColumnType ===1">
+  <div class="form-group col-md-3" *ngIf="column.ColumnType ===1">
     <label for="{{column.Lable}}">{{column.Lable}}</label>
-    <input name="{{column.Lable}}"  placeholder="{{column.label}}" type="text" class="form-control" [(ngModel)]="column.ValueDesc">
+    <input name="{{column.Lable}}" placeholder="{{column.label}}" type="text" class="form-control" [(ngModel)]="column.ValueDesc">
   </div>
-<div class="form-group col-md-3" *ngIf="column.ColumnType ===3">
+  <div class="form-group col-md-3" *ngIf="column.ColumnType ===3">
     <label for="{{column.Lable}}">{{column.Lable}} <span class="help-block">*</span></label>
-    <input name="{{column.Lable}}"   placeholder="{{column.Lable}}" type="date" class="form-control" [ngModel]="column.ValueDate | date:'yyyy-MM-dd'"
-      (ngModelChange)="column.ValueDate = $event">
+    <input name="{{column.Lable}}" placeholder="{{column.Lable}}" bsDatepicker class="form-control" [ngModel]="column.ValueDate">
   </div>
   <div class="form-group col-md-3" *ngIf="column.ColumnType ===2">
-      <label for="{{column.Lable}}">{{column.Lable}}</label>
-      <input name="{{column.Lable}}"  placeholder="{{column.Lable}}" type="number" class="form-control" [(ngModel)]="column.ValueAmount"  >
-    </div>
-  
-
-    <div class="form-group col-md-3" *ngIf="column.ColumnType ===4">
-      <label for="{{column.Lable}}">{{column.Lable}}</label>
-      <select name="{{column.Lable}}" class="form-control" [(ngModel)]="column.ValueLockUpID" (change) ="getChildren(column)">
-        <option [ngValue]="undefined">Select</option>
-        <option *ngFor="let lock of column.LockUps" [ngValue]="lock.ID">{{lock.Name}}</option>
-      </select></div>
-    </div>
-
-
-  <div *ngFor="let item of childs ">
-    <app-select-component [child]="item" (parent)="getChildren($event)"></app-select-component>
+    <label for="{{column.Lable}}">{{column.Lable}}</label>
+    <input name="{{column.Lable}}" placeholder="{{column.Lable}}" type="number" class="form-control" [(ngModel)]="column.ValueAmount">
   </div>
 
- 
-   
 
-  
+  <div class="form-group col-md-3" *ngIf="column.ColumnType ===4">
+    <label for="{{column.Lable}}">{{column.Lable}}</label>
+    <select name="{{column.Lable}}" class="form-control" [(ngModel)]="column.ValueLockUpID" (change)="getChildren(column)">
+      <option [ngValue]="undefined">Select</option>
+      <option *ngFor="let lock of column.LockUps" [ngValue]="lock.ID">{{lock.Name}}</option>
+    </select></div>
+</div>
+
+
+<div *ngFor="let item of childs ">
+  <app-select-component [child]="item" (parent)="getChildren($event)"></app-select-component>
+</div>
