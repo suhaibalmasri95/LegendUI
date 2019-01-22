@@ -1,3 +1,4 @@
+import { SearchService } from './../../../_services/search.service';
 import { MinorCode } from './../../../entities/models/minorCode';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
@@ -21,6 +22,7 @@ import { SearchCustomersComponent } from './searchCustomers/search-customers.com
 import { LockUp } from '../../../entities/organization/LockUp';
 import { LineOfBusiness } from '../../../entities/Setup/lineOfBusiness';
 import { CustomerService } from '../../../_services/_customer/customer.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-customers',
@@ -63,7 +65,7 @@ export class CustomersComponent implements OnInit {
   customerContactsDataSource: MatTableDataSource<CustomerContact>;
 
   commissionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Product',
-   'SubLob', 'CommissionType', 'CommissionPercent', 'CommissionAmount', 'actions'];
+    'SubLob', 'CommissionType', 'CommissionPercent', 'CommissionAmount', 'actions'];
   commissionDataSource: MatTableDataSource<Commission>;
 
   providerLicenseTableColumns = ['select', 'ID', 'LICNESNO', 'EffectiveDate', 'EXP_DATE', 'Specialty', 'ProviderType', 'actions'];
@@ -89,7 +91,7 @@ export class CustomersComponent implements OnInit {
   userCompany: any;
   user: any;
   dropdownSettings = {};
-
+  hasBeenSearched = false;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
   @ViewChild('paginator3') paginator3: MatPaginator;
@@ -102,12 +104,15 @@ export class CustomersComponent implements OnInit {
   currencies: any;
   countries: any;
   selectedCustomerTypes: any;
-
+  customerSearch: FormControl = new FormControl();
+  searchOnCustomerName: FormControl = new FormControl();
+  CustomerSearchResult: Customer[] = [];
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private customerTypeService: CustomerTypeService, private customerService: CustomerService,
     private customerContactService: CustomerContactService,
     private commissionService: CommissionService, private providerLicenseService: ProviderLicenseService,
-    private commonService: CommonService, public dialog: MatDialog
+    private commonService: CommonService, public dialog: MatDialog,
+    private seracrhService: SearchService
   ) { }
 
   ngOnInit() {
@@ -153,9 +158,148 @@ export class CustomersComponent implements OnInit {
       itemsShowLimit: 2,
       allowSearchFilter: true
     };
+
+    this.customerSearch.valueChanges.subscribe(
+      term => {
+        if (term !== '') {
+          this.seracrhService.search(null, null, null, term, null, null, null,
+            1, null).subscribe(
+              data => {
+                if (data.length > 0) {
+                  this.CustomerSearchResult = data;
+                  this.hasBeenSearched = true;
+                } else {
+                  this.hasBeenSearched = false;
+                }
+
+              });
+        } else {
+          this.hasBeenSearched = false;
+        }
+      });
+    this.searchOnCustomerName.valueChanges.subscribe(
+      term => {
+        if (term !== '') {
+          this.seracrhService.search(null, term, null, null, null, null, null,
+            1, null).subscribe(
+              data => {
+                if (data.length > 0) {
+                  this.CustomerSearchResult = data;
+                  this.hasBeenSearched = true;
+                } else {
+                  this.hasBeenSearched = false;
+                }
+
+              });
+        } else {
+          this.hasBeenSearched = false;
+        }
+      });
   }
 
+  FillCustomerData() {
 
+    this.hasBeenSearched = true;
+    if (this.customerSearch.value !== null) {
+      this.searchOnCustomerName.patchValue(this.customerSearch.value);
+    } else {
+      this.customerSearch.patchValue(this.searchOnCustomerName.value);
+    }
+    this.customerForm.Email = this.customerSearch.value.Email ? this.customerSearch.value.Email : this.searchOnCustomerName.value.Email;
+    this.customerForm.ReferenceNo = this.customerSearch.value.ReferenceNo
+      ? this.customerSearch.value.ReferenceNo : this.searchOnCustomerName.value.ReferenceNo;
+    this.customerForm.Mobile = this.customerSearch.value.Mobile ?
+      this.customerSearch.value.Mobile : this.searchOnCustomerName.value.Mobile;
+    this.customerForm.CustomerNo = this.customerSearch.value.CustomerNo ?
+      this.customerSearch.value.CustomerNo : this.searchOnCustomerName.value.CustomerNo;
+    this.customerForm.ID = this.customerSearch.value.ID ?
+      this.customerSearch.value.ID : this.searchOnCustomerName.value.ID;
+    this.customerForm.Name = this.customerSearch.value.Name ?
+      this.customerSearch.value.Name : this.searchOnCustomerName.value.Name;
+    this.customerForm.CreatedBy = this.customerSearch.value.CreatedBy ?
+      this.customerSearch.value.CreatedBy : this.searchOnCustomerName.value.CreatedBy;
+    this.customerForm.CompanyID = this.customerSearch.value.CompanyID ?
+      this.customerSearch.value.CompanyID : this.searchOnCustomerName.value.CompanyID;
+    this.customerForm.CreationDate = this.customerSearch.value.CreationDate ?
+      this.customerSearch.value.CreationDate : this.searchOnCustomerName.value.CreationDate;
+    this.customerForm.Name2 = this.customerSearch.value.Name2 ?
+      this.customerSearch.value.Name2 : this.searchOnCustomerName.value.Name2;
+
+    this.customerForm.CommName = this.customerSearch.value.CommName ?
+      this.customerSearch.value.CommName : this.searchOnCustomerName.value.CommName;
+    this.customerForm.CurrencyCode = this.customerSearch.value.CurrencyCode ?
+      this.customerSearch.value.CurrencyCode : this.searchOnCustomerName.value.CurrencyCode;
+    this.customerForm.Fax = this.customerSearch.value.Fax ?
+      this.customerSearch.value.Fax : this.searchOnCustomerName.value.Fax;
+    this.customerForm.XCoordinates = this.customerSearch.value.XCoordinates ?
+      this.customerSearch.value.XCoordinates : this.searchOnCustomerName.value.XCoordinates;
+    this.customerForm.YCoordinates = this.customerSearch.value.YCoordinates ?
+      this.customerSearch.value.YCoordinates : this.searchOnCustomerName.value.YCoordinates;
+    this.customerForm.Website = this.customerSearch.value.Website ?
+      this.customerSearch.value.Website : this.searchOnCustomerName.value.Website;
+    this.customerForm.TaxNo = this.customerSearch.value.TaxNo ?
+      this.customerSearch.value.TaxNo : this.searchOnCustomerName.value.TaxNo;
+    this.customerForm.StatusNotes = this.customerSearch.value.StatusNotes ?
+      this.customerSearch.value.StatusNotes : this.searchOnCustomerName.value.StatusNotes;
+    this.customerForm.StatusDate = this.customerSearch.value.StatusDate ?
+      this.customerSearch.value.StatusDate : this.searchOnCustomerName.value.StatusDate;
+    this.customerForm.Status = this.customerSearch.value.Status ?
+      this.customerSearch.value.Status : this.searchOnCustomerName.value.Status;
+    this.customerForm.ShareType = this.customerSearch.value.ShareType ?
+      this.customerSearch.value.ShareType : this.searchOnCustomerName.value.ShareType;
+    this.customerForm.RefExpiryDate = this.customerSearch.value.RefExpiryDate ?
+      this.customerSearch.value.RefExpiryDate : this.searchOnCustomerName.value.RefExpiryDate;
+    this.customerForm.RefEffectiveDate = this.customerSearch.value.RefEffectiveDate ?
+      this.customerSearch.value.RefEffectiveDate : this.searchOnCustomerName.value.RefEffectiveDate;
+    this.customerForm.PostalCode = this.customerSearch.value.PostalCode ?
+      this.customerSearch.value.PostalCode : this.searchOnCustomerName.value.PostalCode;
+    this.customerForm.PoBox = this.customerSearch.value.PoBox ?
+      this.customerSearch.value.PoBox : this.searchOnCustomerName.value.PoBox;
+    this.customerForm.PhoneCode = this.customerSearch.value.PhoneCode ?
+      this.customerSearch.value.PhoneCode : this.searchOnCustomerName.value.PhoneCode;
+    this.customerForm.Phone = this.customerSearch.value.Phone ?
+      this.customerSearch.value.Phone : this.searchOnCustomerName.value.Phone;
+    this.customerForm.Nationality = this.customerSearch.value.Nationality ?
+      this.customerSearch.value.Nationality : this.searchOnCustomerName.value.Nationality;
+    this.customerForm.ModifiedBy = this.customerSearch.value.ModifiedBy ?
+      this.customerSearch.value.ModifiedBy : this.searchOnCustomerName.value.ModifiedBy;
+
+    this.customerForm.ModificationDate = this.customerSearch.value.ModificationDate ?
+      this.customerSearch.value.ModificationDate : this.searchOnCustomerName.value.ModificationDate;
+    this.customerForm.Logo = this.customerSearch.value.Logo ?
+      this.customerSearch.value.Logo : this.searchOnCustomerName.value.Logo;
+    this.customerForm.LockUpTitle = this.customerSearch.value.LockUpTitle ?
+      this.customerSearch.value.LockUpTitle : this.searchOnCustomerName.value.LockUpTitle;
+    this.customerForm.LockUpTaxType = this.customerSearch.value.LockUpTaxType ?
+      this.customerSearch.value.LockUpTaxType : this.searchOnCustomerName.value.LockUpTaxType;
+    this.customerForm.LockUpSecotor = this.customerSearch.value.LockUpSecotor ?
+      this.customerSearch.value.LockUpSecotor : this.searchOnCustomerName.value.LockUpSecotor;
+    this.customerForm.LockUpLanguage = this.customerSearch.value.LockUpLanguage ?
+      this.customerSearch.value.LockUpLanguage : this.searchOnCustomerName.value.LockUpLanguage;
+
+    this.customerForm.LockUpGender = this.customerSearch.value.LockUpGender ?
+      this.customerSearch.value.LockUpGender : this.searchOnCustomerName.value.LockUpGender;
+    this.customerForm.IsVip = this.customerSearch.value.IsVip ?
+      this.customerSearch.value.IsVip : this.searchOnCustomerName.value.IsVip;
+    this.customerForm.IndOrComp = this.customerSearch.value.IndOrComp ?
+      this.customerSearch.value.IndOrComp : this.searchOnCustomerName.value.IndOrComp;
+    this.customerForm.Iban = this.customerSearch.value.Iban ?
+      this.customerSearch.value.Iban : this.searchOnCustomerName.value.Iban;
+    this.customerForm.CityID = this.customerSearch.value.CityID ?
+      this.customerSearch.value.CityID : this.searchOnCustomerName.value.CityID;
+    this.customerForm.BirthDate = this.customerSearch.value.BirthDate ?
+      this.customerSearch.value.BirthDate : this.searchOnCustomerName.value.BirthDate;
+    this.customerForm.BankID = this.customerSearch.value.BankID ?
+      this.customerSearch.value.BankID : this.searchOnCustomerName.value.BankID;
+    this.customerForm.BankBranchID = this.customerSearch.value.BankBranchID ?
+      this.customerSearch.value.BankBranchID : this.searchOnCustomerName.value.BankBranchID;
+    this.customerForm.AreaID = this.customerSearch.value.AreaID ?
+      this.customerSearch.value.AreaID : this.searchOnCustomerName.value.AreaID;
+    this.customerForm.Address = this.customerSearch.value.Address ?
+      this.customerSearch.value.Address : this.searchOnCustomerName.value.Address;
+
+
+  }
 
   applyFilter(filterValue: string) {
     switch (this.extraForm) {
@@ -170,7 +314,11 @@ export class CustomersComponent implements OnInit {
       //   break;
     }
   }
-
+  checkCurrentCustomer() {
+    if (this.CustomerSearchResult.length === 0 && (this.customerSearch.value === null || this.searchOnCustomerName.value === null)) {
+      this.hasBeenSearched = false;
+    }
+  }
   showBranchAndDepartmentForm($event) {
     setTimeout(() => {
       switch ($event.index) {
@@ -342,7 +490,7 @@ export class CustomersComponent implements OnInit {
         const result: any = res;
 
         for (let index = 0; index < this.selectedCustomerTypes.length; index++) {
-          const element: any =  this.selectedCustomerTypes[index];
+          const element: any = this.selectedCustomerTypes[index];
           const customer: any = {
             CustomerID: result.ID,
             LocCustomerType: element.MinorCode,
@@ -350,7 +498,7 @@ export class CustomersComponent implements OnInit {
             CreationDate: new Date()
           };
 
-          this.http.post(this.customerService.ApiUrl + 'CreateCustomerType', customer).subscribe( types => {
+          this.http.post(this.customerService.ApiUrl + 'CreateCustomerType', customer).subscribe(types => {
           });
         }
         this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
@@ -611,7 +759,9 @@ export class CustomersComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
-      //  this.customer = result;
+      this.customerForm = result;
+      this.searchOnCustomerName.patchValue(this.customerForm);
+      this.customerSearch.patchValue(this.customerForm);
     });
   }
 
@@ -621,8 +771,11 @@ export class CustomersComponent implements OnInit {
   }
 
 
-  displayFn(customer?: Customer): string | undefined {
-    return customer ? customer.CustomerNo + ' ' + customer.Name : undefined;
+  displayCustomerNumber(customer?: Customer): string | undefined {
+    return customer ? customer.CustomerNo : '';
+  }
+  displayCustomerName(customer?: Customer): string | undefined {
+    return customer ? customer.Name : '';
   }
 
   loadBankBranches() {
