@@ -36,14 +36,15 @@
             <form #form="ngForm" (ngSubmit)="saveCustomer(form)" class="{{submit?'submited':''}}">
               <div class="row">
                 <div class="form-group col-md-3">
-                   
-                    <label for="CustomerNo">Customer No</label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
-                    <input class="form-control" type="text" placeholder="Customer No" matInput [formControl]="customerSearch"
+
+                  <label for="CustomerNo">Customer No</label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
+                  <input class="form-control" type="text" placeholder="Customer No" matInput [formControl]="customerSearch"
                     [matAutocomplete]="policyHoldersauto" (blur)="checkCurrentCustomer()">
-              
-                  <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayCustomerNumber" (optionSelected)="FillCustomerData()">
+
+                  <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayCustomerNumber"
+                    (optionSelected)="FillCustomerData()">
                     <mat-option *ngFor="let Holder of CustomerSearchResult" [value]="Holder">
-                        {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+                      {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
                     </mat-option>
                   </mat-autocomplete>
                 </div>
@@ -72,13 +73,13 @@
               <div class="row">
                 <div class="form-group col-md-3">
                   <label for="Name">Name <span class="help-block">*</span></label>
-                 
-                    <input class="form-control" type="text" placeholder="Name" matInput [formControl]="searchOnCustomerName"
+
+                  <input class="form-control" type="text" placeholder="Name" matInput [formControl]="searchOnCustomerName"
                     [matAutocomplete]="nameAuto" (blur)="checkCurrentCustomer()">
-              
+
                   <mat-autocomplete #nameAuto="matAutocomplete" [displayWith]="displayCustomerName" (optionSelected)="FillCustomerData()">
                     <mat-option *ngFor="let Holder of CustomerSearchResult" [value]="Holder">
-                        {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+                      {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
                     </mat-option>
                   </mat-autocomplete>
                 </div>
@@ -102,8 +103,7 @@
               <div class="row">
                 <div class="form-group col-md-3">
                   <label for="Phone">Phone</label>
-                  <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerForm.Phone"
-                    >
+                  <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerForm.Phone">
                 </div>
                 <div class="form-group col-md-3">
                   <label for="Email">Email<span class="help-block">*</span></label>
@@ -159,7 +159,7 @@
                       <div class="form-group col-md-3">
                         <label for="CustomerGroup">Customer Group</label>
                         <input class="form-control" type="text" placeholder="Customer Group" matInput [(ngModel)]="customerForm.CustomerGroup"
-                        [matAutocomplete]="CustomerGroup" name="CustomerGroup">
+                          [matAutocomplete]="CustomerGroup" name="CustomerGroup">
                         <mat-autocomplete #CustomerGroup="matAutocomplete" [displayWith]="displayFn">
                           <mat-option *ngFor="let obj of CustomerGroups" [value]="obj.ID">
                             {{ obj.Name }}
@@ -521,7 +521,6 @@
                   <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
 
                 </div>
-                <div class="hr-line-dashed"></div>
 
 
                 <div class="col-md-12 extra-form" *ngIf="extraForm==='CustomerType'">
@@ -566,7 +565,95 @@
 
 
             <mat-tab label="Customer Contacts">
+
+              <div class="col-md-12 extra-form" *ngIf="extraForm==='CustomerContacts'">
+
+                <fieldset class="animated fadeInDown">
+                  <legend>
+                    Customer Contacts
+                  </legend>
+                  <form #form2="ngForm" (ngSubmit)="saveCustomerContact(form2)" class="{{submit2?'submited':''}}">
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="Name">Name <span class="help-block">*</span></label>
+                        <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="customerContactForm.Name"
+                          required>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Name2">Name 2</label>
+                        <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="customerContactForm.Name2">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Mobile">Mobile <span class="help-block">*</span></label>
+                        <input name="Mobile" placeholder="Mobile" type="text" class="form-control" [(ngModel)]="customerContactForm.Mobile"
+                          required>
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="PhoneCode">Phone Code</label>
+                        <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="customerContactForm.PhoneCode">
+                      </div>
+                    </div>
+
+
+                    <div class="row">
+
+                      <div class="form-group col-md-3">
+                        <label for="Phone">Phone </label>
+                        <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerContactForm.Phone">
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="Email">Email <span class="help-block">*</span></label>
+                        <input name="Email" placeholder="Email" type="email" class="form-control" [(ngModel)]="customerContactForm.Email"
+                          required>
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="LineOfBusniess">Line Of Business</label>
+                        <select name="LineOfBusniess" class="form-control" [(ngModel)]="customerContactForm.LineOfBusniess">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
+                        </select>
+                      </div>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="Department">Department </label>
+                        <select name="Department" class="form-control" [(ngModel)]="customerContactForm.Department">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let obj of Departments" [ngValue]="obj.ID">{{obj.Name}}</option>
+                        </select>
+                      </div>
+
+                    </div>
+
+
+                    <div class="row">
+
+                      <div class="col-md-11 text-right">
+                        <br>
+                        <br>
+                        <input class="btn btn-default" type="reset" (click)="customerContactForm={};submit2=false;resetForm(form2)"
+                          value="Reset" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                      </div>
+                    </div>
+                  </form>
+                </fieldset>
+              </div>
+
+
+
+
               <div class="col-md-12">
+                <div class="hr-line-dashed"></div>
+
                 <div class="html5buttons">
                   <br>
                   <div class="dt-buttons btn-group">
@@ -671,90 +758,10 @@
                   <mat-paginator #paginator2 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
                 </div>
 
-                <div class="hr-line-dashed"></div>
 
 
-                <div class="col-md-12 extra-form" *ngIf="extraForm==='CustomerContacts'">
-
-                  <fieldset class="animated fadeInDown">
-                    <legend>
-                      Customer Contacts
-                    </legend>
-                    <form #form2="ngForm" (ngSubmit)="saveCustomerContact(form2)" class="{{submit2?'submited':''}}">
-                      <div class="row">
-
-                        <div class="form-group col-md-3">
-                          <label for="Name">Name <span class="help-block">*</span></label>
-                          <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="customerContactForm.Name"
-                            required>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="Name2">Name 2</label>
-                          <input name="Name2" placeholder="Name 2" type="text" class="form-control" [(ngModel)]="customerContactForm.Name2">
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="Mobile">Mobile <span class="help-block">*</span></label>
-                          <input name="Mobile" placeholder="Mobile" type="text" class="form-control" [(ngModel)]="customerContactForm.Mobile"
-                            required>
-                        </div>
-
-                        <div class="form-group col-md-3">
-                          <label for="PhoneCode">Phone Code</label>
-                          <input name="PhoneCode" placeholder="Phone Code" type="text" class="form-control" [(ngModel)]="customerContactForm.PhoneCode">
-                        </div>
-                      </div>
 
 
-                      <div class="row">
-
-                        <div class="form-group col-md-3">
-                          <label for="Phone">Phone </label>
-                          <input name="Phone" placeholder="Phone" type="text" class="form-control" [(ngModel)]="customerContactForm.Phone">
-                        </div>
-
-
-                        <div class="form-group col-md-3">
-                          <label for="Email">Email <span class="help-block">*</span></label>
-                          <input name="Email" placeholder="Email" type="email" class="form-control" [(ngModel)]="customerContactForm.Email"
-                            required>
-                        </div>
-
-
-                        <div class="form-group col-md-3">
-                          <label for="LineOfBusniess">Line Of Business</label>
-                          <select name="LineOfBusniess" class="form-control" [(ngModel)]="customerContactForm.LineOfBusniess">
-                            <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
-                          </select>
-                        </div>
-
-
-                        <div class="form-group col-md-3">
-                          <label for="Department">Department </label>
-                          <select name="Department" class="form-control" [(ngModel)]="customerContactForm.Department">
-                            <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let obj of Departments" [ngValue]="obj.ID">{{obj.Name}}</option>
-                          </select>
-                        </div>
-
-                      </div>
-
-
-                      <div class="row">
-
-                        <div class="col-md-11 text-right">
-                          <br>
-                          <br>
-                          <input class="btn btn-default" type="reset" (click)="customerContactForm={};submit2=false;resetForm(form2)"
-                            value="Reset" />
-                          <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
-                        </div>
-                      </div>
-                    </form>
-                  </fieldset>
-                </div>
 
               </div>
             </mat-tab>
