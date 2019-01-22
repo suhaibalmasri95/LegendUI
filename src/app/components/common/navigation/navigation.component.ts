@@ -29,6 +29,7 @@ export class NavigationComponent {
   activeRoute(routename: string): boolean {
     return this.router.url.indexOf(routename) > -1;
   }
+
   logout() {
     this.authService.userToken = null;
     this.authService.currentUser = null;

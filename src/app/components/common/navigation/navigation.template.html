@@ -51,10 +51,10 @@
 
         </ul>
       </li>
-      <li [ngClass]="{active: activeRoute('setup')}">
+      <li [ngClass]="{active: activeRoute('/setup')}">
         <a href="#"><i class="fa fa-th-large"></i> <span class="nav-label">Setup</span> <span class="fa arrow"></span>
         </a>
-        <ul class="nav nav-second-level collapse" [ngClass]="{in: activeRoute('setup')}">
+        <ul class="nav nav-second-level collapse" [ngClass]="{in: activeRoute('/setup')}">
           <li [ngClass]="{active: activeRoute('lineOfBusiness')}"><a [routerLink]="['/setup/lineOfBusiness']">Line Of
               Business</a></li>
           <li [ngClass]="{active: activeRoute('charges')}"><a [routerLink]="['/setup/charges']">Charges</a></li>

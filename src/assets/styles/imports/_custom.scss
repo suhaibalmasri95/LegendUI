@@ -86,6 +86,9 @@ table {
 }
 
 
+.mat-tab-label{
+  background: #1ab394;
+}
 
 .mat-tab-label-active {
   z-index: 100;
@@ -144,7 +147,7 @@ input[type="file"] {
 .skin-2 .nav > li.active {
   border: none;
   border-left: 0.3em Solid #19c0a0;
-  background: #f6f6f6;
+  background: none;
 }
 
 .skin-2 #side-menu > li > a {
@@ -152,10 +155,11 @@ input[type="file"] {
 }
 .skin-2 #side-menu > li.active > a {
   font-weight: 600;
+  background: none;
 }
 
 .skin-2 .navbar-default .nav > li > a:hover, .skin-2 .navbar-default .nav > li > a:focus ,.skin-2 #side-menu > li > a:hover {
-  background: #f6f6f6;
+  background: none;
   font-weight: 600;
 }
 
@@ -239,4 +243,8 @@ ngx-treeview-item .row-item>div{
 
 ngx-treeview-item .row-item>div>input{
   margin: 5px;
+}
+
+.mini-navbar .metismenu {
+  display: none;
 }
