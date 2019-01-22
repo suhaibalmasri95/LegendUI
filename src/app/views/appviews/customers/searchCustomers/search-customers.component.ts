@@ -34,7 +34,7 @@ export class SearchCustomersComponent implements OnInit {
     this.submit = false;
     this.selectedCustomer = new Customer();
 
-    this.loadCustomers();
+    //this.loadCustomers();
 
 
   }

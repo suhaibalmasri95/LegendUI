@@ -36,9 +36,16 @@
             <form #form="ngForm" (ngSubmit)="saveCustomer(form)" class="{{submit?'submited':''}}">
               <div class="row">
                 <div class="form-group col-md-3">
-                  <label for="CustomerNo">Customer No </label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
-                  <input type="text" name="CustomerNo" placeholder="Customer No" readonly class="form-control"
-                    [(ngModel)]="customerForm.CustomerNo" />
+                   
+                    <label for="CustomerNo">Customer No</label><i title="Search" (click)="searchCustomers()" class="fa fa-search pull-right"></i>
+                    <input class="form-control" type="text" placeholder="Customer No" matInput [formControl]="customerSearch"
+                    [matAutocomplete]="policyHoldersauto" (blur)="checkCurrentCustomer()">
+              
+                  <mat-autocomplete #policyHoldersauto="matAutocomplete" [displayWith]="displayCustomerNumber" (optionSelected)="FillCustomerData()">
+                    <mat-option *ngFor="let Holder of CustomerSearchResult" [value]="Holder">
+                        {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
                 </div>
                 <div class="form-group col-md-3">
                   <label for="IndOrComp">Individual/Company</label>
@@ -65,8 +72,15 @@
               <div class="row">
                 <div class="form-group col-md-3">
                   <label for="Name">Name <span class="help-block">*</span></label>
-                  <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="customerForm.Name"
-                    required>
+                 
+                    <input class="form-control" type="text" placeholder="Name" matInput [formControl]="searchOnCustomerName"
+                    [matAutocomplete]="nameAuto" (blur)="checkCurrentCustomer()">
+              
+                  <mat-autocomplete #nameAuto="matAutocomplete" [displayWith]="displayCustomerName" (optionSelected)="FillCustomerData()">
+                    <mat-option *ngFor="let Holder of CustomerSearchResult" [value]="Holder">
+                        {{ Holder.CustomerNo }} &nbsp; {{ Holder.Name }}
+                    </mat-option>
+                  </mat-autocomplete>
                 </div>
                 <div class="form-group col-md-3">
                   <label for="Name2">Name 2</label>
