@@ -71,26 +71,22 @@ export class CustomerType implements IEntity {
     FinGlID: number;
 }
 export class CustomerContact implements IEntity {
-    ID: number;
+    selected: boolean;
+    CreatedBy: string;
+    CreationDate: Date;
+    ModifiedBy: string;
+    ModificationDate: Date;
     Name: string;
     Name2: string;
-    Label: string;
-    Label2: string;
     LangID: number;
-    ModifiedBy: string;
-    CreateBy: string;
-    LineOfBusniess: number;
-    SubLineOfBusniess: number;
-    Status: number;
-    StatusDate: Date;
-    CreationDate: Date;
-    ModificationDate: Date;
-    ColumnType: number;
-    CategoryID: number;
-    RefTableName: string;
-    RefMajorCode: string;
-    RefColDetailsID: string;
-    selected: boolean;
+    ID: number;
+    CustomerID: number;
+    LocCustomerDept: number;
+    LineOfBusiness: number;
+    Phone: string;
+    Mobile: string;
+    PhoneCode: string;
+    Email: string;
 }
 export class ProviderLicense implements IEntity {
     ID: number;
