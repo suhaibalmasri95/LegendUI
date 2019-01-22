@@ -107,7 +107,7 @@ export class CustomersComponent implements OnInit {
   customerSearch: FormControl = new FormControl();
   searchOnCustomerName: FormControl = new FormControl();
   CustomerSearchResult: Customer[] = [];
-  
+
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private customerTypeService: CustomerTypeService, private customerService: CustomerService,
     private customerContactService: CustomerContactService,
@@ -479,7 +479,9 @@ export class CustomersComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-
+    if (typeof  this.searchOnCustomerName.value  === 'string') {
+      this.customerForm.Name = this.searchOnCustomerName.value;
+    }
     this.customerForm = this.customerForm.selected ? this.customerForm : Object.assign({}, form.value);
     if (this.uploader.queue.length > 0) {
       this.UploadFlag(form);
@@ -601,13 +603,13 @@ export class CustomersComponent implements OnInit {
 
 
 
-   loadCustomerContacts($event) {
+  loadCustomerContacts($event) {
     this.customerContactService.load(this.customerForm.ID
-, 1).subscribe(data => {
+      , 1).subscribe(data => {
         this.customerContacts = data;
         this.customerContactsDataSource = new MatTableDataSource<CustomerContact>(this.customerContacts);
       });
-  } 
+  }
 
 
   replaceFileName(fileName) {
