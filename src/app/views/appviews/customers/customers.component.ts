@@ -152,7 +152,7 @@ export class CustomersComponent implements OnInit {
 
     this.dropdownSettings = {
       singleSelection: false,
-      idField: 'ID',
+      idField: 'MinorCode',
       textField: 'Name',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
@@ -479,14 +479,14 @@ export class CustomersComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-    if (typeof  this.searchOnCustomerName.value  === 'string') {
-      this.customerForm.Name = this.searchOnCustomerName.value;
-    }
+   
     this.customerForm = this.customerForm.selected ? this.customerForm : Object.assign({}, form.value);
     if (this.uploader.queue.length > 0) {
       this.UploadFlag(form);
     } else {
-
+      if (typeof  this.searchOnCustomerName.value  === 'string') {
+        this.customerForm.Name = this.searchOnCustomerName.value;
+      }
       this.AddUpdateUrl = this.customerService.ApiUrl + 'Create';
       this.customerForm.CompanyID = this.userCompany.ID;
       this.http.post(this.AddUpdateUrl, this.customerForm).subscribe(res => {
