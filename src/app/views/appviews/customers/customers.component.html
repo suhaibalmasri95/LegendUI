@@ -615,8 +615,8 @@
 
 
                       <div class="form-group col-md-3">
-                        <label for="LineOfBusniess">Line Of Business</label>
-                        <select name="LineOfBusniess" class="form-control" [(ngModel)]="customerContactForm.LineOfBusniess">
+                        <label for="LineOfBusiness">Line Of Business</label>
+                        <select name="LineOfBusiness" class="form-control" [(ngModel)]="customerContactForm.LineOfBusiness">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let line of LineOfBusinesses" [ngValue]="line.ID">{{line.Name}}</option>
                         </select>
@@ -624,8 +624,8 @@
 
 
                       <div class="form-group col-md-3">
-                        <label for="Department">Department </label>
-                        <select name="Department" class="form-control" [(ngModel)]="customerContactForm.Department">
+                        <label for="LocCustomerDept">Department </label>
+                        <select name="LocCustomerDept" class="form-control" [(ngModel)]="customerContactForm.LocCustomerDept">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let obj of Departments" [ngValue]="obj.ID">{{obj.Name}}</option>
                         </select>

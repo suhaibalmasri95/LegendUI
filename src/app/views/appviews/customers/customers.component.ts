@@ -531,10 +531,13 @@ export class CustomersComponent implements OnInit {
     if (form.invalid) { return; }
     this.customerContactForm = this.customerContactForm.selected ? this.customerContactForm : Object.assign({}, form.value);
     if (this.customerContactForm.selected) {
-      this.AddUpdateUrl = this.customerTypeService.ApiUrl + '/Update';
+      this.AddUpdateUrl = this.customerContactService.ApiUrl + '/Update';
     } else {
-      this.AddUpdateUrl = this.customerTypeService.ApiUrl + '/Create';
+      this.AddUpdateUrl = this.customerContactService.ApiUrl + '/Create';
     }
+    this.customerContactForm.CustomerID = this.customerForm.ID;
+    this.customerContactForm.CreatedBy = this.user.Name;
+    this.customerContactForm.CreationDate = new Date();
     this.http.post(this.AddUpdateUrl, this.customerContactForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCustomerContactsTable(this.customerContactForm.ID ? this.customerContactForm.ID : null);
