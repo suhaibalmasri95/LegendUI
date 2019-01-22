@@ -33,7 +33,11 @@ import { TopNavigationLayoutComponent } from './TopNavigationLayoutComponent';
     BsDropdownModule.forRoot(),
     HttpClientModule, // Import Http Client
     BlockUIModule.forRoot(), // Import BlockUIModule
-    BlockUIHttpModule.forRoot(), // Import Block UI Http Module
+    BlockUIHttpModule.forRoot({
+      requestFilters: [
+        { method: 'GET', url: /getPolicyHolders/ }
+      ]
+    }),
   ],
   exports: [
     FooterComponent,

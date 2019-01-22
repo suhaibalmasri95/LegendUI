@@ -5,8 +5,9 @@ html, body { height: 100%; }
 body { margin: 0; font-family: 'Roboto', sans-serif; }
 
 .form-group .fa{
-    cursor: pointer;} 
-.mat-input-element {
+    cursor: pointer;
+} 
+.mat-input-element[ng-reflect-autocomplete] {
     border: 1px solid #e5e6e7 !important;
- 
+    padding: 15px;
 }
