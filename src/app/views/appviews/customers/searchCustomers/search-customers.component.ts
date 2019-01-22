@@ -1,8 +1,10 @@
+import { SearchService } from './../../../../_services/search.service';
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatTableDataSource, MatPaginator, MatSort, MatDialogRef } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Customer } from '../../../../entities/customer/customer';
 import { CustomerService } from '../../../../_services/_customer/customer.service';
+
 
 export interface DialogData {
   selectedCustomer: any;
@@ -18,7 +20,7 @@ export class SearchCustomersComponent implements OnInit {
   noData: boolean=true;
 
   constructor(private dialogRef: MatDialogRef<SearchCustomersComponent>,
-    @Inject(MAT_DIALOG_DATA) data, private customerService: CustomerService) { }
+    @Inject(MAT_DIALOG_DATA) data, private customerService: CustomerService , private searchSearvice: SearchService) { }
 
   customerSearchForm: Customer;
   customersTableColumns = ['ID', 'Name', 'Name2', 'CommercialName', 'Mobile', 'Phone', 'Email'];
@@ -78,9 +80,10 @@ export class SearchCustomersComponent implements OnInit {
     }
     this.customerSearchForm = Object.assign({}, form.value);
 
-    this.customerService.load(this.customerSearchForm.ID, this.customerSearchForm.Name,
-      this.customerSearchForm.CustomerNo, this.customerSearchForm.Email, this.customerSearchForm.Mobile,
-      this.customerSearchForm.ReferenceNo, this.customerSearchForm.Name, this.customerSearchForm.IndOrComp, 1).subscribe(data => {
+    this.searchSearvice.search(this.customerSearchForm.ID, this.customerSearchForm.Name,
+     null, this.customerSearchForm.CustomerNo,  this.customerSearchForm.Email, this.customerSearchForm.Mobile,
+      this.customerSearchForm.ReferenceNo,  this.customerSearchForm.IndOrComp,  1,
+      this.customerSearchForm.CommName).subscribe(data => {
         this.renderCustomerTypesTable(data);
       });
   }

@@ -12,8 +12,8 @@ export class CustomerContactService {
 
 
 
-  ApiUrl: string = environment.azureUrl + 'CustomerContact/';
-  commonApiUrl: string = environment.azureUrl + 'CustomerContact/';
+  ApiUrl: string = environment.azureUrl + 'CustomerContacts/';
+  commonApiUrl: string = environment.azureUrl + 'CustomerContacts/';
 
   constructor(private http: HttpClient) { }
 
@@ -42,15 +42,15 @@ export class CustomerContactService {
   }
 
 
-  load(ID: number = null, productID: number = null, langId: number = null): Observable<CustomerContact[]> {
+  load(ID: number = null, CustomerID: number = null, langId: number = null): Observable<CustomerContact[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&productID=';
-    if (productID != null) {
-      queryString += productID;
+    queryString += '&CustomerID=';
+    if (CustomerID != null) {
+      queryString += CustomerID;
     }
 
     queryString += '&langId=';
