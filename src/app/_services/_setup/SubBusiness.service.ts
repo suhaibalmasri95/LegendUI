@@ -1,8 +1,10 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { SubLineOfBusiness } from '../../entities/Setup/SubLineOfBusiness';
 
 @Injectable({
@@ -38,32 +40,32 @@ export class SubBusinessService {
   }
 
 add(subLine: SubLineOfBusiness) {
-  this.http.post(this.SubBusinessApiUrl + 'Create', subLine).map(
+  this.http.post(this.SubBusinessApiUrl + 'Create', subLine).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 update(subLine: SubLineOfBusiness) {
-  this.http.post(this.SubBusinessApiUrl + 'Update', subLine).map(
+  this.http.post(this.SubBusinessApiUrl + 'Update', subLine).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 delete(subLine: SubLineOfBusiness) {
-  this.http.post(this.SubBusinessApiUrl + 'delete', subLine).map(
+  this.http.post(this.SubBusinessApiUrl + 'delete', subLine).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletes(subLines: SubLineOfBusiness[]) {
-  this.http.post(this.SubBusinessApiUrl + 'Delete', subLines).map(
+  this.http.post(this.SubBusinessApiUrl + 'Delete', subLines).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

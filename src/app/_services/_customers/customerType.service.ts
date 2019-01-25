@@ -1,8 +1,10 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { CustomerType } from '../../entities/customer/customer';
 
 @Injectable({
@@ -16,27 +18,27 @@ export class CustomerTypeService {
   constructor(private http: HttpClient) { }
 
   add(d) {
-    this.http.post(this.ApiUrl + 'Create', d).map(
+    this.http.post(this.ApiUrl + 'Create', d).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(d) {
-    this.http.post(this.ApiUrl + 'Update', d).map(
+    this.http.post(this.ApiUrl + 'Update', d).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(d) {
-    this.http.post(this.ApiUrl + 'Delete', d).map(
+    this.http.post(this.ApiUrl + 'Delete', d).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
 

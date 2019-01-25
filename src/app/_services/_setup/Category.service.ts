@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Category } from './../../entities/Setup/Categories';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,27 +20,27 @@ export class CategoryService {
   constructor(private http: HttpClient) { }
 
   add(category: Category) {
-    this.http.post(this.ApiUrl + 'Create', category).map(
+    this.http.post(this.ApiUrl + 'Create', category).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(category: Category) {
-    this.http.post(this.ApiUrl + 'Update', category).map(
+    this.http.post(this.ApiUrl + 'Update', category).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(category: Category) {
-    this.http.post(this.ApiUrl + 'Delete', category).map(
+    this.http.post(this.ApiUrl + 'Delete', category).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, lineOfBussniess: number = null, subLineOfBussniess: number = null,

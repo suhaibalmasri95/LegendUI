@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { ProductAttachment } from './../../entities/Product/Attachment';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 @Injectable({
   providedIn: 'root'
@@ -18,27 +20,27 @@ export class AttachmentsService {
   constructor(private http: HttpClient) { }
 
   add(productAttachment: ProductAttachment) {
-    this.http.post(this.ApiUrl + 'Create', productAttachment).map(
+    this.http.post(this.ApiUrl + 'Create', productAttachment).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(productAttachment: ProductAttachment) {
-    this.http.post(this.ApiUrl + 'Update', productAttachment).map(
+    this.http.post(this.ApiUrl + 'Update', productAttachment).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(productAttachment: ProductAttachment) {
-    this.http.post(this.ApiUrl + 'Delete', productAttachment).map(
+    this.http.post(this.ApiUrl + 'Delete', productAttachment).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   load(ID: number = null, ProductID: number = null, ProductDetailID: number = null, langId: number = null):
     Observable<ProductAttachment[]> {

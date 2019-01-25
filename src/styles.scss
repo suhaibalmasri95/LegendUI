@@ -1,13 +1,83 @@
 /* Import main Inspinia style */
 @import "assets/styles/style";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: 'Roboto', sans-serif; }
+html,
+body {
+  height: 100%;
+}
 
-.form-group .fa{
-    cursor: pointer;
-} 
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.form-group .fa {
+  cursor: pointer;
+}
+
 .mat-input-element[ng-reflect-autocomplete] {
-    border: 1px solid #e5e6e7 !important;
-    padding: 15px;
+  border: 1px solid #e5e6e7 !important;
+  padding: 15px;
+}
+
+.mat-step-header .mat-step-icon {
+  background-color: #a4a9a4;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.mat-step-icon .mat-icon {
+  font-size: 16px;
+  height: 16px;
+  width: 16px;
+  margin: 4px;
+}
+
+.mat-step-header .mat-step-label {
+  overflow: visible;
+}
+
+.mat-step-header .mat-step-icon-not-touched span,
+.mat-step-header .mat-step-icon span,
+.mat-step-header .mat-step-icon-not-touched .mat-icon,
+.mat-step-header .mat-step-icon .mat-icon {
+  display: none;
+}
+
+.mat-step-header:nth-of-type(1) .mat-step-icon-not-touched:after,
+.mat-step-header:nth-of-type(1) .mat-step-icon:after {
+
+}
+
+.active-step-1 mat-step-header:nth-of-type(1) .mat-step-icon-not-touched::after,
+.active-step-1 mat-step-header:nth-of-type(1) .mat-step-icon::after {
+  content: 'add_circle' !important;
+  /* name of the material icon */
+  font-family: 'Material Icons' !important;
+  font-feature-settings: 'liga'1;
+}
+.mat-horizontal-stepper-header-container{
+    margin-bottom: 20px; 
+  }
+  
+  .mat-horizontal-stepper-header{ 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: -15px;
+  }
+  .mat-step-label{
+    position: relative;
+    top: 10px;
+  }
+  
+  .mat-stepper-horizontal-line{
+   margin: 0 -30px !important;
+  }
+  
+  .mat-horizontal-stepper-header .mat-step-icon, .mat-horizontal-stepper-header .mat-step-icon-not-touched{
+    margin-right: 0 !important;
+  }
+  .mat-tab-header-pagination-controls-enabled .mat-tab-header-pagination {
+     display: none !important; 
 }

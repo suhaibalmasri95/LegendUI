@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { City } from '../../entities/organization/City';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 
 @Injectable({
@@ -35,32 +37,32 @@ loadCities(countryId: number = null, cityId: number = null, langId: number = nul
   return this.http.get<City[]>(this.cityApiUrl + '/Load' + queryString);
 }
 addCity(city: City) {
-  this.http.post(this.cityApiUrl + 'Create', city).map(
+  this.http.post(this.cityApiUrl + 'Create', city).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 updateCity(city: City) {
-  this.http.post(this.cityApiUrl + 'Update', city).map(
+  this.http.post(this.cityApiUrl + 'Update', city).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteCity(city: City) {
-  this.http.post(this.cityApiUrl + 'delete', city).map(
+  this.http.post(this.cityApiUrl + 'delete', city).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteCities(cities: City[]) {
-  this.http.post(this.cityApiUrl + 'Delete', cities).map(
+  this.http.post(this.cityApiUrl + 'Delete', cities).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

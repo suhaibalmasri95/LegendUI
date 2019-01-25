@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Bank } from '../../entities/organization/Bank';
 
@@ -24,32 +26,32 @@ export class BanksService {
   }
 
 addBanks(bank: Bank) {
-  this.http.post(this.BankApiUrl + 'Create', bank).map(
+  this.http.post(this.BankApiUrl + 'Create', bank).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 updateBanks(bank: Bank) {
-  this.http.post(this.BankApiUrl + 'Update', bank).map(
+  this.http.post(this.BankApiUrl + 'Update', bank).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletleBank(bank: Bank) {
-  this.http.post(this.BankApiUrl + 'Delete', bank).map(
+  this.http.post(this.BankApiUrl + 'Delete', bank).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteBanks(banks: Bank[]) {
-  this.http.post(this.BankApiUrl + 'Delete', banks).map(
+  this.http.post(this.BankApiUrl + 'Delete', banks).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

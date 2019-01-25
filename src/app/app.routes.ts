@@ -215,8 +215,7 @@ export const ROUTES: Routes = [
       {
         path: 'products', component: ProductsComponent,
         resolve: {
-          products: ProductsResolver,
-          excessFrom: ExcessFromResolver,
+     
           GroupIndividualLockups: GroupIndividualLockupsResolver,
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
@@ -227,15 +226,12 @@ export const ROUTES: Routes = [
       {
         path: 'productAttachments', component: ProductAttachmentsComponent,
         resolve: {
-          Products: ProductsResolver,
           Status: LockUpResolver,
           ReportLevels: ReportLevelResolver,
           lineOfBusiness: LineOfBusinessResolver,
           Services: ServicesResolver,
           AttachmentLevels: AttachmentLevelResolver,
-          WordingTypes: WordingTypesResolver,
           GroupIndividualLockups: GroupIndividualLockupsResolver,
-
         }
       }
     ]

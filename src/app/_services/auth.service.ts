@@ -1,12 +1,14 @@
+
+import {throwError as observableThrowError,  Observable , BehaviorSubject} from 'rxjs';
+
+import {catchError, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
+
+
+
 import { IfObservable } from 'rxjs/observable/IfObservable';
-import { Observable } from 'rxjs/Observable';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import { User } from '../entities/organization/user';
 import { environment } from '../../environments/environment';
 
@@ -27,8 +29,8 @@ export class AuthService {
 
   login(model: any) {
     return this.http
-      .post(this.apiUrl, model)
-      .map((respone: Response) => {
+      .post(this.apiUrl, model).pipe(
+      map((respone: Response) => {
         const res: any = respone;
         const user: any = res.user;
         const userCompany: any = res.userCompany;
@@ -40,7 +42,7 @@ export class AuthService {
           this.currentUser = user;
           this.userToken = res.tokenString;
         }
-      }).catch(this.handelError);
+      }),catchError(this.handelError),);
   }
 
   loggedIn() {
@@ -52,7 +54,7 @@ export class AuthService {
   private handelError(error: any) {
     const applicationError = error.headers.get('Application-Error');
     if (applicationError) {
-      return Observable.throw(applicationError);
+      return observableThrowError(applicationError);
     }
     const serverError = error.json();
     let modelStateError = '';
@@ -63,6 +65,6 @@ export class AuthService {
         }
       }
     }
-    return Observable.throw(modelStateError || 'Server Error');
+    return observableThrowError(modelStateError || 'Server Error');
   }
 }

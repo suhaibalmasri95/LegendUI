@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Diagnose } from './../../entities/Setup/Diagnosis';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,27 +19,27 @@ export class DiagnosisService {
   constructor(private http: HttpClient) { }
 
   add(diagnose: Diagnose) {
-    this.http.post(this.ApiUrl + 'Create', diagnose).map(
+    this.http.post(this.ApiUrl + 'Create', diagnose).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(diagnose: Diagnose) {
-    this.http.post(this.ApiUrl + 'Update', diagnose).map(
+    this.http.post(this.ApiUrl + 'Update', diagnose).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(diagnose: Diagnose) {
-    this.http.post(this.ApiUrl + 'Delete', diagnose).map(
+    this.http.post(this.ApiUrl + 'Delete', diagnose).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
 

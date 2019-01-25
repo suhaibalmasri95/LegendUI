@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Department } from '../../entities/organization/Department';
 
@@ -35,32 +37,32 @@ export class DepartmentService {
   }
 
 addDepartment(department: Department) {
-  this.http.post(this.deparmentApiUrl + 'Create', department).map(
+  this.http.post(this.deparmentApiUrl + 'Create', department).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 updateDepratment(department: Department) {
-  this.http.post(this.deparmentApiUrl + 'Update', department).map(
+  this.http.post(this.deparmentApiUrl + 'Update', department).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletleDepartment(department: Department) {
-  this.http.post(this.deparmentApiUrl + 'Delete', department).map(
+  this.http.post(this.deparmentApiUrl + 'Delete', department).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteDepartments(departments: Department[]) {
-  this.http.post(this.deparmentApiUrl + 'Delete', departments).map(
+  this.http.post(this.deparmentApiUrl + 'Delete', departments).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

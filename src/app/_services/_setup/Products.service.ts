@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Product } from './../../entities/Product/Products';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,47 +19,38 @@ export class ProductsService {
   constructor(private http: HttpClient) { }
 
   add(product: Product) {
-    this.http.post(this.ApiUrl + 'Create', product).map(
+    this.http.post(this.ApiUrl + 'Create', product).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(product: Product) {
-    this.http.post(this.ApiUrl + 'Update', product).map(
+    this.http.post(this.ApiUrl + 'Update', product).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(product: Product) {
-    this.http.post(this.ApiUrl + 'Delete', product).map(
+    this.http.post(this.ApiUrl + 'Delete', product).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
-  load(ID: number = null, QusLevel: number = null, LineOfBusiness: number = null,
-    SubLineOfBusiness: number = null, langId: number = null): Observable<Product[]> {
+  load(ID: number = null, Name: string = null,  langId: number = null): Observable<Product[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&QusLevel=';
-    if (QusLevel != null) {
-      queryString += QusLevel;
-    }
-    queryString += '&LineOfBusiness=';
-    if (LineOfBusiness != null) {
-      queryString += LineOfBusiness;
-    }
-    queryString += '&SubLineOfBusiness=';
-    if (SubLineOfBusiness != null) {
-      queryString += SubLineOfBusiness;
+    queryString += '&Name=';
+    if (Name != null) {
+      queryString += Name;
     }
     queryString += '&langId=';
     if (langId != null) {

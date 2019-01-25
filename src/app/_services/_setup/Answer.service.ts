@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Answer } from './../../entities/Setup/Questionnaires';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,27 +17,27 @@ export class AnswerService {
   constructor(private http: HttpClient) { }
 
   add(answer: Answer) {
-    this.http.post(this.ApiUrl + 'Create', answer).map(
+    this.http.post(this.ApiUrl + 'Create', answer).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(answer: Answer) {
-    this.http.post(this.ApiUrl + 'Update', Answer).map(
+    this.http.post(this.ApiUrl + 'Update', Answer).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(answer: Answer) {
-    this.http.post(this.ApiUrl + 'Delete', answer).map(
+    this.http.post(this.ApiUrl + 'Delete', answer).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, QusID: number = null,

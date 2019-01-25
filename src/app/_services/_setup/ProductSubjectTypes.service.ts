@@ -1,10 +1,12 @@
+
+import {map} from 'rxjs/operators';
 import { ProductSubjectType } from './../../entities/Product/Products';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { SubjectType } from '../../entities/Setup/SubjectType';
 @Injectable({
@@ -40,32 +42,32 @@ export class ProductSubjectTypes {
   }
 
 add(sebjectType: SubjectType) {
-  this.http.post(this.sebjectTypeApiUrl + 'Create', sebjectType).map(
+  this.http.post(this.sebjectTypeApiUrl + 'Create', sebjectType).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 update(sebjectType: SubjectType) {
-  this.http.post(this.sebjectTypeApiUrl + 'Update', sebjectType).map(
+  this.http.post(this.sebjectTypeApiUrl + 'Update', sebjectType).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 delete(sebjectType: SubjectType) {
-  this.http.post(this.sebjectTypeApiUrl + 'delete', sebjectType).map(
+  this.http.post(this.sebjectTypeApiUrl + 'delete', sebjectType).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletes(sebjectTypes: SubjectType[]) {
-  this.http.post(this.sebjectTypeApiUrl + 'Delete', sebjectTypes).map(
+  this.http.post(this.sebjectTypeApiUrl + 'Delete', sebjectTypes).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

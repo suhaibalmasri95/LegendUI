@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Discount } from './../../entities/Setup/Charges';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 
 @Injectable({
@@ -18,27 +20,27 @@ export class DiscountService {
   constructor(private http: HttpClient) { }
 
   add(discount: Discount) {
-    this.http.post(this.ApiUrl + 'Create', discount).map(
+    this.http.post(this.ApiUrl + 'Create', discount).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(discount: Discount) {
-    this.http.post(this.ApiUrl + 'Update', discount).map(
+    this.http.post(this.ApiUrl + 'Update', discount).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(discount: Discount) {
-    this.http.post(this.ApiUrl + 'Delete', discount).map(
+    this.http.post(this.ApiUrl + 'Delete', discount).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,

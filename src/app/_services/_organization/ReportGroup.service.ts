@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ReportsGroup } from '../../entities/organization/ReportsGroup';
 import { environment } from '../../../environments/environment';
@@ -22,32 +24,32 @@ export class ReportsGroupService {
   }
 
   add(group: ReportsGroup) {
-    return this.http.post(this.apiUrl + 'Create', group).map(
+    return this.http.post(this.apiUrl + 'Create', group).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   update(group: ReportsGroup) {
-    return this.http.post(this.apiUrl + 'Update', group).map(
+    return this.http.post(this.apiUrl + 'Update', group).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   delete(group: ReportsGroup) {
-    return this.http.post(this.apiUrl + 'Delete', group).map(
+    return this.http.post(this.apiUrl + 'Delete', group).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   deletes(groups: ReportsGroup[]) {
-    return this.http.post(this.apiUrl + 'Delete', groups).map(
+    return this.http.post(this.apiUrl + 'Delete', groups).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
 

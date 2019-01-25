@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { ProductsDetail } from './../../entities/Product/Products';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 @Injectable({
   providedIn: 'root'
@@ -19,27 +21,27 @@ export class ProductsDetailService {
   constructor(private http: HttpClient) { }
 
   add(productsDetail: ProductsDetail) {
-    this.http.post(this.ApiUrl + 'Create', productsDetail).map(
+    this.http.post(this.ApiUrl + 'Create', productsDetail).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(productsDetail: ProductsDetail) {
-    this.http.post(this.ApiUrl + 'Update', productsDetail).map(
+    this.http.post(this.ApiUrl + 'Update', productsDetail).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(productsDetail: ProductsDetail) {
-    this.http.post(this.ApiUrl + 'Delete', productsDetail).map(
+    this.http.post(this.ApiUrl + 'Delete', productsDetail).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, producID: number = null, langId: number = null): Observable<ProductsDetail[]> {

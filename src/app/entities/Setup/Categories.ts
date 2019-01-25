@@ -4,8 +4,8 @@ export class Category implements IEntity {
     ID: number;
     Name: string;
     Name2: string;
-    Label: string;
-    Label2: string;
+    Lable: string;
+    Lable2: string;
     LangID: number;
     ModifiedBy: string;
     CreateBy: string;
@@ -27,8 +27,8 @@ export class Column implements IEntity {
     ID: number;
     Name: string;
     Name2: string;
-    Label: string;
-    Label2: string;
+    Lable: string;
+    Lable2: string;
     LangID: number;
     ModifiedBy: string;
     CreateBy: string;
@@ -49,8 +49,8 @@ export class Validation implements IEntity {
     ID: number;
     Name: string;
     Name2: string;
-    Label: string;
-    Label2: string;
+    Lable: string;
+    Lable2: string;
     LangID: number;
     ModifiedBy: string;
     CreateBy: string;

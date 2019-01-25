@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Area } from '../../entities/organization/Area';
 @Injectable({
@@ -39,32 +41,32 @@ export class AreaService {
   }
 
 addArea(area: Area) {
-  this.http.post(this.areaApiUrl + 'Create', area).map(
+  this.http.post(this.areaApiUrl + 'Create', area).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 updateArea(area: Area) {
-  this.http.post(this.areaApiUrl + 'Update', area).map(
+  this.http.post(this.areaApiUrl + 'Update', area).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteArea(area: Area) {
-  this.http.post(this.areaApiUrl + 'delete', area).map(
+  this.http.post(this.areaApiUrl + 'delete', area).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteAreas(areas: Area[]) {
-  this.http.post(this.areaApiUrl + 'Delete', areas).map(
+  this.http.post(this.areaApiUrl + 'Delete', areas).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

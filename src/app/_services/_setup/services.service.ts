@@ -1,8 +1,10 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Service } from './../../entities/Setup/Diagnosis';
 
 @Injectable({
@@ -17,27 +19,27 @@ export class ServicesService {
   constructor(private http: HttpClient) { }
 
   add(service: Service) {
-    this.http.post(this.ApiUrl + 'Create', service).map(
+    this.http.post(this.ApiUrl + 'Create', service).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(service: Service) {
-    this.http.post(this.ApiUrl + 'Update', service).map(
+    this.http.post(this.ApiUrl + 'Update', service).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(service: Service) {
-    this.http.post(this.ApiUrl + 'Delete', service).map(
+    this.http.post(this.ApiUrl + 'Delete', service).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, ServiceType: number = null, CodeingSystem: number = null,

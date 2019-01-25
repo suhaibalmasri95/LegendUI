@@ -1,8 +1,10 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { LineOfBusiness } from '../../entities/Setup/lineOfBusiness';
 
 @Injectable({
@@ -38,32 +40,32 @@ export class LineOfBusinessService {
   }
 
 add(lineOfBusiness: LineOfBusiness) {
-  this.http.post(this.LineOfApiUrl + 'Create', lineOfBusiness).map(
+  this.http.post(this.LineOfApiUrl + 'Create', lineOfBusiness).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 update(lineOfBusiness: LineOfBusiness) {
-  this.http.post(this.LineOfApiUrl + 'Update', lineOfBusiness).map(
+  this.http.post(this.LineOfApiUrl + 'Update', lineOfBusiness).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 delete(lineOfBusiness: LineOfBusiness) {
-  this.http.post(this.LineOfApiUrl + 'delete', lineOfBusiness).map(
+  this.http.post(this.LineOfApiUrl + 'delete', lineOfBusiness).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletes(lineOfBusiness: LineOfBusiness[]) {
-  this.http.post(this.LineOfApiUrl + 'Delete', lineOfBusiness).map(
+  this.http.post(this.LineOfApiUrl + 'Delete', lineOfBusiness).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

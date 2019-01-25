@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Cover } from './../../entities/Setup/Charges';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 
 @Injectable({
@@ -18,27 +20,27 @@ export class CoversService {
   constructor(private http: HttpClient) { }
 
   add(cover: Cover) {
-    this.http.post(this.ApiUrl + 'Create', cover).map(
+    this.http.post(this.ApiUrl + 'Create', cover).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(cover: Cover) {
-    this.http.post(this.ApiUrl + 'Update', cover).map(
+    this.http.post(this.ApiUrl + 'Update', cover).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(cover: Cover) {
-    this.http.post(this.ApiUrl + 'Delete', cover).map(
+    this.http.post(this.ApiUrl + 'Delete', cover).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,

@@ -1,10 +1,11 @@
+
+import {map,  debounceTime } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Customer } from '../../entities/Financial/Customer';
-import { debounceTime } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,27 +17,27 @@ export class CustomerService {
   constructor(private http: HttpClient, private httpService: HttpClient) { }
 
   add(d) {
-    this.http.post(this.ApiUrl + 'Create', d).map(
+    this.http.post(this.ApiUrl + 'Create', d).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(d) {
-    this.http.post(this.ApiUrl + 'Update', d).map(
+    this.http.post(this.ApiUrl + 'Update', d).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(d) {
-    this.http.post(this.ApiUrl + 'Delete', d).map(
+    this.http.post(this.ApiUrl + 'Delete', d).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, Name: string, custOrName: string,

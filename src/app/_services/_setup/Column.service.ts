@@ -1,8 +1,10 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Column } from '../../entities/Setup/Categories';
 
 @Injectable({
@@ -18,27 +20,27 @@ export class ColumnService {
   constructor(private http: HttpClient) { }
 
   add(column: Column) {
-    this.http.post(this.ApiUrl + 'Create', column).map(
+    this.http.post(this.ApiUrl + 'Create', column).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(column: Column) {
-    this.http.post(this.ApiUrl + 'Update', column).map(
+    this.http.post(this.ApiUrl + 'Update', column).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(column: Column) {
-    this.http.post(this.ApiUrl + 'Delete', column).map(
+    this.http.post(this.ApiUrl + 'Delete', column).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   load(ID: number = null, CategoryID: number = null, lineOfBussniess: number = null, subLineOfBussniess: number = null,

@@ -1,3 +1,5 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { User } from '../../entities/organization/User';
@@ -43,32 +45,32 @@ export class UserService {
   }
 
   addUser(user: User) {
-    return this.http.post(this.userApiUrl + 'Create', user).map(
+    return this.http.post(this.userApiUrl + 'Create', user).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   updateUser(user: User) {
-    return this.http.post(this.userApiUrl + 'Update', user).map(
+    return this.http.post(this.userApiUrl + 'Update', user).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   deleteUser(user: User) {
-    return this.http.post(this.userApiUrl + 'Delete', user).map(
+    return this.http.post(this.userApiUrl + 'Delete', user).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   deleteUsers(user: User[]) {
-    return this.http.post(this.userApiUrl + 'Delete', user).map(
+    return this.http.post(this.userApiUrl + 'Delete', user).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
 }

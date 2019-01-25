@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Company } from '../../entities/organization/Company';
 @Injectable({
@@ -22,32 +24,32 @@ loadCompanies(): Observable<Company[]> {
 }
 
 addCompany(company: Company) {
-  this.http.post(this.companyApiUrl + 'Create', company).map(
+  this.http.post(this.companyApiUrl + 'Create', company).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 updateCompany(company: Company) {
-  this.http.post(this.companyApiUrl + 'Update', company).map(
+  this.http.post(this.companyApiUrl + 'Update', company).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletleCompany(company: Company) {
-  this.http.post(this.companyApiUrl + 'Delete', company).map(
+  this.http.post(this.companyApiUrl + 'Delete', company).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteCompanies(companies: Company[]) {
-  this.http.post(this.companyApiUrl + 'Delete', companies).map(
+  this.http.post(this.companyApiUrl + 'Delete', companies).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

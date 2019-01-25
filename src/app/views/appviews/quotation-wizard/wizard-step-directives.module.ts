@@ -1,3 +1,5 @@
+import { ProductwordingComponent } from './../products/productCompnent/productwording/productwording.component';
+import { ProductSubjectTypeComponent } from './../products/productCompnent/productSubjectType/productSubjectType.component';
 import { GenericTableComponent } from './../genericTable/genericTable.component';
 import { AttachmentComponent } from './../quotation/attachment/attachment.component';
 import { CountriesComponent } from './../countries/countries.component';
@@ -47,7 +49,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomersComponent } from '../customers/customers.component';
 import { SearchCustomersComponent } from '../customers/searchCustomers/search-customers.component';
 import { OrderModule } from 'ngx-order-pipe';
-
+import {MatStepperModule} from '@angular/material/stepper';
 @NgModule({
   imports: [
     CommonModule,
@@ -76,6 +78,7 @@ import { OrderModule } from 'ngx-order-pipe';
     MatExpansionModule,
     MatCardModule,
     MatListModule,
+    MatStepperModule,
     BrowserAnimationsModule,
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger' // set defaults here
@@ -88,6 +91,8 @@ import { OrderModule } from 'ngx-order-pipe';
   ],
   declarations: [QuotationWizardComponent, QuotationComponent, RiskComponent ,
      SummaryComponent,
+     ProductwordingComponent,
+     ProductSubjectTypeComponent,
     SidenavComponent,
     DynamicComponentComponent,
     DynamicColumnsComponent,

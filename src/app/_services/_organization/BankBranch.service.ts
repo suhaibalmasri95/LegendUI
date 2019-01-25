@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { BankBranch } from '../../entities/organization/BankBranch';
 
@@ -22,32 +24,32 @@ export class BankBranchService {
   }
 
 addBankBranch(bankBranch: BankBranch) {
-  this.http.post(this.BankBranchApiUrl + 'Create', bankBranch).map(
+  this.http.post(this.BankBranchApiUrl + 'Create', bankBranch).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 updateBankBranch(bankBranch: BankBranch) {
-  this.http.post(this.BankBranchApiUrl + 'Update', bankBranch).map(
+  this.http.post(this.BankBranchApiUrl + 'Update', bankBranch).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletleBankBranch(bankBranch: BankBranch) {
-  this.http.post(this.BankBranchApiUrl + 'Delete', bankBranch).map(
+  this.http.post(this.BankBranchApiUrl + 'Delete', bankBranch).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteBankBranches(bankBranches: BankBranch[]) {
-  this.http.post(this.BankBranchApiUrl + 'Delete', bankBranches).map(
+  this.http.post(this.BankBranchApiUrl + 'Delete', bankBranches).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { CompanyBranch } from '../../entities/organization/CompanyBranch';
 
@@ -35,32 +37,32 @@ export class CompanyBranchService {
   }
 
 addCompanyBranch(companyBranch: CompanyBranch) {
-  this.http.post(this.companyBranchApiUrl + 'Create', companyBranch).map(
+  this.http.post(this.companyBranchApiUrl + 'Create', companyBranch).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 updateCompanyBranch(companyBranch: CompanyBranch) {
-  this.http.post(this.companyBranchApiUrl + 'Update', companyBranch).map(
+  this.http.post(this.companyBranchApiUrl + 'Update', companyBranch).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deletleCompanyBranch(companyBranch: CompanyBranch) {
-  this.http.post(this.companyBranchApiUrl + 'Delete', companyBranch).map(
+  this.http.post(this.companyBranchApiUrl + 'Delete', companyBranch).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 deleteCompanyBranches(companyBranches: CompanyBranch[]) {
-  this.http.post(this.companyBranchApiUrl + 'Delete', companyBranches).map(
+  this.http.post(this.companyBranchApiUrl + 'Delete', companyBranches).pipe(map(
     (response) => {
       return response;
     }
-  );
+  ));
 }
 
 

@@ -1,9 +1,11 @@
+
+import {map} from 'rxjs/operators';
 import { Benefit } from './../../entities/Setup/Diagnosis';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,27 +19,27 @@ export class BenefitService {
   constructor(private http: HttpClient) { }
 
   add(benefit: Benefit) {
-    this.http.post(this.ApiUrl + 'Create', benefit).map(
+    this.http.post(this.ApiUrl + 'Create', benefit).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(benefit: Benefit) {
-    this.http.post(this.ApiUrl + 'Update', benefit).map(
+    this.http.post(this.ApiUrl + 'Update', benefit).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(benefit: Benefit) {
-    this.http.post(this.ApiUrl + 'Delete', benefit).map(
+    this.http.post(this.ApiUrl + 'Delete', benefit).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
 

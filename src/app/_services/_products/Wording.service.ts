@@ -1,8 +1,11 @@
+import { Wording, WordingDetail } from './../../entities/Product/Attachment';
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { Column } from '../../entities/Setup/Categories';
 
 @Injectable({
@@ -18,30 +21,31 @@ export class WordingService {
   constructor(private http: HttpClient) { }
 
   add(column: Column) {
-    this.http.post(this.ApiUrl + 'Create', column).map(
+    this.http.post(this.ApiUrl + 'Create', column).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   update(column: Column) {
-    this.http.post(this.ApiUrl + 'Update', column).map(
+    this.http.post(this.ApiUrl + 'Update', column).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
   delete(column: Column) {
-    this.http.post(this.ApiUrl + 'Delete', column).map(
+    this.http.post(this.ApiUrl + 'Delete', column).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
 
-  load(ID: number = null, productID: number = null, ProductDetailID: number = null, langId: number = null): Observable<Column[]> {
+  load(ID: number = null, productID: number = null, 
+    ProductDetailID: number = null, langId: number = null): Observable<Wording[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -59,11 +63,12 @@ export class WordingService {
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<Column[]>(this.ApiUrl + 'Load' + queryString);
+      return this.http.get<Wording[]>(this.ApiUrl + 'Load' + queryString);
     }
   }
 
-  loadDetails(ID: number = null, productID: number = null, ProductDetailID: number = null, langId: number = null): Observable<Column[]> {
+  loadDetails(ID: number = null, productID: number = null, ProductDetailID: number = null,
+     langId: number = null): Observable<WordingDetail[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -81,7 +86,7 @@ export class WordingService {
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<Column[]>(this.commonApiUrl + 'Load' + queryString);
+      return this.http.get<WordingDetail[]>(this.commonApiUrl + 'Load' + queryString);
     }
   }
 

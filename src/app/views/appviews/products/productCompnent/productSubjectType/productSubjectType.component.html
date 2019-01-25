@@ -1,0 +1,241 @@
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+      <div class="col-md-12">
+  
+        <div class="tabs-container">
+          <div class="panel-body">
+      <fieldset>
+        <legend>
+          Product Subject types
+        </legend>
+        <form #form="ngForm" (ngSubmit)="saveSubjectType(form)" class="{{submit3?'submited':''}}">
+
+          <div class="row">
+
+         
+
+            <div class="form-group col-md-3">
+              <label for="ProductDetailsID">Product Detail</label>
+              <select name="ProductDetailsID" class="form-control" [(ngModel)]="subjectTypeForm.ProductDetailsID" (change)="loadRelatedSubjectType()">
+                <option [ngValue]="undefined">Select</option>
+                <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.ID}}</option>
+              </select>
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
+              <select name="LineOfBusniess" class="form-control" [(ngModel)]="subjectTypeForm.LineOfBusniess"
+                (change)="loadSubLinesOfBusiness(subjectTypeForm.LineOfBusniess)" required>
+                <option [ngValue]="undefined">Select</option>
+                <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
+              </select>
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="SubLineOfBusniess">Sub Line of Business</label>
+              <select name="SubLineOfBusniess" class="form-control" [(ngModel)]="subjectTypeForm.SubLineOfBusniess"
+                [disabled]="!SubLobs ||SubLobs.length===0">
+                <option [ngValue]="undefined">Select</option>
+                <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label for="SubjectType">Subject Type</label>
+              <select name="SubjectType" placeholder="Subject Type" class="form-control" [(ngModel)]="subjectTypeForm.SubjectType">
+                <option [ngValue]="undefined">Select</option>
+                <option *ngFor="let  SubjectType of SubjectTypes" [ngValue]="SubjectType.ID">{{SubjectType.Name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+
+           
+
+
+            <div class="form-group col-md-3">
+              <label for="ExcessPercentage">Excess %</label>
+              <input name="ExcessPercentage" placeholder="Excess %" type="number" class="form-control"
+                [(ngModel)]="subjectTypeForm.ExcessPercentage">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="MinExcessAmount">Min Excess Amount</label>
+              <input name="MinExcessAmount" placeholder="Min Excess Amount" type="number" class="form-control"
+                [(ngModel)]="subjectTypeForm.MinExcessAmount">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="MaxExcessAmount">Max Excess Amount</label>
+              <input name="MaxExcessAmount" placeholder="Max Excess Amount" type="number" class="form-control"
+                [(ngModel)]="subjectTypeForm.MaxExcessAmount">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="From">Excess From <span class="help-block">*</span></label>
+              <select name="From" placeholder="Excess From" class="form-control" [(ngModel)]="subjectTypeForm.From"
+                required>
+                <option [ngValue]="undefined">Select</option>
+                <option *ngFor="let excessFrom of excessFroms" [ngValue]="excessFrom.ID">{{excessFrom.Name}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+          
+
+            <div class="col-md-7 text-right">
+              <br>
+              <br>
+              <div class="btn-group">
+                <input class="btn btn-default" type="reset" (click)="resetForm(form)" value="Reset" />
+                <input class="btn btn-primary" type="submit" value="Save" (click)="submit3=true" />
+              </div>
+            </div>
+          </div>
+        </form>
+      </fieldset>
+    </div>
+    <div class="col-md-5">
+
+      <br>
+      <div class="table-container">
+        <table mat-table #table4 [dataSource]="subjectTypesPDDataSource" matSort>
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle4() : null" [checked]="selection4.hasValue() && isAllSelected4()"
+                [indeterminate]="selection4.hasValue() && !isAllSelected4()">
+              </mat-checkbox>
+            </th>
+            <td style="width: 5%" mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection4.toggle(row) : null"
+                [checked]="selection4.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+            </td>
+          </ng-container>
+
+
+          <ng-container matColumnDef="SubjectType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject Type</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.SubjectType}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ParentSubjectType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Subject Type</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element">
+              {{element.ParentSubjectType}} </td>
+          </ng-container>
+          <ng-container matColumnDef="lob">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.lob}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="subLob">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element">
+              {{element.sublob}} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="subjectTypesLobTableColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: subjectTypesLobTableColumns;" class=" mat-row"></tr>
+
+        </table>
+      </div>
+      <mat-paginator #paginator4 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+    </div>
+
+    <div class="col-md-2 text-center groups-arrows">
+      <div>
+        <i class="fa fa-arrow-right" (click)="addProductSubjectTypes()"></i>
+      </div>
+
+      <div>
+        <i class="fa fa-arrow-left" (click)="deleteProductSubjectType()"></i>
+      </div>
+
+    </div>
+
+    <div class="col-md-5">
+
+      <br>
+      <div class="table-container">
+        <table mat-table #table5 [dataSource]="subjectTypesLobDataSource" matSort>
+
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle5() : null" [checked]="selection5.hasValue() && isAllSelected5()"
+                [indeterminate]="selection5.hasValue() && !isAllSelected5()">
+              </mat-checkbox>
+            </th>
+            <td style="width: 5%" mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection5.toggle(row) : null"
+                [checked]="selection5.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="SubjectType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject Type</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.SubjectType}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ParentSubjectType">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Subject Type</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element">
+              {{element.ParentSubjectType}} </td>
+          </ng-container>
+          <ng-container matColumnDef="lob">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.lob}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="subLob">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element">
+              {{element.sublob}} </td>
+          </ng-container>
+          <ng-container matColumnDef="Product">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element">
+              {{element.Product}} </td>
+          </ng-container>
+          <ng-container matColumnDef="ProductDetail">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
+            <td style="width: 15%" mat-cell *matCellDef="let element">
+              {{element.ProductDetail}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="subjectTypesPDTableColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: subjectTypesPDTableColumns;" class=" mat-row"></tr>
+
+        </table>
+      </div>
+      <mat-paginator #paginator5 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
+
+    </div>
+
+    <div class="hr-line-dashed"></div>
+
+
+
+  </div>  </div>
+</div>
+
+</div>

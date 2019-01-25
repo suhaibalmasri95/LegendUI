@@ -1,8 +1,10 @@
+
+import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/catch';
+
 import { LockUp } from '../../entities/organization/LockUp';
 
 
@@ -18,32 +20,32 @@ export class LockUpService {
   constructor(private http: HttpClient) { }
 
   addLockUp(lockUp: LockUp) {
-    this.http.post(this.lockUpApiUrl + 'Create', lockUp).map(
+    this.http.post(this.lockUpApiUrl + 'Create', lockUp).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   updateLockUp(lockUp: LockUp) {
-    this.http.post(this.lockUpApiUrl + 'Update', lockUp).map(
+    this.http.post(this.lockUpApiUrl + 'Update', lockUp).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   deletleLockUp(lockUp: LockUp) {
-    this.http.post(this.lockUpApiUrl + 'Delete', lockUp).map(
+    this.http.post(this.lockUpApiUrl + 'Delete', lockUp).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   deleteLockUps(lockups: LockUp[]) {
-    this.http.post(this.lockUpApiUrl + 'Delete', lockups).map(
+    this.http.post(this.lockUpApiUrl + 'Delete', lockups).pipe(map(
       (response) => {
         return response;
       }
-    );
+    ));
   }
   LoadLockUpsByMajorCode(majorCode: number = 1): Observable<LockUp[]> {
     return this.http.get<LockUp[]>(this.lockUpApiUrl + 'LoadLockUps?MajorCode=' + majorCode);
