@@ -226,12 +226,7 @@ export const ROUTES: Routes = [
       {
         path: 'productAttachments', component: ProductAttachmentsComponent,
         resolve: {
-          Status: LockUpResolver,
-          ReportLevels: ReportLevelResolver,
-          lineOfBusiness: LineOfBusinessResolver,
-          Services: ServicesResolver,
-          AttachmentLevels: AttachmentLevelResolver,
-          GroupIndividualLockups: GroupIndividualLockupsResolver,
+        
         }
       }
     ]

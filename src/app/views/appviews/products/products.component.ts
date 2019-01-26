@@ -108,6 +108,7 @@ export class ProductsComponent implements OnInit {
   selection11: SelectionModel<ProductColumnValidation>;
   extraForm: string;
   productDetail: ProductsDetail;
+  productQuestionnaireForm: ProductQuestionnaire;
   snackPosition: MatSnackBarHorizontalPosition;
   selectedCategories: any;
   @ViewChild('paginator') paginator: MatPaginator;
@@ -148,7 +149,7 @@ export class ProductsComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user'));
     this.selection2 = new SelectionModel<ProductsDetail>(true, initialSelection);
     this.selection3 = new SelectionModel<ProductsDetail>(true, initialSelection);
-
+    this.productQuestionnaireForm = new ProductQuestionnaire();
     this.selection6 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
     this.selection7 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
     this.selection8 = new SelectionModel<Category>(true, initialSelection);
@@ -223,6 +224,7 @@ export class ProductsComponent implements OnInit {
   }
 
   updateProductsDetail(productsDetail: ProductsDetail) {
+
     this.productsDetailForm = productsDetail;
     this.productsDetailForm.EffectiveDate = new Date(productsDetail.EffectiveDate);
     this.productsDetailForm.ExpiryDate = new Date(productsDetail.ExpiryDate);
@@ -230,6 +232,23 @@ export class ProductsComponent implements OnInit {
     this.productsDetailForm.ModificationDate = new Date(productsDetail.ModificationDate);
     this.productsDetailForm.StatusDate = new Date(productsDetail.StatusDate);
     this.productsDetailForm.selected = true;
+    this.productQuestionnaireForm.ProductDetailedID = this.productsDetailForm.ID ;
+    this.reloadQuestionnairesTable(this.productsDetailForm.ID ? this.productsDetailForm.ID : null ,
+      this.productsDetailForm.LineOfBusniess ? this.productsDetailForm.LineOfBusniess : null ,
+      this.productsDetailForm.SubLineOfBusniess  );
+  }
+
+  FilterQustionnaires() {
+    this.productDetails.forEach(element => {
+      if (element.ID === this.productQuestionnaireForm.ProductDetailedID ) {
+        this.reloadQuestionnairesTable(this.productQuestionnaireForm.ProductDetailedID ?
+          this.productQuestionnaireForm.ProductDetailedID  : null ,
+          element.LineOfBusniess ? element.LineOfBusniess : null ,
+          element.SubLineOfBusniess ? element.SubLineOfBusniess : null );
+          this.productsDetailForm = element;
+      }
+    });
+  
   }
   changeTab($event) {
     setTimeout(() => {
@@ -240,7 +259,7 @@ export class ProductsComponent implements OnInit {
           break;
         case 2:
           this.extraForm = 'ProductQuestionears';
-          this.reloadQuestionnairesTable(this.productsDetailForm.ID ? this.productsDetailForm.ID : null);
+          //this.reloadQuestionnairesTable(this.productsDetailForm.ID ? this.productsDetailForm.ID : null);
           break;
       }
     });
@@ -315,9 +334,9 @@ export class ProductsComponent implements OnInit {
   }
 
   // RelatedQuestionnaires
-  reloadQuestionnairesTable(productsDetailId = null) {
-    this.productQuestionnaireService.loadRelated(this.productsDetailForm.ID,
-      this.productsDetailForm.LineOfBusniess, this.productsDetailForm.SubLineOfBusniess, 1).subscribe(data => {
+  reloadQuestionnairesTable(productsDetailId = null , line , sub) {
+    this.productQuestionnaireService.loadRelated(productsDetailId,
+      line, sub, 1).subscribe(data => {
         this.rendernNotRelatedQuestionnairesTable(data.UnRelatedQuestionnaires);
         this.renderRelatedQuestionnairesTable(data.RelatedQuestionnaires);
       });
@@ -353,8 +372,23 @@ export class ProductsComponent implements OnInit {
       this.productQuestionnaires.CreationDate = new Date();
       this.productQuestionnaires.StatusDate = new Date();
       this.http.post(this.productQuestionnaireService.ApiUrl + 'Create', this.productQuestionnaires).subscribe(res => {
-        console.log(res);
+        this.reloadQuestionnairesTable(this.productsDetailForm.ID ,
+          this.productsDetailForm.LineOfBusniess , this.productsDetailForm.SubLineOfBusniess);
       });
+    });
+  }
+
+  removeQuestionaires() {
+    
+    const Ids = [];
+    this.selection7.selected.forEach(element => {
+
+      Ids.push(element.ID);
+    });
+    this.http.post(this.productQuestionnaireService.ApiUrl  + 'DeleteMultiple', { IDs: Ids }).subscribe(res => {
+ 
+      this.reloadQuestionnairesTable(this.productsDetailForm.ID ,
+        this.productsDetailForm.LineOfBusniess , this.productsDetailForm.SubLineOfBusniess);
     });
   }
   renderRelatedQuestionnairesTable(data) {
@@ -719,7 +753,7 @@ export class ProductsComponent implements OnInit {
 
   }
   UpdateProductCategoryValidation(data) {
-    
+ 
     this.productCategorySerivce.loadValidation(null, data.ProductCategoryID,
       this.columnValidationForm.ProductID, this.columnValidationForm.ProductDetailID,
       data.ID, this.columnValidationForm.LocValidType, 1

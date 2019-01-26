@@ -29,7 +29,7 @@
 
   <mat-step>
     <ng-template matStepLabel>
-      <h3>Product </h3>
+      <h5>Product </h5>
     </ng-template>
     <div class="wrapper wrapper-content animated fadeInRight">
       <div class="row">
@@ -359,14 +359,14 @@
   <mat-step [editable]="submit">
 
     <ng-template matStepLabel>
-      <h3>Product Subject types</h3>
+      <h5>Product Subject types</h5>
     </ng-template>
     <app-productsubjecttype *ngIf="submit" [product]="productForm" [productDetails]="productDetails"></app-productsubjecttype>
 
   </mat-step>
   <mat-step [editable]="submit">
     <ng-template matStepLabel>
-      <h3>Product Categories </h3>
+      <h5>Product Categories </h5>
     </ng-template>
     <div class="wrapper wrapper-content animated fadeInRight" *ngIf="submit">
       <div class="row">
@@ -815,13 +815,31 @@
     </div>
   </mat-step>
   <mat-step [editable]="submit">
-    <app-product-attachments *ngIf="submit " [product]="productForm"></app-product-attachments>
+
+      <ng-template matStepLabel>
+          <h5>Product Attachments </h5>
+        </ng-template>
+    <app-product-attachments [Lobs]="Lobs" [status]="LockUps" *ngIf="submit" [product]="productForm"></app-product-attachments>
   </mat-step>
   <mat-step [editable]="submit">
     <app-productwording *ngIf="submit" [product]="productForm"></app-productwording>
   </mat-step>
   <mat-step [editable]="submit">
 
+      <ng-template matStepLabel>
+          <h5>Product Questionnaires</h5>
+        </ng-template>
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="ProductDetailedID">Product Details </label>
+                <select name="ProductDetailedID" class="form-control" 
+                  [(ngModel)]="productQuestionnaireForm.ProductDetailedID" (change)="FilterQustionnaires()"
+                  required>
+                  <option [ngValue]="undefined">Select</option>
+                  <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.ID}}</option>
+                </select>
+              </div>
+        </div>
     <div class="col-md-5" *ngIf="submit">
 
       <br>
@@ -877,7 +895,7 @@
       </div>
 
       <div>
-        <i class="fa fa-arrow-left" (click)="removeSubLineOfBusiness()"></i>
+        <i class="fa fa-arrow-left" (click)="removeQuestionaires()"></i>
       </div>
 
     </div>

@@ -1,3 +1,4 @@
+import { ProductReport } from './../../entities/Product/Attachment';
 
 import {map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -43,7 +44,7 @@ export class ProductReportService {
     ));
   }
 
-  load(ID: number = null, productID: number = null, ProductDetailID: number = null, langId: number = null): Observable<Column[]> {
+  load(ID: number = null, productID: number = null, ProductDetailID: number = null, langId: number = null): Observable<ProductReport[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -62,8 +63,30 @@ export class ProductReportService {
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<Column[]>(this.ApiUrl + 'Load' + queryString);
+      return this.http.get<ProductReport[]>(this.ApiUrl + 'Load' + queryString);
     }
   }
+  loadRelated(ID: number = null, productID: number = null, ProductDetailID: number = null,
+     langId: number = null): Observable<any> {
+    let queryString = '?ID=';
 
+    if (ID != null) {
+      queryString += ID;
+    }
+    queryString += '&productID=';
+    if (productID != null) {
+      queryString += productID;
+    }
+
+    queryString += '&ProductDetailID=';
+    if (ProductDetailID != null) {
+      queryString += ProductDetailID;
+    }
+
+    queryString += '&langId=';
+    if (langId != null) {
+      queryString += langId;
+      return this.http.get<any>(this.ApiUrl + 'LoadRelated' + queryString);
+    }
+  }
 }

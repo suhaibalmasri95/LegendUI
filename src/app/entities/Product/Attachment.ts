@@ -8,7 +8,7 @@ export class ProductAttachment implements IEntity {
     ID: number;
     Status: number;
     StatusDate: Date;
-    AttachmentLevel: string;
+    AttachmentLevel: number;
     IsRequired: number;
     IsRequiredTemp: boolean;
     AttachmentID: number;
@@ -86,6 +86,7 @@ export class ProductReport implements IEntity {
     ReportId: number;
     ReportLevel: number;
     IsRequired: number;
+    TempIsRequired: boolean;
     ReportCode: string;
     CreateBy: string;
     CreationDate: Date;
