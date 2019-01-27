@@ -78,7 +78,7 @@ export class ProductwordingComponent implements OnInit {
       textField: 'ID',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 2,
+
       allowSearchFilter: true
     };
     this.user = JSON.parse(localStorage.getItem('user'));
@@ -106,7 +106,7 @@ export class ProductwordingComponent implements OnInit {
   selectWording(wording) {
     this.noSelectedWording = false;
     this.selectedWording = wording;
-    this.reloadWordingsDetailsTable(wording.ID);
+    this.reloadWordingsDetailsTable(this.wordingForm.ProductId , this.wordingForm.ProductDetailId );
   }
 
   reloadWordingsTable(ProductId) {
@@ -114,8 +114,8 @@ export class ProductwordingComponent implements OnInit {
       this.renderWordingsTable(data);
     });
   }
-  reloadWordingsDetailsTable(wordingId) {
-    this.wordingService.loadDetails(null, wordingId, null, 1).subscribe(data => {
+  reloadWordingsDetailsTable(productID,productDetailID) {
+    this.wordingService.loadDetails(null, productID, productDetailID, 1).subscribe(data => {
       this.renderWordingsDetailsTable(data);
     });
   }
@@ -228,16 +228,19 @@ export class ProductwordingComponent implements OnInit {
   }
 
   updateWording(wording: Wording) {
-    window.scroll(0, 0);
+
     this.wordingForm = new Wording;
     this.wordingForm = wording;
     this.wordingForm.selected = true;
-
+    this.noSelectedWording = false;
     this.wordingDetailsForm.SubLineOfBusniess = this.wordingForm.SubLineOfBusiness;
     this.wordingDetailsForm.LineOfBusniess = this.wordingForm.LineOfBusiness;
     this.wordingDetailsForm.ProductDetailId = this.wordingForm.ProductDetailId;
+    this.selectedProductDetail.push(this.wordingForm);
     this.wordingDetailsForm.ProductId = this.wordingForm.ProductId;
     this.wordingDetailsForm.WordType = this.wordingForm.LockUpType;
+    this.reloadWordingsDetailsTable(this.wordingForm.ProductId , this.wordingForm.ProductDetailId);
+
   }
 
   saveWordingDetails(form) {
@@ -245,13 +248,31 @@ export class ProductwordingComponent implements OnInit {
     this.wordingDetailsForm = this.wordingDetailsForm.selected ? this.wordingDetailsForm : Object.assign({}, form.value);
     // this.wordingForm.LockUpChargeType = 3;
     if (this.wordingDetailsForm.selected) {
-      this.AddUpdateUrl = this.wordingService.ApiUrl + 'Update';
+      this.AddUpdateUrl = this.wordingService.ApiUrl2 + 'Update';
+      this.wordingDetailsForm.ModifiedBy = this.user.Name;
+      this.wordingDetailsForm.ModificationDate = new Date();
     } else {
-      this.AddUpdateUrl = this.wordingService.ApiUrl + 'Create';
+      this.AddUpdateUrl = this.wordingService.ApiUrl2 + 'Create';
+      this.wordingDetailsForm.CreateBy = this.user.Name;
+      this.wordingDetailsForm.CreationDate = new Date();
+      this.wordingDetailsForm.StatusDate = new Date();
     }
+    if (this.wordingDetailsForm.AutoAdd) {
+      this.wordingDetailsForm.IsAutoAdd = 1;
+    } else {
+      this.wordingDetailsForm.IsAutoAdd = 0;
+    }
+    this.wordingDetailsForm.ProductDetailId = this.wordingForm.ProductDetailId;
+    this.wordingDetailsForm.ProductId = this.wordingForm.ProductId;
+    this.wordingDetailsForm.WordId = this.wordingForm.ID;
+    this.wordingDetailsForm.ProductId = this.wordingForm.ProductId;
+    this.wordingDetailsForm.WordType = this.wordingForm.LockUpType;
+    this.wordingDetailsForm.SubLineOfBusniess = this.wordingForm.SubLineOfBusiness;
+    this.wordingDetailsForm.LineOfBusniess = this.wordingForm.LineOfBusiness;
+    this.wordingDetailsForm.ProductDetailId = this.wordingForm.ProductDetailId;
     this.http.post(this.AddUpdateUrl, this.wordingDetailsForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadWordingsDetailsTable(this.selectedWording);
+      this.reloadWordingsDetailsTable(this.wordingForm.ID,this.wordingForm.ProductDetailId);
       this.wordingDetailsForm = new WordingDetail;
       this.submit3 = false;
       form.resetForm();
@@ -262,12 +283,12 @@ export class ProductwordingComponent implements OnInit {
   deleteWordingDetails(id) {
     this.http.post(this.wordingService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadWordingsDetailsTable(this.selectedWording);
+      this.reloadWordingsDetailsTable(this.wordingForm.ID, this.wordingForm.ProductDetailId);
     });
 
   }
   updateWordingDetails(wordingDetails: WordingDetail) {
-    window.scroll(0, 0);
+
     this.wordingDetailsForm = new WordingDetail;
     this.wordingDetailsForm = wordingDetails;
     this.wordingDetailsForm.selected = true;

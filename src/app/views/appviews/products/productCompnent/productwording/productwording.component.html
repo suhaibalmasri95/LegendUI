@@ -50,12 +50,12 @@
             <label for="Status">Status</label>
             <select name="Status" class="form-control" [(ngModel)]="wordingForm.Status">
               <option [ngValue]="undefined">Select</option>
-              <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+              <option *ngFor="let status of LockUps" [ngValue]="status.MinorCode">{{status.Name}}</option>
             </select>
           </div>
         </div>
         <br><br>
-        <div class="row">
+     <!--    <div class="row">
           <label for="Description">Description</label>
           <ckeditor [(ngModel)]="wordingForm.Description" #description="ngModel" name="Description"  [config]="ckeConfig"
             debounce="500" (change)="onChangeDescription($event)">
@@ -67,7 +67,7 @@
           <ckeditor [(ngModel)]="wordingForm.Description2" #description2="ngModel" name="Description2"  [config]="ckeConfig"
             debounce="500" (change)="onChangeDescription2($event)">
           </ckeditor>
-        </div>
+        </div> -->
         <br>
         <br>
         <div class="row">
@@ -89,32 +89,44 @@
     </fieldset>
 
   </div>
-  <div class="html5buttons">
-    <br>
-    <div class="dt-buttons btn-group">
-      <button class="btn btn-default" [disabled]="!selection3.hasValue()" mwlConfirmationPopover [popoverTitle]="'Confirm'"
-        [popoverMessage]="'are you sure to delete?'" placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
-        <img src="assets/images/Trash-can.png"></button>
-      <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','wording')" placement="bottom"
-        ngbTooltip="Export to CSV"><span>
-          <img src="assets/images/csv.jpg"></span></a>
-      <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','wording')" placement="bottom"
-        ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
-      </a>
-      <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','wording')" placement="bottom"
-        ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
-      <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
-    </div>
-  </div>
-  <div class="col-md-12">
-    <div class="col-md-3">
-      <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-      </mat-form-field>
-    </div>
+  
+  
 
-  </div>
+<br><br><br>
+<div class="row">
+    <div class="col-md-12">
 
+      <div class="tabs-container">
+        <div class="panel-body">
+  <mat-tab-group>
+ <mat-tab label="Wording">
+    <div class="col-md-12">
+    <div class="html5buttons">
+        <br>
+        <div class="dt-buttons btn-group">
+          <button class="btn btn-default" [disabled]="!selection3.hasValue()" mwlConfirmationPopover [popoverTitle]="'Confirm'"
+            [popoverMessage]="'are you sure to delete?'" placement="bottom" (confirm)="deleteSelectedData()" ngbTooltip="Delete">
+            <img src="assets/images/Trash-can.png"></button>
+          <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','wording')" placement="bottom"
+            ngbTooltip="Export to CSV"><span>
+              <img src="assets/images/csv.jpg"></span></a>
+          <a class="btn btn-default buttons-excel buttons-html5" (click)="export('excel','wording')" placement="bottom"
+            ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span>
+          </a>
+          <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','wording')" placement="bottom"
+            ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+          <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img src="assets/images/print.jpg"></span></a>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="col-md-3">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+          </mat-form-field>
+        </div>
+    
+      </div>
+      <br><br>
   <div class="x">
     <div class="table-container">
       <table mat-table #table3 [dataSource]="wordingDataSource" matSort>
@@ -180,14 +192,12 @@
       </table>
     </div>
     <mat-paginator #paginator3 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true"></mat-paginator>
-  </div>
-
-
-
-
+  </div></div>
+ </mat-tab>
+    <mat-tab label="Wording Details"> 
   <div class="col-md-12 extra-form"  *ngIf="!noSelectedWording">
 
-    <div class="col-md-12 extra-form" *ngIf="extraForm==='wordings'" >
+    <div class="col-md-12 extra-form"  >
         <div class="hr-line-dashed"></div>
   
         <fieldset class="animated fadeInDown">
@@ -206,19 +216,23 @@
   
               <div class="form-group col-md-3">
                 <label for="LockUpType">Wording Type</label>
-                <select disabled name="LockUpType" class="form-control" [(ngModel)]="wordingDetailsForm.LockUpType" required>
+                <select disabled name="LockUpType" class="form-control" [(ngModel)]="wordingDetailsForm.WordType" required>
                   <option [ngValue]="undefined">Select</option>
-                  <option *ngFor="let WordingType of WordingTypes" [ngValue]="WordingType.ID">{{WordingType.Name}}</option>
+                  <option *ngFor="let WordingType of WordingTypes" [ngValue]="WordingType.MinorCode">{{WordingType.Name}}</option>
                 </select>
               </div>
-              <div class="form-group col-md-3">
-                  <mat-checkbox name="AutoAdd" [(ngModel)]="wordingDetailsForm.AutoAdd">Auto Add
-                  </mat-checkbox>
-                </div>
-    
+            
+      
                 <div class="form-group col-md-3">
-                  <label for="Service">Service</label>
-                  <select name="Service" class="form-control" [(ngModel)]="wordingDetailsForm.Service" required>
+                    <label for="Status">Status</label>
+                    <select name="Status" class="form-control" [(ngModel)]="wordingDetailsForm.Status">
+                      <option [ngValue]="undefined">Select</option>
+                      <option *ngFor="let status of LockUps" [ngValue]="status.MinorCode">{{status.Name}}</option>
+                    </select>
+                  </div>
+                <div class="form-group col-md-3">
+                  <label for="ServiceID">Service</label>
+                  <select name="ServiceID" class="form-control" [(ngModel)]="wordingDetailsForm.ServiceID" required>
                     <option [ngValue]="undefined">Select</option>
                     <option *ngFor="let Service of Services" [ngValue]="Service.ID">{{Service.Name}}</option>
                   </select>
@@ -228,20 +242,16 @@
   
             <div class="row">
   
-           
-              <div class="form-group col-md-3">
-                  <label for="Status">Status</label>
-                  <select name="Status" class="form-control" [(ngModel)]="wordingDetailsForm.Status">
-                    <option [ngValue]="undefined">Select</option>
-                    <option *ngFor="let status of status" [ngValue]="status.ID">{{status.Name}}</option>
-                  </select>
-                </div>
-          
+               
+                <div class="form-group col-md-3">
+                    <mat-checkbox name="AutoAdd" [(ngModel)]="wordingDetailsForm.AutoAdd">Auto Add
+                    </mat-checkbox>
+                  </div>
   
             </div>
          
             <br><br>
-            <div class="row">
+         <div class="row">
               <label for="Description">Description</label>
               <ckeditor [(ngModel)]="wordingDetailsForm.Description" #description="ngModel" name="Description"  [config]="ckeConfig"
                 debounce="500">
@@ -253,7 +263,7 @@
               <ckeditor [(ngModel)]="wordingDetailsForm.Description2" #description2="ngModel" name="Description2"  [config]="ckeConfig"
                 debounce="500" >
               </ckeditor>
-            </div>
+            </div> 
             <div class="row">
         
   
@@ -368,5 +378,5 @@
   
 
   </div>
-
+</mat-tab></mat-tab-group></div></div></div></div>
 </div>

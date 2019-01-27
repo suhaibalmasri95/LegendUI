@@ -15,7 +15,8 @@ export class WordingService {
 
 
   ApiUrl: string = environment.azureUrl + 'ProductWordings/';
-  commonApiUrl: string = environment.azureUrl + 'ProductWordingDetails/';
+  commonApiUrl: string = environment.azureUrl + 'Common/';
+ ApiUrl2: string = environment.azureUrl + 'ProductWordingDetails/';
   Columns: Column[];
 
   constructor(private http: HttpClient) { }
@@ -86,7 +87,7 @@ export class WordingService {
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<WordingDetail[]>(this.commonApiUrl + 'Load' + queryString);
+      return this.http.get<WordingDetail[]>(this.ApiUrl2 + 'Load' + queryString);
     }
   }
 

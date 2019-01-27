@@ -68,6 +68,10 @@ export class WordingDetail implements IEntity {
     selected: boolean;
     ProductDetailId: number;
     WordType: number;
+    IsAutoAdd: number;
+    AutoAdd: boolean;
+    WordId: number;
+    ServiceID: number;
 }
 
 
