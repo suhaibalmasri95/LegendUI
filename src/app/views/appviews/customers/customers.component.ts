@@ -563,7 +563,7 @@ export class CustomersComponent implements OnInit {
   }
 
   deleteCustomerType(id) {
-    this.http.post(this.customerTypeService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+    this.http.post(this.customerTypeService.ApiUrl + 'DeleteCustomerType', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCustomerTypesTable(this.customerForm.ID ? this.customerContactForm.ID : null);
     });
