@@ -96,3 +96,51 @@ export class CustomerStatusResolver implements Resolve<LockUp[]> {
         );
     }
 }
+@Injectable()
+export class CommissionTypesResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(36).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
+@Injectable()
+export class SpecialtiesResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(37).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
+@Injectable()
+export class ProviderTypesResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(38).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
+@Injectable()
+export class ProviderCodingSystemsResolver implements Resolve<LockUp[]> {
+    constructor(private lockUpService: LockUpService, private router: Router) { }
+    resolve(route: ActivatedRouteSnapshot): Observable<LockUp[]> {
+        return this.lockUpService.GetLockUpsByMajorCode(10).pipe(
+            catchError(error => {
+                this.router.navigate(['']);
+                return of(null);
+            })
+        );
+    }
+}
