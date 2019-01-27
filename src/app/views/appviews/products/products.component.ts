@@ -296,7 +296,20 @@ export class ProductsComponent implements OnInit {
     this.productsDetails = data;
   }
 
+  DeleteProductCategory() {
+    this.selection9.selected.forEach(element => {
 
+      this.http.post(this.productCategorySerivce.ApiUrlCategory + 'Delete' , element).subscribe(res =>{
+        this.productCategorySerivce.loadCategory(null, null,
+          this.productCategoryForm.ProductID, this.productCategoryForm.ProductDetailID, this.productCategoryForm.CategoryLevel,
+          this.productCategoryForm.LineOfBusniess, this.productCategoryForm.SubLineOfBusniess, 1).subscribe(result => {
+            this.renderProductCategory(result);
+            this.loadProductUnRelatedCateogry();
+          });
+      });
+
+    });
+  }
   rendersubLOBTable(data) {
     this.subLOBDataSource = new MatTableDataSource<ProductsDetail>(data);
     this.subLOBDataSource.paginator = this.paginator2;
@@ -665,11 +678,14 @@ export class ProductsComponent implements OnInit {
           };
 
           this.http.post(this.productCategorySerivce.ApiUrlCategory + 'Create', category).subscribe(types => {
-
             this.productCategorySerivce.loadCategory(null, null,
               this.productCategoryForm.ProductID, this.productCategoryForm.ProductDetailID, this.productCategoryForm.CategoryLevel,
               this.productCategoryForm.LineOfBusniess, this.productCategoryForm.SubLineOfBusniess, 1).subscribe(res => {
                 this.renderProductCategory(res);
+                this.productCategoryForm = new ProductCategory();
+                this.selectedCategories = [];
+                this.loadProductUnRelatedCateogry();
+
               });
 
           });
@@ -679,6 +695,8 @@ export class ProductsComponent implements OnInit {
 
 
     }
+
+   
   }
 
   saveValidationColumns() {

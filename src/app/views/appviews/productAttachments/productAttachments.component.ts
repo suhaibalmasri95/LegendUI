@@ -48,8 +48,6 @@ export class ProductAttachmentsComponent implements OnChanges {
   RelatedproductAttachment: ProductAttachment[];
   Attachments: Attachment[];
 
- 
-
 
   productReportForm: ProductReport;
   productReports: ProductReport[];

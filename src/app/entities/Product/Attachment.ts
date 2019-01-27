@@ -56,7 +56,7 @@ export class WordingDetail implements IEntity {
     ID: number;
     Status: number;
     StatusDate: Date;
-    ProductID: number;
+    ProductId: number;
     SubLineOfBusniess: number;
     LineOfBusniess: number;
     ExpiryDate: Date;
@@ -66,6 +66,8 @@ export class WordingDetail implements IEntity {
     ModifiedBy: string;
     ModificationDate: Date;
     selected: boolean;
+    ProductDetailId: number;
+    WordType: number;
 }
 
 

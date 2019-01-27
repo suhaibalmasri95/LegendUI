@@ -1,9 +1,13 @@
+import { Service } from './../../../../../entities/Setup/Diagnosis';
+import { ServicesService } from './../../../../../_services/_setup/services.service';
+import { LineOfBusiness } from './../../../../../entities/Setup/lineOfBusiness';
+import { ProductsDetailService } from './../../../../../_services/_setup/ProductsDetail.service';
 import { LockUpService } from './../../../../../_services/_organization/LockUp.service';
 import { CommonService } from './../../../../../_services/Common.service';
 import { WordingService } from './../../../../../_services/_products/Wording.service';
 import { HttpClient } from '@angular/common/http';
 import { LockUp } from './../../../../../entities/organization/LockUp';
-import { Wording, WordingDetail } from './../../../../../entities/Product/Attachment';
+import { Wording, WordingDetail, Attachment } from './../../../../../entities/Product/Attachment';
 import { Product, ProductsDetail } from './../../../../../entities/Product/Products';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort, MatPaginator, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
@@ -17,19 +21,36 @@ import { SelectionModel } from '@angular/cdk/collections';
 export class ProductwordingComponent implements OnInit {
   // tslint:disable-next-line:no-input-rename
   @Input('product') product: Product;
+  // tslint:disable-next-line:no-input-rename
+  @Input('productDetails') productDetails: ProductsDetail[];
+  // tslint:disable-next-line:no-input-rename
+  @Input('Lobs') Lobs: LineOfBusiness[];
+  // tslint:disable-next-line:no-input-rename
+  @Input('status') LockUps: LockUp[];
+
   snackPosition: MatSnackBarHorizontalPosition;
   submit2: boolean;
   wordingDetailsForm: WordingDetail;
   wordingDetails: WordingDetail[];
   wordingForm: Wording;
   noSelectedWording = true;
+  ckeConfig: any;
   selectedWording: Wording;
+  descriptionModel: any;
+  description2Model: any;
+  selectedProductDetail: any[] = [];
+  dropdownSettings = {};
+  @ViewChild('description') description: any;
+  @ViewChild('description2') description2: any;
   AddUpdateUrl: string;
   wordings: Wording[];
   submit3: boolean;
   wordingTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Type', 'Product', 'ProductDetail', 'actions'];
   wordingDataSource: MatTableDataSource<Wording>;
   WordingTypes: LockUp[];
+  Attachments: Attachment[];
+  user: any;
+  Services: Service[];
   wordingDetailsTableColumns = ['select', 'ID', 'Serial', 'Product', 'ProductDetail', 'Service', 'AutoAdd', 'actions'];
   wordingDetailsDataSource: MatTableDataSource<WordingDetail>;
   selection2: SelectionModel<Wording>;
@@ -42,9 +63,25 @@ export class ProductwordingComponent implements OnInit {
   constructor(public snackBar: MatSnackBar, private http: HttpClient,
     private wordingService: WordingService,
     private commonService: CommonService,
-    private lockUpService: LockUpService) { }
+    private lockUpService: LockUpService,
+    private productsDetailService: ProductsDetailService, private medicalSerivce: ServicesService) { }
 
   ngOnInit() {
+    this.ckeConfig = {
+      allowedContent: false,
+      extraPlugins: 'divarea',
+      forcePasteAsPlainText: true
+    };
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'ID',
+      textField: 'ID',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 2,
+      allowSearchFilter: true
+    };
+    this.user = JSON.parse(localStorage.getItem('user'));
     this.selection2 = new SelectionModel<Wording>(true, []);
     this.selection3 = new SelectionModel<WordingDetail>(true, []);
     this.wordingForm = new Wording();
@@ -57,10 +94,13 @@ export class ProductwordingComponent implements OnInit {
       this.wordings = res;
     });
 
-
-
+    this.medicalSerivce.load(null, null, null, 2, null, 1).subscribe(res => {
+      this.Services = res;
+    });
+    this.reloadWordingsTable(this.product.ID);
     this.wordingDetailsForm = new WordingDetail();
-
+    this.wordingDetailsForm.ProductId = this.product.ID;
+    this.loadAttachments();
   }
 
   selectWording(wording) {
@@ -79,6 +119,15 @@ export class ProductwordingComponent implements OnInit {
       this.renderWordingsDetailsTable(data);
     });
   }
+
+  onChangeDescription(event) {
+    console.log(event);
+  }
+
+  onChangeDescription2(event) {
+    console.log(event);
+  }
+
   renderWordingsTable(data) {
     this.wordings = data;
     this.wordingDataSource = new MatTableDataSource<Wording>(data);
@@ -93,7 +142,14 @@ export class ProductwordingComponent implements OnInit {
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
+  loadAttachments() {
+    this.productsDetailService.loadUnRelatedAttachments(null, this.product.ID,
+      this.wordingForm.ProductDetailId,
+      null, 1).subscribe(data => {
+        this.Attachments = data.UnRelatedAttachment;
 
+      });
+  }
   renderWordingsDetailsTable(data) {
     this.wordings = data;
     this.wordingDetailsDataSource = new MatTableDataSource<WordingDetail>(data);
@@ -109,6 +165,8 @@ export class ProductwordingComponent implements OnInit {
     };
   }
   saveWording(form) {
+
+    let x = 0;
     if (form.invalid) { return; }
     this.wordingForm = this.wordingForm.selected ? this.wordingForm : Object.assign({}, form.value);
     // this.wordingForm.LockUpChargeType = 3;
@@ -117,14 +175,48 @@ export class ProductwordingComponent implements OnInit {
     } else {
       this.AddUpdateUrl = this.wordingService.ApiUrl + 'Create';
     }
-    this.http.post(this.AddUpdateUrl, this.wordingForm).subscribe(res => {
-      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadWordingsTable(this.product);
-      this.wordingForm = new Wording;
-      this.submit2 = false;
-      form.resetForm();
-    });
+    this.wordingForm.ProductId = this.product.ID;
+    if (this.selectedProductDetail) {
+      if (this.selectedProductDetail.length > 0) {
+        this.selectedProductDetail.forEach((element, index) => {
+          x++;
+          this.productDetails.forEach(item => {
+            if (item.ID === element) {
 
+              this.wordingForm.ProductDetailId = item.ID;
+              this.wordingForm.LineOfBusiness = item.LineOfBusniess;
+              this.wordingForm.SubLineOfBusiness = item.SubLineOfBusniess;
+              this.http.post(this.AddUpdateUrl, this.wordingForm).subscribe(res => {
+                if (x === this.selectedProductDetail.length) {
+                  this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+                  this.reloadWordingsTable(this.product);
+                  this.wordingForm = new Wording;
+                  this.submit2 = false;
+                  form.resetForm();
+                }
+              });
+            }
+          });
+        });
+      } else {
+
+        //
+        this.wordingDetailsForm.SubLineOfBusniess = this.wordingForm.SubLineOfBusiness;
+        this.wordingDetailsForm.LineOfBusniess = this.wordingForm.LineOfBusiness;
+        this.wordingDetailsForm.ProductDetailId = this.wordingForm.ProductDetailId;
+        this.wordingDetailsForm.ProductId = this.wordingForm.ProductId;
+        this.wordingDetailsForm.WordType = this.wordingForm.LockUpType;
+        //
+
+        this.http.post(this.AddUpdateUrl, this.wordingForm).subscribe(res => {
+          this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadWordingsTable(this.product.ID);
+          this.wordingForm = new Wording;
+          this.submit2 = false;
+          form.resetForm();
+        });
+      }
+    }
   }
 
   deleteWording(id) {
@@ -140,6 +232,12 @@ export class ProductwordingComponent implements OnInit {
     this.wordingForm = new Wording;
     this.wordingForm = wording;
     this.wordingForm.selected = true;
+
+    this.wordingDetailsForm.SubLineOfBusniess = this.wordingForm.SubLineOfBusiness;
+    this.wordingDetailsForm.LineOfBusniess = this.wordingForm.LineOfBusiness;
+    this.wordingDetailsForm.ProductDetailId = this.wordingForm.ProductDetailId;
+    this.wordingDetailsForm.ProductId = this.wordingForm.ProductId;
+    this.wordingDetailsForm.WordType = this.wordingForm.LockUpType;
   }
 
   saveWordingDetails(form) {

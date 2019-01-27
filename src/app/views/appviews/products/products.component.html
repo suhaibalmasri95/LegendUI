@@ -447,6 +447,25 @@
                 </legend>
 
                 <div class="col-md-12">
+                    <div class="html5buttons">
+                        <br>
+                        <div class="dt-buttons btn-group">
+                            <button class="btn btn-default" [disabled]="!selection9.hasValue()"
+                                mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
+                                placement="bottom" (confirm)="DeleteProductCategory()" ngbTooltip="Delete">
+                                <img src="assets/images/Trash-can.png"></button>
+                            <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"
+                                placement="bottom" ngbTooltip="Export to CSV"><span>
+                                    <img src="assets/images/csv.jpg"></span></a>
+                            <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','country')"
+                                placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                            <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"
+                                placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                            <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
+                                        src="assets/images/print.jpg"></span></a>
+                        </div>
+                    </div>
+                    <br>
                   <div class="col-md-3">
                     <mat-form-field>
                       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
@@ -476,40 +495,40 @@
                     </ng-container>
                     <ng-container matColumnDef="Name">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Lable}}
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="lob">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.lob}}
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniess}}
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="subLob">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.sublob}} </td>
+                        {{element.SubLineOfBusniess}} </td>
                     </ng-container>
                     <ng-container matColumnDef="Level">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.Level}} </td>
+                        {{element.CategoryLevel}} </td>
                     </ng-container>
                     <ng-container matColumnDef="IsMultiRecord">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Record</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.IsMultiRecord}} </td>
+                        {{element.MultiRecord}} </td>
                     </ng-container>
                     <ng-container matColumnDef="Product">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.Product}} </td>
+                        {{element.ProductID}} </td>
                     </ng-container>
                     <ng-container matColumnDef="ProductDetail">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.ProductDetail}} </td>
+                        {{element.ProductDetailID}} </td>
                     </ng-container>
                     <ng-container matColumnDef="Status">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
@@ -822,7 +841,10 @@
     <app-product-attachments [Lobs]="Lobs" [status]="LockUps" *ngIf="submit" [product]="productForm"></app-product-attachments>
   </mat-step>
   <mat-step [editable]="submit">
-    <app-productwording *ngIf="submit" [product]="productForm"></app-productwording>
+      <ng-template matStepLabel>
+          <h5>Product Wording </h5>
+        </ng-template>
+    <app-productwording *ngIf="submit" [product]="productForm" [productDetails]="productDetails" [Lobs]="Lobs" [status]="LockUps"></app-productwording>
   </mat-step>
   <mat-step [editable]="submit">
 

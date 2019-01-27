@@ -50,11 +50,13 @@ import { CustomersComponent } from '../customers/customers.component';
 import { SearchCustomersComponent } from '../customers/searchCustomers/search-customers.component';
 import { OrderModule } from 'ngx-order-pipe';
 import {MatStepperModule} from '@angular/material/stepper';
+import { CKEditorModule } from 'ng2-ckeditor';
 @NgModule({
   imports: [
     CommonModule,
     ArchwizardModule,
     FormsModule,
+    CKEditorModule,
     ReactiveFormsModule,
     FileUploadModule,
     HttpClientModule,
@@ -98,6 +100,7 @@ import {MatStepperModule} from '@angular/material/stepper';
     DynamicColumnsComponent,
     SelectComponentComponent,
     TableComponent, LoginComponent,
+
     CountriesComponent,
     BanksComponent,
     LockupAndCurrencyComponent,
