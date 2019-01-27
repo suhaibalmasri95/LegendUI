@@ -1,5 +1,5 @@
 
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -13,8 +13,8 @@ import { ProviderLicense } from '../../entities/customer/customer';
 export class ProviderLicenseService {
 
 
-  ApiUrl: string = environment.azureUrl + 'ProviderLicense/';
-  commonApiUrl: string = environment.azureUrl + 'ProviderLicense/';
+  ApiUrl: string = environment.azureUrl + 'CustomerLicense/';
+  commonApiUrl: string = environment.azureUrl + 'CustomerLicense/';
 
   constructor(private http: HttpClient) { }
 
@@ -42,22 +42,41 @@ export class ProviderLicenseService {
     ));
   }
 
-  load(ID: number = null, productID: number = null, langId: number = null): Observable<ProviderLicense[]> {
+
+  load(ID: number = null, LicenseNo: number = null, CustomerID: number = null,
+    SptID: number = null, ProviderType: number = null, Code: number = null, langId: number = null): Observable<ProviderLicense[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&productID=';
-    if (productID != null) {
-      queryString += productID;
+    queryString += '&LicenseNo=';
+    if (LicenseNo != null) {
+      queryString += LicenseNo;
+    }
+    queryString += '&CustomerID=';
+    if (CustomerID != null) {
+      queryString += CustomerID;
+    }
+    queryString += '&SptID=';
+    if (SptID != null) {
+      queryString += SptID;
+    }
+    queryString += '&ProviderType=';
+    if (ProviderType != null) {
+      queryString += ProviderType;
+    }
+    queryString += '&Code=';
+    if (Code != null) {
+      queryString += Code;
     }
 
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
-      return this.http.get<ProviderLicense[]>(this.ApiUrl + 'Load' + queryString);
     }
+    return this.http.get<ProviderLicense[]>(this.ApiUrl + 'Load' + queryString);
+
   }
 
 }

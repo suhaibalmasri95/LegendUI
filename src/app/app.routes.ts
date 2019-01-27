@@ -63,7 +63,7 @@ import {
 } from './_resolvers/products.resolver';
 import { AccountedFor } from './_resolvers/accounted-for.resolver';
 import { OpenCoverType } from './_resolvers/open-cover-type';
-import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver, CustomerSourcesResolver, BusinessSectorsResolver, TaxTypesResolver, CustomerStatusResolver } from './_resolvers/customers.resolver';
+import { CustomerTypesDDLResolver, DepartmentsResolver, TitlesResolver, CustomerSourcesResolver, BusinessSectorsResolver, TaxTypesResolver, CustomerStatusResolver, CommissionTypesResolver, SpecialtiesResolver, ProviderTypesResolver, ProviderCodingSystemsResolver } from './_resolvers/customers.resolver';
 
 export const ROUTES: Routes = [
   // Main redirect
@@ -215,7 +215,7 @@ export const ROUTES: Routes = [
       {
         path: 'products', component: ProductsComponent,
         resolve: {
-     
+
           GroupIndividualLockups: GroupIndividualLockupsResolver,
           lineOfBusiness: LineOfBusinessResolver,
           subLineOfBusiness: SubLineOfBusinessResolver,
@@ -226,7 +226,7 @@ export const ROUTES: Routes = [
       {
         path: 'productAttachments', component: ProductAttachmentsComponent,
         resolve: {
-        
+
         }
       }
     ]
@@ -271,6 +271,11 @@ export const ROUTES: Routes = [
           TaxTypes: TaxTypesResolver,
           BankNames: BankResolver,
           CustomerStatus: CustomerStatusResolver,
+          CommissionTypes: CommissionTypesResolver,
+          Specialties: SpecialtiesResolver,
+          ProviderTypes: ProviderTypesResolver,
+          ProviderCodingSystems: ProviderCodingSystemsResolver,
+          Status: LockUpResolver,
 
         }
       }

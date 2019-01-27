@@ -217,8 +217,7 @@
 
                       <div class="form-group col-md-3">
                         <label for="BirthDate">Birth Date</label>
-                        <input name="BirthDate" placeholder="Birth Date" bsDatepicker class="form-control" [ngModel]="customerForm.BirthDate"
-                          >
+                        <input name="BirthDate" placeholder="Birth Date" bsDatepicker class="form-control" [ngModel]="customerForm.BirthDate">
                       </div>
 
                       <div class="form-group col-md-3">
@@ -230,7 +229,7 @@
                       <div class="form-group col-md-3">
                         <label for="RefEffectiveDate">Reference Eff. Date</label>
                         <input name="RefEffectiveDate" placeholder="Reference Eff. Date" bsDatepicker class="form-control"
-                          [ngModel]="customerForm.RefEffectiveDate"  >
+                          [ngModel]="customerForm.RefEffectiveDate">
                       </div>
                     </div>
 
@@ -239,7 +238,7 @@
                       <div class="form-group col-md-3">
                         <label for="RefExpiryDate">Reference Exp. Date</label>
                         <input name="RefExpiryDate" placeholder="Reference Exp. Date" bsDatepicker class="form-control"
-                          [ngModel]="customerForm.RefExpiryDate" >
+                          [ngModel]="customerForm.RefExpiryDate">
                       </div>
 
                       <div class="form-group col-md-3">
@@ -259,8 +258,7 @@
 
                       <div class="form-group col-md-3">
                         <label for="StartDate">Start Date</label>
-                        <input name="StartDate" placeholder="Start Date" bsDatepicker class="form-control" [ngModel]="customerForm.StartDate"
-                 >
+                        <input name="StartDate" placeholder="Start Date" bsDatepicker class="form-control" [ngModel]="customerForm.StartDate">
                       </div>
 
                     </div>
@@ -433,7 +431,7 @@
 
           <br>
 
-          <mat-tab-group (selectedTabChange)="showBranchAndDepartmentForm($event)">
+          <mat-tab-group (selectedTabChange)="showBranchAndDepartmentForm($event)" *ngIf="customerForm.ID">
             <mat-tab label="Customer Types">
 
               <div class="col-md-12">
@@ -485,20 +483,20 @@
                       <ng-container matColumnDef="CustomerName">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{element.CustomerName}}
+                          {{customerForm.Name}}
                         </td>
                       </ng-container>
 
                       <ng-container matColumnDef="CustomerType">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Type</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{element.CustomerType}} </td>
+                          {{getCustomerType(element.LocCustomerType)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="GlId">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Gl Id </th>
                         <td mat-cell *matCellDef="let element">
-                          {{element.GlId}}
+                          {{element.GLId}}
                         </td>
                       </ng-container>
 
@@ -533,8 +531,8 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <label for="CustomerType">Customer type <span class="help-block">*</span></label>
-                          <select name="CustomerType" class="form-control" [(ngModel)]="customerTypeForm.CustomerType"
+                          <label for="LocCustomerType">Customer type <span class="help-block">*</span></label>
+                          <select name="LocCustomerType" class="form-control" [(ngModel)]="customerTypeForm.LocCustomerType"
                             required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let obj of CustomerTypesDDL" [ngValue]="obj.ID">{{obj.Name}}</option>
@@ -572,7 +570,7 @@
                   <legend>
                     Customer Contacts
                   </legend>
-                  <form #form2="ngForm" (ngSubmit)="saveCustomerContact(form2)" class="{{submit2?'submited':''}}">
+                  <form #form2="ngForm" (ngSubmit)="saveCustomerContact(form2)" class="{{submit3?'submited':''}}">
                     <div class="row">
 
                       <div class="form-group col-md-3">
@@ -639,9 +637,9 @@
                       <div class="col-md-11 text-right">
                         <br>
                         <br>
-                        <input class="btn btn-default" type="reset" (click)="customerContactForm={};submit2=false;resetForm(form2)"
+                        <input class="btn btn-default" type="reset" (click)="customerContactForm={};submit3=false;resetForm(form2)"
                           value="Reset" />
-                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit3=true" />
                       </div>
                     </div>
                   </form>
@@ -711,9 +709,9 @@
                         <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="Phone">
+                      <ng-container matColumnDef="CustomerID">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
-                        <td mat-cell *matCellDef="let element">{{(element.Phone)}}
+                        <td mat-cell *matCellDef="let element">{{customerForm.Name}}
                         </td>
                       </ng-container>
 
@@ -736,7 +734,7 @@
                       <ng-container matColumnDef="Department">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
                         <td style="width: 10%" mat-cell *matCellDef="let element">
-                          {{element.Department}} </td>
+                          {{getLocCustomerDept(element.LocCustomerDept)}} </td>
                       </ng-container>
 
                       <ng-container matColumnDef="actions">
@@ -827,39 +825,39 @@
                       <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
                     </ng-container>
 
-
-                    <ng-container matColumnDef="NAME">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="NAME2">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name2</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Name2}} </td>
+                    <ng-container matColumnDef="CustomerType">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>CustomerType</th>
+                      <td mat-cell *matCellDef="let element"> {{getCustomerType(element.LocCustomerType)}} </td>
                     </ng-container>
 
 
                     <ng-container matColumnDef="Product">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{(element.Product)}} </td>
+                        {{(element.ProductId)}} </td>
                     </ng-container>
+
+                    <ng-container matColumnDef="LOB">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>LOB</th>
+                      <td mat-cell *matCellDef="let element"> {{element.LineOfBusiness}} </td>
+                    </ng-container>
+
 
                     <ng-container matColumnDef="SubLob">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub Lob</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{(element.SubLob)}} </td>
+                        {{(element.SubLineOfBusiness)}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="CommissionType">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission Type</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{(element.CommissionType)}} </td>
+                        {{getCommissionType(element.LocCommissionType)}} </td>
                     </ng-container>
                     <ng-container matColumnDef="CommissionPercent">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission %</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{(element.CommissionPercent)}} </td>
+                        {{(element.ComissionPercentage)}} </td>
                     </ng-container>
                     <ng-container matColumnDef="CommissionAmount">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission Amount</th>
@@ -898,8 +896,8 @@
                     <div class="row">
 
                       <div class="form-group col-md-3">
-                        <label for="CustomerType">Customer type <span class="help-block">*</span></label>
-                        <select name="CustomerType" class="form-control" [(ngModel)]="commissionForm.CustomerType"
+                        <label for="LocCustomerType">Customer type <span class="help-block">*</span></label>
+                        <select name="LocCustomerType" class="form-control" [(ngModel)]="commissionForm.LocCustomerType"
                           required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let obj of CustomerTypesDDL" [ngValue]="obj.ID">{{obj.Name}}</option>
@@ -907,8 +905,8 @@
                       </div>
 
                       <div class="form-group col-md-3">
-                        <label for="CommissionType">Commission type <span class="help-block">*</span></label>
-                        <select name="Commissionype" class="form-control" [(ngModel)]="commissionForm.CommissionType"
+                        <label for="LocCommissionType">Commission type <span class="help-block">*</span></label>
+                        <select name="LocCommissionType" class="form-control" [(ngModel)]="commissionForm.LocCommissionType"
                           required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let obj of CommissionTypes" [ngValue]="obj.ID">{{obj.Name}}</option>
@@ -916,8 +914,8 @@
                       </div>
 
                       <div class="form-group col-md-3">
-                        <label for="ProductDetail">Product Detail</label>
-                        <select name="ProductDetail" class="form-control" [(ngModel)]="commissionForm.ProductDetail">
+                        <label for="ProductDetailId">Product Detail</label>
+                        <select name="ProductDetailId" class="form-control" [(ngModel)]="commissionForm.ProductDetailId">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let obj of productsDetails" [ngValue]="obj.ID">{{obj.ID}}</option>
                         </select>
@@ -925,30 +923,30 @@
 
 
                       <div class="form-group col-md-3">
-                        <label for="CommissionPercent">Commission % </label>
-                        <input name="CommissionPercent" placeholder="Commission Percent" type="number" class="form-control"
-                          [(ngModel)]="commissionForm.CommissionPercent">
+                        <label for="ComissionPercentage">Commission % </label>
+                        <input name="ComissionPercentage" placeholder="Commission Percent" type="number" class="form-control"
+                          [(ngModel)]="commissionForm.ComissionPercentage">
                       </div>
                     </div>
 
                     <div class="row">
                       <div class="form-group col-md-3">
                         <label for="CommissionAmount">Commission Amount </label>
-                        <input name="CommissionAmount" placeholder="Commission Percent" type="number" class="form-control"
-                          [(ngModel)]="commissionForm.CommissionAmount">
+                        <input [(ngModel)]="commissionForm.CommissionAmount" name="CommissionAmount" placeholder="Commission Percent"
+                          type="number" class="form-control">
                       </div>
-                    </div>
 
-                    <div class="form-group col-md-3">
-                      <label for="DebitCredit"> Debit/Credit</label>
-                      <mat-radio-group [(ngModel)]="commissionForm.DebitCredit">
-                        <mat-radio-button value="1">Debit</mat-radio-button>
-                        <mat-radio-button class="example-margin" value="2">Credit</mat-radio-button>
-                      </mat-radio-group>
-                    </div>
-                    <div class="row">
 
-                      <div class="col-md-12 text-right">
+                      <div class="form-group col-md-3">
+                        <br>
+                        <label for="DrtCr"> Debit/Credit: &nbsp;</label>
+                        <mat-radio-group name="DrtCr" [(ngModel)]="commissionForm.DrtCr">
+                          <mat-radio-button value="1">Debit</mat-radio-button>
+                          <mat-radio-button class="example-margin" value="2">Credit</mat-radio-button>
+                        </mat-radio-group>
+                      </div>
+
+                      <div class="col-md-6 text-right">
                         <br>
                         <br>
                         <input class="btn btn-default" type="reset" (click)="commissionForm={};submit4=false;resetForm(form3)"
@@ -1027,7 +1025,7 @@
 
                     <ng-container matColumnDef="LICNESNO">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>License NO</th>
-                      <td mat-cell *matCellDef="let element"> {{element.LICNESNO}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.LicenseNo}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="EffectiveDate">
@@ -1037,18 +1035,18 @@
 
                     <ng-container matColumnDef="EXP_DATE">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiry Date</th>
-                      <td mat-cell *matCellDef="let element"> {{element.EXP_DATE}} </td>
+                      <td mat-cell *matCellDef="let element"> {{element.ExpireDate}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="Specialty">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Specialty</th>
-                      <td mat-cell *matCellDef="let element"> {{element.Specialty}} </td>
+                      <td mat-cell *matCellDef="let element"> {{getSpecialties(element.LocSptID)}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="ProviderType">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Provider Type</th>
                       <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{(element.ProviderType)}} </td>
+                        {{getProviderTypes(element.LocProviderTyoe)}} </td>
                     </ng-container>
 
                     <ng-container matColumnDef="actions">
@@ -1078,7 +1076,7 @@
                   <legend>
                     Provider License
                   </legend>
-                  <form #form4="ngForm" (ngSubmit)="saveProviderLicense(form4)" class="{{submit4?'submited':''}}">
+                  <form #form4="ngForm" (ngSubmit)="saveProviderLicense(form4)" class="{{submit5?'submited':''}}">
                     <div class="row">
 
 
@@ -1091,19 +1089,17 @@
                       <div class="form-group col-md-3">
                         <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
                         <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
-                          [ngModel]="providerLicenseForm.EffectiveDate"  >
+                          [ngModel]="providerLicenseForm.EffectiveDate">
                       </div>
 
                       <div class="form-group col-md-3">
-                        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                        <input name="ExpiryDate" required placeholder="Expiry Date" bsDatepicker class="form-control"
-                          [ngModel]="providerLicenseForm.ExpiryDate "  >
+                        <label for="ExpireDate">Expiry Date</label>
+                        <input name="ExpireDate" placeholder="Expiry Date" bsDatepicker class="form-control" [ngModel]="providerLicenseForm.ExpireDate ">
                       </div>
 
                       <div class="form-group col-md-3">
-                        <label for="Specialty">Specialty</label>
-                        <select name="Specialty" class="form-control" [(ngModel)]="providerLicenseForm.Specialty"
-                          required>
+                        <label for="LocSptID">Specialty</label>
+                        <select name="LocSptID" class="form-control" [(ngModel)]="providerLicenseForm.LocSptID">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let obj of Specialties" [ngValue]="obj.ID">{{obj.Name}}</option>
                         </select>
@@ -1112,24 +1108,22 @@
 
                     <div class="row">
                       <div class="form-group col-md-3">
-                        <label for="ProviderType">Provider type</label>
-                        <select name="ProviderType" class="form-control" [(ngModel)]="providerLicenseForm.ProviderType"
-                          required>
+                        <label for="LocProviderTyoe">Provider type</label>
+                        <select name="LocProviderTyoe" class="form-control" [(ngModel)]="providerLicenseForm.LocProviderTyoe">
                           <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let obj of ProviderLicenseTypes" [ngValue]="obj.ID">{{obj.Name}}</option>
+                          <option *ngFor="let obj of ProviderTypes" [ngValue]="obj.ID">{{obj.Name}}</option>
                         </select>
                       </div>
                       <div class="form-group col-md-3">
-                        <label for="ProviderCodingSystem">Provider Coding System</label>
-                        <select name="ProviderCodingSystem" class="form-control" [(ngModel)]="providerLicenseForm.ProviderCodingSystem"
-                          required>
+                        <label for="LocCode">Provider Coding System</label>
+                        <select name="LocCode" class="form-control" [(ngModel)]="providerLicenseForm.LocCode">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let obj of ProviderCodingSystems" [ngValue]="obj.ID">{{obj.Name}}</option>
                         </select>
                       </div>
                       <div class="form-group col-md-3">
                         <label for="Status">Status</label>
-                        <select name="Status" class="form-control" [(ngModel)]="providerLicenseForm.Status" required>
+                        <select name="Status" class="form-control" [(ngModel)]="providerLicenseForm.Status">
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let obj of Status" [ngValue]="obj.ID">{{obj.Name}}</option>
                         </select>
@@ -1139,9 +1133,9 @@
                       <div class="col-md-12 text-right">
                         <br>
                         <br>
-                        <input class="btn btn-default" type="reset" (click)="providerLicenseForm={};submit4=false;resetForm(form4)"
+                        <input class="btn btn-default" type="reset" (click)="providerLicenseForm={};submit5=false;resetForm(form4)"
                           value="Reset" />
-                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit4=true" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit5=true" />
                       </div>
                     </div>
                   </form>

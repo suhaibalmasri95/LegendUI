@@ -1,5 +1,4 @@
 import { SearchService } from './../../../_services/search.service';
-import { MinorCode } from './../../../entities/models/minorCode';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   MatTableDataSource, MatSnackBarHorizontalPosition, MatPaginator,
@@ -9,7 +8,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FileUploader } from 'ng2-file-upload';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { Currency } from '../../../entities/organization/Currency';
 import { CommonService } from './../../../_services/Common.service';
 import { Commission } from '../../../entities/Setup/Charges';
 import { Customer } from '../../../entities/Financial/Customer';
@@ -61,15 +59,16 @@ export class CustomersComponent implements OnInit {
   customersTypesTableColumns = ['select', 'ID', 'CustomerName', 'CustomerType', 'GlId', 'actions'];
   customersTypesDataSource: MatTableDataSource<CustomerType>;
 
-  customerContactsTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Phone', 'Mobile', 'Email', 'LOB', 'Department', 'actions'];
+  customerContactsTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'CustomerID', 'Mobile', 'Email', 'LOB', 'Department', 'actions'];
   customerContactsDataSource: MatTableDataSource<CustomerContact>;
 
-  commissionTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'Product',
+  commissionTableColumns = ['select', 'ID', 'CustomerType', 'Product', 'LOB',
     'SubLob', 'CommissionType', 'CommissionPercent', 'CommissionAmount', 'actions'];
+
   commissionDataSource: MatTableDataSource<Commission>;
 
   providerLicenseTableColumns = ['select', 'ID', 'LICNESNO', 'EffectiveDate', 'EXP_DATE', 'Specialty', 'ProviderType', 'actions'];
-  providerLicenseSource: MatTableDataSource<ProviderLicense>;
+  providerLicenseDataSource: MatTableDataSource<ProviderLicense>;
 
   selection: SelectionModel<CustomerType>;
   selection2: SelectionModel<CustomerContact>;
@@ -86,12 +85,18 @@ export class CustomersComponent implements OnInit {
   BankNames: any;
   BankBranches: any[];
   cities: any[];
+  CommissionTypes: any[];
+  Specialties: any[];
+  ProviderTypes: any[];
+  ProviderCodingSystems: any[];
   CustomerStatus: any;
+  Status: any;
   Nationalities: any;
   userCompany: any;
   user: any;
   dropdownSettings = {};
   hasBeenSearched = false;
+
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
   @ViewChild('paginator3') paginator3: MatPaginator;
@@ -107,6 +112,8 @@ export class CustomersComponent implements OnInit {
   customerSearch: FormControl = new FormControl();
   searchOnCustomerName: FormControl = new FormControl();
   CustomerSearchResult: Customer[] = [];
+  submit4: boolean;
+  submit5: boolean;
 
   constructor(public snackBar: MatSnackBar, private http: HttpClient, private route: ActivatedRoute,
     private customerTypeService: CustomerTypeService, private customerService: CustomerService,
@@ -148,6 +155,11 @@ export class CustomersComponent implements OnInit {
       this.BankNames = data.BankNames;
       this.CustomerStatus = data.CustomerStatus;
       this.Nationalities = data.Nationalities;
+      this.CommissionTypes = data.CommissionTypes;
+      this.Specialties = data.Specialties;
+      this.ProviderTypes = data.ProviderTypes;
+      this.ProviderCodingSystems = data.ProviderCodingSystems;
+      this.Status = data.Status;
     });
 
     this.dropdownSettings = {
@@ -286,8 +298,8 @@ export class CustomersComponent implements OnInit {
       this.customerSearch.value.IndOrComp : this.searchOnCustomerName.value.IndOrComp;
     this.customerForm.Iban = this.customerSearch.value.Iban ?
       this.customerSearch.value.Iban : this.searchOnCustomerName.value.Iban;
-    this.customerForm.CityID = this.customerSearch.value.CityID ?
-      this.customerSearch.value.CityID : this.searchOnCustomerName.value.CityID;
+    this.customerForm.ID = this.customerSearch.value.ID ?
+      this.customerSearch.value.ID : this.searchOnCustomerName.value.ID;
     this.customerForm.BirthDate = this.customerSearch.value.BirthDate ?
       this.customerSearch.value.BirthDate : this.searchOnCustomerName.value.BirthDate;
     this.customerForm.BankID = this.customerSearch.value.BankID ?
@@ -356,12 +368,12 @@ export class CustomersComponent implements OnInit {
   }
 
   reloadCommissionTable(customerID = null) {
-    this.commissionService.load(null, customerID, 1).subscribe(data => {
+    this.commissionService.load(null, null, customerID, null, null).subscribe(data => {
       this.renderCommissionTable(data);
     });
   }
   reloadProviderLicenseTable(customerID = null) {
-    this.providerLicenseService.load(null, customerID, 1).subscribe(data => {
+    this.providerLicenseService.load(null, null, customerID, null, null, null, null).subscribe(data => {
       this.renderProviderLicenseTable(data);
     });
   }
@@ -432,11 +444,11 @@ export class CustomersComponent implements OnInit {
   }
   renderProviderLicenseTable(data) {
     this.providerLicenses = data;
-    this.providerLicenseSource = new MatTableDataSource<ProviderLicense>(data);
-    this.providerLicenseSource.paginator = this.paginator4;
-    this.providerLicenseSource.sort = this.sort4;
+    this.providerLicenseDataSource = new MatTableDataSource<ProviderLicense>(data);
+    this.providerLicenseDataSource.paginator = this.paginator4;
+    this.providerLicenseDataSource.sort = this.sort4;
     this.selection4 = new SelectionModel<ProviderLicense>(true, []);
-    this.providerLicenseSource.sortingDataAccessor = (sortData, sortHeaderId) => {
+    this.providerLicenseDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort4.direction === 'asc' ? '3' : '1';
       }
@@ -479,12 +491,12 @@ export class CustomersComponent implements OnInit {
     if (form.invalid) {
       return;
     }
-   
+
     this.customerForm = this.customerForm.selected ? this.customerForm : Object.assign({}, form.value);
     if (this.uploader.queue.length > 0) {
       this.UploadFlag(form);
     } else {
-      if (typeof  this.searchOnCustomerName.value  === 'string') {
+      if (typeof this.searchOnCustomerName.value === 'string') {
         this.customerForm.Name = this.searchOnCustomerName.value;
       }
       this.AddUpdateUrl = this.customerService.ApiUrl + 'Create';
@@ -527,7 +539,45 @@ export class CustomersComponent implements OnInit {
   }
 
 
-  // add update delete city
+  // add update delete 
+
+  saveCustomerType(form) {
+    if (form.invalid) { return; }
+    this.customerTypeForm = this.customerTypeForm.selected ? this.customerTypeForm : Object.assign({}, form.value);
+    if (this.customerContactForm.selected) {
+      this.AddUpdateUrl = this.customerTypeService.ApiUrl + '/CreateCustomerType';
+    } else {
+      this.AddUpdateUrl = this.customerTypeService.ApiUrl + 'CreateCustomerType';
+    }
+    this.customerTypeForm.CustomerID = this.customerForm.ID;
+    this.customerTypeForm.CreatedBy = this.user.Name;
+    this.customerTypeForm.CreationDate = new Date();
+    this.http.post(this.AddUpdateUrl, this.customerTypeForm).subscribe(res => {
+      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadCustomerTypesTable(this.customerForm.ID ? this.customerForm.ID : null);
+      this.customerTypeForm = new CustomerType;
+      this.submit2 = false;
+      form.resetForm();
+    });
+
+  }
+
+  deleteCustomerType(id) {
+    this.http.post(this.customerTypeService.ApiUrl + 'DeleteCustomerType', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadCustomerTypesTable(this.customerForm.ID ? this.customerContactForm.ID : null);
+    });
+  }
+
+
+  updateCustomerType(customerType: CustomerType) {
+    window.scroll(0, 1000);
+    this.customerTypeForm = new CustomerType;
+    this.customerTypeForm = customerType;
+    this.customerTypeForm.selected = true;
+  }
+
+  // add update delete 
 
   saveCustomerContact(form) {
     if (form.invalid) { return; }
@@ -542,18 +592,18 @@ export class CustomersComponent implements OnInit {
     this.customerContactForm.CreationDate = new Date();
     this.http.post(this.AddUpdateUrl, this.customerContactForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadCustomerContactsTable(this.customerContactForm.ID ? this.customerContactForm.ID : null);
+      this.reloadCustomerContactsTable(this.customerForm.ID ? this.customerForm.ID : null);
       this.customerContactForm = new CustomerContact;
-      this.submit2 = false;
+      this.submit3 = false;
       form.resetForm();
     });
 
   }
 
   deleteCustomerContact(id) {
-    this.http.post(this.customerTypeService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+    this.http.post(this.customerContactService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadCustomerContactsTable(this.customerForm.ID ? this.customerContactForm.ID : null);
+      this.reloadCustomerContactsTable(this.customerForm.ID ? this.customerForm.ID : null);
     });
   }
 
@@ -563,9 +613,6 @@ export class CustomersComponent implements OnInit {
     this.customerContactForm = customerContact;
     this.customerContactForm.selected = true;
   }
-
-
-
 
   // add update delete Area
 
@@ -578,12 +625,15 @@ export class CustomersComponent implements OnInit {
     } else {
       this.AddUpdateUrl = this.commissionService.ApiUrl + '/Create';
     }
+    this.commissionForm.CustomerID = this.customerForm.ID;
+    this.commissionForm.CreatedBy = this.user.Name;
+    this.commissionForm.CreationDate = new Date();
     this.http.post(this.AddUpdateUrl, this.commissionForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadCommissionTable(this.customerForm.ID ? this.customerForm.ID : null);
       this.commissionForm = new Commission;
       form.resetForm();
-      this.submit3 = false;
+      this.submit4 = false;
     });
   }
 
@@ -594,13 +644,51 @@ export class CustomersComponent implements OnInit {
     });
   }
 
-  updateDepartment(commission: Commission) {
-    window.scroll(0, 1000);
+
+  updateCommission(commission: Commission) {
+    window.scroll(0, 0);
     this.commissionForm = new Commission;
     this.commissionForm = commission;
     this.commissionForm.selected = true;
   }
 
+
+  // add update delete 
+
+  saveProviderLicense(form) {
+    if (form.invalid) { return; }
+    this.providerLicenseForm = this.providerLicenseForm.selected ? this.providerLicenseForm : Object.assign({}, form.value);
+    if (this.providerLicenseForm.selected) {
+      this.AddUpdateUrl = this.providerLicenseService.ApiUrl + '/Update';
+    } else {
+      this.AddUpdateUrl = this.providerLicenseService.ApiUrl + '/Create';
+    }
+    this.providerLicenseForm.CustomerID = this.customerForm.ID;
+    this.providerLicenseForm.CreatedBy = this.user.Name;
+    this.providerLicenseForm.CreationDate = new Date();
+    this.http.post(this.AddUpdateUrl, this.providerLicenseForm).subscribe(res => {
+      this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadProviderLicenseTable(this.customerForm.ID ? this.customerForm.ID : null);
+      this.providerLicenseForm = new ProviderLicense;
+      this.submit5 = false;
+      form.resetForm();
+    });
+
+  }
+
+  deleteProviderLicense(id) {
+    this.http.post(this.providerLicenseService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+      this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      this.reloadProviderLicenseTable(this.customerForm.ID ? this.customerForm.ID : null);
+    });
+  }
+
+  updateProviderLicense(providerLicense: ProviderLicense) {
+    window.scroll(0, 1000);
+    this.providerLicenseForm = new ProviderLicense;
+    this.providerLicenseForm = providerLicense;
+    this.providerLicenseForm.selected = true;
+  }
 
 
   loadCustomerContacts($event) {
@@ -650,13 +738,6 @@ export class CustomersComponent implements OnInit {
   }
 
 
-  // getCountryName(id: number) {
-  //   for (let index = 0; index < this.countries.length; index++) {
-  //     if (this.countries[index].ID === id) {
-  //       return this.countries[index].Name;
-  //     }
-  //   }
-  // }
   getCustomerName(id: number) {
     for (let index = 0; index < this.customers.length; index++) {
       if (this.customers[index].ID === id) {
@@ -689,25 +770,17 @@ export class CustomersComponent implements OnInit {
     this.isAllSelected3() ? this.selection3.clear() : this.commissionDataSource.data.forEach(row => this.selection3.select(row));
   }
   isAllSelected4() {
-    return this.selection4.selected.length === this.providerLicenseSource.data.length;
+    return this.selection4.selected.length === this.providerLicenseDataSource.data.length;
   }
   masterToggle4() {
-    this.isAllSelected4() ? this.selection4.clear() : this.providerLicenseSource.data.forEach(row => this.selection4.select(row));
+    this.isAllSelected4() ? this.selection4.clear() : this.providerLicenseDataSource.data.forEach(row => this.selection4.select(row));
   }
 
   resetForm(form) {
-    this.customerForm = new Customer();
-    this.submit = false;
+    // this.customerForm = new Customer();
+    //this.submit = false;
     form.reset();
   }
-
-
-
-
-
-
-
-
 
 
   deleteSelectedData() {
@@ -763,15 +836,15 @@ export class CustomersComponent implements OnInit {
       data: {}
     });
 
-
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      this.customerForm = result;
-      this.searchOnCustomerName.patchValue(this.customerForm);
-      this.customerSearch.patchValue(this.customerForm);
-      this.customerTypeService.load(this.customerForm.ID, 1).subscribe(res => {
-        this.renderCustomerTypesTable(res);
-      });
+      if (result) {
+        this.customerForm = result;
+        this.searchOnCustomerName.patchValue(this.customerForm);
+        this.customerSearch.patchValue(this.customerForm);
+        this.customerTypeService.load(this.customerForm.ID, 1).subscribe(res => {
+          this.renderCustomerTypesTable(res);
+        });
+      }
     });
   }
 
@@ -795,4 +868,40 @@ export class CustomersComponent implements OnInit {
   loadCities() {
     this.cities = [];
   }
+  getCustomerType(id: number) {
+    for (let index = 0; index < this.CustomerTypesDDL.length; index++) {
+      if (this.CustomerTypesDDL[index].ID === id) {
+        return this.CustomerTypesDDL[index].Name;
+      }
+    }
+  }
+  getCommissionType(id: number) {
+    for (let index = 0; index < this.CommissionTypes.length; index++) {
+      if (this.CommissionTypes[index].ID === id) {
+        return this.CommissionTypes[index].Name;
+      }
+    }
+  }
+  getSpecialties(id: number) {
+    for (let index = 0; index < this.Specialties.length; index++) {
+      if (this.Specialties[index].ID === id) {
+        return this.Specialties[index].Name;
+      }
+    }
+  }
+  getProviderTypes(id: number) {
+    for (let index = 0; index < this.ProviderTypes.length; index++) {
+      if (this.ProviderTypes[index].ID === id) {
+        return this.ProviderTypes[index].Name;
+      }
+    }
+  }
+  getLocCustomerDept(id: number) {
+    for (let index = 0; index < this.Departments.length; index++) {
+      if (this.Departments[index].ID === id) {
+        return this.Departments[index].Name;
+      }
+    }
+  }
+
 }

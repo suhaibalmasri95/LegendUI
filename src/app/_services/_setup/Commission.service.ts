@@ -1,5 +1,5 @@
 
-import {map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Commission } from './../../entities/Setup/Charges';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 })
 export class CommissionService {
 
-  ApiUrl: string = environment.azureUrl + 'Charge/';
+  ApiUrl: string = environment.azureUrl + 'CustomerCommission/';
   commonApiUrl: string = environment.azureUrl + 'Common/';
   Commissions: Commission[];
 
@@ -43,30 +43,29 @@ export class CommissionService {
     ));
   }
 
-  load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeType: number = null, langId: number = null): Observable<Commission[]> {
+  load(ID, ProductDetailID, CustomerID, ProductID, CommissionType): Observable<Commission[]> {
     let queryString = '?ID=';
-
     if (ID != null) {
       queryString += ID;
     }
-    queryString += '&LockUpChargeType=';
-    if (LockUpChargeType != null) {
-      queryString += LockUpChargeType;
+    queryString += '&ProductDetailID=';
+    if (ProductDetailID != null) {
+      queryString += ProductDetailID;
     }
-    queryString += '&LineOfBusinessCode=';
-    if (LineOfBusinessCode != null) {
-      queryString += LineOfBusinessCode;
+    queryString += '&CustomerID=';
+    if (CustomerID != null) {
+      queryString += CustomerID;
     }
-    queryString += '&ChargeType=';
-    if (ChargeType != null) {
-      queryString += ChargeType;
+    queryString += '&ProductID=';
+    if (ProductID != null) {
+      queryString += ProductID;
     }
-    queryString += '&langId=';
-    if (langId != null) {
-      queryString += langId;
-      return this.http.get<Commission[]>(this.ApiUrl + 'Load' + queryString);
+    queryString += '&CommissionType=';
+    if (CommissionType != null) {
+      queryString += CommissionType;
     }
+    return this.http.get<Commission[]>(this.ApiUrl + 'Load' + queryString);
+
   }
 
 }

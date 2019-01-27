@@ -61,4 +61,19 @@ export class Commission implements IEntity {
     ModificationDate: Date;
     ChargeID: number;
     ChargeType: number;
+
+    CustomerID: number;
+    LocCustomerType: number;
+    FinGlID: number;
+
+    ComissionPercentage: number;
+    CommissionAmount: number;
+    CommissionAmountLc: number;
+    ProductId: number;
+    ProductDetailId: number;
+    LineOfBusiness: number;
+    SubLineOfBusiness: number;
+    DrtCr: number;
+    LocCommissionType: number;
 }
+

@@ -92,21 +92,23 @@ export class ProviderLicense implements IEntity {
     ID: number;
     Name: string;
     Name2: string;
-    Lable: string;
-    Lable2: string;
-    LangID: number;
-    ModifiedBy: string;
-    CreateBy: string;
-    LineOfBusniess: number;
-    SubLineOfBusniess: number;
-    Status: number;
-    StatusDate: Date;
+    CreatedBy: string;
     CreationDate: Date;
+    ModifiedBy: string;
     ModificationDate: Date;
-    ColumnType: number;
-    CategoryID: number;
-    RefTableName: string;
-    RefMajorCode: string;
-    RefColDetailsID: string;
+    LangID: number;
+    CustomerID: number;
+    LocCustomerType: number;
+    FinGlID: number;
+    ComissionPercentage: number;
+    LocProviderTyoe: number;
+    LocCode: number;
+    LocSptID: number;
+    Status : number;
+    StatuseDate: Date;
+    ExpireDate: Date;
+    EffectiveDate: Date;
+    LicenseNo: number;
     selected: boolean;
 }
+
