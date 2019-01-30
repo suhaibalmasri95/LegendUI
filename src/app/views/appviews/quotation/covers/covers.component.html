@@ -1,34 +1,459 @@
-<mat-tab-group>
-  <!-- if document has sales person or broker or agent -->
-  <mat-tab label="Agent Commisons">
+<div class="wrapper wrapper-content animated fadeInRight">
+
+  <div class="row">
     <div class="col-md-12">
-      <app-generictable *ngIf="shares.length > 0" #tableSelector [tableColumns]='sharesTableColumn' [DataSource]='shares'
-        (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+      <div class="tabs-container">
 
-    </div>
+        <div class="panel-body">
 
-  </mat-tab>
-  <mat-tab label="Document Covers">
-      <div class="col-md-12">
+          <fieldset>
+            <legend>
+              Covers
+            </legend>
+          </fieldset>
+          <div class="row">
 
-          <div class="form-group col-md-3">
-              <label for="QutValidity">Risks</label>
-            
-              <input class="form-control" type="text" placeholder="Risks" matInput [formControl]="RiskSearch"
-                [matAutocomplete]="risksauto" >
-            
-              <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
-              <mat-autocomplete #risksauto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="FillForm(false)">
-                <mat-option *ngFor="let risk of risks" [value]="risk">
-                    {{ risk.Name }}
-                </mat-option>
-              </mat-autocomplete>
-            
+
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Document Segment Code</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.DocumentSegment">
             </div>
-        <app-generictable *ngIf="shares.length > 0" #tableSelector [tableColumns]='sharesTableColumn' [DataSource]='shares'
-          (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+            <div class="form-group col-md-3">
+              <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+              <input name="EffectiveDate" disabled required placeholder="Effective Date" bsDatepicker class="form-control"
+                [ngModel]="document.EffectiveDate">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+              <input name="ExpiryDate" disabled required placeholder="Expiry Date" bsDatepicker class="form-control"
+                [ngModel]="document.ExpiryDate">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Policy Holder Name</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="share.Name">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Currency</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.CurrencyCode">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Exrate</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.Exrate">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Net Amount</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.NetAmount">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Net Amount Lc</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.NetAmountLc">
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Loading Amount</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.LoadingAmount">
+            </div>
+
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Loading Amount Lc</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.LoadingAmountLc">
+            </div>
+
+
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Discount Amount </label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.DiscountAmount">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Discount Amount Lc</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.DiscountAmountLc">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Charges Amount </label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.ChargesAmount">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Charges Amount Lc</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.ChargesAmountLc">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Commission Amount </label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.CommAmount">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Commission Amount Lc</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.CommAmountLc">
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Gross Amount </label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.GrossAmmount">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="DocumentSegment">Gross Amount Lc</label>
+              <input name="DocumentSegment" disabled placeholder="Document Segment Code" type="text" class="form-control"
+                [(ngModel)]="document.GrossAmmountLc">
+            </div>
+          </div>
+
+
+
+          <br>
+          <div class="col-md-12">
+            <mat-tab-group (selectedTabChange)="switchTabs($event)">
+              <!-- if document has sales person or broker or agent -->
+              <mat-tab label="Interests">
+                <div class="col-md-12">
+                  <div class="table-container">
+                    <div class="x">
+                      <br>
+
+
+                      <div class="form-group col-md-3">
+                        <label for="Name">Name </label>
+                        <input name="Name" placeholder="Name" type="text" class="form-control" [formControl]="NameSearch">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="Serial">Serial </label>
+                        <input name="Serial" placeholder="Serial" type="text" class="form-control" [formControl]="SerialSearch">
+                      </div>
+
+                      <app-generictable *ngIf="risksTable.length > 0" #tableSelector [tableColumns]='documentRiskColumn'
+                        [DataSource]='risksTable' (update)='setRisk($event)'></app-generictable>
+
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+              <mat-tab label="Agent Commisons">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="LocShareType">Share Type</label>
+                      <select name="LocShareType" class="form-control" [(ngModel)]="coverShare.LocShareType" required>
+                        <option [ngValue]="undefined">Select</option>
+                        <option [ngValue]="5">Sales Person</option>
+                        <option [ngValue]="3">Agent</option>
+                        <option [ngValue]="4">Broker</option>
+
+                      </select>
+
+                    </div>
+
+
+                    <div class="form-group col-md-3">
+                      <label for="Name">Name </label>
+                      <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="coverShare.Name">
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="Amount">Commission </label>
+                      <input name="Amount" placeholder="Commission" type="text" class="form-control" [(ngModel)]="coverShare.Amount">
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="SharePercent">Share </label>
+                      <input name="SharePercent" placeholder="Share" type="text" class="form-control" [(ngModel)]="coverShare.SharePercent">
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="StLOB">Line of Business <span class="help-block">*</span></label>
+                      <select name="StLOB" class="form-control" [(ngModel)]="coverShare.StLOB" (change)="loadSubLinesOfBusiness(coverShare.StLOB)"
+                        required>
+                        <option [ngValue]="undefined">Select</option>
+                        <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
+                      </select>
+                    </div>
+
+
+                    <div class="form-group col-md-3">
+                      <label for="StSubLOB">Sub Line of Business</label>
+                      <select name="StSubLOB" class="form-control" [(ngModel)]="coverShare.StSubLOB" [disabled]="!StLOB ||StLOB.length===0">
+                        <option [ngValue]="undefined">Select</option>
+                        <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
+                      </select>
+                    </div>
+
+
+                    <div class="col-md-11 text-right">
+
+                      <div class="btn-group">
+                        <input class="btn btn-default" type="reset" (click)="resetCoverShare()" value="Reset" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="saveShare()" />
+                      </div>
+                    </div>
+
+
+                  </div>
+                  <br>
+                  <br>
+                  <div class="col-md-12">
+                    <app-generictable *ngIf="shares.length > 0" #tableSelector [tableColumns]='agentCommisonTableColumn'
+                      [DataSource]='shares' (update)='updateShare($event)' (delete)='deleteShare($event)'></app-generictable>
+                  </div>
+                </div>
+
+              </mat-tab>
+              <mat-tab label="Document Covers">
+                <div class="col-md-12">
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="QutValidity">Risks</label>
+
+                      <input class="form-control" type="text" placeholder="Risks" matInput [formControl]="RiskSearch"
+                        [matAutocomplete]="risksauto">
+
+                      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                      <mat-autocomplete #risksauto="matAutocomplete" [displayWith]="displayRisk" (optionSelected)="setRiskAutoComplete()">
+                        <mat-option *ngFor="let risk of risks" [value]="risk">
+                          {{ risk.Name }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                    </div>
+
+                    <div class="form-group col-md-3">
+                      <label for="QutValidity">Charges</label>
+
+                      <input class="form-control" type="text" placeholder="Charges" matInput [formControl]="ChargeSearch"
+                        [matAutocomplete]="chargeauto">
+
+                      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                      <mat-autocomplete #chargeauto="matAutocomplete" (optionSelected)="setChargeAutoComplete()"
+                        [displayWith]="displayCharge">
+                        <mat-option *ngFor="let cover of covers" [value]="cover">
+                          {{ cover.Name }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="Rate">Rate </label>
+                      <input name="Rate" placeholder="Rate" type="number" class="form-control" [(ngModel)]="documentCover.Rate">
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="Share">Manual Amount </label>
+                      <input name="Share" placeholder="Share" type="number" class="form-control" [(ngModel)]="documentCover.ManualAmount ">
+                    </div>
+                  </div>
+
+                  <div class="row">
+
+                    <div class="col-md-11 text-right">
+
+                      <div class="btn-group">
+                        <input class="btn btn-default" type="reset" (click)="resetDocumentCover()" value="Reset" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="SaveCover()" />
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <app-generictable *ngIf="coverCalculation.length > 0" #tableSelector [tableColumns]='documentCovers'
+                    [DataSource]='coverCalculation' (update)='updateCover($event)' (delete)='deleteCover($event)'></app-generictable>
+
+                </div>
+
+              </mat-tab>
+              <mat-tab label="Document fees">
+                <div class="col-md-12">
+
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="QutValidity">Fees</label>
+
+                      <input class="form-control" type="text" placeholder="Charges" matInput [formControl]="FeeSearch"
+                        [matAutocomplete]="feeauto">
+
+                      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                      <mat-autocomplete #feeauto="matAutocomplete" (optionSelected)="setFeeAutoComplete()"
+                        [displayWith]="displayFee">
+                        <mat-option *ngFor="let fee of fees" [value]="fee">
+                          {{ fee.Name }}
+                        </mat-option>
+                      </mat-autocomplete>
+
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="StLOB">Line of Business <span class="help-block">*</span></label>
+                      <select name="StLOB" class="form-control" [(ngModel)]="documentFee.StLOB" (change)="loadSubLinesOfBusiness(documentFee.StLOB)"
+                        required>
+                        <option [ngValue]="undefined">Select</option>
+                        <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
+                      </select>
+                    </div>
+
+
+                    <div class="form-group col-md-3">
+                      <label for="StSubLOB">Sub Line of Business</label>
+                      <select name="StSubLOB" class="form-control" [(ngModel)]="documentFee.StSubLOB" [disabled]="!SubLobs ||SubLobs.length===0">
+                        <option [ngValue]="undefined">Select</option>
+                        <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                      <label for="Fees"> Fees </label>
+                      <input name="Fees" placeholder="Fees" type="number" class="form-control" [(ngModel)]="documentFee.ManualAmount ">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-md-3">
+                      <label for="FeesAmount"> Fees Amount </label>
+                      <input name="FeesAmount" placeholder="Fees Amount" type="number" class="form-control" [(ngModel)]="documentFee.FeesAmount ">
+                    </div>
+                    <div class="col-md-8 text-right">
+                      <br>
+
+                      <div class="btn-group">
+                        <input class="btn btn-default" type="reset" (click)="resetFee()" value="Reset" />
+                        <input class="btn btn-primary" type="submit" value="Save" (click)="SaveFee()" />
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <app-generictable *ngIf="RiskCalculation.length > 0" #tableSelector [tableColumns]='documentFees'
+                    [DataSource]='RiskCalculation' (update)='updateFee($event)' (delete)='deleteFee($event)'></app-generictable>
+
+                </div>
+
+              </mat-tab>
+              <mat-tab label="Installment">
+                <div class="col-md-12">
+                  <div class="x">
+                    <div class="table-container " *ngIf="Installments.length > 0">
+                    
+                        <table mat-table #table [dataSource]="dataSource" matSort>
+
+                          <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                           <!--    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                              </mat-checkbox> -->
+                            </th>
+                            <td style="width: 5%" mat-cell *matCellDef="let row">
+                              <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                                [checked]="selection.isSelected(row)">
+                              </mat-checkbox> -->
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="DueDate">
+
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Due Date </th>
+                            <td style="width: 15%" mat-cell *matCellDef="let element" [satPopoverAnchorFor]="p" (click)="p.open()">
+
+                              <ng-container *ngIf="element.DueDate">
+                                {{element.DueDate | date}}
+                              </ng-container>
+                              <span class="add-comment" *ngIf="!element.DueDate">
+                                Add a Due Date
+                              </span>
+
+                              <sat-popover #p hasBackdrop xAlign="start" yAlign="start" (closed)="updateDueDate(element, $event)">
+                                <inline-edit-date [value]="element.DueDate"></inline-edit-date>
+                              </sat-popover>
+                            </td>
+
+                          </ng-container>
+                          <ng-container matColumnDef="InstallmentPercentage">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Installment Percentage </th>
+                            <td style="width: 15%" mat-cell *matCellDef="let element" [satPopoverAnchorFor]="p2"
+                              (click)="p2.open()">
+
+                              <ng-container *ngIf="element.Percent">
+                                {{element.Percent}}
+                              </ng-container>
+                              <span class="add-comment" *ngIf="!element.Percent">
+                                Add a Installment Percentage
+                              </span>
+
+                              <sat-popover #p2 hasBackdrop xAlign="start" yAlign="start" (closed)="updateInstallmentPercent(element, $event)">
+                                <inline-edit [value]="element.Percent"></inline-edit>
+                              </sat-popover>
+                            </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="GrossAmount">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross Amount</th>
+                            <td style="width: 20%" mat-cell *matCellDef="let element">
+                              {{element.GrossAmount}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="NetAmount">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Net Amount
+                            </th>
+                            <td style="width: 10%" mat-cell *matCellDef="let element">
+                              {{element.NetAmount}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="FeesAmount">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fees Amount </th>
+                            <td style="width: 5%" mat-cell *matCellDef="let element">
+                              {{element.FeesAmount}} </td>
+                          </ng-container>
+
+                          <ng-container matColumnDef="CommissionAmount">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Commission Amount</th>
+                            <td style="width: 10%" mat-cell *matCellDef="let element">
+                              {{element.CommissionAmount}} </td>
+                          </ng-container>
+
+                          
+
+                          <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef>Actions</th>
+                            <td style="width: 20%" mat-cell *matCellDef="let element">
+                              <i (click)="updateCountry(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
+                              <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
+                                [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
+                                (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete"></i>
+                            </td>
+                          </ng-container>
+
+                          <tr mat-header-row *matHeaderRowDef="documentInstallment"></tr>
+                          <tr mat-row *matRowDef="let row; columns: documentInstallment;"  class=" mat-row "></tr>
+
+                        </table>
+                   
+
+
+                    </div>
+                  </div>
+                </div>
   
+
+              </mat-tab>
+
+            </mat-tab-group>
+          </div>
+        </div>
       </div>
-  
-    </mat-tab>
-</mat-tab-group>
+    </div>
+  </div>
+</div>

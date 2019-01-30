@@ -1,11 +1,11 @@
-import { User } from '../entities/organization/User';
 
 import { Injectable } from '@angular/core';
 import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable, of } from 'rxjs';
+import { Observable} from 'rxjs/Observable';
 import { catchError } from 'rxjs/operators';
 import { CompanyBranch } from '../entities/organization/CompanyBranch';
 import { CompanyBranchService } from '../_services/_organization/CompanyBranch.service';
+import { of } from 'rxjs';
 
 
 

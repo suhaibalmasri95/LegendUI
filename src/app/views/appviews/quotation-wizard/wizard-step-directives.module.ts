@@ -51,6 +51,10 @@ import { SearchCustomersComponent } from '../customers/searchCustomers/search-cu
 import { OrderModule } from 'ngx-order-pipe';
 import {MatStepperModule} from '@angular/material/stepper';
 import { CKEditorModule } from 'ng2-ckeditor';
+import { CoversComponent } from '../quotation/covers/covers.component';
+import { SatPopoverModule } from '@ncstate/sat-popover';
+import { InlineEditComponent } from '../inlineEdit/inlineEdit.component';
+import { InlineEditDateComponent } from '../inlineEditDate/inlineEditDate.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -63,6 +67,7 @@ import { CKEditorModule } from 'ng2-ckeditor';
     BrowserModule,
     MatTableModule,
     OrderModule,
+    SatPopoverModule,
     MatPaginatorModule,
     MatSortModule,
     MatTabsModule,
@@ -100,7 +105,7 @@ import { CKEditorModule } from 'ng2-ckeditor';
     DynamicColumnsComponent,
     SelectComponentComponent,
     TableComponent, LoginComponent,
-
+    CoversComponent,
     CountriesComponent,
     BanksComponent,
     LockupAndCurrencyComponent,
@@ -118,6 +123,10 @@ import { CKEditorModule } from 'ng2-ckeditor';
     GenericTableComponent,
     CustomersComponent ,
     SearchCustomersComponent,
+    
+    InlineEditComponent ,
+    InlineEditDateComponent,
+    
     ProductAttachmentsComponent, AttachmentComponent],
 entryComponents: [SearchCustomersComponent],
   exports: [QuotationWizardComponent,  LoginComponent]

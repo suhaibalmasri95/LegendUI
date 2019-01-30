@@ -286,5 +286,4 @@ export const ROUTES: Routes = [
   // Handle all other routes
   { path: '**', redirectTo: 'organizations', pathMatch: 'full' },
 
-
 ];

@@ -13,7 +13,7 @@ export class RiskService {
 ApiUrl: string = environment.azureUrl + 'Risk/';
 commonApiUrl: string = environment.azureUrl + 'Common/';
 constructor(private http: HttpClient) { }
-load(ID: number = null, UWDocumentID: number = null ,  langId: number = null): Observable<Risk[]> {
+load(ID: number = null, UWDocumentID: number = null ,  langId: number = null , Serail: number = null , Name: string = null): Observable<Risk[]> {
 let queryString = '?ID=';
 
 if (ID != null) {
@@ -22,6 +22,14 @@ if (ID != null) {
 queryString += '&UWDocumentID=';
 if (UWDocumentID != null) {
   queryString += UWDocumentID;
+}
+queryString += '&Serail=';
+if (Serail != null) {
+  queryString += Serail;
+}
+queryString += '&Name=';
+if (Name != null) {
+  queryString += Name;
 }
 
 
