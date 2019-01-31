@@ -13,6 +13,7 @@ export class QuotationWizardComponent implements OnInit {
   constructor( private _docService: DocumentService) { }
 
   ngOnInit() {
+    this.document = new Documents();
     this.isDocumentInserted  = false;
     this._docService.currentDocument.subscribe(res => {
       this.document = res;

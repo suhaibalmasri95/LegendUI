@@ -23,10 +23,10 @@
 </div> 
 
 <aw-wizard #wizard> 
-  <app-covers  awWizardStep ></app-covers>
-  <app-quotation awWizardStep [stepTitle]="'Document'"  ></app-quotation>
+ <!--  <app-covers  awWizardStep ></app-covers>
+  <app-quotation awWizardStep [stepTitle]="'Document'"  ></app-quotation> -->
    <aw-wizard-step [stepTitle]="'Risk'" >
-  <div class="centered-content" *ngIf="document">
+  <div class="centered-content" >
       <app-risk [document] = "document" ></app-risk>
   </div>
       </aw-wizard-step> 

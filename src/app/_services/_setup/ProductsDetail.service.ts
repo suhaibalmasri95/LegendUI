@@ -115,7 +115,7 @@ export class ProductsDetailService {
   }
 
   loadSubjectTypes(productDetailID: number = null, LineOfBusiness: number = null,
-    SubLine: number = null, langId: number = null): Observable<any> {
+    SubLine: number = null, langId: number = null , ProductID: number = null): Observable<any> {
     let queryString = '?productDetailID=';
     if (productDetailID != null) {
       queryString += productDetailID;
@@ -123,6 +123,10 @@ export class ProductsDetailService {
     queryString += '&LineOfBusiness=';
     if (LineOfBusiness != null) {
       queryString += LineOfBusiness;
+    }
+    queryString += '&ProductID=';
+    if (ProductID != null) {
+      queryString += ProductID;
     }
     queryString += '&SubLine=';
     if (SubLine != null) {

@@ -81,7 +81,7 @@
 
                     <div class="form-group col-md-3">
                       <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                      <input name="ExpiryDate" required placeholder="Expiry Date" bsDatepicker class="form-control"
+                      <input name="ExpiryDate"  placeholder="Expiry Date" bsDatepicker class="form-control"
                         [ngModel]="productForm.ExpiryDate ">
                     </div>
 
@@ -130,11 +130,11 @@
 
                   <div class="row">
 
-                    <div class="col-md-10 text-right">
+                    <div class="col-md-11 text-right">
                       <br>
                       <br>
                       <div class="btn-group">
-                        <input class="btn btn-default" type="reset" (click)="resetForm(form1)" value="Reset" />
+                        <input class="btn btn-default" type="reset" (click)="resetProduct(form1)" value="Reset" />
                         <input class="btn btn-primary" type="submit" value="Save" (click)="submit=true" />
                       </div>
                     </div>
@@ -155,19 +155,22 @@
                   <form #form2="ngForm" (ngSubmit)="saveProductsDetail(form2)" class="{{submit2?'submited':''}}">
                     <div class="row">
 
-                      <div class="form-group col-md-3">
+                      <!-- <div class="form-group col-md-3">
                         <label for="ProductID">Product</label>
                         <select name="ProductID" class="form-control" [(ngModel)]="productsDetailForm.ProductID"
                           required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let product of products" [ngValue]="product.ID">{{product.Name}}</option>
                         </select>
-                      </div>
+                      </div> -->
 
                       <div class="form-group col-md-3">
                         <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
                         <select name="LineOfBusniess" class="form-control" [(ngModel)]="productsDetailForm.LineOfBusniess"
-                          (change)="loadSubLinesOfBusiness(productsDetailForm.LineOfBusniess)" required>
+                          (change)="loadSubLinesOfBusiness(productsDetailForm.LineOfBusniess)"
+                          [disabled]=" productsDetailForm.selected"
+                          
+                          required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                         </select>
@@ -175,40 +178,40 @@
 
 
                       <div class="form-group col-md-3">
-                        <label for="SubLineOfBusniess">Sub Line of Business</label>
+                        <label for="SubLineOfBusniess">Sub Line of Business <span class="help-block">*</span></label>
                         <select name="SubLineOfBusniess" class="form-control" [(ngModel)]="productsDetailForm.SubLineOfBusniess"
-                          [disabled]="!SubLobs ||SubLobs.length===0">
+                        required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
                         </select>
                       </div>
 
+                 
                       <div class="form-group col-md-3">
-                        <label for="Status">Status</label>
-                        <select name="Status" class="form-control" [(ngModel)]="productsDetailForm.Status">
-                          <option [ngValue]="undefined">Select</option>
-                          <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
-                        </select>
-                      </div>
-
+                          <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+                          <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
+                            [ngModel]="productsDetailForm.EffectiveDate">
+                        </div>
+  
+                        <div class="form-group col-md-3">
+                          <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+                          <input name="ExpiryDate"  placeholder="Expiry Date" bsDatepicker class="form-control"
+                            [ngModel]="productsDetailForm.ExpiryDate ">
+                        </div>
                     </div>
                     <div class="row">
 
-
-                      <div class="form-group col-md-3">
-                        <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
-                        <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
-                          [ngModel]="productsDetailForm.EffectiveDate">
-                      </div>
-
-                      <div class="form-group col-md-3">
-                        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                        <input name="ExpiryDate" required placeholder="Expiry Date" bsDatepicker class="form-control"
-                          [ngModel]="productsDetailForm.ExpiryDate ">
-                      </div>
-
-
-                      <div class="col-md-4 text-right">
+                        <div class="form-group col-md-3">
+                            <label for="Status">Status</label>
+                            <select name="Status" class="form-control" [(ngModel)]="productsDetailForm.Status">
+                              <option [ngValue]="undefined">Select</option>
+                              <option *ngFor="let status of LockUps" [ngValue]="status.MinorCode">{{status.Name}}</option>
+                            </select>
+                          </div>
+                  
+                        </div>
+                        <div class="row">
+                      <div class="col-md-11 text-right">
                         <br>
                         <br>
                         <div class="btn-group">
@@ -241,11 +244,7 @@
                         </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="ID">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                        </td>
-                      </ng-container>
+                     
 
                       <ng-container matColumnDef="lob">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
@@ -256,7 +255,7 @@
 
                       <ng-container matColumnDef="subLob">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
-                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.SubLineOfBusniess}} </td>
+                        <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}} </td>
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="subLineOfBusinessTableColumns"></tr>
@@ -298,11 +297,7 @@
                         </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="ID">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                        <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                        </td>
-                      </ng-container>
+                     
 
                       <ng-container matColumnDef="lob">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
@@ -314,17 +309,18 @@
                       <ng-container matColumnDef="subLob">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{element.SubLineOfBusniess}} </td>
+                          {{element.SubLineDesc}} </td>
                       </ng-container>
                       <ng-container matColumnDef="EffectiveDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Effective Date</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{element.EffectiveDate | date}} </td>
+                          {{element.EffectiveDate | date: 'dd/MM/yyyy'}} </td>
                       </ng-container>
                       <ng-container matColumnDef="ExpiryDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Expiry Date</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                          {{element.ExpiryDate | date }} </td>
+                         
+                          {{(element.ExpiryDate  !== null) ? (element.ExpiryDate | date: 'dd/MM/yyyy') : "" }} </td>
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="productsDetailTableColumns"></tr>
@@ -441,116 +437,6 @@
            
 
 
-              <div class="col-md-12">
-                <legend>
-                  Categories
-                </legend>
-
-                <div class="col-md-12">
-                    <div class="html5buttons">
-                        <br>
-                        <div class="dt-buttons btn-group">
-                            <button class="btn btn-default" [disabled]="!selection9.hasValue()"
-                                mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                                placement="bottom" (confirm)="DeleteProductCategory()" ngbTooltip="Delete">
-                                <img src="assets/images/Trash-can.png"></button>
-                            <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"
-                                placement="bottom" ngbTooltip="Export to CSV"><span>
-                                    <img src="assets/images/csv.jpg"></span></a>
-                            <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','country')"
-                                placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
-                            <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"
-                                placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
-                            <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
-                                        src="assets/images/print.jpg"></span></a>
-                        </div>
-                    </div>
-                    <br>
-                  <div class="col-md-3">
-                    <mat-form-field>
-                      <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-                    </mat-form-field>
-                  </div>
-                </div>
-                <div class="table-container">
-                  <table mat-table #table9 [dataSource]="relatedCategoriesDataSource" matSort>
-
-                    <ng-container matColumnDef="select">
-                      <th mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox (change)="$event ? masterToggle9() : null" [checked]="selection9.hasValue() && isAllSelected9()"
-                          [indeterminate]="selection9.hasValue() && !isAllSelected9()">
-                        </mat-checkbox>
-                      </th>
-                      <td style="width: 5%" mat-cell *matCellDef="let row">
-                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection9.toggle(row) : null"
-                          [checked]="selection9.isSelected(row)">
-                        </mat-checkbox>
-                      </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="ID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                      </td>
-                    </ng-container>
-                    <ng-container matColumnDef="Name">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Lable}}
-                      </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="lob">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniess}}
-                      </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="subLob">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.SubLineOfBusniess}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="Level">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.CategoryLevel}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="IsMultiRecord">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Record</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.MultiRecord}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="Product">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.ProductID}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="ProductDetail">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.ProductDetailID}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="Status">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.Status}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="Order">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element">
-                        {{element.Order}} </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="relatedCategoriesTableColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: relatedCategoriesTableColumns;"
-                     class=" mat-row" (click)="UpdateProductCategory(row)"></tr>
-
-                  </table>
-                </div>
-                <mat-paginator #paginator9 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true">
-                </mat-paginator>
-
-              </div>
 
               <br><br><br>
               <div class="row" *ngIf="submit">
@@ -559,7 +445,119 @@
                   <div class="tabs-container">
                     <div class="panel-body">
                       <mat-tab-group>
+<mat-tab label="Categories">
 
+    <div class="col-md-12">
+        <legend>
+          Categories
+        </legend>
+
+        <div class="col-md-12">
+            <div class="html5buttons">
+                <br>
+                <div class="dt-buttons btn-group">
+                    <button class="btn btn-default" [disabled]="!selection9.hasValue()"
+                        mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
+                        placement="bottom" (confirm)="DeleteProductCategory()" ngbTooltip="Delete">
+                        <img src="assets/images/Trash-can.png"></button>
+                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"
+                        placement="bottom" ngbTooltip="Export to CSV"><span>
+                            <img src="assets/images/csv.jpg"></span></a>
+                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','country')"
+                        placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"
+                        placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
+                                src="assets/images/print.jpg"></span></a>
+                </div>
+            </div>
+            <br>
+          <div class="col-md-3">
+            <mat-form-field>
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="table-container">
+          <table mat-table #table9 [dataSource]="relatedCategoriesDataSource" matSort>
+
+            <ng-container matColumnDef="select">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? masterToggle9() : null" [checked]="selection9.hasValue() && isAllSelected9()"
+                  [indeterminate]="selection9.hasValue() && !isAllSelected9()">
+                </mat-checkbox>
+              </th>
+              <td style="width: 5%" mat-cell *matCellDef="let row">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection9.toggle(row) : null"
+                  [checked]="selection9.isSelected(row)">
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ID">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+              <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="Name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Lable}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lob">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniess}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="subLob">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element">
+                {{element.SubLineOfBusniess}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Level">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element">
+                {{element.CategoryLevel}} </td>
+            </ng-container>
+            <ng-container matColumnDef="IsMultiRecord">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Record</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element">
+                {{element.MultiRecord}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Product">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element">
+                {{element.ProductID}} </td>
+            </ng-container>
+            <ng-container matColumnDef="ProductDetail">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element">
+                {{element.ProductDetailID}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element">
+                {{element.Status}} </td>
+            </ng-container>
+            <ng-container matColumnDef="Order">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
+              <td style="width: 15%" mat-cell *matCellDef="let element">
+                {{element.Order}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="relatedCategoriesTableColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: relatedCategoriesTableColumns;"
+             class=" mat-row" (click)="UpdateProductCategory(row)"></tr>
+
+          </table>
+        </div>
+        <mat-paginator #paginator9 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true">
+        </mat-paginator>
+
+      </div>
+</mat-tab>
                         <mat-tab label="Columns">
 
                           <div class="col-md-12">

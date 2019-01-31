@@ -29,12 +29,13 @@ export class ProductSubjectTypeComponent implements OnChanges {
   @Input('productDetails') productDetails: ProductsDetail[] = [];
   subjectTypeForm: ProductSubjectType;
   subjectTypes: ProductSubjectType[];
-  subjectTypesLobTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob'];
+  subjectTypesLobTableColumns = ['select',  'SubjectType', 'ParentSubjectType', 'lob', 'subLob'];
   subjectTypesLobDataSource: MatTableDataSource<SubjectType>;
   submit3: boolean;
   user: any;
+  hasSelected = false;
   SubjectTypes: SubjectType[];
-  subjectTypesPDTableColumns = ['select', 'ID', 'SubjectType', 'ParentSubjectType', 'lob', 'subLob', 'Product', 'ProductDetail'];
+  subjectTypesPDTableColumns = ['select',  'SubjectType', 'ParentSubjectType', 'lob', 'subLob', 'Product'];
   subjectTypesPDDataSource: MatTableDataSource<ProductSubjectType>;
   AddUpdateUrl: string;
   Lobs: LineOfBusiness[];
@@ -70,32 +71,38 @@ export class ProductSubjectTypeComponent implements OnChanges {
     this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
     this.selection5 = new SelectionModel<ProductSubjectType>(true, initialSelection);
 
-    this.subjectTypeService.load().subscribe(res => {
-      this.SubjectTypes = res;
-    });
+
     this.lineOfBussinessService.load().subscribe(res => {
       this.Lobs = res;
     });
     this.lockUpService.LoadLockUpsByMajorCode(7).subscribe(res => {
       this.excessFroms = res;
     });
+    this.selectedProductDetail = new ProductsDetail;
+    this.selectedProductDetail.ProductID = this.product.ID;
+    this.reloadSubjectType(this.selectedProductDetail);
 
   }
   loadSubLinesOfBusiness(lob) {
-    this.subLineService.load(null, lob ? lob : null, null, 1).subscribe(data => {
-      this.SubLobs = data;
-    });
+  
   }
   loadRelatedSubjectType() {
+    
     this.productDetails.forEach(element => {
       if (element.ID === this.subjectTypeForm.ProductDetailsID) {
+        this.subLineService.load(element.SubLineOfBusniess, element.LineOfBusniess, 
+           null, 1).subscribe(data => {
+          this.SubLobs = data;
+        });
+        this.subjectTypeForm.SubLineOfBusniess = element.SubLineOfBusniess;
+        this.subjectTypeForm.LineOfBusniess = element.LineOfBusniess;
         this.reloadSubjectType(element);
         this.selectedProductDetail = element;
       }
     });
   }
   renderSubjectTypeTable(RelatedSubject, UnRelatedSubject) {
-    this.subjectTypes = RelatedSubject;
+    this.subjectTypes = UnRelatedSubject;
     this.subjectTypesLobDataSource = new MatTableDataSource<SubjectType>(RelatedSubject);
     this.subjectTypesLobDataSource.paginator = this.paginator3;
     this.subjectTypesLobDataSource.sort = this.sort3;
@@ -126,6 +133,9 @@ export class ProductSubjectTypeComponent implements OnChanges {
       return;
     }
     this.subjectTypeForm = this.subjectTypeForm.selected ? this.subjectTypeForm : Object.assign({}, form.value);
+    this.subjectTypeForm.ProductID = this.product.ID;
+    this.subjectTypeForm.LineOfBusniess = this.selectedProductDetail.LineOfBusniess;
+    this.subjectTypeForm.SubLineOfBusniess = this.selectedProductDetail.SubLineOfBusniess;
     if (this.subjectTypeForm.selected) {
       this.AddUpdateUrl = this.productSubjectTypeService.sebjectTypeApiUrl + 'Update';
     } else {
@@ -137,7 +147,7 @@ export class ProductSubjectTypeComponent implements OnChanges {
 
     this.http.post(this.AddUpdateUrl, this.subjectTypeForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      // this.reloadSubjectType(this.productsDetailForm.ID);
+       this.reloadSubjectType(this.selectedProductDetail);
       this.subjectTypeForm = new ProductSubjectType();
       this.submit3 = false;
       form.resetForm();
@@ -147,7 +157,7 @@ export class ProductSubjectTypeComponent implements OnChanges {
   deleteSubjectType(id) {
     this.http.post(this.subjectTypesService.sebjectTypeApiUrl + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      // this.reloadSubjectType(this.productsDetailForm.ID);
+      this.reloadSubjectType(this.selectedProductDetail);
     });
   }
 
@@ -170,7 +180,7 @@ export class ProductSubjectTypeComponent implements OnChanges {
       this.renderSubjectTypeTable([], []);
     }
     this.productsDetailService.loadSubjectTypes(productDetail.ID, productDetail.LineOfBusniess,
-      productDetail.SubLineOfBusniess, 1).subscribe(data => {
+      productDetail.SubLineOfBusniess, 1 ,productDetail.ProductID).subscribe(data => {
         this.renderSubjectTypeTable(data.RelatedSubject, data.UnRelatedSubject);
       });
   }
@@ -238,6 +248,11 @@ export class ProductSubjectTypeComponent implements OnChanges {
     });
   }
   addProductSubjectTypes() {
+    if(!this.subjectTypeForm.ProductDetailsID){
+      this.hasSelected = true;
+      return ;
+    }
+    this.hasSelected = false;
     this.selection4.selected.forEach(element => {
       this.productSubjectType = new ProductSubjectType();
       this.productSubjectType.SubjectTypeID = element.ID;

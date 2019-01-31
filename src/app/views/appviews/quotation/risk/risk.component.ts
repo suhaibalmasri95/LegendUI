@@ -60,18 +60,27 @@ export class RiskComponent implements OnChanges, OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit() {
-    /*  this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID='  + 201 ).subscribe(doc => {
+    this.risks = [];
+    this.document = new Documents();
+    this.riskForm = new Risk();
+      this.http.get<Documents[]>(this.hostUrl+'api/Documents/Load?ID='  + 201 ).subscribe(doc => {
        this.document = doc[0];
+       this.reInit(this.riskForm);
        this.updateMode = true;
-     }); */
- /*    this.http.get<Risk[]>('https://localhost:44322/api/Risk/Load?ID=' + 47).subscribe(doc => {
+     }); 
+    this.http.get<Risk[]>(this.hostUrl+'api/Risk/Load?ID=' + 47).subscribe(doc => {
       this.risks = doc;
       this.renderTable(this.risks);
       //this.reInit(this.riskForm);
       this.riskForm = doc[0];
       this.updateModeForRisk();
+    
+      // create header using child_id
+    
+      //this.reInit(this.riskForm);
+      this.createSubForm(); 
       // this.wizard.navigationMode.goToStep(2);
-    }); */
+    }); 
   }
   updateModeForRisk() {
 
@@ -99,11 +108,11 @@ export class RiskComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges() {
-    this.risks = [];
+   /*   this.risks = [];
     // create header using child_id
     this.riskForm = new Risk();
     this.reInit(this.riskForm);
-    this.createSubForm();
+    this.createSubForm();  */
   }
 
   reInit(riskForm: Risk) {

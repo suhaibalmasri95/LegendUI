@@ -20,6 +20,7 @@ import { Installment } from '../../../../entities/production/Installment';
 import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MatTableDataSource } from '@angular/material';
+import { AlertifyService } from '../../../../_services/alertify.service';
 
 @Component({
   selector: 'app-covers',
@@ -39,9 +40,9 @@ export class CoversComponent implements OnInit {
   documentFees = ['select',
     'Line Of Business', 'Sub Line Of Business', 'Fee', 'Fee Amount', 'action'];
 
-  documentInstallment = [ 'select',
+  documentInstallment = [ 
     'DueDate', 'InstallmentPercentage', 'GrossAmount',
-    'NetAmount', 'FeesAmount', 'CommissionAmount' , 'actions'];
+    'NetAmount', 'FeesAmount', 'CommissionAmount' ];
   RiskSearch: FormControl = new FormControl();
   ChargeSearch: FormControl = new FormControl();
   FeeSearch: FormControl = new FormControl();
@@ -76,7 +77,9 @@ export class CoversComponent implements OnInit {
   constructor(private riskService: RiskService, private seracrhService: SearchService,
     private shareService: SharesService, private coverService: CoversService ,
      private http: HttpClient , private line: LineOfBusinessService, 
-     private subLineService: SubBusinessService, private calculateSerivce: CalculationService ,
+     private subLineService: SubBusinessService, 
+     private calculateSerivce: CalculationService ,
+     private alertifySerice: AlertifyService,
       private installmentService: InstallmentService) { }
 
   ngOnInit() {
@@ -185,9 +188,29 @@ export class CoversComponent implements OnInit {
    el.Percent = installmentPercent;
  
     this.dataSource = new MatTableDataSource<Installment>(copy);
-    this.http.post(this.installmentService.ApiUrl + 'Create' , el).subscribe(res => {
-      console.log(res);
-     });
+   
+  }
+
+  saveChanges() {
+    var totalInstallment = 0;
+    this.dataSource.data.forEach(element => {
+      totalInstallment += Number(element.Percent);
+    });
+    console.log(totalInstallment);
+    if(totalInstallment != 100) {
+      this.alertifySerice.error("Total installment percentage must be 100%");
+    } else{
+      this.dataSource.data.forEach(element => {
+        this.http.post(this.installmentService.ApiUrl + 'Create' , element).subscribe(res => {
+       this.installmentService.load(null, this.document.ID, 1).subscribe(result=> {
+         this.renderInstallmentTable(result);
+       })
+         }); 
+      });
+    }
+
+  
+  /* */
   }
   switchTabs(event) {
     setTimeout(() => {
@@ -221,14 +244,16 @@ export class CoversComponent implements OnInit {
         case 4:
         this.installmentService.load(null, this.document.ID, 1).subscribe(res => {
           this.Installments = res;
-          this.renderCountryTable(res);
+          this.renderInstallmentTable(res);
         })
         break;
     }
   });
     console.log(event);
   }
-
+  getValueDate(date) {
+    return new Date(date);
+  }
   getCustomerDependsOnShareType() {
     this.shares.forEach(element => {
       this.seracrhService.search(element.CustomerId, null, null, null, null,
@@ -425,7 +450,7 @@ export class CoversComponent implements OnInit {
   }
 
 
-  renderCountryTable(data) {
+  renderInstallmentTable(data) {
    
     this.dataSource = new MatTableDataSource<Installment>(data);
 

@@ -20,7 +20,7 @@
                 <label for="ProductDetail">Product Detail</label>
                 <select name="ProductDetail" class="form-control" [(ngModel)]="riskForm.ProductDetailID" (change)="getProductDetailSubjectType(riskForm.ProductDetailID)">
                   <option [ngValue]="undefined">Select</option>
-                  <option *ngFor="let detail of productDetails" [ngValue]="detail.ID">{{detail.SubjectTypeDesc}}</option>
+                  <option *ngFor="let detail of productDetails" [ngValue]="detail.ID">{{detail.SubLineDesc}}</option>
                 </select>
               </div>
 
@@ -28,7 +28,7 @@
                 <label for="SubjectTypeID">Subject Type </label>
                 <select name="SubjectTypeID" class="form-control" [(ngModel)]="riskForm.ProductSubjectTypeID">
                   <option [ngValue]="undefined">Select</option>
-                  <option *ngFor="let subject of productDetailsSubjectTypes" [ngValue]="subject.ID">{{subject.ID}}</option>
+                  <option *ngFor="let subject of productDetailsSubjectTypes" [ngValue]="subject.ID">{{subject.SubjectTypeDesc}}</option>
                 </select>
               </div>
               <div class="form-group col-md-3">

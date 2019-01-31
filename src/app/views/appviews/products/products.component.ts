@@ -23,6 +23,7 @@ import { SubLineOfBusiness } from './../../../entities/Setup/SubLineOfBusiness';
 import { SubBusinessService } from './../../../_services/_setup/SubBusiness.service';
 import { forEach } from '@angular/router/src/utils/collection';
 import { FormControl } from '@angular/forms';
+import { AlertifyService } from '../../../_services/alertify.service';
 
 
 @Component({
@@ -63,11 +64,11 @@ export class ProductsComponent implements OnInit {
   submit2: boolean;
 
   AddUpdateUrl: string;
-  productsDetailTableColumns = ['select', 'ID', 'lob', 'subLob', 'EffectiveDate', 'ExpiryDate'];
+  productsDetailTableColumns = ['select', 'lob', 'subLob', 'EffectiveDate', 'ExpiryDate'];
   productsDetailsDataSource: MatTableDataSource<ProductsDetail>;
 
-  subLineOfBusinessTableColumns = ['select', 'ID', 'lob', 'subLob'];
-  subLOBDataSource: MatTableDataSource<ProductsDetail>;
+  subLineOfBusinessTableColumns = ['select', 'lob', 'subLob'];
+  subLOBDataSource: MatTableDataSource<SubLineOfBusiness>;
 
 
 
@@ -139,7 +140,8 @@ export class ProductsComponent implements OnInit {
     private productQuestionnaireService: ProductQuestionnaireService,
     private subLineService: SubBusinessService, private commonService: CommonService,
     private productCategorySerivce: ProductCategoryService,
-    private lockupService: LockUpService
+    private lockupService: LockUpService,
+    private alertService: AlertifyService
   ) { }
 
   ngOnInit() {
@@ -168,6 +170,8 @@ export class ProductsComponent implements OnInit {
     this.snackPosition = 'right';
 
     this.productForm = new Product();
+    this.productForm.EffectiveDate = new Date();
+
     this.productsDetailForm = new ProductsDetail();
 
     this.columnValidationForm = new ProductColumnValidation();
@@ -206,6 +210,8 @@ export class ProductsComponent implements OnInit {
       this.Levels = res;
     });
 
+
+
   }
 
   displayProduct(product?: Product): string | undefined {
@@ -227,12 +233,15 @@ export class ProductsComponent implements OnInit {
 
     this.productsDetailForm = productsDetail;
     this.productsDetailForm.EffectiveDate = new Date(productsDetail.EffectiveDate);
-    this.productsDetailForm.ExpiryDate = new Date(productsDetail.ExpiryDate);
+    this.productsDetailForm.ExpiryDate =  productsDetail.ExpiryDate ? new Date(productsDetail.ExpiryDate) : null;
     this.productsDetailForm.CreationDate = new Date(productsDetail.CreationDate);
     this.productsDetailForm.ModificationDate = new Date(productsDetail.ModificationDate);
     this.productsDetailForm.StatusDate = new Date(productsDetail.StatusDate);
     this.productsDetailForm.selected = true;
     this.productQuestionnaireForm.ProductDetailedID = this.productsDetailForm.ID ;
+    this.subLineService.load(this.productsDetailForm.SubLineOfBusniess , this.productsDetailForm.LineOfBusniess ,null  , 1).subscribe(res=>{
+      this.SubLobs = res;
+    }) 
     this.reloadQuestionnairesTable(this.productsDetailForm.ID ? this.productsDetailForm.ID : null ,
       this.productsDetailForm.LineOfBusniess ? this.productsDetailForm.LineOfBusniess : null ,
       this.productsDetailForm.SubLineOfBusniess  );
@@ -311,7 +320,7 @@ export class ProductsComponent implements OnInit {
     });
   }
   rendersubLOBTable(data) {
-    this.subLOBDataSource = new MatTableDataSource<ProductsDetail>(data);
+    this.subLOBDataSource = new MatTableDataSource<SubLineOfBusiness>(data);
     this.subLOBDataSource.paginator = this.paginator2;
     this.subLOBDataSource.sort = this.sort2;
     this.selection3 = new SelectionModel<ProductsDetail>(true, []);
@@ -332,6 +341,7 @@ export class ProductsComponent implements OnInit {
       this.renderProductsDetailTable(data);
     });
     this.productsDetailService.loadRelated(productsId, 1).subscribe(data => {
+      this.SubLobs = data.UnRelatedSubLines;
       this.rendersubLOBTable(data.UnRelatedSubLines);
     });
 
@@ -344,6 +354,14 @@ export class ProductsComponent implements OnInit {
     this.productForm = new Product();
     this.submit = false;
     form.reset();
+  }
+  resetProduct(form) {
+    this.productForm = new Product();
+    this.productsDetailForm = new ProductsDetail();
+    this.submit = false;
+   this.renderProductsDetailTable([]);
+   this.rendersubLOBTable([]);
+   form.reset();
   }
 
   // RelatedQuestionnaires
@@ -426,26 +444,60 @@ export class ProductsComponent implements OnInit {
       return;
     }
     this.productForm = this.productForm.selected ? this.productForm : Object.assign({}, form.value);
+    this.productForm.ExpiryDate = form.value.ExpiryDate;
+    if(typeof this.productSearch.value === 'string') {
+      this.productForm.Name = this.productSearch.value ;
+    }
     if (this.productForm.selected) {
       this.AddUpdateUrl = this.productService.ApiUrl + 'Update';
+      this.productForm.ModificationDate = new Date();
+      this.productForm.ModifiedBy = this.user.Name;
     } else {
       this.AddUpdateUrl = this.productService.ApiUrl + 'Create';
+      this.productForm.CreationDate = new Date();
+      this.productForm.CreateBy = this.user.Name;
+      this.productForm.StatusDate = new Date();
     }
+    if(this.productForm && this.productForm.ExpiryDate !== null ) {
+      if(this.productForm.ExpiryDate < this.productForm.EffectiveDate) {
+        this.alertService.error('Expiry date must be greater than effective date');
+      }
+      else {
+        this.saveProductApi(this.productForm);
+            }
+     
+    } else {
+this.saveProductApi(this.productForm);
+    }
+ 
+
+  } 
+  saveProductApi(product) {
     this.http.post(this.AddUpdateUrl, this.productForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+      const status: any = res;
+      if (status.ID) {
+        
+        this.productsDetailForm = new ProductsDetail();
+        this.productsDetailForm.ProductID = status.ID;
+        this.productForm.ID = status.ID;
+      this.reloadProductsDetailTable(status.ID) ;}
 
       // this.productForm = new Product();
       //  this.submit = false;
       //form.resetForm();
     });
-
   }
 
   saveProductsDetail(form) {
     if (form.invalid) {
       return;
     }
+
+   
     this.productsDetailForm = this.productsDetailForm.selected ? this.productsDetailForm : Object.assign({}, form.value);
+    this.productsDetailForm.ExpiryDate = form.value.ExpiryDate;
+    this.productsDetailForm.ProductID = this.productForm.ID;
     if (this.productsDetailForm.selected) {
       this.AddUpdateUrl = this.productsDetailService.ApiUrl + 'Update';
       this.productsDetailForm.StatusDate = new Date();
@@ -456,15 +508,32 @@ export class ProductsComponent implements OnInit {
       this.productsDetailForm.CreationDate = new Date();
       this.productsDetailForm.StatusDate = new Date();
     }
+    if(this.productsDetailForm && this.productsDetailForm.ExpiryDate !== null ){
+      if(this.productsDetailForm.ExpiryDate < this.productsDetailForm.EffectiveDate) {
+        this.alertService.error('Expiry date must be grater than effective date');
+      }
+      else if (this.productsDetailForm.ExpiryDate > this.productForm.ExpiryDate && this.productForm.ExpiryDate !== null ) {
+        this.alertService.error('Product detail expiry date must be less than product expiry date');
+      }
+      else {
+        this.saveProductDetailApi(this.productsDetailForm , form);
+      }
+    } else{
+      this.saveProductDetailApi(this.productsDetailForm , form);
+    }
 
-    this.http.post(this.AddUpdateUrl, this.productsDetailForm).subscribe(res => {
+   
+
+  }
+
+  saveProductDetailApi(productDetail , form) {
+    this.http.post(this.AddUpdateUrl, productDetail).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       this.reloadProductsDetailTable(this.productForm.ID ? this.productForm.ID : null);
       this.productsDetailForm = new ProductsDetail();
       this.submit2 = false;
       form.resetForm();
     });
-
   }
 
 
@@ -542,13 +611,22 @@ export class ProductsComponent implements OnInit {
     this.productForm.StatusDate = new Date(this.productSearch.value.CreationDate);
     this.productForm.ModificationDate = new Date(this.productSearch.value.CreationDate);
     this.productForm.EffectiveDate = new Date(this.productSearch.value.EffectiveDate);
-    this.productForm.ExpiryDate = new Date(this.productSearch.value.ExpiryDate);
+    this.productForm.ExpiryDate = this.productSearch.value.ExpiryDate ?  new Date(this.productSearch.value.ExpiryDate) : null;
     this.submit = true;
     this.productForm.selected = true;
     this.productsDetailService.load(null, this.productForm.ID, 1).subscribe(res => {
       this.productDetails = res;
     });
     this.reloadProductsDetailTable(this.productForm.ID);
+    this.productCategorySerivce.loadCategory(null, null,
+      this.productCategoryForm.ProductID, this.productCategoryForm.ProductDetailID, this.productCategoryForm.CategoryLevel,
+      this.productCategoryForm.LineOfBusniess, this.productCategoryForm.SubLineOfBusniess, 1).subscribe(res => {
+        this.renderProductCategory(res);
+        this.productCategoryForm = new ProductCategory();
+        this.selectedCategories = [];
+        this.loadProductUnRelatedCateogry();
+
+      });
   }
 
 
@@ -824,7 +902,7 @@ export class ProductsComponent implements OnInit {
     this.selection2.selected.forEach(element => {
       this.productDetail = new ProductsDetail();
       this.productDetail.EffectiveDate = this.productForm.EffectiveDate;
-      this.productDetail.ExpiryDate = this.productForm.ExpiryDate;
+      this.productDetail.ExpiryDate = this.productForm.ExpiryDate ? this.productForm.ExpiryDate : null; 
       this.productDetail.SubLineOfBusniess = element.ID;
       this.productDetail.LineOfBusniess = element.LineOfBusniess;
       this.productDetail.ProductID = this.productForm.ID;
@@ -853,9 +931,8 @@ export class ProductsComponent implements OnInit {
   }
 
   loadSubLinesOfBusiness(lob) {
-    this.subLineService.load(null, lob ? lob : null, null, 1).subscribe(data => {
-      this.SubLobs = data;
-    });
+    this.SubLobs = this.subLOBDataSource.data;
+    this.SubLobs = this.SubLobs.filter(x=>x.LineOfBusniess == lob);
     this.loadProductUnRelatedCateogry();
   }
 

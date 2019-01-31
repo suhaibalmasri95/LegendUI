@@ -17,9 +17,9 @@
 
             <div class="form-group col-md-3">
               <label for="ProductDetailsID">Product Detail</label>
-              <select name="ProductDetailsID" class="form-control" [(ngModel)]="subjectTypeForm.ProductDetailsID" (change)="loadRelatedSubjectType()">
+              <select name="ProductDetailsID"  required="!selectedProductDetail.ID"  class="form-control" [(ngModel)]="subjectTypeForm.ProductDetailsID" (change)="loadRelatedSubjectType()">
                 <option [ngValue]="undefined">Select</option>
-                <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.ID}}</option>
+                <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.SubLineDesc}}</option>
               </select>
             </div>
 
@@ -27,7 +27,7 @@
             <div class="form-group col-md-3">
               <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
               <select name="LineOfBusniess" class="form-control" [(ngModel)]="subjectTypeForm.LineOfBusniess"
-                (change)="loadSubLinesOfBusiness(subjectTypeForm.LineOfBusniess)" required>
+                disabled>
                 <option [ngValue]="undefined">Select</option>
                 <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
               </select>
@@ -37,16 +37,16 @@
             <div class="form-group col-md-3">
               <label for="SubLineOfBusniess">Sub Line of Business</label>
               <select name="SubLineOfBusniess" class="form-control" [(ngModel)]="subjectTypeForm.SubLineOfBusniess"
-                [disabled]="!SubLobs ||SubLobs.length===0">
+               disabled>
                 <option [ngValue]="undefined">Select</option>
                 <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
               </select>
             </div>
             <div class="form-group col-md-3">
-              <label for="SubjectType">Subject Type</label>
-              <select name="SubjectType" placeholder="Subject Type" class="form-control" [(ngModel)]="subjectTypeForm.SubjectType">
+              <label for="SubjectTypeID">Subject Type</label>
+              <select name="SubjectTypeID" placeholder="Subject Type" class="form-control" [disabled]="subjectTypeForm.selected"  [(ngModel)]="subjectTypeForm.SubjectType">
                 <option [ngValue]="undefined">Select</option>
-                <option *ngFor="let  SubjectType of SubjectTypes" [ngValue]="SubjectType.ID">{{SubjectType.Name}}</option>
+                <option *ngFor="let  SubjectType of subjectTypes" [ngValue]="SubjectType.ID">{{SubjectType.Name}}</option>
               </select>
             </div>
           </div>
@@ -57,23 +57,23 @@
 
 
             <div class="form-group col-md-3">
-              <label for="ExcessPercentage">Excess %</label>
-              <input name="ExcessPercentage" placeholder="Excess %" type="number" class="form-control"
-                [(ngModel)]="subjectTypeForm.ExcessPercentage">
+              <label for="ExcessPerc">Excess %</label>
+              <input name="ExcessPerc" placeholder="Excess %" type="number" class="form-control"
+                [(ngModel)]="subjectTypeForm.ExcessPerc">
             </div>
             <div class="form-group col-md-3">
-              <label for="MinExcessAmount">Min Excess Amount</label>
-              <input name="MinExcessAmount" placeholder="Min Excess Amount" type="number" class="form-control"
-                [(ngModel)]="subjectTypeForm.MinExcessAmount">
+              <label for="MinExcess">Min Excess Amount</label>
+              <input name="MinExcess" placeholder="Min Excess Amount" type="number" class="form-control"
+                [(ngModel)]="subjectTypeForm.MinExcess">
             </div>
             <div class="form-group col-md-3">
-              <label for="MaxExcessAmount">Max Excess Amount</label>
-              <input name="MaxExcessAmount" placeholder="Max Excess Amount" type="number" class="form-control"
-                [(ngModel)]="subjectTypeForm.MaxExcessAmount">
+              <label for="MaxExcess">Max Excess Amount</label>
+              <input name="MaxExcess" placeholder="Max Excess Amount" type="number" class="form-control"
+                [(ngModel)]="subjectTypeForm.MaxExcess">
             </div>
             <div class="form-group col-md-3">
-              <label for="From">Excess From <span class="help-block">*</span></label>
-              <select name="From" placeholder="Excess From" class="form-control" [(ngModel)]="subjectTypeForm.From"
+              <label for="ExcessFrom">Excess From <span class="help-block">*</span></label>
+              <select name="ExcessFrom" placeholder="Excess From" class="form-control" [(ngModel)]="subjectTypeForm.ExcessFrom"
                 required>
                 <option [ngValue]="undefined">Select</option>
                 <option *ngFor="let excessFrom of excessFroms" [ngValue]="excessFrom.ID">{{excessFrom.Name}}</option>
@@ -96,6 +96,21 @@
         </form>
       </fieldset>
     </div>
+    <br >
+    <div >
+       
+        <div class="form-group col-md-3">
+            <label for="ProductDetailsID">Product Detail</label>
+            <select name="ProductDetailsID" class="form-control" [ngClass]="{'ng-dirty ng-invalid ng-touched': hasSelected}" 
+             (change)="loadRelatedSubjectType()" [(ngModel)]="subjectTypeForm.ProductDetailsID">
+              <option [ngValue]="undefined">Select</option>
+              <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.SubLineDesc}}</option>
+            </select>
+          </div>
+    </div>
+    <br>
+    <br>
+    <br> <br>
     <div class="col-md-5">
 
       <br>
@@ -115,16 +130,12 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="ID">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-            </td>
-          </ng-container>
+          
 
 
           <ng-container matColumnDef="SubjectType">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject Type</th>
-            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.SubjectType}}
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
             </td>
           </ng-container>
 
@@ -135,14 +146,14 @@
           </ng-container>
           <ng-container matColumnDef="lob">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
-            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.lob}}
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniessDesc}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="subLob">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
             <td style="width: 15%" mat-cell *matCellDef="let element">
-              {{element.sublob}} </td>
+              {{element.SubLineOfBusniessDesc}} </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="subjectTypesLobTableColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: subjectTypesLobTableColumns;" class=" mat-row"></tr>
@@ -181,46 +192,38 @@
                 [checked]="selection5.isSelected(row)">
               </mat-checkbox>
             </td>
-          </ng-container>
+          </ng-container >
 
-          <ng-container matColumnDef="ID">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-            <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-            </td>
-          </ng-container>
+      
 
           <ng-container matColumnDef="SubjectType">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Subject Type</th>
-            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.SubjectType}}
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.SubjectTypeDesc}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="ParentSubjectType">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Parent Subject Type</th>
             <td style="width: 15%" mat-cell *matCellDef="let element">
-              {{element.ParentSubjectType}} </td>
+              {{element.SubjectTypeParentDesc}} </td>
           </ng-container>
           <ng-container matColumnDef="lob">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
-            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.lob}}
+            <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniessDesc}}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="subLob">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
             <td style="width: 15%" mat-cell *matCellDef="let element">
-              {{element.sublob}} </td>
+              {{element.SubLineOfBusniessDesc}} </td>
           </ng-container>
           <ng-container matColumnDef="Product">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
             <td style="width: 15%" mat-cell *matCellDef="let element">
-              {{element.Product}} </td>
+              {{element.ProductDesc}} </td>
           </ng-container>
-          <ng-container matColumnDef="ProductDetail">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
-            <td style="width: 15%" mat-cell *matCellDef="let element">
-              {{element.ProductDetail}} </td>
-          </ng-container>
+      
 
           <tr mat-header-row *matHeaderRowDef="subjectTypesPDTableColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: subjectTypesPDTableColumns;" class=" mat-row"></tr>

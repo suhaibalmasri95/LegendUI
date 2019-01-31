@@ -348,27 +348,18 @@
                 <div class="col-md-12">
                   <div class="x">
                     <div class="table-container " *ngIf="Installments.length > 0">
-                    
+                 
                         <table mat-table #table [dataSource]="dataSource" matSort>
 
-                          <ng-container matColumnDef="select">
-                            <th mat-header-cell *matHeaderCellDef>
-                           <!--    <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                                [indeterminate]="selection.hasValue() && !isAllSelected()">
-                              </mat-checkbox> -->
-                            </th>
-                            <td style="width: 5%" mat-cell *matCellDef="let row">
-                              <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                                [checked]="selection.isSelected(row)">
-                              </mat-checkbox> -->
-                            </td>
-                          </ng-container>
+                      
                           <ng-container matColumnDef="DueDate">
 
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Due Date </th>
-                            <td style="width: 15%" mat-cell *matCellDef="let element" [satPopoverAnchorFor]="p" (click)="p.open()">
-
-                              <ng-container *ngIf="element.DueDate">
+                            <td style="width: 15%" mat-cell *matCellDef="let element" >
+                                <mat-form-field floatLabel="never">
+                                    <input matInput placeholder="Due Date" bsDatepicker [value]="element.DueDate | date" [(ngModel)]="element.DueDate">
+                                   </mat-form-field>
+                            <!--   <ng-container *ngIf="element.DueDate">
                                 {{element.DueDate | date}}
                               </ng-container>
                               <span class="add-comment" *ngIf="!element.DueDate">
@@ -377,16 +368,17 @@
 
                               <sat-popover #p hasBackdrop xAlign="start" yAlign="start" (closed)="updateDueDate(element, $event)">
                                 <inline-edit-date [value]="element.DueDate"></inline-edit-date>
-                              </sat-popover>
+                              </sat-popover> -->
                             </td>
 
                           </ng-container>
                           <ng-container matColumnDef="InstallmentPercentage">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Installment Percentage </th>
-                            <td style="width: 15%" mat-cell *matCellDef="let element" [satPopoverAnchorFor]="p2"
-                              (click)="p2.open()">
-
-                              <ng-container *ngIf="element.Percent">
+                            <td style="width: 15%" mat-cell *matCellDef="let element" 
+                             >	<mat-form-field floatLabel="never">
+                             <input matInput placeholder="Installment Percentage" [value]="element.Percent" [(ngModel)]="element.Percent">
+                            </mat-form-field>
+                              <!-- <ng-container *ngIf="element.Percent">
                                 {{element.Percent}}
                               </ng-container>
                               <span class="add-comment" *ngIf="!element.Percent">
@@ -395,7 +387,7 @@
 
                               <sat-popover #p2 hasBackdrop xAlign="start" yAlign="start" (closed)="updateInstallmentPercent(element, $event)">
                                 <inline-edit [value]="element.Percent"></inline-edit>
-                              </sat-popover>
+                              </sat-popover> -->
                             </td>
                           </ng-container>
 
@@ -426,21 +418,21 @@
 
                           
 
-                          <ng-container matColumnDef="actions">
-                            <th mat-header-cell *matHeaderCellDef>Actions</th>
-                            <td style="width: 20%" mat-cell *matCellDef="let element">
-                              <i (click)="updateCountry(element)" class="fa fa-edit" placement="left" ngbTooltip="Edit"></i>
-                              <i (click)="$event.stopPropagation()" class="fa fa-remove" mwlConfirmationPopover
-                                [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'" placement="left"
-                                (confirm)="deleteCountry(element.ID)" ngbTooltip="Delete"></i>
-                            </td>
-                          </ng-container>
-
                           <tr mat-header-row *matHeaderRowDef="documentInstallment"></tr>
                           <tr mat-row *matRowDef="let row; columns: documentInstallment;"  class=" mat-row "></tr>
 
                         </table>
-                   
+                        <br>
+                        <br>
+                        <div class="col-md-11 text-right">
+  
+                          <div class="btn-group">
+                          
+                            <input class="btn btn-primary" type="submit" value="Save" (click)="saveChanges()" />
+                          </div>
+                        </div>
+                       
+                      
 
 
                     </div>
