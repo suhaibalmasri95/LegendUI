@@ -208,9 +208,6 @@ export class CoversComponent implements OnInit {
          }); 
       });
     }
-
-  
-  /* */
   }
   switchTabs(event) {
     setTimeout(() => {

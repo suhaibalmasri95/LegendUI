@@ -10,7 +10,7 @@ import { SubjectTypesService } from './../../../_services/_setup/SubjectTypes.se
 import { ProductQuestionnaireService } from './../../../_services/_setup/productQuestionnaires.service';
 import { LineOfBusiness } from './../../../entities/Setup/lineOfBusiness';
 import { CommonService } from './../../../_services/Common.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MatSort, MatPaginator, MatTableDataSource, MatSnackBar, MatSnackBarHorizontalPosition } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
@@ -24,7 +24,7 @@ import { SubBusinessService } from './../../../_services/_setup/SubBusiness.serv
 import { forEach } from '@angular/router/src/utils/collection';
 import { FormControl } from '@angular/forms';
 import { AlertifyService } from '../../../_services/alertify.service';
-
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-products',
@@ -40,7 +40,7 @@ export class ProductsComponent implements OnInit {
   productsDetailForm: ProductsDetail;
   productsDetails: ProductsDetail[];
 
-
+  columnsForm: Column;
   CategoriesDDL: Category[];
   columnValidationForm: ProductColumnValidation;
   columnValidations: Validation[];
@@ -57,7 +57,7 @@ export class ProductsComponent implements OnInit {
   GroupIndividualLockups: LockUp[];
   ValidationTypes: LockUp[];
   productQuestionnaires: ProductQuestionnaire;
-  productDetails: ProductsDetail[];
+  productDetails: ProductsDetail[] = [];
   showSubTypes = false;
 
   submit: boolean;
@@ -81,14 +81,14 @@ export class ProductsComponent implements OnInit {
   notRelatedCategoriesColumns = ['select', 'ID', 'Name', 'lob', 'subLob', 'Level', 'IsMultiRecord'];
   notRelatedCategoriesDataSource: MatTableDataSource<Category>;
 
-  relatedCategoriesTableColumns = ['select', 'ID', 'Name', 'lob', 'subLob', 'Level', 'IsMultiRecord',
+  relatedCategoriesTableColumns = ['select', 'Name', 'lob', 'subLob', 'Level', 'IsMultiRecord',
     'Product', 'ProductDetail', 'Status', 'Order'];
   relatedCategoriesDataSource: MatTableDataSource<ProductCategory>;
 
 
-  categoryColumnsTableColumns = ['select', 'ID', 'Lable', 'ColumnType', 'Category', 'Product', 'ProductDetail', 'Status', 'ListReference'];
+  categoryColumnsTableColumns = ['select', 'Lable', 'ColumnType', 'Category', 'Product', 'ProductDetail', 'Status', 'ListReference'];
   categoryColumnsDataSource: MatTableDataSource<ProductColumns>;
-  columnValidationsTableColumns = ['select', 'ID', 'Lable', 'DataType', 'ValidationType', 'IsMandatory', 'CheckDuplication', 'MinValue',
+  columnValidationsTableColumns = ['select', 'Lable', 'DataType', 'ValidationType', 'IsMandatory', 'CheckDuplication', 'MinValue',
     'MaxValue'];
   columnValidationsDataSource: MatTableDataSource<ProductColumnValidation>;
 
@@ -111,7 +111,7 @@ export class ProductsComponent implements OnInit {
   productDetail: ProductsDetail;
   productQuestionnaireForm: ProductQuestionnaire;
   snackPosition: MatSnackBarHorizontalPosition;
-  selectedCategories: any;
+  selectedCategories: any[] = [];
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginator2') paginator2: MatPaginator;
 
@@ -123,7 +123,7 @@ export class ProductsComponent implements OnInit {
   @ViewChild('paginator9') paginator9: MatPaginator;
   @ViewChild('paginator10') paginator10: MatPaginator;
   @ViewChild('paginator11') paginator11: MatPaginator;
-
+  @ViewChild('myButton') myButton: ElementRef;
   @ViewChild('table2', { read: MatSort }) sort2: MatSort;
 
   @ViewChild('table4', { read: MatSort }) sort4: MatSort;
@@ -168,7 +168,7 @@ export class ProductsComponent implements OnInit {
       allowSearchFilter: true
     };
     this.snackPosition = 'right';
-
+    this.productDetails = [];
     this.productForm = new Product();
     this.productForm.EffectiveDate = new Date();
 
@@ -277,6 +277,11 @@ export class ProductsComponent implements OnInit {
   loadProductUnRelatedCateogry() {
 
     this.productCategoryForm.ProductID = this.productForm.ID;
+  if(this.productCategoryForm.CategoryLevel === 1 || this.productCategoryForm.CategoryLevel === 2) {
+    this.productCategoryForm.ProductDetailID = null;
+    this.productCategoryForm.SubLineOfBusniess = null;
+    this.productCategoryForm.LineOfBusniess = null;
+  }
     this.productCategorySerivce.loadUnRelatedCategory(null, null, this.productCategoryForm.ProductID,
       this.productCategoryForm.ProductDetailID,
       this.productCategoryForm.CategoryLevel, this.productCategoryForm.LineOfBusniess,
@@ -288,8 +293,15 @@ export class ProductsComponent implements OnInit {
         this.renderProductCategory(result.RelatedCategories);
       });
   }
+  clickTest() {
+    console.log(this.productDetails.length);
+    this.productDetails = this.productsDetailsDataSource? this.productsDetailsDataSource.data :  this.productDetails;  
+    console.log(this.productDetails.length);
+  }
   renderProductsDetailTable(data) {
-    this.productsDetails = data;
+   
+    this.productsDetails = _.cloneDeep(data);
+   
     this.productsDetailsDataSource = new MatTableDataSource<ProductsDetail>(data);
     this.productsDetailsDataSource.paginator = this.paginator2;
     this.productsDetailsDataSource.sort = this.sort2;
@@ -301,8 +313,43 @@ export class ProductsComponent implements OnInit {
       // tslint:disable-next-line:max-line-length
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
+    let el: HTMLElement = this.myButton.nativeElement as HTMLElement;
+    el.click();
+   
+  }
 
-    this.productsDetails = data;
+  saveChanges() {
+ 
+    this.relatedCategoriesDataSource.data.forEach(element => {
+      this.productCategoryForm =new ProductCategory();
+      this.productCategoryForm.ID = element.ID;
+      this.productCategoryForm.Lable = element.Lable;
+      this.productCategoryForm.Lable2 = element.Lable2;
+      this.productCategoryForm.LineOfBusniess = element.LineOfBusniess;
+      this.productCategoryForm.ModificationDate = new Date();
+      this.productCategoryForm.Order = Number(element.Order);
+      this.productCategoryForm.ProductDetailID = element.ProductDetailID;
+      this.productCategoryForm.ProductID = element.ProductID;
+      this.productCategoryForm.Status = element.Status;
+      this.productCategoryForm.StatusDate = element.StatusDate;
+      this.productCategoryForm.SubLineOfBusniess = element.SubLineOfBusniess;
+      this.productCategoryForm.CreationDate = element.CreationDate;
+      this.productCategoryForm.CreateBy = element.CreateBy;
+      this.productCategoryForm.CategoryID = element.CategoryID;
+      this.productCategoryForm.CategoryLevel = element.CategoryLevel;
+      this.productCategoryForm.DictionaryID = element.DictionaryID;
+      this.productCategoryForm.MultiRecord = element.MultiRecord;
+      this.productCategoryForm.Name = element.Name;
+      this.productCategoryForm.Name2 = element.Name2;
+      this.http.post(this.productCategorySerivce.ApiUrlCategory + 'Create' , this.productCategoryForm).subscribe(res => {
+        this.loadProductUnRelatedCateogry();
+  
+      }); 
+     
+    });
+ 
+   
+     
   }
 
   DeleteProductCategory() {
@@ -473,14 +520,20 @@ this.saveProductApi(this.productForm);
 
   } 
   saveProductApi(product) {
-    this.http.post(this.AddUpdateUrl, this.productForm).subscribe(res => {
+    this.http.post(this.AddUpdateUrl, product).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       const status: any = res;
       if (status.ID) {
+        this.productService.load(status.ID,null,1).subscribe(product=> {
+          this.productsDetailForm = new ProductsDetail();
+          this.productsDetailForm.ProductID = status.ID;
+          this.productForm = product[0];
+          this.productForm.ExpiryDate = this.productForm.ExpiryDate ? new Date(this.productForm.ExpiryDate) : null;
+          this.productForm.EffectiveDate = this.productForm.EffectiveDate ? new Date(this.productForm.EffectiveDate) : null; 
         
-        this.productsDetailForm = new ProductsDetail();
-        this.productsDetailForm.ProductID = status.ID;
-        this.productForm.ID = status.ID;
+        });
+        
+        
       this.reloadProductsDetailTable(status.ID) ;}
 
       // this.productForm = new Product();
@@ -778,11 +831,19 @@ this.saveProductApi(this.productForm);
   }
 
   saveValidationColumns() {
+    if(this.columnValidationForm.IsMandetoryTemp) {
+      this.columnValidationForm.IsMandetory = 1;
+    } 
+    if(this.columnValidationForm.CheckDuplicationTemp) {
+      this.columnValidationForm.CheckDuplication = 1;
+    }
     this.http.post(this.productCategorySerivce.ApiUrlValidation + 'Create' , this.columnValidationForm).subscribe(res => {
-      this.productCategorySerivce.loadValidation(null, this.columnValidationForm.CategoryID,
+     const result: any = res;
+      this.productCategorySerivce.loadValidation(result.ID , this.columnValidationForm.CategoryID,
         this.columnValidationForm.ProductID, this.columnValidationForm.ProductDetailID,
        null , this.columnValidationForm.LocValidType, 1
       ).subscribe(result => {
+        this.columnValidationForm = new ProductColumnValidation();
         this.renderProductCategoryValidation(result);
       });
     
@@ -826,11 +887,14 @@ this.saveProductApi(this.productForm);
 
 
   UpdateProductCategory(data) {
-
+    this.productCategoryForm = data;
+    this.productCategoryForm.selected = true;
+   // this.loadProductUnRelatedCateogry();
     this.productCategorySerivce.loadColumn(null, data.CategoryID
       , data.ProductID, data.ProductDetailID, data.ColumnType,
       data.LineOfBusniess, data.SubLineOfBusniess, 1).subscribe(res => {
         this.productColumns = res;
+        this.columnsForm = new Column();
         this.renderProductCategoryColumn(res);
       });
 
@@ -849,15 +913,25 @@ this.saveProductApi(this.productForm);
 
   }
   UpdateProductCategoryValidation(data) {
- 
+    this.columnsForm = data;
     this.productCategorySerivce.loadValidation(null, data.ProductCategoryID,
       this.columnValidationForm.ProductID, this.columnValidationForm.ProductDetailID,
       data.ID, this.columnValidationForm.LocValidType, 1
     ).subscribe(res => {
       if (res.length > 0) {
       this.columnValidationForm = res[0];
+      this.columnValidationForm.Lable = data.Lable;
+      this.columnValidationForm.Lable2 = data.Lable2;
+      this.columnValidationForm.ColumnID = data.ID;
+      this.columnValidationForm.CategoryID = data.ProductCategoryID;
+      this.columnValidationForm.DataType = data.ColumnType;
+      this.columnValidationForm.ProductDetailID = data.ProductDetailID;
+      this.columnValidationForm.ProductID = data.ProductID;
       this.renderProductCategoryValidation(res); 
     } else {
+      this.renderProductCategoryValidation([]);
+       
+      this.columnValidationForm = new ProductColumnValidation();
       this.columnValidationForm.Lable = data.Lable;
       this.columnValidationForm.Lable2 = data.Lable2;
       this.columnValidationForm.ColumnID = data.ID;
@@ -897,6 +971,12 @@ this.saveProductApi(this.productForm);
   updateValidations(row) {
     this.columnValidationForm = new ProductColumnValidation();
     this.columnValidationForm = row;
+    if(this.columnValidationForm.IsMandetory === 1) {
+      this.columnValidationForm.IsMandetoryTemp = true;
+    }
+    if(this.columnValidationForm.CheckDuplication) {
+      this.columnValidationForm.CheckDuplicationTemp = true;
+    }
   }
   AddProductDetails() {
     this.selection2.selected.forEach(element => {
@@ -931,11 +1011,24 @@ this.saveProductApi(this.productForm);
   }
 
   loadSubLinesOfBusiness(lob) {
+ 
+   
     this.SubLobs = this.subLOBDataSource.data;
     this.SubLobs = this.SubLobs.filter(x=>x.LineOfBusniess == lob);
-    this.loadProductUnRelatedCateogry();
+
   }
 
+  loadSubLineCategory() {
+    this.productDetails.forEach(element => {
+      if(element.ID === this.productCategoryForm.ProductDetailID) {
+        this.SubLobs = this.subLOBDataSource.data;
+        this.SubLobs = this.SubLobs.filter(x=>x.LineOfBusniess == element.LineOfBusniess);
+        this.loadProductUnRelatedCateogry();
+      }
+    });
+  
+
+  }
 
 
 

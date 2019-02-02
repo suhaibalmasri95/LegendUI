@@ -75,7 +75,7 @@ export class ProductwordingComponent implements OnInit {
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'ID',
-      textField: 'ID',
+      textField: 'SubLineDesc',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
 
@@ -175,21 +175,23 @@ export class ProductwordingComponent implements OnInit {
     } else {
       this.AddUpdateUrl = this.wordingService.ApiUrl + 'Create';
     }
+
     this.wordingForm.ProductId = this.product.ID;
     if (this.selectedProductDetail) {
-      if (this.selectedProductDetail.length > 0) {
+      const length = this.selectedProductDetail.length;
+      if (length > 0) {
         this.selectedProductDetail.forEach((element, index) => {
           x++;
           this.productDetails.forEach(item => {
-            if (item.ID === element) {
+            if (item.ID === element.ID) {
 
               this.wordingForm.ProductDetailId = item.ID;
               this.wordingForm.LineOfBusiness = item.LineOfBusniess;
               this.wordingForm.SubLineOfBusiness = item.SubLineOfBusniess;
               this.http.post(this.AddUpdateUrl, this.wordingForm).subscribe(res => {
-                if (x === this.selectedProductDetail.length) {
+                if (x === length) {
                   this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-                  this.reloadWordingsTable(this.product);
+                  this.reloadWordingsTable(this.product.ID);
                   this.wordingForm = new Wording;
                   this.submit2 = false;
                   form.resetForm();
@@ -236,7 +238,12 @@ export class ProductwordingComponent implements OnInit {
     this.wordingDetailsForm.SubLineOfBusniess = this.wordingForm.SubLineOfBusiness;
     this.wordingDetailsForm.LineOfBusniess = this.wordingForm.LineOfBusiness;
     this.wordingDetailsForm.ProductDetailId = this.wordingForm.ProductDetailId;
-    this.selectedProductDetail.push(this.wordingForm);
+    this.productDetails.forEach(element => {
+      if(element.ID = this.wordingDetailsForm.ProductDetailId) {
+
+      }this.selectedProductDetail = [element] ;
+    });
+    
     this.wordingDetailsForm.ProductId = this.wordingForm.ProductId;
     this.wordingDetailsForm.WordType = this.wordingForm.LockUpType;
     this.reloadWordingsDetailsTable(this.wordingForm.ProductId , this.wordingForm.ProductDetailId);
@@ -272,7 +279,7 @@ export class ProductwordingComponent implements OnInit {
     this.wordingDetailsForm.ProductDetailId = this.wordingForm.ProductDetailId;
     this.http.post(this.AddUpdateUrl, this.wordingDetailsForm).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadWordingsDetailsTable(this.wordingForm.ID,this.wordingForm.ProductDetailId);
+      this.reloadWordingsDetailsTable(this.wordingForm.ProductId,this.wordingForm.ProductDetailId);
       this.wordingDetailsForm = new WordingDetail;
       this.submit3 = false;
       form.resetForm();
@@ -281,9 +288,9 @@ export class ProductwordingComponent implements OnInit {
   }
 
   deleteWordingDetails(id) {
-    this.http.post(this.wordingService.ApiUrl + 'Delete', { ID: id }).subscribe(res => {
+    this.http.post(this.wordingService.ApiUrl2 + 'Delete', { ID: id }).subscribe(res => {
       this.snackBar.open('Deleted successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-      this.reloadWordingsDetailsTable(this.wordingForm.ID, this.wordingForm.ProductDetailId);
+      this.reloadWordingsDetailsTable(this.wordingForm.ProductId, this.wordingForm.ProductDetailId);
     });
 
   }
@@ -292,6 +299,9 @@ export class ProductwordingComponent implements OnInit {
     this.wordingDetailsForm = new WordingDetail;
     this.wordingDetailsForm = wordingDetails;
     this.wordingDetailsForm.selected = true;
+    if(this.wordingDetailsForm.IsAutoAdd) {
+      this.wordingDetailsForm.AutoAdd = true;
+    }
   }
 
   export(type, data) {

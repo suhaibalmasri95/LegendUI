@@ -23,5 +23,5 @@ export class ProductCategory implements IEntity {
     ProductDetailID: number;
     Order: number;
     DictionaryID: number;
-
+    
 }

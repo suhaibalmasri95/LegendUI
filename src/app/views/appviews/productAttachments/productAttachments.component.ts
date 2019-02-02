@@ -61,14 +61,14 @@ export class ProductAttachmentsComponent implements OnChanges {
   productTableColumns = ['ID', 'Name', 'Name2', 'ProductCode', 'EffectiveDate', 'ExpiryDate', 'GroupIndividual'];
   productsDataSource: MatTableDataSource<Product>;
 
-  attachmentTableColumns = ['select', 'ID', 'NAME', 'NAME2', 'AttachmentLevel', 'IsRequired', 'Product', 'ProductDetail', 'actions'];
+  attachmentTableColumns = ['select',  'NAME', 'NAME2', 'AttachmentLevel', 'IsRequired', 'Product', 'ProductDetail', 'actions'];
   attachmentsDataSource: MatTableDataSource<ProductAttachment>;
 
 
-  unrelatedProductReportTableColumns = ['select', 'ID', 'ReportName', 'ReportCode', 'ReportGroup'];
+  unrelatedProductReportTableColumns = ['select', 'ReportName', 'ReportCode', 'ReportGroup'];
   unrelatedProductReportDataSource: MatTableDataSource<ProductReport>;
 
-  productReportTableColumns = ['select', 'ID', 'ReportName', 'ReportCode', 'ReportGroup', 'Product',
+  productReportTableColumns = ['select','ReportName', 'ReportCode', 'ReportGroup', 'Product',
     'productDetail', 'ReportLevel', 'Status', 'IsRequired'];
 
   productReportDataSource: MatTableDataSource<ProductReport>;
@@ -98,6 +98,7 @@ export class ProductAttachmentsComponent implements OnChanges {
   AttachmentLevels: LockUp[];
   GroupIndividualLockups: LockUp[];
   ProductDetails: ProductsDetail[];
+  selectedProductDetail: ProductsDetail;
   user: any;
   // tslint:disable-next-line:no-input-rename
   @Input('Lobs') Lobs: LineOfBusiness[];
@@ -205,18 +206,37 @@ export class ProductAttachmentsComponent implements OnChanges {
     });
   }
   loadAttachments() {
+    this.selectedProductDetail  = new ProductsDetail();
+    this.ProductDetails.forEach(element => {
+      if(element.ID == this.attachmentForm.ProductDetailId){
+        this.selectedProductDetail = element;
+        this.subLineService.load(null, element.LineOfBusniess , null, 1).subscribe(data => {
+          this.SubLobs = data;
+        });
+        this.attachmentForm.LineOfBusiness = element.LineOfBusniess;
+        this.attachmentForm.SubLineOfBusiness = element.SubLineOfBusniess;
+      }
+    });
+    
     this.productsDetailService.loadUnRelatedAttachments(null, this.product.ID ,
        this.attachmentForm.ProductDetailId ,
        this.attachmentForm.AttachmentLevel , 1).subscribe(data => {
-      this.Attachments = data.UnRelatedAttachment;
+         // check if selected display attachments null and load current attachment and set it as selected
+         if(this.attachmentForm.selected) {
+          this.attachmentsService.load(this.attachmentForm.ID , null , null , 1).subscribe(attachment => {
+            this.selectedAttachment = [ attachment[0] ] ;
+            this.Attachments = [];
+          });
+         } else{
+          this.Attachments = data.UnRelatedAttachment;
+         }
+  
       this.RelatedproductAttachment = data.RelatedAttachment;
     });
   }
 
   loadSubLinesOfBusiness(lob) {
-    this.subLineService.load(null, lob ? lob : null, null, 1).subscribe(data => {
-      this.SubLobs = data;
-    });
+
   }
 
   reloadAttachmentTable(ProductId) {
@@ -301,29 +321,59 @@ export class ProductAttachmentsComponent implements OnChanges {
 
     if (this.attachmentForm.selected) {
       this.AddUpdateUrl = this.attachmentsService.ApiUrl + 'Update';
+      if(this.attachmentForm.IsRequiredTemp) {
+        this.attachmentForm.IsRequired = 1;
+      } else {
+        this.attachmentForm.IsRequired = 0;
+      }
+      for (let index = 0; index < this.selectedAttachment.length; index++) {
+        const element: any = this.selectedAttachment[index];
+       
+          
+          this.attachmentForm.StatusDate = new Date();
+          this.attachmentForm.AttachmentID = element.ID;
+          this.attachmentForm.Name = element.Name;
+          this.attachmentForm.ProductId = this.product.ID;
+      
+        this.http.post(this.AddUpdateUrl, this.attachmentForm).subscribe(res => {
+          this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadAttachmentTable(this.product.ID);
+          this.attachmentForm = new ProductAttachment;
+          this.submit = false;
+          form.resetForm();
+  
+      });
+     
+     
+    }
     } else {
       this.AddUpdateUrl = this.attachmentsService.ApiUrl + 'Create';
+      for (let index = 0; index < this.selectedAttachment.length; index++) {
+        const element: any = this.selectedAttachment[index];
+        this.Attachments.forEach(item => {
+          if (item.ID === element.ID) {
+          this.attachmentForm.StatusDate = new Date();
+          this.attachmentForm.AttachmentID = element.ID;
+          this.attachmentForm.Name = item.Name;
+          this.attachmentForm.ProductId = this.product.ID;
+          if(this.attachmentForm.IsRequiredTemp) {
+            this.attachmentForm.IsRequired = 1;
+          } else{
+            this.attachmentForm.IsRequired = 0;
+          }
+        this.http.post(this.AddUpdateUrl, this.attachmentForm).subscribe(res => {
+          this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
+          this.reloadAttachmentTable(this.product.ID);
+          this.attachmentForm = new ProductAttachment;
+          this.submit = false;
+          form.resetForm();
+        });
+      }
+        });
+     
     }
-    for (let index = 0; index < this.selectedAttachment.length; index++) {
-      const element: any = this.selectedAttachment[index];
-      this.Attachments.forEach(item => {
-        if (item.ID === element.ID) {
-        this.attachmentForm.StatusDate = new Date();
-        this.attachmentForm.AttachmentID = element.ID;
-        this.attachmentForm.Name = item.Name;
-        this.attachmentForm.ProductId = this.product.ID;
-    
-      this.http.post(this.AddUpdateUrl, this.attachmentForm).subscribe(res => {
-        this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
-        this.reloadAttachmentTable(this.product.ID);
-        this.attachmentForm = new ProductAttachment;
-        this.submit = false;
-        form.resetForm();
-      });
     }
-      });
-   
-  }
+
 
   }
 
@@ -339,6 +389,10 @@ export class ProductAttachmentsComponent implements OnChanges {
     this.attachmentForm = new ProductAttachment;
     this.attachmentForm = attachment;
     this.attachmentForm.selected = true;
+    if(this.attachmentForm.IsRequired === 1 ) {
+      this.attachmentForm.IsRequiredTemp = true;
+    }
+    this.loadAttachments();
   }
 
 
@@ -368,6 +422,10 @@ export class ProductAttachmentsComponent implements OnChanges {
     
       this.productReportForm.ReportId = element.ID;
       this.productReportForm.Status = 1;
+      this.productReportForm.Name = element.Name;
+      this.productReportForm.Name2 = element.Name2;
+      this.productReportForm.ReportCode = element.ReportCode;
+      
       this.productReportForm.StatusDate = new Date();
       this.productReportForm.ProductId = this.product.ID;
       this.ProductDetails.forEach(item => {
@@ -378,6 +436,7 @@ export class ProductAttachmentsComponent implements OnChanges {
       });
       this.productReportForm.CreateBy = this.user.Name;
       this.productReportForm.CreationDate = new Date();
+      this.productReportForm.StatusDate = new Date();
       this.http.post(this.productReportService.ApiUrl + 'Create' , this.productReportForm).subscribe(res =>{
         this.reloadProductReportTable(this.product.ID);
       });

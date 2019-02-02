@@ -21,7 +21,7 @@ import { SelectionModel } from '@angular/cdk/collections';
   templateUrl: './productSubjectType.component.html',
   styleUrls: ['./productSubjectType.component.css']
 })
-export class ProductSubjectTypeComponent implements OnChanges {
+export class ProductSubjectTypeComponent implements OnInit, OnChanges {
 
   // tslint:disable-next-line:no-input-rename
   @Input('product') product: Product;
@@ -62,6 +62,25 @@ export class ProductSubjectTypeComponent implements OnChanges {
   ) { }
 
 
+  ngOnInit(){
+    this.snackPosition = 'right';
+    const initialSelection = [];
+    this.user = JSON.parse(localStorage.getItem('user'));
+    this.subjectTypeForm = new ProductSubjectType();
+    this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
+    this.selection5 = new SelectionModel<ProductSubjectType>(true, initialSelection);
+
+
+    this.lineOfBussinessService.load().subscribe(res => {
+      this.Lobs = res;
+    });
+    this.lockUpService.LoadLockUpsByMajorCode(7).subscribe(res => {
+      this.excessFroms = res;
+    });
+    this.selectedProductDetail = new ProductsDetail;
+    this.selectedProductDetail.ProductID = this.product.ID;
+    this.reloadSubjectType(this.selectedProductDetail);
+  }
 
   ngOnChanges() {
     this.snackPosition = 'right';

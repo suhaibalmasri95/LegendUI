@@ -81,8 +81,7 @@
 
                     <div class="form-group col-md-3">
                       <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                      <input name="ExpiryDate"  placeholder="Expiry Date" bsDatepicker class="form-control"
-                        [ngModel]="productForm.ExpiryDate ">
+                      <input name="ExpiryDate" placeholder="Expiry Date" bsDatepicker class="form-control" [ngModel]="productForm.ExpiryDate ">
                     </div>
 
 
@@ -113,7 +112,7 @@
                       <label for="Status">Status</label>
                       <select name="Status" class="form-control" [(ngModel)]="productForm.Status">
                         <option [ngValue]="undefined">Select</option>
-                        <option *ngFor="let status of LockUps" [ngValue]="status.ID">{{status.Name}}</option>
+                        <option *ngFor="let status of LockUps" [ngValue]="status.MinorCode">{{status.Name}}</option>
                       </select>
                     </div>
 
@@ -167,50 +166,47 @@
                       <div class="form-group col-md-3">
                         <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
                         <select name="LineOfBusniess" class="form-control" [(ngModel)]="productsDetailForm.LineOfBusniess"
-                          (change)="loadSubLinesOfBusiness(productsDetailForm.LineOfBusniess)"
-                          [disabled]=" productsDetailForm.selected"
-                          
+                          (change)="loadSubLinesOfBusiness(productsDetailForm.LineOfBusniess)" [disabled]=" productsDetailForm.selected"
                           required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                         </select>
                       </div>
-
+                      <button hidden #myButton (click)="clickTest()"></button>
 
                       <div class="form-group col-md-3">
                         <label for="SubLineOfBusniess">Sub Line of Business <span class="help-block">*</span></label>
                         <select name="SubLineOfBusniess" class="form-control" [(ngModel)]="productsDetailForm.SubLineOfBusniess"
-                        required>
+                          required>
                           <option [ngValue]="undefined">Select</option>
                           <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
                         </select>
                       </div>
 
-                 
+
                       <div class="form-group col-md-3">
-                          <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
-                          <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
-                            [ngModel]="productsDetailForm.EffectiveDate">
-                        </div>
-  
-                        <div class="form-group col-md-3">
-                          <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                          <input name="ExpiryDate"  placeholder="Expiry Date" bsDatepicker class="form-control"
-                            [ngModel]="productsDetailForm.ExpiryDate ">
-                        </div>
+                        <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
+                        <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
+                          [ngModel]="productsDetailForm.EffectiveDate">
+                      </div>
+
+                      <div class="form-group col-md-3">
+                        <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
+                        <input name="ExpiryDate" placeholder="Expiry Date" bsDatepicker class="form-control" [ngModel]="productsDetailForm.ExpiryDate ">
+                      </div>
                     </div>
                     <div class="row">
 
-                        <div class="form-group col-md-3">
-                            <label for="Status">Status</label>
-                            <select name="Status" class="form-control" [(ngModel)]="productsDetailForm.Status">
-                              <option [ngValue]="undefined">Select</option>
-                              <option *ngFor="let status of LockUps" [ngValue]="status.MinorCode">{{status.Name}}</option>
-                            </select>
-                          </div>
-                  
-                        </div>
-                        <div class="row">
+                      <div class="form-group col-md-3">
+                        <label for="Status">Status</label>
+                        <select name="Status" class="form-control" [(ngModel)]="productsDetailForm.Status">
+                          <option [ngValue]="undefined">Select</option>
+                          <option *ngFor="let status of LockUps" [ngValue]="status.MinorCode">{{status.Name}}</option>
+                        </select>
+                      </div>
+
+                    </div>
+                    <div class="row">
                       <div class="col-md-11 text-right">
                         <br>
                         <br>
@@ -244,7 +240,7 @@
                         </td>
                       </ng-container>
 
-                     
+
 
                       <ng-container matColumnDef="lob">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
@@ -297,7 +293,7 @@
                         </td>
                       </ng-container>
 
-                     
+
 
                       <ng-container matColumnDef="lob">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
@@ -319,8 +315,8 @@
                       <ng-container matColumnDef="ExpiryDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Expiry Date</th>
                         <td style="width: 15%" mat-cell *matCellDef="let element">
-                         
-                          {{(element.ExpiryDate  !== null) ? (element.ExpiryDate | date: 'dd/MM/yyyy') : "" }} </td>
+
+                          {{(element.ExpiryDate !== null) ? (element.ExpiryDate | date: 'dd/MM/yyyy') : "" }} </td>
                       </ng-container>
 
                       <tr mat-header-row *matHeaderRowDef="productsDetailTableColumns"></tr>
@@ -352,19 +348,21 @@
       </div>
     </div>
   </mat-step>
-  <mat-step [editable]="submit">
+  <mat-step [editable]="productForm.ID && productDetails.length > 0">
 
     <ng-template matStepLabel>
       <h5>Product Subject types</h5>
     </ng-template>
-    <app-productsubjecttype *ngIf="submit" [product]="productForm" [productDetails]="productDetails"></app-productsubjecttype>
+    {{productDetails.legend}}
+    <app-productsubjecttype *ngIf="productForm.ID && productDetails.length > 0" [product]="productForm"
+      [productDetails]="productDetails"></app-productsubjecttype>
 
   </mat-step>
   <mat-step [editable]="submit">
     <ng-template matStepLabel>
       <h5>Product Categories </h5>
     </ng-template>
-    <div class="wrapper wrapper-content animated fadeInRight" *ngIf="submit">
+    <div class="wrapper wrapper-content animated fadeInRight" *ngIf="productForm.ID && productDetails.length > 0">
       <div class="row">
         <div class="col-md-12">
 
@@ -390,13 +388,14 @@
                       [(ngModel)]="productCategoryForm.ProductDetailID" (change)="loadProductUnRelatedCateogry()"
                       required>
                       <option [ngValue]="undefined">Select</option>
-                      <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.ID}}</option>
+                      <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.SubLineDesc}}</option>
                     </select>
                   </div>
                   <div class="form-group col-md-3">
                     <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
                     <select name="LineOfBusniess" class="form-control" [(ngModel)]="productCategoryForm.LineOfBusniess"
-                      (change)="loadSubLinesOfBusiness(productsDetailForm.LineOfBusniess)" required>
+                      [disabled]="productCategoryForm.CategoryLevel === 1 || productCategoryForm.CategoryLevel === 2"
+                      (change)="loadSubLineCategory()" required>
                       <option [ngValue]="undefined">Select</option>
                       <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                     </select>
@@ -406,7 +405,7 @@
                   <div class="form-group col-md-3">
                     <label for="SubLineOfBusniess">Sub Line of Business</label>
                     <select name="SubLineOfBusniess" class="form-control" (change)="loadProductUnRelatedCateogry()"
-                      [(ngModel)]="productCategoryForm.SubLineOfBusniess" [disabled]="!SubLobs ||SubLobs.length===0">
+                      [(ngModel)]="productCategoryForm.SubLineOfBusniess" [disabled]="productCategoryForm.CategoryLevel === 1 || productCategoryForm.CategoryLevel === 2">
                       <option [ngValue]="undefined">Select</option>
                       <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
                     </select>
@@ -414,150 +413,171 @@
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-md-3">
-                      <label for="selectedCategories">Categories<span class="help-block">*</span></label>
-                      <ng-multiselect-dropdown name="selectedCategories" [placeholder]="'Categories'" [data]="CategoriesDDL"
-                        [(ngModel)]="selectedCategories" [settings]="dropdownSettings">
-                      </ng-multiselect-dropdown>
-                    </div>
-
-                    <div class="col-md-4 text-right">
-                        <br>
-                        <br>
-                        <div class="btn-group">
-                        
-                          <input class="btn btn-primary" type="submit" value="Save" (click)="SaveCateogryColumns()" />
-                        </div>
-                      </div>
-                    
+                  <div class="form-group col-md-3">
+                    <label for="selectedCategories">Categories<span class="help-block">*</span></label>
+                    <ng-multiselect-dropdown name="selectedCategories" [placeholder]="'Categories'" [data]="CategoriesDDL"
+                      [(ngModel)]="selectedCategories" [settings]="dropdownSettings">
+                    </ng-multiselect-dropdown>
                   </div>
+
+                  <div class="col-md-4 text-right">
+                    <br>
+                    <br>
+                    <div class="btn-group">
+
+                      <input class="btn btn-primary" type="submit" value="Save" [disabled]="productCategoryForm.selected" (click)="SaveCateogryColumns()" />
+                    </div>
+                  </div>
+
+                </div>
               </div>
 
 
-           
+
 
 
 
               <br><br><br>
-              <div class="row" *ngIf="submit">
+              <div class="row" *ngIf="productForm.ID && productDetails.length > 0">
                 <div class="col-md-12">
 
                   <div class="tabs-container">
                     <div class="panel-body">
                       <mat-tab-group>
-<mat-tab label="Categories">
+                        <mat-tab label="Categories">
 
-    <div class="col-md-12">
-        <legend>
-          Categories
-        </legend>
+                          <div class="col-md-12">
+                            <legend>
+                              Categories
+                            </legend>
 
-        <div class="col-md-12">
-            <div class="html5buttons">
-                <br>
-                <div class="dt-buttons btn-group">
-                    <button class="btn btn-default" [disabled]="!selection9.hasValue()"
-                        mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
-                        placement="bottom" (confirm)="DeleteProductCategory()" ngbTooltip="Delete">
-                        <img src="assets/images/Trash-can.png"></button>
-                    <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"
-                        placement="bottom" ngbTooltip="Export to CSV"><span>
-                            <img src="assets/images/csv.jpg"></span></a>
-                    <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','country')"
-                        placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
-                    <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"
-                        placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
-                    <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
-                                src="assets/images/print.jpg"></span></a>
-                </div>
-            </div>
-            <br>
-          <div class="col-md-3">
-            <mat-form-field>
-              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="table-container">
-          <table mat-table #table9 [dataSource]="relatedCategoriesDataSource" matSort>
+                            <div class="col-md-12">
+                              <div class="html5buttons">
+                                <br>
+                                <div class="dt-buttons btn-group">
+                                  <button class="btn btn-default" [disabled]="!selection9.hasValue()"
+                                    mwlConfirmationPopover [popoverTitle]="'Confirm'" [popoverMessage]="'are you sure to delete?'"
+                                    placement="bottom" (confirm)="DeleteProductCategory()" ngbTooltip="Delete">
+                                    <img src="assets/images/Trash-can.png"></button>
+                                  <a class="btn btn-default buttons-csv buttons-html5" (click)="export('csv','country')"
+                                    placement="bottom" ngbTooltip="Export to CSV"><span>
+                                      <img src="assets/images/csv.jpg"></span></a>
+                                  <a class="btn btn-default buttons-excel buttons-html5" (click)="export('xlsx','country')"
+                                    placement="bottom" ngbTooltip="Export to Excel"><span><img src="assets/images/ExcelLogoSmall.scale-80.png"></span></a>
+                                  <a class="btn btn-default buttons-pdf buttons-html5" (click)="export('pdf','country')"
+                                    placement="bottom" ngbTooltip="Export to PDF"><span><img src="assets/images/pdf.jpg"></span></a>
+                                  <a class="btn btn-default buttons-print" placement="bottom" ngbTooltip="Print Data"><span><img
+                                        src="assets/images/print.jpg"></span></a>
+                                </div>
+                              </div>
+                              <br>
+                              <div class="col-md-3">
+                                <mat-form-field>
+                                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+                                </mat-form-field>
+                              </div>
+                            </div>
+                            <div class="table-container">
+                              <table mat-table #table9 [dataSource]="relatedCategoriesDataSource" matSort>
 
-            <ng-container matColumnDef="select">
-              <th mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? masterToggle9() : null" [checked]="selection9.hasValue() && isAllSelected9()"
-                  [indeterminate]="selection9.hasValue() && !isAllSelected9()">
-                </mat-checkbox>
-              </th>
-              <td style="width: 5%" mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection9.toggle(row) : null"
-                  [checked]="selection9.isSelected(row)">
-                </mat-checkbox>
-              </td>
-            </ng-container>
+                                <ng-container matColumnDef="select">
+                                  <th mat-header-cell *matHeaderCellDef>
+                                    <mat-checkbox (change)="$event ? masterToggle9() : null" [checked]="selection9.hasValue() && isAllSelected9()"
+                                      [indeterminate]="selection9.hasValue() && !isAllSelected9()">
+                                    </mat-checkbox>
+                                  </th>
+                                  <td style="width: 5%" mat-cell *matCellDef="let row">
+                                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection9.toggle(row) : null"
+                                      [checked]="selection9.isSelected(row)">
+                                    </mat-checkbox>
+                                  </td>
+                                </ng-container>
 
-            <ng-container matColumnDef="ID">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-              <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="Name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Lable}}
-              </td>
-            </ng-container>
 
-            <ng-container matColumnDef="lob">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniess}}
-              </td>
-            </ng-container>
+                                <ng-container matColumnDef="Name">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Lable}}
+                                  </td>
+                                </ng-container>
 
-            <ng-container matColumnDef="subLob">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element">
-                {{element.SubLineOfBusniess}} </td>
-            </ng-container>
-            <ng-container matColumnDef="Level">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element">
-                {{element.CategoryLevel}} </td>
-            </ng-container>
-            <ng-container matColumnDef="IsMultiRecord">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Record</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element">
-                {{element.MultiRecord}} </td>
-            </ng-container>
-            <ng-container matColumnDef="Product">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element">
-                {{element.ProductID}} </td>
-            </ng-container>
-            <ng-container matColumnDef="ProductDetail">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element">
-                {{element.ProductDetailID}} </td>
-            </ng-container>
-            <ng-container matColumnDef="Status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element">
-                {{element.Status}} </td>
-            </ng-container>
-            <ng-container matColumnDef="Order">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
-              <td style="width: 15%" mat-cell *matCellDef="let element">
-                {{element.Order}} </td>
-            </ng-container>
+                                <ng-container matColumnDef="lob">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniess}}
+                                  </td>
+                                </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="relatedCategoriesTableColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: relatedCategoriesTableColumns;"
-             class=" mat-row" (click)="UpdateProductCategory(row)"></tr>
+                                <ng-container matColumnDef="subLob">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element">
+                                    {{element.SubLineOfBusniess}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Level">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element">
+                                    {{element.CategoryLevel}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="IsMultiRecord">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Record</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element">
+                                    {{element.MultiRecord}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Product">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element">
+                                    {{element.ProductID}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="ProductDetail">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element">
+                                    {{element.ProductDetailID}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Status">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element">
+                                 
+                                    <mat-form-field>
+                                        <mat-select [(value)]="element.Status" placeholder="Status">
+                                            <mat-option value="undefined">select</mat-option>
+                                            <mat-option  *ngFor="let status of LockUps"  [value]="status.MinorCode">
+                                              {{status.Name}}</mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                     
+                               
+                                  </td>
+                                </ng-container>
+                                <ng-container matColumnDef="Order">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Order</th>
+                                  <td style="width: 15%" mat-cell *matCellDef="let element">
+                                    <mat-form-field floatLabel="never">
+                                      <input matInput placeholder="Order" [value]="element.Percent" [(ngModel)]="element.Order">
+                                    </mat-form-field>
 
-          </table>
-        </div>
-        <mat-paginator #paginator9 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true">
-        </mat-paginator>
+                                  </td>
+                                </ng-container>
 
-      </div>
-</mat-tab>
+
+                                <tr mat-header-row *matHeaderRowDef="relatedCategoriesTableColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: relatedCategoriesTableColumns;" 
+                                
+                                class=" mat-row {{productCategoryForm.ID===row.ID?'active':'not-active'}}"
+                                  (click)="UpdateProductCategory(row)"></tr>
+
+                              </table>
+                            </div>
+                            <mat-paginator #paginator9 [pageSizeOptions]="[10, 20, 30 ,40,50]" [showFirstLastButtons]="true">
+                            </mat-paginator>
+                            <br>
+                            <div class="col-md-11 text-right">
+  
+                              <div class="btn-group">
+                              
+                                <input class="btn btn-primary" type="submit" value="Save" (click)="saveChanges()" />
+                              </div>
+                            </div>
+                           
+                          </div>
+                        </mat-tab>
                         <mat-tab label="Columns">
 
                           <div class="col-md-12">
@@ -588,11 +608,7 @@
                                   </td>
                                 </ng-container>
 
-                                <ng-container matColumnDef="ID">
-                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                                  <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                                  </td>
-                                </ng-container>
+                            
                                 <ng-container matColumnDef="Lable">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Label</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Lable}}
@@ -632,7 +648,8 @@
                                 </ng-container>
 
                                 <tr mat-header-row *matHeaderRowDef="categoryColumnsTableColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: categoryColumnsTableColumns;"(click)="UpdateProductCategoryValidation(row)" class=" mat-row"></tr>
+                                <tr mat-row *matRowDef="let row; columns: categoryColumnsTableColumns;" (click)="UpdateProductCategoryValidation(row)"
+                                class=" mat-row {{columnsForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                               </table>
                             </div>
@@ -649,95 +666,92 @@
                               Column Validations
                             </legend>
                             <fieldset>
-                              
-                                <form #form4="ngForm" (ngSubmit)="saveValidationColumns()" class="{{submit4?'submited':''}}">
-                                  <div class="row">
-                                      <div class="form-group col-md-3">
-                                          <label for="CategoryID">Categories </label>
-                                          <select name="CategoryID" class="form-control" 
-                                            [(ngModel)]="columnValidationForm.CategoryID" (change)="LoadProductCategoryCloumns()"
-                                            required>
-                                            <option [ngValue]="undefined">Select</option>
-                                            <option *ngFor="let cat of RelatedCategory" [ngValue]="cat.ID">{{cat.Lable}}</option>
-                                          </select>
-                                        </div>
-                                        <div class="form-group col-md-3">
-                                            <label for="ColumnID">Columns </label>
-                                            <select name="ColumnID" class="form-control" 
-                                              [(ngModel)]="columnValidationForm.ColumnID" 
-                                              (change)="updateValidationValues()"
-                                              required>
-                                              <option [ngValue]="undefined">Select</option>
-                                              <option *ngFor="let column of productColumns" [ngValue]="column.ID">{{column.Lable}}</option>
-                                            </select>
-                                          </div>
-                                    <div class="form-group col-md-3">
-                                      <label for="Lable">Label<span class="help-block">*</span></label>
-                                      <input name="Lable" placeholder="Label" readonly type="text" class="form-control"
-                                        [(ngModel)]="columnValidationForm.Lable" required>
-                                    </div>
-  
-                                    <div class="form-group col-md-3">
-                                      <label for="Lable2">Label2 </label>
-                                      <input name="Lable2" placeholder="Lable2" readonly type="text" class="form-control"
-                                        [(ngModel)]="columnValidationForm.Lable2">
+
+                              <form #form4="ngForm" (ngSubmit)="saveValidationColumns()" class="{{submit4?'submited':''}}">
+                                <div class="row">
+                                  <div class="form-group col-md-3">
+                                    <label for="CategoryID">Categories </label>
+                                    <select name="CategoryID" class="form-control" [(ngModel)]="columnValidationForm.CategoryID"
+                                      (change)="LoadProductCategoryCloumns()" required>
+                                      <option [ngValue]="undefined">Select</option>
+                                      <option *ngFor="let cat of RelatedCategory" [ngValue]="cat.ID">{{cat.Lable}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group col-md-3">
+                                    <label for="ColumnID">Columns </label>
+                                    <select name="ColumnID" class="form-control" [(ngModel)]="columnValidationForm.ColumnID"
+                                      (change)="updateValidationValues()" required>
+                                      <option [ngValue]="undefined">Select</option>
+                                      <option *ngFor="let column of productColumns" [ngValue]="column.ID">{{column.Lable}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group col-md-3">
+                                    <label for="Lable">Label<span class="help-block">*</span></label>
+                                    <input name="Lable" placeholder="Label" readonly type="text" class="form-control"
+                                      [(ngModel)]="columnValidationForm.Lable" required>
+                                  </div>
+
+                                  <div class="form-group col-md-3">
+                                    <label for="Lable2">Label2 </label>
+                                    <input name="Lable2" placeholder="Lable2" readonly type="text" class="form-control"
+                                      [(ngModel)]="columnValidationForm.Lable2">
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="form-group col-md-3">
+                                    <label for="DataType">Data Type</label>
+                                    <input name="DataType" placeholder="Data Type" readonly type="text" class="form-control"
+                                      [(ngModel)]="columnValidationForm.DataType">
+                                  </div>
+
+                                  <div class="form-group col-md-3">
+                                    <label for="MaxValue">Max Value</label>
+                                    <input name="MaxValue" placeholder="Max Value" type="number" class="form-control"
+                                      [(ngModel)]="columnValidationForm.MaxValue">
+                                  </div>
+
+
+
+                                  <div class="form-group col-md-3">
+                                    <label for="ValidationType">Validation Type</label>
+                                    <select name="ValidationType" class="form-control" [(ngModel)]="columnValidationForm.LocValidType">
+                                      <option [ngValue]="undefined">Select</option>
+                                      <option *ngFor="let ValidationType of ValidationTypes" [ngValue]="ValidationType.MinorCode">{{ValidationType.Name}}</option>
+                                    </select>
+                                  </div>
+                                  <div class="form-group col-md-3">
+                                    <label for="MinValue">Min Value</label>
+                                    <input name="MinValue" placeholder="Min Value" type="number" [disabled]="columnValidationForm.LocValidType!==3"
+                                      [required]="columnValidationForm.LocValidType === 3" class="form-control"
+                                      [(ngModel)]="columnValidationForm.MinValue">
+                                  </div>
+                                  <div class="form-group col-md-3" *ngIf="columnValidationForm.LocValidType === 2">
+                                    <mat-checkbox name="IsMandetory" [(ngModel)]="columnValidationForm.IsMandetoryTemp">
+                                      Is Mandatory
+                                    </mat-checkbox>
+                                  </div>
+
+                                  <div class="form-group col-md-3" *ngIf="columnValidationForm.LocValidType === 1">
+                                    <mat-checkbox name="CheckDuplication" [(ngModel)]="columnValidationForm.CheckDuplicationTemp">
+                                      Check Duplicatio
+                                    </mat-checkbox>
+                                  </div>
+
+
+
+
+                                  <div class="col-md-12 text-right">
+                                    <br>
+                                    <br>
+                                    <div class="btn-group">
+                                      <input class="btn btn-default" type="reset" (click)="submit4=false;resetForm(form4)"
+                                        value="Reset" />
+                                      <input class="btn btn-primary" type="submit" value="Save" (click)="submit4=true" />
                                     </div>
                                   </div>
-                                  <div class="row">
-                                    <div class="form-group col-md-3">
-                                      <label for="DataType">Data Type</label>
-                                      <input name="DataType" placeholder="Data Type" readonly type="text" class="form-control"
-                                        [(ngModel)]="columnValidationForm.DataType">
-                                    </div>
-     
-                                    <div class="form-group col-md-3">
-                                        <label for="MaxValue">Max Value</label>
-                                        <input name="MaxValue" placeholder="Max Value" type="number" class="form-control"
-                                          [(ngModel)]="columnValidationForm.MaxValue">
-                                      </div>
-                                  
-  
-                                
-                                      <div class="form-group col-md-3">
-                                          <label for="ValidationType">Validation Type</label>
-                                          <select name="ValidationType" class="form-control" [(ngModel)]="columnValidationForm.LocValidType">
-                                            <option [ngValue]="undefined">Select</option>
-                                            <option *ngFor="let ValidationType of ValidationTypes" [ngValue]="ValidationType.MinorCode">{{ValidationType.Name}}</option>
-                                          </select>
-                                        </div>
-                                      <div class="form-group col-md-3">
-                                          <label for="MinValue">Min Value</label>
-                                          <input name="MinValue" placeholder="Min Value" type="number" [disabled]="columnValidationForm.LocValidType!==3"
-                                            [required]="columnValidationForm.LocValidType === 3" class="form-control"
-                                            [(ngModel)]="columnValidationForm.MinValue">
-                                        </div>
-                                    <div class="form-group col-md-3" *ngIf="columnValidationForm.LocValidType === 2" >
-                                      <mat-checkbox name="IsMandetory"  [(ngModel)]="columnValidationForm.IsMandetory">
-                                          Is Mandatory
-                                      </mat-checkbox>
-                                    </div>
-  
-                                    <div class="form-group col-md-3" *ngIf="columnValidationForm.LocValidType === 1" >
-                                      <mat-checkbox name="CheckDuplication" [(ngModel)]="columnValidationForm.CheckDuplication">
-                                         Check Duplicatio
-                                      </mat-checkbox>
-                                    </div>
-  
-                               
-  
-  
-                                    <div class="col-md-12 text-right">
-                                      <br>
-                                      <br>
-                                      <div class="btn-group">
-                                        <input class="btn btn-default" type="reset" (click)="submit4=false;resetForm(form4)"
-                                          value="Reset" />
-                                        <input class="btn btn-primary" type="submit" value="Save" (click)="submit4=true" />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </form>
-                              </fieldset>
+                                </div>
+                              </form>
+                            </fieldset>
                             <div class="col-md-12">
                               <div class="col-md-3">
                                 <mat-form-field>
@@ -761,11 +775,7 @@
                                   </td>
                                 </ng-container>
 
-                                <ng-container matColumnDef="ID">
-                                  <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                                  <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                                  </td>
-                                </ng-container>
+                            
                                 <ng-container matColumnDef="Lable">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Label</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Lable}}
@@ -803,7 +813,8 @@
                                 </ng-container>
 
                                 <tr mat-header-row *matHeaderRowDef="columnValidationsTableColumns"></tr>
-                                <tr mat-row *matRowDef="let row; columns: columnValidationsTableColumns;" (click) ="updateValidations(row)" class=" mat-row"></tr>
+                                <tr mat-row *matRowDef="let row; columns: columnValidationsTableColumns;" (click)="updateValidations(row)"
+                                class=" mat-row {{columnValidationForm.ID===row.ID?'active':'not-active'}}"></tr>
 
                               </table>
                             </div>
@@ -813,7 +824,7 @@
 
 
 
-                        
+
                           </div>
                         </mat-tab>
 
@@ -833,18 +844,20 @@
   </mat-step>
   <mat-step [editable]="submit">
 
-      <ng-template matStepLabel>
-          <h5>Product Attachments </h5>
-        </ng-template>
-    <app-product-attachments [Lobs]="Lobs" [status]="LockUps" *ngIf="submit" [product]="productForm"></app-product-attachments>
+    <ng-template matStepLabel>
+      <h5>Product Attachments </h5>
+    </ng-template>
+    <app-product-attachments [Lobs]="Lobs" [status]="LockUps" *ngIf="productForm.ID && productDetails.length > 0"
+      [product]="productForm"></app-product-attachments>
   </mat-step>
   <mat-step [editable]="submit">
-      <ng-template matStepLabel>
-          <h5>Product Wording </h5>
-        </ng-template>
-    <app-productwording *ngIf="submit" [product]="productForm" [productDetails]="productDetails" [Lobs]="Lobs" [status]="LockUps"></app-productwording>
+    <ng-template matStepLabel>
+      <h5>Product Wording </h5>
+    </ng-template>
+    <app-productwording *ngIf="productForm.ID && productDetails.length > 0" [product]="productForm" [productDetails]="productDetails"
+      [Lobs]="Lobs" [status]="LockUps"></app-productwording>
   </mat-step>
-<!--   <mat-step [editable]="submit">
+  <!--   <mat-step [editable]="submit">
 
       <ng-template matStepLabel>
           <h5>Product Questionnaires</h5>
@@ -856,11 +869,11 @@
                   [(ngModel)]="productQuestionnaireForm.ProductDetailedID" (change)="FilterQustionnaires()"
                   required>
                   <option [ngValue]="undefined">Select</option>
-                  <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.ID}}</option>
+                  <option *ngFor="let ProductDetail of productDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.SubLineDesc}}</option>
                 </select>
               </div>
         </div>
-    <div class="col-md-5" *ngIf="submit">
+    <div class="col-md-5" *ngIf="productForm.ID && productDetails.length > 0">
 
       <br>
       <legend>
@@ -909,7 +922,7 @@
 
     </div>
 
-    <div class="col-md-2 text-center groups-arrows" *ngIf="submit">
+    <div class="col-md-2 text-center groups-arrows" *ngIf="productForm.ID && productDetails.length > 0">
       <div>
         <i class="fa fa-arrow-right" (click)="addQuestionaire()"></i>
       </div>
@@ -920,7 +933,7 @@
 
     </div>
 
-    <div class="col-md-5" *ngIf="submit">
+    <div class="col-md-5" *ngIf="productForm.ID && productDetails.length > 0">
 
       <br>
       <legend>

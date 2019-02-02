@@ -25,5 +25,8 @@ export class ProductColumnValidation implements IEntity {
     MaxValue: number;
     MinValue: number;
     CheckDuplication: number;
+    IsMandetoryTemp: boolean;
+    CheckDuplicationTemp: boolean;
+  
 
 }

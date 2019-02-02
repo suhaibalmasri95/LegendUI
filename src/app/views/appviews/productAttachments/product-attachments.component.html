@@ -37,7 +37,7 @@
                           <select name="ProductDetailId" class="form-control" (change)="loadAttachments()" [disabled]="attachmentForm.AttachmentLevel === 1 || attachmentForm.AttachmentLevel ===2"
                             [(ngModel)]="attachmentForm.ProductDetailId" required>
                             <option [ngValue]="undefined">Select</option>
-                            <option *ngFor="let ProductDetail of ProductDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.ID}}</option>
+                            <option *ngFor="let ProductDetail of ProductDetails" [ngValue]="ProductDetail.ID">{{ProductDetail.SubLineDesc}}</option>
                           </select>
                         </div>
                         <div class="form-group col-md-3">
@@ -53,7 +53,7 @@
                       <div class="row">
 
                         <div class="form-group col-md-3">
-                          <mat-checkbox name="IsRequiredTemp" [(ngModel)]="attachmentForm.IsRequired">Is Required
+                          <mat-checkbox name="IsRequiredTemp" [(ngModel)]="attachmentForm.IsRequiredTemp">Is Required
                           </mat-checkbox>
                         </div>
 
@@ -71,35 +71,36 @@
                         <div class="form-group col-md-3">
                           <label for="LineOfBusiness">Line of Business <span class="help-block">*</span></label>
                           <select name="LineOfBusiness" class="form-control" [(ngModel)]="attachmentForm.LineOfBusiness"
-                            (change)="loadSubLinesOfBusiness(attachmentForm.LineOfBusiness)" required>
+                            disabled
+                            required>
                             <option [ngValue]="undefined">Select</option>
                             <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                           </select>
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="SubLineOfBusiness">Sub Line of Business</label>
-                            <select name="SubLineOfBusiness" class="form-control" [(ngModel)]="attachmentForm.SubLineOfBusiness"
-                              [disabled]="!SubLobs ||SubLobs.length===0">
-                              <option [ngValue]="undefined">Select</option>
-                              <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
-                            </select>
-                          </div>
-  
-  
-                          <div class="form-group col-md-3">
-                            <label for="Status">Status</label>
-                            <select name="Status" class="form-control" [(ngModel)]="attachmentForm.Status">
-                              <option [ngValue]="undefined">Select</option>
-                              <option *ngFor="let status of status" [ngValue]="status.MinorCode">{{status.Name}}</option>
-                            </select>
-                          </div>
-  
+                          <label for="SubLineOfBusiness">Sub Line of Business</label>
+                          <select name="SubLineOfBusiness" class="form-control" disabled
+                            [(ngModel)]="attachmentForm.SubLineOfBusiness" >
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
+                          </select>
+                        </div>
+
+
+                        <div class="form-group col-md-3">
+                          <label for="Status">Status</label>
+                          <select name="Status" class="form-control" [(ngModel)]="attachmentForm.Status">
+                            <option [ngValue]="undefined">Select</option>
+                            <option *ngFor="let status of status" [ngValue]="status.MinorCode">{{status.Name}}</option>
+                          </select>
+                        </div>
+
 
                       </div>
 
                       <div class="row">
 
-                       
+
                         <div class="col-md-6 text-right">
                           <br>
                           <br>
@@ -142,7 +143,7 @@
                         [(ngModel)]="productdetail">
                         <mat-option [value]=""> All </mat-option>
                         <mat-option *ngFor="let productdetail of ProductDetails" [value]="productdetail.ID">
-                          {{productdetail.Name}}
+                          {{productdetail.SubLineDesc}}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -178,10 +179,7 @@
                         </td>
                       </ng-container>
 
-                      <ng-container matColumnDef="ID">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                        <td mat-cell *matCellDef="let element"> {{element.ID}} </td>
-                      </ng-container>
+                     
 
                       <ng-container matColumnDef="NAME">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
@@ -276,11 +274,7 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="ID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                      </td>
-                    </ng-container>
+            
 
                     <ng-container matColumnDef="ReportName">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Report Name</th>
@@ -318,14 +312,14 @@
                   <mat-select placeholder="Product details" [(ngModel)]="productReportForm.ProductDetailId">
                     <mat-option [value]=""> All </mat-option>
                     <mat-option *ngFor="let productDetail of ProductDetails" [value]="productDetail.ID">
-                      {{productDetail.ID}}
+                      {{productDetail.SubLineDesc}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
                 <mat-form-field>
                   <mat-select placeholder="Report Level" [(ngModel)]="productReportForm.ReportLevel">
                     <mat-option [value]=""> All </mat-option>
-                    <mat-option *ngFor="let reportLevel of ReportLevels" [value]="reportLevel.ID">
+                    <mat-option *ngFor="let reportLevel of ReportLevels" [value]="reportLevel.MinorCode">
                       {{reportLevel.Name}}
                     </mat-option>
                   </mat-select>
@@ -365,15 +359,11 @@
                       </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="ID">
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-                      <td style="width: 5%" mat-cell *matCellDef="let element"> {{element.ID}}
-                      </td>
-                    </ng-container>
+                 
 
                     <ng-container matColumnDef="ReportName">
                       <th mat-header-cell *matHeaderCellDef mat-sort-header>Report Name</th>
-                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.ReportName}}
+                      <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.Name}}
                       </td>
                     </ng-container>
 

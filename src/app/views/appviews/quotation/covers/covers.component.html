@@ -359,16 +359,7 @@
                                 <mat-form-field floatLabel="never">
                                     <input matInput placeholder="Due Date" bsDatepicker [value]="element.DueDate | date" [(ngModel)]="element.DueDate">
                                    </mat-form-field>
-                            <!--   <ng-container *ngIf="element.DueDate">
-                                {{element.DueDate | date}}
-                              </ng-container>
-                              <span class="add-comment" *ngIf="!element.DueDate">
-                                Add a Due Date
-                              </span>
-
-                              <sat-popover #p hasBackdrop xAlign="start" yAlign="start" (closed)="updateDueDate(element, $event)">
-                                <inline-edit-date [value]="element.DueDate"></inline-edit-date>
-                              </sat-popover> -->
+                      
                             </td>
 
                           </ng-container>
@@ -378,16 +369,7 @@
                              >	<mat-form-field floatLabel="never">
                              <input matInput placeholder="Installment Percentage" [value]="element.Percent" [(ngModel)]="element.Percent">
                             </mat-form-field>
-                              <!-- <ng-container *ngIf="element.Percent">
-                                {{element.Percent}}
-                              </ng-container>
-                              <span class="add-comment" *ngIf="!element.Percent">
-                                Add a Installment Percentage
-                              </span>
-
-                              <sat-popover #p2 hasBackdrop xAlign="start" yAlign="start" (closed)="updateInstallmentPercent(element, $event)">
-                                <inline-edit [value]="element.Percent"></inline-edit>
-                              </sat-popover> -->
+                           
                             </td>
                           </ng-container>
 
