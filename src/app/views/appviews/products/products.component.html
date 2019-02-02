@@ -72,7 +72,7 @@
                     <div class="form-group col-md-3">
                       <label for="EffectiveDate">Effective Date <span class="help-block">*</span></label>
                       <input name="EffectiveDate" required placeholder="Effective Date" bsDatepicker class="form-control"
-                        [ngModel]="productForm.EffectiveDate">
+                        [(ngModel)]="productForm.EffectiveDate">
                     </div>
 
                   </div>
@@ -81,7 +81,7 @@
 
                     <div class="form-group col-md-3">
                       <label for="ExpiryDate">Expiry Date <span class="help-block">*</span></label>
-                      <input name="ExpiryDate" placeholder="Expiry Date" bsDatepicker class="form-control" [ngModel]="productForm.ExpiryDate ">
+                      <input name="ExpiryDate" placeholder="Expiry Date" bsDatepicker class="form-control" [(ngModel)]="productForm.ExpiryDate ">
                     </div>
 
 
@@ -211,7 +211,7 @@
                         <br>
                         <br>
                         <div class="btn-group">
-                          <input class="btn btn-default" type="reset" (click)="submit2=false;resetForm(form2)" value="Reset" />
+                          <input class="btn btn-default" type="reset" (click)="submit2=false;resetProductDetail(form2)" value="Reset" />
                           <input class="btn btn-primary" type="submit" value="Save" (click)="submit2=true" />
                         </div>
                       </div>
@@ -420,7 +420,7 @@
                     </ng-multiselect-dropdown>
                   </div>
 
-                  <div class="col-md-4 text-right">
+                  <div class="col-md-8 text-right">
                     <br>
                     <br>
                     <div class="btn-group">
@@ -431,7 +431,7 @@
 
                 </div>
               </div>
-
+              <br>
 
 
 
@@ -502,29 +502,29 @@
 
                                 <ng-container matColumnDef="lob">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Line of Business</th>
-                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineOfBusniess}}
+                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.LineDesc}}
                                   </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="subLob">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Sub LOB</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.SubLineOfBusniess}} </td>
+                                    {{element.SubLineDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="Level">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.CategoryLevel}} </td>
+                                    {{element.CategoryLevelDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="IsMultiRecord">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Is Multi Record</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.MultiRecord}} </td>
+                                    {{element.IsMultiDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="Product">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.ProductID}} </td>
+                                    {{element.ProductDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="ProductDetail">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
@@ -616,20 +616,20 @@
                                 </ng-container>
                                 <ng-container matColumnDef="ColumnType">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Column Type</th>
-                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.ColumnType}}
+                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.ColumnTypeDesc}}
                                   </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="Category">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.Category}} </td>
+                                    {{element.CategoryDesc}} </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="Product">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.Product}} </td>
+                                    {{element.ProductDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="ProductDetail">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
@@ -744,7 +744,7 @@
                                     <br>
                                     <br>
                                     <div class="btn-group">
-                                      <input class="btn btn-default" type="reset" (click)="submit4=false;resetForm(form4)"
+                                      <input class="btn btn-default" type="reset" (click)="submit4=false;resetValidationForm(form4)"
                                         value="Reset" />
                                       <input class="btn btn-primary" type="submit" value="Save" (click)="submit4=true" />
                                     </div>
@@ -783,13 +783,13 @@
                                 </ng-container>
                                 <ng-container matColumnDef="DataType">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Type</th>
-                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.DataType}}
+                                  <td style="width: 15%" mat-cell *matCellDef="let element"> {{element.DataTypeDesc}}
                                   </td>
                                 </ng-container>
                                 <ng-container matColumnDef="ValidationType">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Validation Type</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.ValidationType}} </td>
+                                    {{element.LocTypeDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="IsMandatory">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>IsMandatory</th>

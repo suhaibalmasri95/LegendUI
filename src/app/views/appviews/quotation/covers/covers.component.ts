@@ -21,6 +21,7 @@ import { DataSource } from '@angular/cdk/table';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MatTableDataSource } from '@angular/material';
 import { AlertifyService } from '../../../../_services/alertify.service';
+import { Customer } from '../../../../entities/Financial/Customer';
 
 @Component({
   selector: 'app-covers',
@@ -69,7 +70,8 @@ export class CoversComponent implements OnInit {
   selectedRisk: Risk = new Risk();
   coverCalculation: Calculation[] = []; 
   RiskCalculation: Calculation[] = []; 
-  
+  customerSearch: FormControl = new FormControl();
+  Customers: Customer[] = [];
   Installments: Installment[] = [];
   dataSource: MatTableDataSource<Installment>;
   riskTableColumn = ['select', 'Serial', 'Effective Date', 'Expiry Date', 'Line Of Business',
@@ -167,6 +169,22 @@ export class CoversComponent implements OnInit {
         
                 }
               });
+              this.customerSearch.valueChanges.subscribe(
+                term => {
+                  if (term !== '') {
+                    this.seracrhService.search(null, null, term, null, null, null, null, 1, this.coverShare.LocShareType).subscribe(
+                      data => {
+                        if (data.length > 0) {
+                          this.Customers = data;
+                          
+                        } else {
+                        
+                        }
+                      });
+                  } else {
+                 
+                  }
+                });
  
   }
 
@@ -208,6 +226,9 @@ export class CoversComponent implements OnInit {
          }); 
       });
     }
+  }
+  displayFn(customer?: Customer): string | undefined {
+    return customer ?   customer.Name : undefined;
   }
   switchTabs(event) {
     setTimeout(() => {
@@ -335,6 +356,7 @@ export class CoversComponent implements OnInit {
    
   }
   SaveCover() {
+    
     if(this.documentCover && (this.documentCover.ID === undefined || this.documentCover.ID === null)  ) {
       
       this.documentCover.CreatedBy = this.user.Name;
@@ -345,6 +367,7 @@ export class CoversComponent implements OnInit {
      }
      this.documentCover.UwDocumentID = this.document.ID;
      this.documentCover.UwRiskID = this.selectedRisk.ID;
+    
      this.documentCover.ChargeType = 1;
      this.http.post(this.calculateSerivce.ApiUrl + 'Create', this.documentCover).subscribe(shareResult => {
       console.log(shareResult);
@@ -427,9 +450,10 @@ export class CoversComponent implements OnInit {
 
   saveShare(){
    
-   // this.coverShare.CustomerId = customerID;
-   if(this.coverShare && (this.coverShare.ID === undefined || this.coverShare.ID === null)  ) {
 
+   if(typeof this.customerSearch.value !== 'string') {
+   if(this.coverShare && (this.coverShare.ID === undefined || this.coverShare.ID === null)  ) {
+   this.coverShare.CustomerId = this.customerSearch.value.ID;
     this.coverShare.CreatedBy = this.user.Name;
     this.coverShare.CreationDate = new Date();
    }  else{
@@ -443,7 +467,10 @@ export class CoversComponent implements OnInit {
         this.shares = shares;
         this.getCustomerDependsOnShareType();
       });
-    });
+    }); } else {
+      this.alertifySerice.error("You need to select a customer");
+    }
+
   }
 
 

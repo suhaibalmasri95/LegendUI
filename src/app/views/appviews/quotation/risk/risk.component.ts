@@ -73,7 +73,7 @@ export class RiskComponent implements OnChanges, OnInit {
       this.renderTable(this.risks);
       //this.reInit(this.riskForm);
       this.riskForm = doc[0];
-      this.updateModeForRisk();
+     // this.updateModeForRisk();
     
       // create header using child_id
     
@@ -335,7 +335,7 @@ export class RiskComponent implements OnChanges, OnInit {
         }
         input.append('Remarks', this.attachmentForm.controls.Remarks.value ? this.attachmentForm.controls.Remarks.value : '');
         // etc, etc
-        this.http.post('https://localhost:44322/api/Attachment/Create', input).subscribe(res => {
+        this.http.post( this.hostUrl + 'api/Attachment/Create', input).subscribe(res => {
         });
 
         if (x === this.attachmentForm.controls.attachmetValues.value.length - 1) {
@@ -428,12 +428,12 @@ export class RiskComponent implements OnChanges, OnInit {
     return this.attachmentForm.controls;
   }
   submit() {
-    this.http.post('https://localhost:44322/api/Risk/Create', { Risks: this.risks }).subscribe(res => {
+    this.http.post(this.hostUrl+'api/Risk/Create', { Risks: this.risks }).subscribe(res => {
       console.log(res);
       const status: any = res;
       if (status.ID) {
         this.riskForm.ID = status.ID;
-        this.http.get<Risk[]>('https://localhost:44322/api/Risk/Load?ID=' + status.ID).subscribe(doc => {
+        this.http.get<Risk[]>(this.hostUrl+'api/Risk/Load?ID=' + status.ID).subscribe(doc => {
           this.risks = doc;
           this.renderTable(this.risks);
           //this.reInit(this.riskForm);

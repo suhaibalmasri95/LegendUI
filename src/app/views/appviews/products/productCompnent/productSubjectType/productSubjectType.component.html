@@ -44,7 +44,7 @@
             </div>
             <div class="form-group col-md-3">
               <label for="SubjectTypeID">Subject Type</label>
-              <select name="SubjectTypeID" placeholder="Subject Type" class="form-control" [disabled]="subjectTypeForm.selected"  [(ngModel)]="subjectTypeForm.SubjectType">
+              <select name="SubjectTypeID" placeholder="Subject Type" class="form-control" [disabled]="subjectTypeForm.selected"  [(ngModel)]="subjectTypeForm.SubjectTypeID">
                 <option [ngValue]="undefined">Select</option>
                 <option *ngFor="let  SubjectType of subjectTypes" [ngValue]="SubjectType.ID">{{SubjectType.Name}}</option>
               </select>
@@ -84,7 +84,7 @@
           <div class="row">
           
 
-            <div class="col-md-7 text-right">
+            <div class="col-md-11 text-right">
               <br>
               <br>
               <div class="btn-group">
@@ -226,7 +226,10 @@
       
 
           <tr mat-header-row *matHeaderRowDef="subjectTypesPDTableColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: subjectTypesPDTableColumns;" class=" mat-row"></tr>
+          <tr mat-row *matRowDef="let row; columns: subjectTypesPDTableColumns;" 
+          class=" mat-row {{subjectTypeForm.ID===row.ID?'active':'not-active'}}"
+          (click)="updateSubjectType(row)"
+        ></tr>
 
         </table>
       </div>

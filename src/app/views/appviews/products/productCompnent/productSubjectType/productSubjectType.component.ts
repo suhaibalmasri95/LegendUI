@@ -28,7 +28,7 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
   // tslint:disable-next-line:no-input-rename
   @Input('productDetails') productDetails: ProductsDetail[] = [];
   subjectTypeForm: ProductSubjectType;
-  subjectTypes: ProductSubjectType[];
+  subjectTypes: any[];
   subjectTypesLobTableColumns = ['select',  'SubjectType', 'ParentSubjectType', 'lob', 'subLob'];
   subjectTypesLobDataSource: MatTableDataSource<SubjectType>;
   submit3: boolean;
@@ -101,6 +101,30 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
     this.selectedProductDetail.ProductID = this.product.ID;
     this.reloadSubjectType(this.selectedProductDetail);
 
+  }
+  updateSubjectType(row) {
+    this.subjectTypeForm = new ProductSubjectType();
+    this.subjectTypeForm = row;
+    this.subjectTypeForm.selected = true;
+    this.productDetails.forEach(element => {
+      if (element.ID === this.subjectTypeForm.ProductDetailsID) {
+        this.subLineService.load(element.SubLineOfBusniess, element.LineOfBusniess, 
+           null, 1).subscribe(data => {
+          this.SubLobs = data;
+        });
+        this.subjectTypeForm.SubLineOfBusniess = element.SubLineOfBusniess;
+        this.subjectTypeForm.LineOfBusniess = element.LineOfBusniess;
+        
+        this.selectedProductDetail = element;
+        this.subjectTypeService.load(this.subjectTypeForm.SubjectTypeID , null , null , 1).subscribe(data =>{
+          this.subjectTypes = data;
+         
+        });
+     
+      }
+     
+    });
+  
   }
   loadSubLinesOfBusiness(lob) {
   
@@ -180,12 +204,7 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
     });
   }
 
-  updateSubjectType(subjectType: ProductSubjectType) {
-    window.scroll(0, 0);
-    this.subjectTypeForm = new ProductSubjectType();
-    this.subjectTypeForm = subjectType;
-    this.subjectTypeForm.selected = true;
-  }
+
 
   resetForm(form) {
 

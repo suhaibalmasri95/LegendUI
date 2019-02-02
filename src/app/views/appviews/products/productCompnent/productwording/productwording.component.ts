@@ -142,6 +142,7 @@ export class ProductwordingComponent implements OnInit {
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
   }
+  
   loadAttachments() {
     this.productsDetailService.loadUnRelatedAttachments(null, this.product.ID,
       this.wordingForm.ProductDetailId,

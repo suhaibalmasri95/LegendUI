@@ -22,9 +22,10 @@ import { ProductsDetailService } from './../../../_services/_setup/ProductsDetai
 import { SubLineOfBusiness } from './../../../entities/Setup/SubLineOfBusiness';
 import { SubBusinessService } from './../../../_services/_setup/SubBusiness.service';
 import { forEach } from '@angular/router/src/utils/collection';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, NgForm } from '@angular/forms';
 import { AlertifyService } from '../../../_services/alertify.service';
 import * as _ from 'lodash';
+import { CategoryService } from '../../../_services/_setup/Category.service';
 
 @Component({
   selector: 'app-products',
@@ -39,7 +40,7 @@ export class ProductsComponent implements OnInit {
 
   productsDetailForm: ProductsDetail;
   productsDetails: ProductsDetail[];
-
+  submit4: boolean;
   columnsForm: Column;
   CategoriesDDL: Category[];
   columnValidationForm: ProductColumnValidation;
@@ -91,8 +92,8 @@ export class ProductsComponent implements OnInit {
   columnValidationsTableColumns = ['select', 'Lable', 'DataType', 'ValidationType', 'IsMandatory', 'CheckDuplication', 'MinValue',
     'MaxValue'];
   columnValidationsDataSource: MatTableDataSource<ProductColumnValidation>;
-
-
+  @ViewChild('form1') form1: NgForm;
+ 
   productSearch: FormControl = new FormControl();
   user: any;
   selection2: SelectionModel<ProductsDetail>;
@@ -141,7 +142,8 @@ export class ProductsComponent implements OnInit {
     private subLineService: SubBusinessService, private commonService: CommonService,
     private productCategorySerivce: ProductCategoryService,
     private lockupService: LockUpService,
-    private alertService: AlertifyService
+    private alertService: AlertifyService,
+    private categoryService: CategoryService
   ) { }
 
   ngOnInit() {
@@ -399,16 +401,44 @@ export class ProductsComponent implements OnInit {
 
   resetForm(form) {
     this.productForm = new Product();
+
     this.submit = false;
     form.reset();
+
+  }
+  resetValidationForm(form) {
+    this.columnValidationForm = new ProductColumnValidation();
+
+    this.submit4 = false;
+
+
   }
   resetProduct(form) {
-    this.productForm = new Product();
-    this.productsDetailForm = new ProductsDetail();
+   
+   
     this.submit = false;
    this.renderProductsDetailTable([]);
    this.rendersubLOBTable([]);
-   form.reset();
+   this.productsDetailForm = new ProductsDetail();
+
+   this.productsDetailForm.EffectiveDate = new Date();
+  form.reset();
+
+  console.log(this.form1);
+  this.form1.controls.EffectiveDate.patchValue(new Date());
+ 
+   this.createForm();
+  }
+  createForm() {
+ this.productForm = new Product();
+ this.productForm.EffectiveDate = new Date();
+ this.productForm.Name = 'test';
+  }
+  resetProductDetail(form) {
+    this.productsDetailForm = new ProductsDetail();
+    this.submit2 = false;
+  
+    form.reset();
   }
 
   // RelatedQuestionnaires
@@ -607,6 +637,7 @@ this.saveProductApi(this.productForm);
 
 
   renderProductCategory(data) {
+    this.RelatedCategory = data;
     this.relatedCategoriesDataSource = new MatTableDataSource<ProductCategory>(data);
     this.relatedCategoriesDataSource.paginator = this.paginator9;
     this.relatedCategoriesDataSource.sort = this.sort9;
@@ -672,12 +703,12 @@ this.saveProductApi(this.productForm);
     });
     this.reloadProductsDetailTable(this.productForm.ID);
     this.productCategorySerivce.loadCategory(null, null,
-      this.productCategoryForm.ProductID, this.productCategoryForm.ProductDetailID, this.productCategoryForm.CategoryLevel,
+      this.productForm.ID, this.productCategoryForm.ProductDetailID, this.productCategoryForm.CategoryLevel,
       this.productCategoryForm.LineOfBusniess, this.productCategoryForm.SubLineOfBusniess, 1).subscribe(res => {
         this.renderProductCategory(res);
         this.productCategoryForm = new ProductCategory();
         this.selectedCategories = [];
-        this.loadProductUnRelatedCateogry();
+       // this.loadProductUnRelatedCateogry();
 
       });
   }
@@ -815,7 +846,7 @@ this.saveProductApi(this.productForm);
                 this.renderProductCategory(res);
                 this.productCategoryForm = new ProductCategory();
                 this.selectedCategories = [];
-                this.loadProductUnRelatedCateogry();
+                //this.loadProductUnRelatedCateogry();
 
               });
 
@@ -887,8 +918,9 @@ this.saveProductApi(this.productForm);
 
 
   UpdateProductCategory(data) {
-    this.productCategoryForm = data;
-    this.productCategoryForm.selected = true;
+    //
+    this.productCategoryForm.ID = data.ID;
+    //this.productCategoryForm.selected = true;
    // this.loadProductUnRelatedCateogry();
     this.productCategorySerivce.loadColumn(null, data.CategoryID
       , data.ProductID, data.ProductDetailID, data.ColumnType,
@@ -902,13 +934,15 @@ this.saveProductApi(this.productForm);
   }
 
   LoadProductCategoryCloumns() {
-
-    this.productCategorySerivce.loadColumn(null, this.columnValidationForm.CategoryID
-      , null, null, null,
-      null, null, 1).subscribe(res => {
-        this.productColumns = res;
-        this.renderProductCategoryColumn(res);
-      });
+    this.productCategorySerivce.loadCategory(this.columnValidationForm.CategoryID,null,null,null,null,null,null,1).subscribe(result => {
+      this.productCategorySerivce.loadColumn(null, result[0].CategoryID
+        , result[0].ProductID, result[0].ProductDetailID, null,
+        null, null, 1).subscribe(res => {
+          this.productColumns = res;
+       //   this.renderProductCategoryColumn(res);
+        });
+    });
+ 
 
 
   }

@@ -137,6 +137,7 @@
                         <label for="Name">Name </label>
                         <input name="Name" placeholder="Name" type="text" class="form-control" [formControl]="NameSearch">
                       </div>
+                     
 
                       <div class="form-group col-md-3">
                         <label for="Serial">Serial </label>
@@ -165,11 +166,21 @@
 
                     </div>
 
-
                     <div class="form-group col-md-3">
-                      <label for="Name">Name </label>
-                      <input name="Name" placeholder="Name" type="text" class="form-control" [(ngModel)]="coverShare.Name">
+                      <label for="Name">Name</label>
+    
+                      <input class="form-control" type="text" placeholder="Name" matInput [formControl]="customerSearch"
+                        [matAutocomplete]="searchCustomerauto" >
+    
+                      <!-- CREATE AUTO COMPLETE PANEL WITH OPTIONS. -->
+                      <mat-autocomplete #searchCustomerauto="matAutocomplete" [displayWith]="displayFn" >
+                        <mat-option *ngFor="let customer of Customers" [value]="customer">
+                           {{ customer.Name }}
+                        </mat-option>
+                      </mat-autocomplete>
+    
                     </div>
+                
 
                     <div class="form-group col-md-3">
                       <label for="Amount">Commission </label>
