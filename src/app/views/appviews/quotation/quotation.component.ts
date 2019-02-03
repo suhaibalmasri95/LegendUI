@@ -52,6 +52,7 @@ export class QuotationComponent implements OnInit {
   policyHolderUpdate: FormControl = new FormControl();
   shares: Share[];
   updateMode = false;
+  
   hasBeenSearched = false;
   next = false;
   customer: CustomerShare;
@@ -223,7 +224,7 @@ export class QuotationComponent implements OnInit {
             });
         }
       });
-    /*   this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID='  + 201 ).subscribe(doc => {
+    /*   this.http.get<Documents[]>('https://localhost:44322api/Documents/Load?ID='  + 201 ).subscribe(doc => {
         this.documentForm = doc[0];
         this.updateMode = true;
       this.updateDocumentMode(this.documentForm .ID , this.documentForm.ProductId);
@@ -376,7 +377,7 @@ export class QuotationComponent implements OnInit {
         input.append('Remarks', this.attachmentForm.controls.Remarks.value ?  this.attachmentForm.controls.Remarks.value : '');
 
         // etc, etc
-        this.http.post('https://localhost:44322/api/Attachment/Create', input).subscribe(res => {
+        this.http.post(this.hostUrl + 'api/Attachment/Create', input).subscribe(res => {
 
           if (x === this.attachmentForm.controls.attachmetValues.value.length - 1) {
             this.attachmentService.load(null, this.documentForm.ID, null, null, null, this.documentForm.DocumentType, 1)
@@ -425,7 +426,7 @@ export class QuotationComponent implements OnInit {
         input.append('Remarks', this.attachmentForm.controls.Remarks.value ?  this.attachmentForm.controls.Remarks.value : '');
 
         // etc, etc
-        this.http.post('https://localhost:44322/api/Attachment/Create', input).subscribe(res => {
+        this.http.post(this.hostUrl + 'api/Attachment/Create', input).subscribe(res => {
           if (x === this.attachmentForm.controls.attachments.value.length - 1) {
             this.attachmentService.load(null, this.documentForm.ID, null, null, null, this.documentForm.DocumentType, 1)
               .subscribe(attachments => {
@@ -809,11 +810,11 @@ export class QuotationComponent implements OnInit {
       this.documentForm.UpdateMode = true;
     }
 
-    this.http.post('https://localhost:44322/api/Documents/Create', this.documentForm).subscribe(res => {
+    this.http.post(this.hostUrl + 'api/Documents/Create', this.documentForm).subscribe(res => {
       console.log(res);
       const status: any = res;
       if (status.ID) {
-        this.http.get<Documents[]>('https://localhost:44322/api/Documents/Load?ID=' + status.ID).subscribe(doc => {
+        this.http.get<Documents[]>(this.hostUrl +'api/Documents/Load?ID=' + status.ID).subscribe(doc => {
           this.documentForm = doc[0];
           this.updateMode = true;
           this.updateDocumentMode(this.documentForm.ID, this.documentForm.ProductId);

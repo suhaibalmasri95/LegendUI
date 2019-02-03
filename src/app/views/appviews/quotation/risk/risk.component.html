@@ -192,8 +192,8 @@
                     </td>
                   </ng-container>
 
-                  <tr mat-header-row *matHeaderRowDef="RiskTableColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: RiskTableColumns;" (click)="updateRisk(row)" class=" mat-row {{riskForm.ProductDetailID===row.ProductDetailID?'active':'not-active'}}"></tr>
+                  <tr mat-header-row *matHeaderRowDef="RiskTableColumns"></tr><!--class=" mat-row {{riskForm?.ID===row?.ID?'active':'not-active'}}"-->
+                  <tr mat-row *matRowDef="let row; columns: RiskTableColumns;" (click)="updateRisk(row)" class=" mat-row "></tr>
 
                 </table>
 
@@ -206,7 +206,10 @@
 
 
 
-                    <input *ngIf="risks.length> 0" class="btn btn-primary" type="submit" value="submit" (click)="submit()" /></div>
+                    <input *ngIf="risks.length> 0" class="btn btn-primary" type="submit" value="submit" (click)="submit()" />
+                    <button class="btn btn-primary" (click)="nextClick()" *ngIf="updateMode">Next </button>
+                  </div>
+                   
                 </div>
               </div> <br> <br>
               <div class="row"></div>

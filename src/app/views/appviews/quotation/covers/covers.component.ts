@@ -1,6 +1,6 @@
 import { Risk } from './../../../../entities/production/Risk';
 import { RiskService } from './../../../../_services/_production/Risk.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SharesService } from '../../../../_services/_products/shares.service';
 import { Documents } from '../../../../entities/production/Documents';
@@ -54,7 +54,7 @@ export class CoversComponent implements OnInit {
   containBroker: boolean = false;
   risks: Risk[] = [];
   risksTable: Risk[] = [];
-  document: Documents;
+  @Input('document') document: Documents;
   user: any;
   shares: Share[] = [];
   coverShare: Share = new Share();
@@ -90,7 +90,7 @@ export class CoversComponent implements OnInit {
     this.line.load(null,null,null,1).subscribe(res => {
       this.Lobs = res;
     });
-    this.test();
+  
     this.RiskSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
@@ -428,19 +428,7 @@ export class CoversComponent implements OnInit {
   }
   
 
-  test() {
-    this.document = new Documents();
-    this.http.get<Documents[]>('http://localhost:5000/api/Documents/Load?ID=' + 201).subscribe(doc => {
-      this.document = doc[0];
-      this.document.EffectiveDate = new Date(this.document.EffectiveDate);
-      this.document.ExpiryDate = new Date(this.document.ExpiryDate);
-      this.riskService.load(null, this.document.ID, 1).subscribe(response => {
-        this.risksTable = response;
-      });
-    
-    });
 
-  }
   resetCoverShare(){
     this.coverShare = new Share();
   }

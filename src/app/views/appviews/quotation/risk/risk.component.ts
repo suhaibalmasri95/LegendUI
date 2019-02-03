@@ -5,7 +5,6 @@ import { DocumentAttachment } from './../../../../entities/production/DocumentAt
 import { ProductsDetailService } from './../../../../_services/_setup/ProductsDetail.service';
 import { ProductDynmicCategory } from './../../../../entities/Dynamic/ProductDynmicCategory';
 import { Documents } from './../../../../entities/production/Documents';
-import { DocumentService } from './../../../../_services/DocumentService.service';
 import { DynamicService } from './../../../../_services/_dynamic/Dynamic.service';
 import { ProductSubjectTypes } from './../../../../_services/_setup/ProductSubjectTypes.service';
 import { ProductsDetail, ProductSubjectType } from './../../../../entities/Product/Products';
@@ -60,7 +59,7 @@ export class RiskComponent implements OnChanges, OnInit {
     private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.risks = [];
+/*     this.risks = [];
     this.document = new Documents();
     this.riskForm = new Risk();
       this.http.get<Documents[]>(this.hostUrl+'api/Documents/Load?ID='  + 201 ).subscribe(doc => {
@@ -80,7 +79,7 @@ export class RiskComponent implements OnChanges, OnInit {
       //this.reInit(this.riskForm);
       this.createSubForm(); 
       // this.wizard.navigationMode.goToStep(2);
-    }); 
+    }); */ 
   }
   updateModeForRisk() {
 
@@ -90,7 +89,7 @@ export class RiskComponent implements OnChanges, OnInit {
     this.updateMode = true;
     this.riskForm.UpdateMode = true;
 
-    //this.getDynamicCategoriesForRisk(this.riskForm.ProductID, this.riskForm.ProductDetailID);
+    this.getDynamicCategoriesForRisk(this.riskForm.ProductID, this.riskForm.ProductDetailID);
 
     this.attachmentService.load(null, null, this.riskForm.ID, null, null, 3, 1).subscribe(attachments => {
       this.documentAttachments = attachments;
@@ -108,11 +107,11 @@ export class RiskComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges() {
-   /*   this.risks = [];
+     this.risks = [];
     // create header using child_id
     this.riskForm = new Risk();
     this.reInit(this.riskForm);
-    this.createSubForm();  */
+    this.createSubForm();  
   }
 
   reInit(riskForm: Risk) {
@@ -153,9 +152,14 @@ export class RiskComponent implements OnChanges, OnInit {
 
   updateRisk(risk: Risk, index: number) {
     this.riskForm = new Risk;
+    if(risk.ID){
+      this.updateMode = true;
+      this.updateModeForRisk();
+    }
     this.riskForm = risk;
     this.riskForm.index = index;
     this.riskForm.selected = true;
+
   }
   updateSelectedRisk() {
     this.risks = [];
@@ -186,7 +190,7 @@ export class RiskComponent implements OnChanges, OnInit {
     this.risks.push(this.riskForm);
     this.submit();
   }
-
+  
   addRisk(risk: Risk) {
     if (risk.selected) {
       this.risks[risk.index] = risk;
@@ -214,7 +218,9 @@ export class RiskComponent implements OnChanges, OnInit {
       this.productDynamicCategoriesMultiRecord = [];
       this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
       this.risks.push(this.riskForm);
-      this.submit();
+      this.renderTable(this.risks);
+      this.riskForm = new Risk();
+     // this.submit();
 
     }
   }
@@ -433,12 +439,16 @@ export class RiskComponent implements OnChanges, OnInit {
       const status: any = res;
       if (status.ID) {
         this.riskForm.ID = status.ID;
-        this.http.get<Risk[]>(this.hostUrl+'api/Risk/Load?ID=' + status.ID).subscribe(doc => {
+        this.http.get<Risk[]>(this.hostUrl+'api/Risk/Load?UWDocumentID=' + this.document.ID).subscribe(doc => {
           this.risks = doc;
+       
+          this.reInit(this.riskForm);
           this.renderTable(this.risks);
-          //this.reInit(this.riskForm);
           this.updateModeForRisk();
-          // this.wizard.navigationMode.goToStep(2);
+          if(this.next){
+            this.wizard.navigationMode.goToStep(2);
+          }
+          
         });
       }
     });

@@ -10,6 +10,7 @@ import { Company } from '../../../entities/organization/Company';
 import { CompanyBranch } from '../../../entities/organization/CompanyBranch';
 import { City } from '../../../entities/organization/City';
 import { Department } from '../../../entities/organization/Department';
+
 import { Currency } from '../../../entities/organization/Currency';
 import { CompanyService } from './../../../_services/_organization/Company.service';
 import { CityService } from './../../../_services/_organization/City.service';
