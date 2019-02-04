@@ -52,7 +52,7 @@ export class ProductsComponent implements OnInit {
   ProductsDetailLockUp: LockUp[];
 
   Lobs: LineOfBusiness[];
-  SubLobs: SubLineOfBusiness[];
+  SubLobs: any[];
   Levels: LockUp[];
 
   GroupIndividualLockups: LockUp[];
@@ -283,6 +283,10 @@ export class ProductsComponent implements OnInit {
     this.productCategoryForm.ProductDetailID = null;
     this.productCategoryForm.SubLineOfBusniess = null;
     this.productCategoryForm.LineOfBusniess = null;
+  } else {
+   this.loadSubLineCategory();
+    
+  
   }
     this.productCategorySerivce.loadUnRelatedCategory(null, null, this.productCategoryForm.ProductID,
       this.productCategoryForm.ProductDetailID,
@@ -1055,14 +1059,17 @@ this.saveProductApi(this.productForm);
   loadSubLineCategory() {
     this.productDetails.forEach(element => {
       if(element.ID === this.productCategoryForm.ProductDetailID) {
-        this.SubLobs = this.subLOBDataSource.data;
+        this.SubLobs = this.productsDetailsDataSource.data;
         this.SubLobs = this.SubLobs.filter(x=>x.LineOfBusniess == element.LineOfBusniess);
-        this.loadProductUnRelatedCateogry();
+        this.productCategoryForm.SubLineOfBusniess = element.SubLineOfBusniess;
+        this.productCategoryForm.LineOfBusniess = element.LineOfBusniess;
+      
       }
     });
   
 
   }
+  
 
 
 

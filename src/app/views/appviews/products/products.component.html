@@ -394,8 +394,8 @@
                   <div class="form-group col-md-3">
                     <label for="LineOfBusniess">Line of Business <span class="help-block">*</span></label>
                     <select name="LineOfBusniess" class="form-control" [(ngModel)]="productCategoryForm.LineOfBusniess"
-                      [disabled]="productCategoryForm.CategoryLevel === 1 || productCategoryForm.CategoryLevel === 2"
-                      (change)="loadSubLineCategory()" required>
+                      disabled
+  required>
                       <option [ngValue]="undefined">Select</option>
                       <option *ngFor="let  Lob of Lobs" [ngValue]="Lob.ID">{{Lob.Name}}</option>
                     </select>
@@ -404,10 +404,10 @@
 
                   <div class="form-group col-md-3">
                     <label for="SubLineOfBusniess">Sub Line of Business</label>
-                    <select name="SubLineOfBusniess" class="form-control" (change)="loadProductUnRelatedCateogry()"
-                      [(ngModel)]="productCategoryForm.SubLineOfBusniess" [disabled]="productCategoryForm.CategoryLevel === 1 || productCategoryForm.CategoryLevel === 2">
+                    <select name="SubLineOfBusniess" class="form-control"
+                      [(ngModel)]="productCategoryForm.SubLineOfBusniess" disabled>
                       <option [ngValue]="undefined">Select</option>
-                      <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.ID">{{SubLOB.Name}}</option>
+                      <option *ngFor="let  SubLOB of SubLobs" [ngValue]="SubLOB.SubLineOfBusniess">{{SubLOB.SubLineDesc}}</option>
                     </select>
                   </div>
                 </div>
@@ -529,7 +529,7 @@
                                 <ng-container matColumnDef="ProductDetail">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.ProductDetailID}} </td>
+                                    {{element.ProductDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="Status">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
@@ -634,7 +634,7 @@
                                 <ng-container matColumnDef="ProductDetail">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Detail</th>
                                   <td style="width: 15%" mat-cell *matCellDef="let element">
-                                    {{element.ProductDetail}} </td>
+                                    {{element.ProductColumnDesc}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="Status">
                                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>

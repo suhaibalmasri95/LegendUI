@@ -575,7 +575,10 @@ export class QuotationComponent implements OnInit {
   }
   getDynamicCategoriesForPolicy(id: number) {
     this.dynamicService.load(null, null, id, null, 1, null, null, 1).subscribe(res => {
+      this.productDynamicCategories = [];
+      this.productDynamicCategories = [];
       if (this.updateMode) {
+
         this.FilterAndMeargeArray(res);
       } else {
         res.forEach(element => {

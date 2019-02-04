@@ -193,7 +193,7 @@
                   </ng-container>
 
                   <tr mat-header-row *matHeaderRowDef="RiskTableColumns"></tr><!--class=" mat-row {{riskForm?.ID===row?.ID?'active':'not-active'}}"-->
-                  <tr mat-row *matRowDef="let row; columns: RiskTableColumns;" (click)="updateRisk(row)" class=" mat-row "></tr>
+                  <tr mat-row *matRowDef="let row; columns: RiskTableColumns; let i = index" (click)="updateRisk(row , i)" class=" mat-row "></tr>
 
                 </table>
 

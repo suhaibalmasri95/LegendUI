@@ -159,6 +159,16 @@ export class RiskComponent implements OnChanges, OnInit {
     this.riskForm = risk;
     this.riskForm.index = index;
     this.riskForm.selected = true;
+    this.riskForm.DynamicCategory.forEach(element => {
+      if(element.IsMulitRecords ===1) {
+        this.productDynamicCategoriesMultiRecord = [];
+        
+        this.productDynamicCategoriesMultiRecord.push(element);
+      } else{
+        this.productDynamicCategories = [];
+        this.productDynamicCategories.push(element);
+      }
+    });
 
   }
   updateSelectedRisk() {
@@ -180,15 +190,14 @@ export class RiskComponent implements OnChanges, OnInit {
       }
 
     }
+    
     this.productDynamicCategories = [];
     this.riskForm.UpdateMode = true;
     this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
     this.productDynamicCategoriesMultiRecord = [];
     this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
     this.risks.push(this.riskForm);
-    this.submit();
-    this.risks.push(this.riskForm);
-    this.submit();
+    this.riskForm = new Risk();
   }
   
   addRisk(risk: Risk) {
@@ -234,8 +243,9 @@ export class RiskComponent implements OnChanges, OnInit {
       if (this.productDetails[i].ID === productDetailID) {
         this.productDetail = this.productDetails[i];
       }
-      this.getDynamicCategoriesForRisk(this.document.ProductId, productDetailID);
+      
     }
+    this.getDynamicCategoriesForRisk(this.document.ProductId, productDetailID);
     this.productSubjectTypeService.load(null, this.productDetail.ProductID,
       this.productDetail.ID, 1).subscribe(res => {
         this.productDetailsSubjectTypes = res;
@@ -259,12 +269,15 @@ export class RiskComponent implements OnChanges, OnInit {
   getDynamicCategoriesForRisk(productID: number, productDetailID: number) {
     this.hasValue = true;
     this.dynamicService.load(null, null, productID, productDetailID, 3, null, null, 1).subscribe(res => {
+      this.productDynamicCategories = [];
+      this.productDynamicCategoriesMultiRecord = [];
       if (this.updateMode) {
         this.FilterAndMeargeArray(res);
       } else {
         res.forEach(element => {
           if (element.IsMulitRecords > 0) {
             element.InsertedData = [];
+            
             this.productDynamicCategoriesMultiRecord.push(element);
           } else {
             element.InsertedData = [];
