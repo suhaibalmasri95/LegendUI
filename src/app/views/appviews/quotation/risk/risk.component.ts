@@ -162,7 +162,7 @@ export class RiskComponent implements OnChanges, OnInit {
     this.riskForm.DynamicCategory.forEach(element => {
       if(element.IsMulitRecords ===1) {
         this.productDynamicCategoriesMultiRecord = [];
-        
+       
         this.productDynamicCategoriesMultiRecord.push(element);
       } else{
         this.productDynamicCategories = [];
@@ -172,7 +172,7 @@ export class RiskComponent implements OnChanges, OnInit {
 
   }
   updateSelectedRisk() {
-    this.risks = [];
+  
     if (this.productDynamicCategories) {
       this.productDynamicCategories.forEach(element => {
         if (element.IsMulitRecords === 0) {
@@ -193,9 +193,9 @@ export class RiskComponent implements OnChanges, OnInit {
     
     this.productDynamicCategories = [];
     this.riskForm.UpdateMode = true;
-    this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
+    //this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
     this.productDynamicCategoriesMultiRecord = [];
-    this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
+    //this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
     this.risks.push(this.riskForm);
     this.riskForm = new Risk();
   }
@@ -223,9 +223,9 @@ export class RiskComponent implements OnChanges, OnInit {
 
       }
       this.productDynamicCategories = [];
-      this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
+     // this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
       this.productDynamicCategoriesMultiRecord = [];
-      this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
+     // this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
       this.risks.push(this.riskForm);
       this.renderTable(this.risks);
       this.riskForm = new Risk();

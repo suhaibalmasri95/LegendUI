@@ -43,6 +43,10 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
      this.updateModeForDocument = true;
     this.updateMode(this.category.InsertedData, this.category.Columns.length);
   }
+  if(this.category.Result){
+    if(this.category.Result.length > 0)
+    this.mapTwoDynamic(this.category.Result);
+  }
    console.log('on init', this.tableSelector);
   }
 
@@ -333,5 +337,15 @@ mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicC
   setCategoryChildData(childs: ProductDynamicColumn[]) {
     this.category.childsData = [];
     this.category.childsData = childs;
+  }
+
+  mapTwoDynamic(array: Array<ProductDynamicColumn[]>){
+    this.dataSource = ['select' , 'action'];
+    array.forEach(element => {
+      
+      this.resetData(element);
+    
+      this.dynamicDataSources.push(this.dynamicDataSource);
+    });
   }
 }

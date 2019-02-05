@@ -796,6 +796,7 @@ export class QuotationComponent implements OnInit {
       this.documentForm.share = this.share;
       this.documentForm.UpdateMode = true;
     }
+    
 
     if (this.newCustomer !== undefined && this.newCustomer.AddUpdate === true) {
       this.documentForm.NewCustomer = this.newCustomer;
