@@ -45,6 +45,7 @@ export class QuotationComponent implements OnInit {
   text: string;
   value: string;
   previewLink = '';
+  selectedCustomerForm: Customer;
   hostUrl: string = environment.hostUrl;
   share: Share;
   attachmentForm: FormGroup;
@@ -304,6 +305,7 @@ export class QuotationComponent implements OnInit {
       Level: new FormControl(''),
       Type: new FormControl(''),
       File: new FormControl(''),
+      AttachedPath: new FormControl(''),
       attachmetValues: new FormControl(''),
       enableMultiSelect: new FormControl(false),
       defaultSelect: new FormControl(false),
@@ -360,9 +362,12 @@ export class QuotationComponent implements OnInit {
         if (this.attachmentForm.controls.attachmetValues.value[x].ID) {
           input.append('ID', this.attachmentForm.controls.attachmetValues.value[x].ID.toString());
         }
+        if(this.documentAttachments[x].AttachedPath !==undefined)
+        input.append('AttachedPath',   this.documentAttachments[x].AttachedPath);
+      
         input.append('CreatedBy', this.documentForm.CreatedBy);
         input.append('ProductAttachmentID', this.attachmentForm.controls.attachmetValues.value[x].ProductAttachmentID.toString());
-        input.append('File', this.attachmentForm.controls.File.value);
+        input.append('File',this.attachmentForm.controls.File.value);
         input.append('Serial', '1');
         input.append('RiskID', '');
         if (this.selectedFile != null &&
@@ -384,6 +389,8 @@ export class QuotationComponent implements OnInit {
               .subscribe(attachments => {
                 this.documentAttachments = attachments;
                 this.attachmentForm.controls.File.patchValue({});
+                //fill paths
+         
               });
           }
         });
@@ -410,6 +417,9 @@ export class QuotationComponent implements OnInit {
         if (this.attachmentForm.controls.attachments.value[x].ID) {
           input.append('ID', this.attachmentForm.controls.attachments.value[x].ID.toString());
         }
+        if(this.documentAttachments[x].AttachedPath !==undefined)
+        input.append('AttachedPath',   this.documentAttachments[x].AttachedPath);
+      
         input.append('CreatedBy', this.documentForm.CreatedBy);
         input.append('ProductAttachmentID', this.attachmentForm.controls.attachments.value[x].ProductAttachmentID.toString());
         input.append('File', this.attachmentForm.controls.File.value);
@@ -432,6 +442,12 @@ export class QuotationComponent implements OnInit {
               .subscribe(attachments => {
                 this.documentAttachments = attachments;
                 this.attachmentForm.controls.File.patchValue({});
+               
+
+                this.attachmentForm.controls.attachments.patchValue([]);
+                this.attachmentForm.controls.attachments.patchValue(attachments);
+           
+            
               });
           }
         });
@@ -441,6 +457,7 @@ export class QuotationComponent implements OnInit {
 
     }
   }
+ 
   setDocumentShare(busType: number) {
     if (busType === 251) {
       this.documentForm.DocumentShare = 100;
@@ -653,12 +670,37 @@ export class QuotationComponent implements OnInit {
             countForBen++;
           }
         });
-        if (((countForBen <= 1 || countForPolicyHolder <= 1) && this.policyHolderUpdate.value.ID !== undefined ) &&
-            (this.customerUpdateForm.ShareType !== 1 &&    this.customerUpdateForm.ShareType !== 2) ) {
-          this.alert.error('You can not change  beneificary type when document only contain only one ');
+
+        if(countForPolicyHolder == 1 && this.policyHolderUpdate.value.ID !== undefined) {
+        
+          if(this.selectedCustomerForm.ShareType ===1 &&  this.customerUpdateForm.ShareType !== 1)  {
+            this.alert.error('You can not change  policy holder  type when document only contain only one ');
+          } else {
+            if(countForBen == 1  && this.policyHolderUpdate.value.ID !== undefined ) {
+              if(this.selectedCustomerForm.ShareType ===2 && this.customerUpdateForm.ShareType !== 2) {
+                this.alert.error('You can not change  beneificary  type when document only contain only one ');
+              } else {
+                this.InsertLoadShare(result.ID);
+              }
+             
+            } else {
+              this.InsertLoadShare(result.ID);
+            }
+          }
         } else {
-          this.InsertLoadShare(result.ID);
+          if(countForBen == 1  && this.policyHolderUpdate.value.ID !== undefined ) {
+            if(this.selectedCustomerForm.ShareType ===2 && this.customerUpdateForm.ShareType !== 2) {
+              this.alert.error('You can not change  beneificary  type when document only contain only one ');
+            } else {
+              this.InsertLoadShare(result.ID);
+            }
+           
+          } else {
+            this.InsertLoadShare(result.ID);
+          }
         }
+
+   
 
 
       }
@@ -688,10 +730,20 @@ export class QuotationComponent implements OnInit {
     });
     return returnArray;
   }
+  resetShare() {
+    this.newShare = new Share();
+    this.policyHolderUpdate.patchValue(null);
+    this.customerUpdateForm = new Customer();
+  }
   updateShare(share: Share) {
     this.newShare.ID = share.ID;
+    this.newShare.SharePercent = share.SharePercent;
+    this.newShare.CommissionPercent = share.CommissionPercent;
+    this.newShare.ShareType = share.ShareType
     this.seracrhService.search(share.CustomerId, null, null, null, null, null, null, 1, share.LocShareType).subscribe(res => {
       this.customerUpdateForm = res[0];
+      this.selectedCustomerForm = _.cloneDeep(res[0]);
+      this.selectedCustomerForm.ShareType = _.cloneDeep(share.LocShareType);
       this.policyHolderUpdate.patchValue(res[0]);
       this.customerUpdateForm.ShareType = share.LocShareType;
     });
@@ -702,6 +754,7 @@ export class QuotationComponent implements OnInit {
     this.f.File.patchValue({});
     this.attachmentForm.controls.Remarks.patchValue(attachment.Remarks);
     this.attachmentForm.controls.IsReceived.patchValue(attachment.IsReceived);
+    this.attachmentForm.controls.AttachedPath.patchValue(attachment.AttachedPath);
     this.attachmentForm.controls.attachmetValues.value.forEach(element => {
       if (element.ProductAttachmentID === attachment.ProductAttachmentID) {
         this.attachmentForm.controls.attachments.patchValue([element]);

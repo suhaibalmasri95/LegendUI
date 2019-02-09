@@ -119,13 +119,13 @@
 
           <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox (change)="$event ? masterToggle4() : null" [checked]="selection4.hasValue() && isAllSelected4()"
-                [indeterminate]="selection4.hasValue() && !isAllSelected4()">
+              <mat-checkbox (change)="$event ? masterToggle5() : null" [checked]="selection5.hasValue() && isAllSelected5()"
+                [indeterminate]="selection5.hasValue() && !isAllSelected5()">
               </mat-checkbox>
             </th>
             <td style="width: 5%" mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection4.toggle(row) : null"
-                [checked]="selection4.isSelected(row)">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection5.toggle(row) : null"
+                [checked]="selection5.isSelected(row)">
               </mat-checkbox>
             </td>
           </ng-container>
@@ -176,20 +176,20 @@
     </div>
 
     <div class="col-md-5">
-
+      
       <br>
       <div class="table-container">
         <table mat-table #table5 [dataSource]="subjectTypesLobDataSource" matSort>
 
           <ng-container matColumnDef="select">
             <th mat-header-cell *matHeaderCellDef>
-              <mat-checkbox (change)="$event ? masterToggle5() : null" [checked]="selection5.hasValue() && isAllSelected5()"
-                [indeterminate]="selection5.hasValue() && !isAllSelected5()">
+              <mat-checkbox (change)="$event ? masterToggle4() : null" [checked]="selection4.hasValue() && isAllSelected4()"
+                [indeterminate]="selection4.hasValue() && !isAllSelected4()">
               </mat-checkbox>
             </th>
             <td style="width: 5%" mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection5.toggle(row) : null"
-                [checked]="selection5.isSelected(row)">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection4.toggle(row) : null"
+                [checked]="selection4.isSelected(row)">
               </mat-checkbox>
             </td>
           </ng-container >

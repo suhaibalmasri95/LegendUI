@@ -473,7 +473,7 @@
                     <input class="form-control" type="text" [(ngModel)]="customerUpdateForm.ReferenceNo" placeholder="National ID"
                       name="ReferenceNo" (blur)="SearchCustomerReferenceNumber(customerUpdateForm.ReferenceNo , ture)">
                   </div>
-                  <div class="form-group col-md-3">
+                  <div class="form-group col-md-3" *ngIf="customerUpdateForm.ShareType !==1 || customerUpdateForm.ShareType!==2">
                     <label for="commission Percent">Commission Percent</label>
                     <input class="form-control" type="number" [(ngModel)]="newShare.Percent" placeholder="Commission Percent"
                       name="CommissionPercent">
@@ -491,10 +491,11 @@
 
 
                 </div>
+              
                 <div class="col-md-12 text-right">
                   <div class="btn-group">
                     <button class="btn btn-primary" (click)="AddUpdateShare()">Save</button>
-
+                    <button class="btn btn-primary" (click)="resetShare()">reset</button>
                   </div>
                 </div>
                 <br />

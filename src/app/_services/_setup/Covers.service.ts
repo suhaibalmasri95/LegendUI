@@ -44,7 +44,7 @@ export class CoversService {
   }
 
   load(ID: number = null, LockUpChargeType: number = null, LineOfBusinessCode: number = null,
-    ChargeType: number = null, langId: number = null): Observable<Cover[]> {
+    ChargeType: number = null, langId: number = null , name: string): Observable<Cover[]> {
     let queryString = '?ID=';
 
     if (ID != null) {
@@ -61,6 +61,10 @@ export class CoversService {
     queryString += '&ChargeType=';
     if (ChargeType != null) {
       queryString += ChargeType;
+    }
+    queryString += '&Name=';
+    if (name != null) {
+      queryString += name;
     }
     queryString += '&langId=';
     if (langId != null) {

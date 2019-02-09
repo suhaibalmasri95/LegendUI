@@ -92,10 +92,13 @@ export class CoversComponent implements OnInit {
       this.Lobs = res;
     });
   
+    this.riskService.load(null, this.document.ID, null).subscribe(res => {
+      this.risksTable = res;
+    });
     this.RiskSearch.valueChanges.subscribe(
       term => {
         if (term !== '') {
-          this.riskService.load(null, this.document.ID, null).subscribe(
+          this.riskService.load(null, this.document.ID, null, null, term).subscribe(
             data => {
               if (data.length > 0) {
                 this.risks = data;
@@ -111,7 +114,7 @@ export class CoversComponent implements OnInit {
       this.ChargeSearch.valueChanges.subscribe(
         term => {
           if (term !== '') {
-            this.coverService.load(null, 1 , null , null , 1).subscribe(
+            this.coverService.load(null, 1 , null , null , 1, term).subscribe(
               data => {
                 if (data.length > 0) {
                   this.covers = data;
@@ -128,7 +131,7 @@ export class CoversComponent implements OnInit {
         this.FeeSearch.valueChanges.subscribe(
           term => {
             if (term !== '') {
-              this.coverService.load(null, 2 , null , null , 1).subscribe(
+              this.coverService.load(null, 2 , null , null , 1 , term).subscribe(
                 data => {
                   if (data.length > 0) {
                     this.fees = data;
@@ -159,7 +162,7 @@ export class CoversComponent implements OnInit {
             this.SerialSearch.valueChanges.subscribe(
               term => {
                 if (term !== '') {
-                  this.riskService.load(null, null , 1 , term , null).subscribe(
+                  this.riskService.load(null, this.document.ID , 1 , term , null).subscribe(
                     data => {
                     
                         this.risksTable = data;
@@ -406,8 +409,8 @@ export class CoversComponent implements OnInit {
       this.documentFee.ModificationDate = new Date();
      }
      this.documentFee.UwDocumentID = this.document.ID;
-     this.documentFee.UwRiskID = this.selectedRisk.ID;
-     this.documentCover.ChargeType = 2;
+    // this.documentFee.UwRiskID = this.selectedRisk.ID;
+     this.documentFee.ChargeType = 2;
      this.http.post(this.calculateSerivce.ApiUrl + 'Create', this.documentFee).subscribe(shareResult => {
       console.log(shareResult);
       this.calculateSerivce.load(null, 2, this.document.ID, this.selectedRisk.ID, 1).subscribe(cal => {

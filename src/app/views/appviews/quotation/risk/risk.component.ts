@@ -156,7 +156,7 @@ export class RiskComponent implements OnChanges, OnInit {
       this.updateMode = true;
       this.updateModeForRisk();
     }
-    this.riskForm = risk;
+    this.riskForm = _.cloneDeep(risk);
     this.riskForm.index = index;
     this.riskForm.selected = true;
     this.riskForm.DynamicCategory.forEach(element => {
@@ -196,9 +196,10 @@ export class RiskComponent implements OnChanges, OnInit {
     //this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
     this.productDynamicCategoriesMultiRecord = [];
     //this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
-    this.risks.push(this.riskForm);
+    this.risks[this.riskForm.index] = _.cloneDeep(this.riskForm);
     this.riskForm = new Risk();
   }
+  
   
   addRisk(risk: Risk) {
     if (risk.selected) {

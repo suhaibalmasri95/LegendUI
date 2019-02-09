@@ -346,6 +346,7 @@ mapAnyToProductDynamicColumn(index: number , table: any , filed: ProductDynamicC
       this.resetData(element);
     
       this.dynamicDataSources.push(this.dynamicDataSource);
+      
     });
   }
 }

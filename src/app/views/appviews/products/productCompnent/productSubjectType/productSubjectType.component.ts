@@ -30,20 +30,20 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
   subjectTypeForm: ProductSubjectType;
   subjectTypes: any[];
   subjectTypesLobTableColumns = ['select',  'SubjectType', 'ParentSubjectType', 'lob', 'subLob'];
-  subjectTypesLobDataSource: MatTableDataSource<SubjectType>;
+  subjectTypesLobDataSource: MatTableDataSource<ProductSubjectType>;
   submit3: boolean;
   user: any;
   hasSelected = false;
   SubjectTypes: SubjectType[];
   subjectTypesPDTableColumns = ['select',  'SubjectType', 'ParentSubjectType', 'lob', 'subLob', 'Product'];
-  subjectTypesPDDataSource: MatTableDataSource<ProductSubjectType>;
+  subjectTypesPDDataSource: MatTableDataSource<SubjectType>;
   AddUpdateUrl: string;
   Lobs: LineOfBusiness[];
   SubLobs: SubLineOfBusiness[];
   productSubjectType: ProductSubjectType;
   snackPosition: MatSnackBarHorizontalPosition;
-  selection4: SelectionModel<SubjectType>;
-  selection5: SelectionModel<ProductSubjectType>;
+  selection4: SelectionModel<ProductSubjectType>;
+  selection5: SelectionModel<SubjectType>;
   selectedProductDetail: ProductsDetail;
   excessFroms: LockUp[];
   @ViewChild('paginator3') paginator3: MatPaginator;
@@ -67,8 +67,8 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
     const initialSelection = [];
     this.user = JSON.parse(localStorage.getItem('user'));
     this.subjectTypeForm = new ProductSubjectType();
-    this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
-    this.selection5 = new SelectionModel<ProductSubjectType>(true, initialSelection);
+    this.selection4 = new SelectionModel<ProductSubjectType>(true, initialSelection);
+    this.selection5 = new SelectionModel<SubjectType>(true, initialSelection);
 
 
     this.lineOfBussinessService.load().subscribe(res => {
@@ -87,8 +87,8 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
     const initialSelection = [];
     this.user = JSON.parse(localStorage.getItem('user'));
     this.subjectTypeForm = new ProductSubjectType();
-    this.selection4 = new SelectionModel<SubjectType>(true, initialSelection);
-    this.selection5 = new SelectionModel<ProductSubjectType>(true, initialSelection);
+    this.selection4 = new SelectionModel<ProductSubjectType>(true, initialSelection);
+    this.selection5 = new SelectionModel<SubjectType>(true, initialSelection);
 
 
     this.lineOfBussinessService.load().subscribe(res => {
@@ -145,11 +145,11 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
     });
   }
   renderSubjectTypeTable(RelatedSubject, UnRelatedSubject) {
-    this.subjectTypes = UnRelatedSubject;
-    this.subjectTypesLobDataSource = new MatTableDataSource<SubjectType>(RelatedSubject);
+    this.subjectTypes = UnRelatedSubject; 
+    this.subjectTypesLobDataSource = new MatTableDataSource<ProductSubjectType>(RelatedSubject);
     this.subjectTypesLobDataSource.paginator = this.paginator3;
     this.subjectTypesLobDataSource.sort = this.sort3;
-    this.selection4 = new SelectionModel<SubjectType>(true, []);
+    this.selection4 = new SelectionModel<ProductSubjectType>(true, []);
     this.subjectTypesLobDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort3.direction === 'asc' ? '3' : '1';
@@ -158,10 +158,10 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
       return /^\d+$/.test(sortData[sortHeaderId]) ? Number('2' + sortData[sortHeaderId]) : '2' + sortData[sortHeaderId].toString().toLocaleLowerCase();
     };
 
-    this.subjectTypesPDDataSource = new MatTableDataSource<ProductSubjectType>(UnRelatedSubject);
+    this.subjectTypesPDDataSource = new MatTableDataSource<SubjectType>(UnRelatedSubject);
     this.subjectTypesPDDataSource.paginator = this.paginator5;
     this.subjectTypesPDDataSource.sort = this.sort5;
-    this.selection5 = new SelectionModel<ProductSubjectType>(true, []);
+    this.selection5 = new SelectionModel<SubjectType>(true, []);
     this.subjectTypesPDDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort5.direction === 'asc' ? '3' : '1';
@@ -276,7 +276,7 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
   deleteProductSubjectType() {
 
     const Ids = [];
-    this.selection5.selected.forEach(element => {
+    this.selection4.selected.forEach(element => {
 
       Ids.push(element.ID);
     });
@@ -291,7 +291,7 @@ export class ProductSubjectTypeComponent implements OnInit, OnChanges {
       return ;
     }
     this.hasSelected = false;
-    this.selection4.selected.forEach(element => {
+    this.selection5.selected.forEach(element => {
       this.productSubjectType = new ProductSubjectType();
       this.productSubjectType.SubjectTypeID = element.ID;
       this.productSubjectType.SubjectTypeParentID = element.Parent;

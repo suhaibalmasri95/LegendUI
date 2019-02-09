@@ -557,11 +557,14 @@ this.saveProductApi(this.productForm);
     this.http.post(this.AddUpdateUrl, product).subscribe(res => {
       this.snackBar.open('Saved successfully', '', { duration: 3000, horizontalPosition: this.snackPosition });
       const status: any = res;
+      this.productForm.ID = status.ID;
+    
       if (status.ID) {
         this.productService.load(status.ID,null,1).subscribe(product=> {
           this.productsDetailForm = new ProductsDetail();
           this.productsDetailForm.ProductID = status.ID;
           this.productForm = product[0];
+          this.productForm.selected = true;
           this.productForm.ExpiryDate = this.productForm.ExpiryDate ? new Date(this.productForm.ExpiryDate) : null;
           this.productForm.EffectiveDate = this.productForm.EffectiveDate ? new Date(this.productForm.EffectiveDate) : null; 
         
