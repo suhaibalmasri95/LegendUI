@@ -1,6 +1,8 @@
 import { DocumentService } from './../../../_services/DocumentService.service';
 import { Documents } from './../../../entities/production/Documents';
 import { Component, OnInit } from '@angular/core';
+import { Risk } from '../../../entities/production/Risk';
+import { RiskListenerService } from '../../../_services/RiskListener.service';
 
 @Component({
   selector: 'app-quotation-wizard',
@@ -10,12 +12,16 @@ import { Component, OnInit } from '@angular/core';
 export class QuotationWizardComponent implements OnInit {
   isDocumentInserted: boolean;
   document: Documents;
-  constructor( private _docService: DocumentService) { }
+  risks: Risk[] = [];
+  constructor( private _docService: DocumentService , private _riskSerivce: RiskListenerService) { }
 
   ngOnInit() {
     this.isDocumentInserted  = false;
     this._docService.currentDocument.subscribe(res => {
       this.document = res;
+    });
+    this._riskSerivce.currentRisks.subscribe(res=>{
+      this.risks = res;
     });
   }
 

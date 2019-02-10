@@ -44,6 +44,7 @@ export class DynamicComponentComponent implements OnInit , AfterViewInit {
     this.updateMode(this.category.InsertedData, this.category.Columns.length);
   }
   if(this.category.Result){
+    this.updateModeForDocument = true;
     if(this.category.Result.length > 0)
     this.mapTwoDynamic(this.category.Result);
   }

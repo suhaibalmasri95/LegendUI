@@ -32,7 +32,7 @@
   </div>
       </aw-wizard-step>  
        <aw-wizard-step [stepTitle]="'Covers'">
-          <div class="centered-content" *ngIf="document">
+          <div class="centered-content" *ngIf="document && risks.length > 0" >
            
             <app-covers   [document] = "document"></app-covers>
             </div>

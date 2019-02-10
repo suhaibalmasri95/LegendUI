@@ -80,7 +80,7 @@ export class DynamicService {
     return this.http.get<ProductDynamicColumn[]>(this.dynamicApiUrl + 'LoadChild' + queryString);
   }
   UpdateMode(DocumentID: number = null, RiskID: number = null
-    , ProductID: number = null,  langId: number = null): Observable<ProductDynamicColumn[]> {
+    , ProductID: number = null,  langId: number = null , ProductDetailID: number  = null) : Observable<ProductDynamicColumn[]> {
     let queryString = '?DocumentID=';
   
     if (DocumentID != null) {
@@ -96,6 +96,10 @@ export class DynamicService {
     queryString += '&langId=';
     if (langId != null) {
       queryString += langId;
+    }
+    queryString += '&ProductDetailID=';
+    if (ProductDetailID != null) {
+      queryString += ProductDetailID;
     }
     // tslint:disable-next-line:max-line-length
     return this.http.get<ProductDynamicColumn[]>(this.dynamicApiUrl + 'LoadUpdate' + queryString);

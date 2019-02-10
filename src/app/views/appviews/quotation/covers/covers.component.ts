@@ -29,7 +29,7 @@ import { Customer } from '../../../../entities/Financial/Customer';
   templateUrl: './covers.component.html',
   styleUrls: ['./covers.component.css']
 })
-export class CoversComponent implements OnInit {
+export class CoversComponent implements OnChanges, OnInit  {
   documentRiskColumn = ['select', 'Serial', 'Effective Date', 'Expiry Date'
     , 'Line Of Business', 'Sub Line Of Business', 'Gross Amount',
     'Net Amount'];
@@ -191,6 +191,19 @@ export class CoversComponent implements OnInit {
                 });
  
   }
+  ngOnChanges() {
+
+    this.user = JSON.parse(localStorage.getItem('user'));
+    this.share = new Share();
+    this.line.load(null,null,null,1).subscribe(res => {
+      this.Lobs = res;
+    });
+  
+    this.riskService.load(null, this.document.ID, null).subscribe(res => {
+      this.risksTable = res;
+    });
+   }
+
 
   updateDueDate(el: Installment, DueDate: Date) {
     if (DueDate == null) { return; }

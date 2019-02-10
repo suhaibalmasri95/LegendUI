@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
 import { WizardState } from 'angular-archwizard';
 import * as _ from 'lodash';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { RiskListenerService } from '../../../../_services/RiskListener.service';
 @Component({
   selector: 'app-risk',
   templateUrl: './risk.component.html',
@@ -55,6 +56,7 @@ export class RiskComponent implements OnChanges, OnInit {
   constructor(private http: HttpClient, private productSubjectTypeService: ProductSubjectTypes
     , private dynamicService: DynamicService,
     private productDetailService: ProductsDetailService,
+    private _riskSerivce: RiskListenerService,
     @Inject(WizardState) private wizard: WizardState, private attachmentService: PolicyAttachmentService,
     private fb: FormBuilder) { }
 
@@ -119,6 +121,7 @@ export class RiskComponent implements OnChanges, OnInit {
     this.productDetail = new ProductsDetail();
     this.user = JSON.parse(localStorage.getItem('user'));
     riskForm.CreatedBy = this.user.Name;
+    riskForm.CreationDate = new Date();
     const initialSelection = [];
     this.selection = new SelectionModel<Risk>(true, initialSelection);
     riskForm.EffectiveDate = new Date();
@@ -154,21 +157,30 @@ export class RiskComponent implements OnChanges, OnInit {
     this.riskForm = new Risk;
     if(risk.ID){
       this.updateMode = true;
+      this.riskForm = risk ;
       this.updateModeForRisk();
-    }
-    this.riskForm = _.cloneDeep(risk);
+    } else {
+
+  
+
+
+    this.riskForm = risk;
     this.riskForm.index = index;
     this.riskForm.selected = true;
+    this.productDynamicCategoriesMultiRecord = [];
+    this.productDynamicCategories = [];
     this.riskForm.DynamicCategory.forEach(element => {
       if(element.IsMulitRecords ===1) {
         this.productDynamicCategoriesMultiRecord = [];
        
-        this.productDynamicCategoriesMultiRecord.push(element);
+        this.productDynamicCategoriesMultiRecord.push(_.cloneDeep(element));
+
       } else{
         this.productDynamicCategories = [];
-        this.productDynamicCategories.push(element);
+        this.productDynamicCategories.push(_.cloneDeep(element));
       }
-    });
+    });  }
+    
 
   }
   updateSelectedRisk() {
@@ -196,8 +208,10 @@ export class RiskComponent implements OnChanges, OnInit {
     //this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
     this.productDynamicCategoriesMultiRecord = [];
     //this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
-    this.risks[this.riskForm.index] = _.cloneDeep(this.riskForm);
+    this.risks[this.riskForm.index]=this.riskForm;
+  
     this.riskForm = new Risk();
+    this.reInit(this.riskForm);
   }
   
   
@@ -230,6 +244,7 @@ export class RiskComponent implements OnChanges, OnInit {
       this.risks.push(this.riskForm);
       this.renderTable(this.risks);
       this.riskForm = new Risk();
+      this.reInit(this.riskForm);
      // this.submit();
 
     }
@@ -298,7 +313,7 @@ export class RiskComponent implements OnChanges, OnInit {
   FilterAndMeargeArray(firstArray: ProductDynmicCategory[]) {
     this.productDynamicCategories = [];
     this.productDynamicCategoriesMultiRecord = [];
-    this.dynamicService.UpdateMode(null, this.riskForm.ID, null, this.riskForm.ProductDetailID).subscribe(res => {
+    this.dynamicService.UpdateMode(null, this.riskForm.ID, this.riskForm.ProductID , 1 , this.riskForm.ProductDetailID).subscribe(res => {
       firstArray.forEach(element => {
         if (element.IsMulitRecords > 0) {
 
@@ -458,7 +473,9 @@ export class RiskComponent implements OnChanges, OnInit {
        
           this.reInit(this.riskForm);
           this.renderTable(this.risks);
-          this.updateModeForRisk();
+          this._riskSerivce.changeColumn(this.risks);
+         // this.updateModeForRisk();
+         this.updateMode = true;
           if(this.next){
             this.wizard.navigationMode.goToStep(2);
           }
