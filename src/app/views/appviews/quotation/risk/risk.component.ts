@@ -208,6 +208,8 @@ export class RiskComponent implements OnChanges, OnInit {
     //this.productDynamicCategories = _.cloneDeep(this.originalDynamicCategories);
     this.productDynamicCategoriesMultiRecord = [];
     //this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
+    this.riskForm.StSubLOB =     this.productDetail.SubLineOfBusniess;
+    this.riskForm.StLOB = this.productDetail.LineOfBusniess;
     this.risks[this.riskForm.index]=this.riskForm;
   
     this.riskForm = new Risk();
@@ -243,6 +245,7 @@ export class RiskComponent implements OnChanges, OnInit {
      // this.productDynamicCategoriesMultiRecord = _.cloneDeep(this.originalDynamicCategoriesMulti);
   this.riskForm.StSubLOB =     this.productDetail.SubLineOfBusniess;
   this.riskForm.StLOB = this.productDetail.LineOfBusniess;
+  
       this.risks.push(this.riskForm);
       this.renderTable(this.risks);
       this.riskForm = new Risk();

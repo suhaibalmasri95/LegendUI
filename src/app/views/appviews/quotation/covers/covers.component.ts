@@ -270,7 +270,7 @@ export class CoversComponent implements OnChanges, OnInit  {
         break;
         case 3:
         this.calculateSerivce.load(null, 2, this.document.ID, 
-          this.selectedRisk.ID ? this.selectedRisk.ID : null, 1).subscribe(cal => {
+         null, 1).subscribe(cal => {
           this.RiskCalculation = cal;
   
           
