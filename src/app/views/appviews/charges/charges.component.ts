@@ -236,7 +236,7 @@ export class ChargesComponent implements OnInit {
   }
 
   reloadCoverTable(LineOfBusinessCode?) {
-    this.coversService.load(null, 1, LineOfBusinessCode, null, 1).subscribe(data => {
+    this.coversService.load(null, 1, LineOfBusinessCode, null, 1 , null).subscribe(data => {
       this.renderCoverTable(data);
     });
   }
