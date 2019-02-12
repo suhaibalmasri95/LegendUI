@@ -12,7 +12,7 @@ export class CoverResolver implements Resolve<Cover[]> {
     constructor(private coverService: CoversService, private router: Router) { }
 
     resolve(route: ActivatedRouteSnapshot): Observable<Cover[]> {
-        return this.coverService.load(null, 1, null, null , 1).pipe(
+        return this.coverService.load(null, 1, null, null , 1 , null).pipe(
             catchError(error => {
                 this.router.navigate(['']);
                 return of(null);

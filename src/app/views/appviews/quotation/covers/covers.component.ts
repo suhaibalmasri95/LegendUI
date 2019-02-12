@@ -1,6 +1,6 @@
 import { Risk } from './../../../../entities/production/Risk';
 import { RiskService } from './../../../../_services/_production/Risk.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SharesService } from '../../../../_services/_products/shares.service';
 import { Documents } from '../../../../entities/production/Documents';
@@ -384,7 +384,8 @@ export class CoversComponent implements OnChanges, OnInit  {
      }
      this.documentCover.UwDocumentID = this.document.ID;
      this.documentCover.UwRiskID = this.selectedRisk.ID;
-    
+     this.documentCover.StSubLOB = this.selectedRisk.StSubLOB;
+     this.documentCover.StLOB = this.selectedRisk.StLOB;
      this.documentCover.ChargeType = 1;
      this.http.post(this.calculateSerivce.ApiUrl + 'Create', this.documentCover).subscribe(shareResult => {
       console.log(shareResult);
@@ -426,8 +427,8 @@ export class CoversComponent implements OnChanges, OnInit  {
      this.documentFee.ChargeType = 2;
      this.http.post(this.calculateSerivce.ApiUrl + 'Create', this.documentFee).subscribe(shareResult => {
       console.log(shareResult);
-      this.calculateSerivce.load(null, 2, this.document.ID, this.selectedRisk.ID, 1).subscribe(cal => {
-        this.coverCalculation = cal;
+      this.calculateSerivce.load(null, 2, this.document.ID,null, 1).subscribe(cal => {
+        this.RiskCalculation = cal;
         this.documentFee = new Calculation();
         
       });

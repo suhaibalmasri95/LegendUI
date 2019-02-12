@@ -16,5 +16,6 @@ constructor() { }
 
 changeColumn(risks: Risk[]) {
   this.riskSource.next(risks);
+  
 }
 }

@@ -96,7 +96,7 @@ export class ProductsComponent implements OnInit {
  
   productSearch: FormControl = new FormControl();
   user: any;
-  selection2: SelectionModel<ProductsDetail>;
+  selection2: SelectionModel<SubLineOfBusiness>;
   selection3: SelectionModel<ProductsDetail>;
   dropdownSettings = {};
   unRelatedCategory: Category[];
@@ -151,7 +151,7 @@ export class ProductsComponent implements OnInit {
     const initialSelection = [];
     this.productCategoryForm = new ProductCategory();
     this.user = JSON.parse(localStorage.getItem('user'));
-    this.selection2 = new SelectionModel<ProductsDetail>(true, initialSelection);
+    this.selection2 = new SelectionModel<SubLineOfBusiness>(true, initialSelection);
     this.selection3 = new SelectionModel<ProductsDetail>(true, initialSelection);
     this.productQuestionnaireForm = new ProductQuestionnaire();
     this.selection6 = new SelectionModel<ProductQuestionnaire>(true, initialSelection);
@@ -311,7 +311,7 @@ export class ProductsComponent implements OnInit {
     this.productsDetailsDataSource = new MatTableDataSource<ProductsDetail>(data);
     this.productsDetailsDataSource.paginator = this.paginator2;
     this.productsDetailsDataSource.sort = this.sort2;
-    this.selection2 = new SelectionModel<ProductsDetail>(true, []);
+    this.selection2 = new SelectionModel<SubLineOfBusiness>(true, []);
     this.productsDetailsDataSource.sortingDataAccessor = (sortData, sortHeaderId) => {
       if (!sortData[sortHeaderId]) {
         return this.sort2.direction === 'asc' ? '3' : '1';
